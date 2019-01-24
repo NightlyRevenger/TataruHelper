@@ -1,5 +1,7 @@
 ## In depth interface guide  
 * [Chat Appearance](#chat-appearance)  
+* [Translation Settings](#translation-settings)  
+* [General](#general)  
 
 ### Chat Appearance  
 
@@ -18,3 +20,11 @@
 8. **Background Color** - you can change the background color of you Chat Box. There are a lot of settings with color customization and transparency. Color can be set in RGB or HEX. Parameter A - transparency (under the Advance settings).
 9. **Show/Hide Chat Window** - to make sure that you've set up your chat window correctly, you can show or hide it.
 10. **Reset Chat Position** - you can reset the position of your Chat Box if you drag it outside the screen.
+
+### Translation Settings  
+
+![2.png](2.png)
+
+### General  
+
+![3.png](3.png)
