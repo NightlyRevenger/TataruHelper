@@ -7,7 +7,7 @@
 ---
 ## Table of Contents
 * [English](#english)
-   * [New Features](#new-features)
+   * [New features](#new-features)
    * [Installation](#installation)
    * [How to use](#how-to-use)
    * [Development](#development)
@@ -33,7 +33,7 @@ Tataru Helper - application for translation of in-game texts in Japan MMORPG - F
   - You can freely change the translator engine and use various translation methods.
   - Tataru Taru
 
-## New Features!
+## New features!
 
   - Soon™
 
