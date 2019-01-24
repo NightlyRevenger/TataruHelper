@@ -1,3 +1,3 @@
 ## In depth interface guide
 
-![1](Documents/1.png)
+![1.png](Documents/1.png)
