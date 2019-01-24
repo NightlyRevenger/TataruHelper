@@ -39,7 +39,8 @@ namespace FFXIITataruHelper
         bool _IsHideToTray;
 
         string SettingFileName = "AppSettings.json";
-        string UpdatePath = @"D:\BP\C_sharp\FFXIV\Releases";
+        string GitPath = @"https://github.com/NightlyRevenger/TataruHelper/releases/latest";
+        string UpdatePath = @"https://github.com/NightlyRevenger/TataruHelper";
 
         string _EmptyHKString = "Empty";
 
@@ -527,9 +528,9 @@ namespace FFXIITataruHelper
             {
                 try
                 {
-                    using (var mgr = new UpdateManager(UpdatePath))
+                    using (var mgr = UpdateManager.GitHubUpdateManager(UpdatePath))
                     {
-                        await mgr.UpdateApp();
+                        await mgr.Result.UpdateApp();
                     }
                 }
                 catch (Exception ex)
