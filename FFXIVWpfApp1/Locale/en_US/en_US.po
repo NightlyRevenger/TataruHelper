@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2019-01-20 18:50+0300\n"
-"PO-Revision-Date: 2019-01-20 19:01+0300\n"
+"POT-Creation-Date: 2019-01-24 10:56+0300\n"
+"PO-Revision-Date: 2019-01-24 12:47+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -13,119 +13,135 @@ msgstr ""
 "X-Poedit-Basepath: ../..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: GetString;GetPluralString:1,2;"
-"GetParticularString:1c,2;"
-"GetParticularPluralString:1c,2,3;_;_n:1,2;_p:1c,2;"
-"_pn:1c,2,3\\n\n"
+"GetParticularString:1c,2;GetParticularPluralString:1c,2,3;_;_n:1,2;"
+"_p:1c,2;_pn:1c,2,3\\n\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: LanguagueWrapper.cs:81
+#: LanguagueWrapper.cs:78
 msgid "Settings"
 msgstr "Settings"
 
-#: LanguagueWrapper.cs:83
+#: LanguagueWrapper.cs:80
 msgid "Language"
 msgstr "Language"
 
-#: LanguagueWrapper.cs:84
+#: LanguagueWrapper.cs:81
 msgid "English"
 msgstr "English"
 
-#: LanguagueWrapper.cs:85
+#: LanguagueWrapper.cs:82
 msgid "Russian"
 msgstr "Russian"
 
-#: LanguagueWrapper.cs:87
+#: LanguagueWrapper.cs:84
 msgid "Help"
 msgstr "Help"
 
-#: LanguagueWrapper.cs:89
+#: LanguagueWrapper.cs:86
 msgid "Chat Appearance"
 msgstr "Chat Appearance"
 
-#: LanguagueWrapper.cs:90
+#: LanguagueWrapper.cs:87
 msgid "Translation Settings"
 msgstr "Translation Settings"
 
-#: LanguagueWrapper.cs:91
+#: LanguagueWrapper.cs:88
 msgid "General Behavior"
 msgstr "General"
 
-#: LanguagueWrapper.cs:93
+#: LanguagueWrapper.cs:90
 msgid "Font Settings"
 msgstr "Font Settings"
 
-#: LanguagueWrapper.cs:94
+#: LanguagueWrapper.cs:91
 msgid "Font Size"
 msgstr "Font Size"
 
-#: LanguagueWrapper.cs:96
+#: LanguagueWrapper.cs:93
 msgid "Font Color"
 msgstr "Font Color"
 
-#: LanguagueWrapper.cs:97
+#: LanguagueWrapper.cs:94
 msgid "Color 1"
 msgstr "Color 1"
 
-#: LanguagueWrapper.cs:98
+#: LanguagueWrapper.cs:95
 msgid "Color 2"
 msgstr "Color 2"
 
-#: LanguagueWrapper.cs:100
+#: LanguagueWrapper.cs:97
 msgid "Background Color"
 msgstr "Background Color"
 
-#: LanguagueWrapper.cs:102
+#: LanguagueWrapper.cs:99
 msgid "Paragraph Settings"
 msgstr "Paragraph Settings"
 
-#: LanguagueWrapper.cs:103
+#: LanguagueWrapper.cs:100
 msgid "Interval Width"
 msgstr "Spacing"
 
-#: LanguagueWrapper.cs:104
+#: LanguagueWrapper.cs:101
 msgid "Line Break Height"
 msgstr "Line Break Height"
 
-#: LanguagueWrapper.cs:107
+#: LanguagueWrapper.cs:104
 msgid "Translation Engine"
 msgstr "Translation Engine"
 
-#: LanguagueWrapper.cs:108
+#: LanguagueWrapper.cs:105
 msgid "FF Language"
 msgstr "FF Language"
 
-#: LanguagueWrapper.cs:109
+#: LanguagueWrapper.cs:106
 msgid "Traslate To"
 msgstr "Translate To"
 
-#: LanguagueWrapper.cs:111
+#: LanguagueWrapper.cs:108
 msgid "Hotkeys"
 msgstr "Hotkeys"
 
-#: LanguagueWrapper.cs:112
+#: LanguagueWrapper.cs:109
 msgid "Show/hide Chat Window"
 msgstr "Show/Hide Chat Window"
 
-#: LanguagueWrapper.cs:113 LanguagueWrapper.cs:116
+#: LanguagueWrapper.cs:110 LanguagueWrapper.cs:113
 msgid "Click Through"
 msgstr "Click Through"
 
-#: LanguagueWrapper.cs:115
+#: LanguagueWrapper.cs:112
 msgid "Other"
 msgstr "Other"
 
-#: LanguagueWrapper.cs:117 LanguagueWrapper.cs:120
+#: LanguagueWrapper.cs:114 LanguagueWrapper.cs:117
 msgid "Always On Top"
 msgstr "Always On Top"
 
-#: LanguagueWrapper.cs:118 LanguagueWrapper.cs:121
+#: LanguagueWrapper.cs:115 LanguagueWrapper.cs:118
 msgid "Hide to Tray"
 msgstr "Hide To Tray"
 
-#: LanguagueWrapper.cs:123
+#: LanguagueWrapper.cs:120
 msgid "Show Chat Window"
 msgstr "Show Chat Window"
 
-#: LanguagueWrapper.cs:124
+#: LanguagueWrapper.cs:121
 msgid "Hide Chat Window"
 msgstr "Hide Chat Window"
+
+#: LanguagueWrapper.cs:123
+msgid "Reset Chat Position"
+msgstr "Reset Chat Position"
+
+#: LanguagueWrapper.cs:127 LanguagueWrapper.cs:129
+msgid "Translation engine error. Consider switching to other engine."
+msgstr ""
+"Translation engine error. Consider switching to other engine."
+
+#: LanguagueWrapper.cs:131
+msgid "Couldn't find FFXIV process."
+msgstr "Couldn't find FFXIV process."
+
+#: LanguagueWrapper.cs:135 LanguagueWrapper.cs:137
+msgid "Process found:"
+msgstr "Process found:"

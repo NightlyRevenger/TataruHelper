@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2019-01-20 18:51+0300\n"
-"PO-Revision-Date: 2019-01-20 19:08+0300\n"
+"POT-Creation-Date: 2019-01-24 11:00+0300\n"
+"PO-Revision-Date: 2019-01-24 12:50+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -18,114 +18,131 @@ msgstr ""
 "_p:1c,2;_pn:1c,2,3\\n\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: LanguagueWrapper.cs:81
+#: LanguagueWrapper.cs:80
 msgid "Settings"
 msgstr "Настройки"
 
-#: LanguagueWrapper.cs:83
+#: LanguagueWrapper.cs:82
 msgid "Language"
 msgstr "Язык"
 
-#: LanguagueWrapper.cs:84
+#: LanguagueWrapper.cs:83
 msgid "English"
 msgstr "English"
 
-#: LanguagueWrapper.cs:85
+#: LanguagueWrapper.cs:84
 msgid "Russian"
 msgstr "Русский"
 
-#: LanguagueWrapper.cs:87
+#: LanguagueWrapper.cs:86
 msgid "Help"
 msgstr "Помощь"
 
-#: LanguagueWrapper.cs:89
+#: LanguagueWrapper.cs:88
 msgid "Chat Appearance"
 msgstr "Настройки внешнего вида"
 
-#: LanguagueWrapper.cs:90
+#: LanguagueWrapper.cs:89
 msgid "Translation Settings"
 msgstr "Настройки перевода"
 
-#: LanguagueWrapper.cs:91
+#: LanguagueWrapper.cs:90
 msgid "General Behavior"
 msgstr "Основные настройки"
 
-#: LanguagueWrapper.cs:93
+#: LanguagueWrapper.cs:92
 msgid "Font Settings"
 msgstr "Настройки шрифта"
 
-#: LanguagueWrapper.cs:94
+#: LanguagueWrapper.cs:93
 msgid "Font Size"
 msgstr "Размер шрифта"
 
-#: LanguagueWrapper.cs:96
+#: LanguagueWrapper.cs:95
 msgid "Font Color"
 msgstr "Цвет шрифта"
 
-#: LanguagueWrapper.cs:97
+#: LanguagueWrapper.cs:96
 msgid "Color 1"
 msgstr "Цвет 1"
 
-#: LanguagueWrapper.cs:98
+#: LanguagueWrapper.cs:97
 msgid "Color 2"
 msgstr "Цвет 2"
 
-#: LanguagueWrapper.cs:100
+#: LanguagueWrapper.cs:99
 msgid "Background Color"
 msgstr "Цвет фона"
 
-#: LanguagueWrapper.cs:102
+#: LanguagueWrapper.cs:101
 msgid "Paragraph Settings"
 msgstr "Настройки вывода"
 
-#: LanguagueWrapper.cs:103
+#: LanguagueWrapper.cs:102
 msgid "Interval Width"
 msgstr "Ширина отступа"
 
-#: LanguagueWrapper.cs:104
+#: LanguagueWrapper.cs:103
 msgid "Line Break Height"
 msgstr "Межабзацный интервал"
 
-#: LanguagueWrapper.cs:107
+#: LanguagueWrapper.cs:106
 msgid "Translation Engine"
-msgstr "Механизм перевода"
+msgstr "Сервис перевода"
 
-#: LanguagueWrapper.cs:108
+#: LanguagueWrapper.cs:107
 msgid "FF Language"
 msgstr "Язык игры"
 
-#: LanguagueWrapper.cs:109
+#: LanguagueWrapper.cs:108
 msgid "Traslate To"
 msgstr "Язык перевода"
 
-#: LanguagueWrapper.cs:111
+#: LanguagueWrapper.cs:110
 msgid "Hotkeys"
 msgstr "Горячие клавиши"
 
-#: LanguagueWrapper.cs:112
+#: LanguagueWrapper.cs:111
 msgid "Show/hide Chat Window"
 msgstr "Показать/Скрыть окно перевода"
 
-#: LanguagueWrapper.cs:113 LanguagueWrapper.cs:116
+#: LanguagueWrapper.cs:112 LanguagueWrapper.cs:115
 msgid "Click Through"
 msgstr "Игнорировать нажатия"
 
-#: LanguagueWrapper.cs:115
+#: LanguagueWrapper.cs:114
 msgid "Other"
 msgstr "Прочее"
 
-#: LanguagueWrapper.cs:117 LanguagueWrapper.cs:120
+#: LanguagueWrapper.cs:116 LanguagueWrapper.cs:119
 msgid "Always On Top"
 msgstr "Поверх всех окон"
 
-#: LanguagueWrapper.cs:118 LanguagueWrapper.cs:121
+#: LanguagueWrapper.cs:117 LanguagueWrapper.cs:120
 msgid "Hide to Tray"
 msgstr "Свернуть в трей"
 
-#: LanguagueWrapper.cs:123
+#: LanguagueWrapper.cs:122
 msgid "Show Chat Window"
 msgstr "Показать окно перевода"
 
-#: LanguagueWrapper.cs:124
+#: LanguagueWrapper.cs:123
 msgid "Hide Chat Window"
 msgstr "Скрыть окно перевода"
+
+#: LanguagueWrapper.cs:125
+msgid "Reset Chat Position"
+msgstr "Сбросить положение окна"
+
+#: LanguagueWrapper.cs:129 LanguagueWrapper.cs:131
+msgid "Translation engine error. Consider switching to other engine."
+msgstr ""
+"Ошибка сервиса перевода. Попробуйте переключиться на другой переводчик."
+
+#: LanguagueWrapper.cs:133
+msgid "Couldn't find FFXIV process."
+msgstr "Не удалось найти процесс FFXIV."
+
+#: LanguagueWrapper.cs:137 LanguagueWrapper.cs:139
+msgid "Process found:"
+msgstr "Процесс найден:"

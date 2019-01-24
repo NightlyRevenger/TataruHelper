@@ -25,7 +25,7 @@
             <StackPanel>
             </StackPanel>
         </DockPanel>
-        <tb:TaskbarIcon x:Name="TaskBarIcon" IconSource="Resources/tray_icon.ico" TrayMouseDoubleClick="TBDoubleClick" ToolTipText="FFXIV_TR">
+        <tb:TaskbarIcon x:Name="TaskBarIcon" IconSource="Resources/tray_icon.ico" TrayMouseDoubleClick="TBDoubleClick" ToolTipText="Tataru Helper">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <MenuItem x:Name="TBMenuChatWin" Header="Chat Window" Click="TBMenuChatWin_Click" />

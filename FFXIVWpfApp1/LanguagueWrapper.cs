@@ -69,6 +69,8 @@ namespace FFXIITataruHelper
             {
                 var fs = File.Open(path, System.IO.FileMode.Open);
                 catalog = new Catalog(fs);
+                fs.Close();
+                fs.Dispose();
             }
             catch (Exception e)
             {

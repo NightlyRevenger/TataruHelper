@@ -34,7 +34,7 @@ namespace FFXIITataruHelper
         public static List<string> RecentFont1Colors = new List<string>(new string[] { "#FFFFFFFF" });
         public static List<string> RecentFont2Colors = new List<string>(new string[] { "#FF000000" });
 
-        public static string HotKeysFilePath = "HotKeys.json";
+        public static string HotKeysFilePath = "../HotKeys.json";
 
         public static int LineBreakHeight = 0;
 

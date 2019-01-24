@@ -23,6 +23,7 @@ using NGettext;
 using FFXIITataruHelper.WinUtils;
 using FFXIITataruHelper.Translation;
 using Squirrel;
+using System.Threading;
 
 namespace FFXIITataruHelper
 {
@@ -38,7 +39,7 @@ namespace FFXIITataruHelper
 
         bool _IsHideToTray;
 
-        string SettingFileName = "AppSettings.json";
+        string SettingFileName = "../AppSettings.json";
         string GitPath = @"https://github.com/NightlyRevenger/TataruHelper/releases/latest";
         string UpdatePath = @"https://github.com/NightlyRevenger/TataruHelper";
 
@@ -51,6 +52,10 @@ namespace FFXIITataruHelper
         HotKeyCombination _ClickThoughtChatKeys;
 
         LanguagueWrapper _LanguagueWrapper;
+
+        Task _UpdateInProgress = null;
+
+        UpdateManager _UpdateManager;
 
         private bool _IsShutDown;
 
@@ -74,7 +79,13 @@ namespace FFXIITataruHelper
 
             _LanguagueWrapper = new LanguagueWrapper(this);
 
+            SquirrelAwareApp.HandleEvents(
+                onInitialInstall: v => OnInitialInstall(ref _UpdateManager),
+                onAppUpdate: v => OnAppUpdate(ref _UpdateManager),
+                onAppUninstall: v => OnAppUninstall(ref _UpdateManager));
+
             LoadSettings();
+            //
         }
 
         private void Button1_Click(object sender, RoutedEventArgs e)
@@ -116,7 +127,7 @@ namespace FFXIITataruHelper
         private void About_Click(object sender, RoutedEventArgs e)
         {
             string caption = "TataruHelper v" + Convert.ToString(System.Reflection.Assembly.GetEntryAssembly().GetName().Version);
-            string text = "TataruHelper" + Environment.NewLine + "GitHub: "+ UpdatePath;
+            string text = "TataruHelper" + Environment.NewLine + "GitHub: " + UpdatePath;
 
             MessageBoxResult result = Xceed.Wpf.Toolkit.MessageBox.Show(text, caption, MessageBoxButton.OK);
         }
@@ -476,10 +487,11 @@ namespace FFXIITataruHelper
 
                 if (e.Cancel == false)
                 {
-                    _LogWriter.Stop();
+                    //_LogWriter.Stop();
 
                     _ChatWindow.Close();
                     SaveSettings();
+                    _LogWriter.Stop();
                 }
             }
             catch (Exception ex)
@@ -505,6 +517,7 @@ namespace FFXIITataruHelper
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            _UpdateManager.Dispose();
             _LogWriter.Stop();
         }
 
@@ -523,22 +536,11 @@ namespace FFXIITataruHelper
 
             LoadHotKeys();
 
-#if (!DEBUG)
             Task.Run(async () =>
             {
-                try
-                {
-                    using (var mgr = UpdateManager.GitHubUpdateManager(UpdatePath))
-                    {
-                        await mgr.Result.UpdateApp();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Logger.WriteLog(Convert.ToString(ex));
-                }
+                await Task.Delay(GlobalSettings.LookForPorcessDelay * 4);
+                Squirrel_Update();
             });
-#endif
         }
 
         private void RegisterHotKeyDown(ref GlobalHotKey globalHotKey, HotKeyCombination hotKeyCombination, TextBox textBox, KeyEventArgs e)
@@ -771,5 +773,129 @@ namespace FFXIITataruHelper
 
             GlobalSettings.MainWinWidth = this.Width;
         }
+
+        private void Squirrel_Update()
+        {
+            Task.Run(async () =>
+            {
+                await UpdateIfAvailable();
+            });
+
+            SpinWait.SpinUntil(() => _UpdateInProgress != null);
+
+            Task.Run(() =>
+            {
+                var res = WaitForUpdatesOnShutdown();
+                res.Wait();
+
+            }).Wait();
+        }
+
+        public async Task UpdateIfAvailable()
+        {
+            _UpdateInProgress = RealUpdateIfAvailable();
+            await _UpdateInProgress;
+        }
+
+        public async Task WaitForUpdatesOnShutdown()
+        {
+            // We don't actually care about errors here, only completion
+            await _UpdateInProgress.ContinueWith(ex => { });
+        }
+
+        private async Task RealUpdateIfAvailable()
+        {
+            Logger.WriteLog("Checking remote server for update.");
+
+            try
+            {
+                _UpdateManager = await UpdateManager.GitHubUpdateManager(UpdatePath);
+
+                var res = await _UpdateManager.UpdateApp();
+
+                string test = String.Empty;
+
+                try
+                {
+                    if (res != null)
+                    {
+                        test = res.BaseUrl + Environment.NewLine;
+                        test += res.EntryAsString + Environment.NewLine;
+                        test += res.PackageName + Environment.NewLine;
+                        test += res.Version + Environment.NewLine;
+                        test += "IsDelta: " + res.IsDelta + Environment.NewLine;
+                    }
+                    else
+                    {
+                        Logger.WriteLog("No Updates Found");
+                    }
+
+                    if (test.Length > 0)
+                        Logger.WriteLog(test);
+
+                }
+                catch (Exception ex3)
+                {
+                    Logger.WriteLog(ex3);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+            }
+        }
+
+        private void OnInitialInstall(ref UpdateManager mgr)
+        {
+            try
+            {
+                //mgr.CreateShortcutForThisExe();
+                //mgr.CreateShortcutsForExecutable("Navvy.Desktop.exe", ShortcutLocation.Desktop, false);
+                //mgr.CreateShortcutsForExecutable("Navvy.Desktop.exe", ShortcutLocation.StartMenu, false);
+                mgr.CreateUninstallerRegistryEntry();
+
+            }
+            catch (Exception e)
+            {
+                Logger.WriteLog(Convert.ToString(e));
+            }
+        }
+
+        private void OnAppUpdate(ref UpdateManager mgr)
+        {
+            try
+            {
+                mgr.RemoveUninstallerRegistryEntry();
+            }
+            catch (Exception e)
+            {
+                Logger.WriteLog(Convert.ToString(e));
+            }
+
+            try
+            {
+                mgr.CreateUninstallerRegistryEntry();
+            }
+            catch (Exception e)
+            {
+                Logger.WriteLog(Convert.ToString(e));
+            }
+        }
+
+        private void OnAppUninstall(ref UpdateManager mgr)
+        {
+            try
+            {
+                //mgr.RemoveShortcutsForExecutable("Navvy.Desktop.exe", ShortcutLocation.Desktop);
+                //mgr.RemoveShortcutsForExecutable("Navvy.Desktop.exe", ShortcutLocation.StartMenu);
+                mgr.RemoveUninstallerRegistryEntry();
+            }
+            catch (Exception e)
+            {
+                Logger.WriteLog(Convert.ToString(e));
+            }
+        }
+
     }
 }
