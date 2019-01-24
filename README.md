@@ -45,8 +45,8 @@ Tataru Helper requires:
 Final Fantasy XIV with **DirectX 11** and **64 bit**.
 
 1. Download the latest version of the application from [here](https://github.com/NightlyRevenger/TataruHelper/releases/latest) (Setup.exe).
-2. Extract all the files in the zip archive(using WinRAR or [7-zip](https://www.7-zip.org/)) and place them everywhere you want.
-3. Open Tataru Helper, configure source and destination language and do the initial setup.
+2. Run the Setup.exe file, the shortcut will be placed on the desktop.
+3. Tataru Helper will start automatically, configure source and destination language and do the initial setup.
 4. Close the settings window and drag the floating window to the right place.
 4. Everything's ready!
 
@@ -103,8 +103,8 @@ Tataru Helper требуется:
 Final Fantasy XIV в режиме **DirectX 11** и **64 bit**.
 
 1. Скачайте последнюю версию приложения [здесь](https://github.com/NightlyRevenger/TataruHelper/releases/latest) (Setup.exe).
-2. Разархивируйте все файлы из zip архива (используя WinRar или [7-zip](https://www.7-zip.org/)) и разместите их там, где удобно.
-3. Откройте Tataru Helper, настройте исходный и целевой языки и проведите начальную настройку.
+2. Запустите файл Setup.exe, ярлык автоматически будет создан на рабочем столе.
+3. Tataru Helper будет запущено автоматически, настройте исходный и целевой языки и проведите начальную настройку.
 4. Закройте окно настроек и переместите окно приложения в удобное место.
 4. Всё готово!
 
