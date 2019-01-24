@@ -31,7 +31,8 @@ Tataru Helper - application for translation of in-game texts in Japan MMORPG - F
 
   - You can choose the source and destination language.
   - You can freely change the translator engine and use various translation methods.
-  - Tataru Taru
+  - Automatic updates.
+  - Tataru Taru!
 
 ## New features!
 
@@ -89,7 +90,8 @@ Tataru Helper - приложение для перевода внутриигр�
 
   - Вы можете выбрать исходный и целевой язык.
   - Вы можете переключаться между различными механизмами перевода. 
-  - Татару Тару
+  - Автоматические обновления.
+  - Татару Тару!
 
 ## Новые функции!
 
