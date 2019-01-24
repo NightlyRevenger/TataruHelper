@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>$id$</id>
+    <version>$version$</version>
+    <title>$title$</title>
+    <authors>$author$</authors>
+    <owners>$author$</owners>
+    <licenseUrl>https://github.com/FFXIVAPP/sharlayan/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/FFXIVAPP/sharlayan</projectUrl>
+    <iconUrl>https://raw.githubusercontent.com/FFXIVAPP/sharlayan/master/Sharlayan/Logo.png</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>$description$</description>
+    <copyright>$copyright$</copyright>
+    <tags>ffxiv memory tracking</tags>
+  </metadata>
+</package>  

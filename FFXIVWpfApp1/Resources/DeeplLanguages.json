@@ -1,0 +1,47 @@
+[
+  {
+    "ShownName": "Dutch",
+    "NativeName": "Dutch",
+    "LanguageCode": "NL"
+  },
+  {
+    "ShownName": "English",
+    "NativeName": "English",
+    "LanguageCode": "EN"
+  },
+  {
+    "ShownName": "French",
+    "NativeName": "French",
+    "LanguageCode": "FR"
+  },
+  {
+    "ShownName": "German",
+    "NativeName": "German",
+    "LanguageCode": "DE"
+  },
+  {
+    "ShownName": "Italian",
+    "NativeName": "Italian",
+    "LanguageCode": "IT"
+  },
+  {
+    "ShownName": "Polish",
+    "NativeName": "Polish",
+    "LanguageCode": "PL"
+  },
+  {
+    "ShownName": "Portuguese",
+    "NativeName": "Portuguese",
+    "LanguageCode": "PT"
+  },
+  {
+    "ShownName": "Russian",
+    "NativeName": "Russian",
+    "LanguageCode": "RU"
+  },
+  {
+    "ShownName": "Spanish",
+    "NativeName": "Spanish",
+    "LanguageCode": "ES"
+  }
+]

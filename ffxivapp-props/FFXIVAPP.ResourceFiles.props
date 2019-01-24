@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Choose>
+    <When Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+      <ItemGroup>
+		<ProjectReference Include="..\..\ffxivapp-resourcefiles\FFXIVAPP.ResourceFiles\FFXIVAPP.ResourceFiles.csproj">
+		  <Project>{38e2405f-58d4-411c-b1dF-6e2d6f14082e}</Project>
+		  <Name>FFXIVAPP.ResourceFiles</Name>
+		</ProjectReference>
+      </ItemGroup>
+    </When>
+  </Choose>
+</Project>
+    

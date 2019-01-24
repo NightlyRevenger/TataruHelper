@@ -1,0 +1,131 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2019-01-20 18:50+0300\n"
+"PO-Revision-Date: 2019-01-20 19:01+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.1\n"
+"X-Poedit-Basepath: ../..\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Poedit-KeywordsList: GetString;GetPluralString:1,2;"
+"GetParticularString:1c,2;"
+"GetParticularPluralString:1c,2,3;_;_n:1,2;_p:1c,2;"
+"_pn:1c,2,3\\n\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: LanguagueWrapper.cs:81
+msgid "Settings"
+msgstr "Settings"
+
+#: LanguagueWrapper.cs:83
+msgid "Language"
+msgstr "Language"
+
+#: LanguagueWrapper.cs:84
+msgid "English"
+msgstr "English"
+
+#: LanguagueWrapper.cs:85
+msgid "Russian"
+msgstr "Russian"
+
+#: LanguagueWrapper.cs:87
+msgid "Help"
+msgstr "Help"
+
+#: LanguagueWrapper.cs:89
+msgid "Chat Appearance"
+msgstr "Chat Appearance"
+
+#: LanguagueWrapper.cs:90
+msgid "Translation Settings"
+msgstr "Translation Settings"
+
+#: LanguagueWrapper.cs:91
+msgid "General Behavior"
+msgstr "General"
+
+#: LanguagueWrapper.cs:93
+msgid "Font Settings"
+msgstr "Font Settings"
+
+#: LanguagueWrapper.cs:94
+msgid "Font Size"
+msgstr "Font Size"
+
+#: LanguagueWrapper.cs:96
+msgid "Font Color"
+msgstr "Font Color"
+
+#: LanguagueWrapper.cs:97
+msgid "Color 1"
+msgstr "Color 1"
+
+#: LanguagueWrapper.cs:98
+msgid "Color 2"
+msgstr "Color 2"
+
+#: LanguagueWrapper.cs:100
+msgid "Background Color"
+msgstr "Background Color"
+
+#: LanguagueWrapper.cs:102
+msgid "Paragraph Settings"
+msgstr "Paragraph Settings"
+
+#: LanguagueWrapper.cs:103
+msgid "Interval Width"
+msgstr "Spacing"
+
+#: LanguagueWrapper.cs:104
+msgid "Line Break Height"
+msgstr "Line Break Height"
+
+#: LanguagueWrapper.cs:107
+msgid "Translation Engine"
+msgstr "Translation Engine"
+
+#: LanguagueWrapper.cs:108
+msgid "FF Language"
+msgstr "FF Language"
+
+#: LanguagueWrapper.cs:109
+msgid "Traslate To"
+msgstr "Translate To"
+
+#: LanguagueWrapper.cs:111
+msgid "Hotkeys"
+msgstr "Hotkeys"
+
+#: LanguagueWrapper.cs:112
+msgid "Show/hide Chat Window"
+msgstr "Show/Hide Chat Window"
+
+#: LanguagueWrapper.cs:113 LanguagueWrapper.cs:116
+msgid "Click Through"
+msgstr "Click Through"
+
+#: LanguagueWrapper.cs:115
+msgid "Other"
+msgstr "Other"
+
+#: LanguagueWrapper.cs:117 LanguagueWrapper.cs:120
+msgid "Always On Top"
+msgstr "Always On Top"
+
+#: LanguagueWrapper.cs:118 LanguagueWrapper.cs:121
+msgid "Hide to Tray"
+msgstr "Hide To Tray"
+
+#: LanguagueWrapper.cs:123
+msgid "Show Chat Window"
+msgstr "Show Chat Window"
+
+#: LanguagueWrapper.cs:124
+msgid "Hide Chat Window"
+msgstr "Hide Chat Window"

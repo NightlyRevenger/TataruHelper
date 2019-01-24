@@ -1,0 +1,82 @@
+[
+  {
+    "ShownName": "Arabic",
+    "NativeName": "Arabic",
+    "LanguageCode": "ar"
+  },
+  {
+    "ShownName": "Chinese",
+    "NativeName": "Chinese",
+    "LanguageCode": "zh"
+  },
+    {
+    "ShownName": "English",
+    "NativeName": "English",
+    "LanguageCode": "en"
+  },
+    {
+    "ShownName": "Farsi (Persian)",
+    "NativeName": "Persian",
+    "LanguageCode": "fa"
+  },
+    {
+    "ShownName": "French",
+    "NativeName": "French",
+    "LanguageCode": "fr"
+  },
+    {
+    "ShownName": "German",
+    "NativeName": "German",
+    "LanguageCode": "de"
+  },
+    {
+    "ShownName": "Hindi",
+    "NativeName": "Hindi",
+    "LanguageCode": "hi"
+  },
+    {
+    "ShownName": "Japanese",
+    "NativeName": "Japanese",
+    "LanguageCode": "ja"
+  },
+    {
+    "ShownName": "Kazakh",
+    "NativeName": "Kazakh",
+    "LanguageCode": "kk"
+  },
+    {
+    "ShownName": "Korean",
+    "NativeName": "Korean",
+    "LanguageCode": "ko"
+  },
+    {
+    "ShownName": "Polish",
+    "NativeName": "Polish",
+    "LanguageCode": "pl"
+  },
+      {
+    "ShownName": "Portuguese",
+    "NativeName": "Portuguese",
+    "LanguageCode": "pt"
+  },
+      {
+    "ShownName": "Russian",
+    "NativeName": "Russian",
+    "LanguageCode": "ru"
+  },
+      {
+    "ShownName": "Spanish",
+    "NativeName": "Spanish",
+    "LanguageCode": "es"
+  },
+  {
+    "ShownName": "Turkish",
+    "NativeName": "Turkish",
+    "LanguageCode": "tr"
+  },
+  {
+    "ShownName": "Ukrainian",
+    "NativeName": "Ukrainian",
+    "LanguageCode": "uk"
+  }
+]

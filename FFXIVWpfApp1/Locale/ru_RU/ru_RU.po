@@ -1,0 +1,131 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2019-01-20 18:51+0300\n"
+"PO-Revision-Date: 2019-01-20 19:08+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.1\n"
+"X-Poedit-Basepath: ../..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Poedit-KeywordsList: GetString;GetPluralString:1,2;"
+"GetParticularString:1c,2;GetParticularPluralString:1c,2,3;_;_n:1,2;"
+"_p:1c,2;_pn:1c,2,3\\n\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: LanguagueWrapper.cs:81
+msgid "Settings"
+msgstr "Настройки"
+
+#: LanguagueWrapper.cs:83
+msgid "Language"
+msgstr "Язык"
+
+#: LanguagueWrapper.cs:84
+msgid "English"
+msgstr "English"
+
+#: LanguagueWrapper.cs:85
+msgid "Russian"
+msgstr "Русский"
+
+#: LanguagueWrapper.cs:87
+msgid "Help"
+msgstr "Помощь"
+
+#: LanguagueWrapper.cs:89
+msgid "Chat Appearance"
+msgstr "Настройки внешнего вида"
+
+#: LanguagueWrapper.cs:90
+msgid "Translation Settings"
+msgstr "Настройки перевода"
+
+#: LanguagueWrapper.cs:91
+msgid "General Behavior"
+msgstr "Основные настройки"
+
+#: LanguagueWrapper.cs:93
+msgid "Font Settings"
+msgstr "Настройки шрифта"
+
+#: LanguagueWrapper.cs:94
+msgid "Font Size"
+msgstr "Размер шрифта"
+
+#: LanguagueWrapper.cs:96
+msgid "Font Color"
+msgstr "Цвет шрифта"
+
+#: LanguagueWrapper.cs:97
+msgid "Color 1"
+msgstr "Цвет 1"
+
+#: LanguagueWrapper.cs:98
+msgid "Color 2"
+msgstr "Цвет 2"
+
+#: LanguagueWrapper.cs:100
+msgid "Background Color"
+msgstr "Цвет фона"
+
+#: LanguagueWrapper.cs:102
+msgid "Paragraph Settings"
+msgstr "Настройки вывода"
+
+#: LanguagueWrapper.cs:103
+msgid "Interval Width"
+msgstr "Ширина отступа"
+
+#: LanguagueWrapper.cs:104
+msgid "Line Break Height"
+msgstr "Межабзацный интервал"
+
+#: LanguagueWrapper.cs:107
+msgid "Translation Engine"
+msgstr "Механизм перевода"
+
+#: LanguagueWrapper.cs:108
+msgid "FF Language"
+msgstr "Язык игры"
+
+#: LanguagueWrapper.cs:109
+msgid "Traslate To"
+msgstr "Язык перевода"
+
+#: LanguagueWrapper.cs:111
+msgid "Hotkeys"
+msgstr "Горячие клавиши"
+
+#: LanguagueWrapper.cs:112
+msgid "Show/hide Chat Window"
+msgstr "Показать/Скрыть окно перевода"
+
+#: LanguagueWrapper.cs:113 LanguagueWrapper.cs:116
+msgid "Click Through"
+msgstr "Игнорировать нажатия"
+
+#: LanguagueWrapper.cs:115
+msgid "Other"
+msgstr "Прочее"
+
+#: LanguagueWrapper.cs:117 LanguagueWrapper.cs:120
+msgid "Always On Top"
+msgstr "Поверх всех окон"
+
+#: LanguagueWrapper.cs:118 LanguagueWrapper.cs:121
+msgid "Hide to Tray"
+msgstr "Свернуть в трей"
+
+#: LanguagueWrapper.cs:123
+msgid "Show Chat Window"
+msgstr "Показать окно перевода"
+
+#: LanguagueWrapper.cs:124
+msgid "Hide Chat Window"
+msgstr "Скрыть окно перевода"

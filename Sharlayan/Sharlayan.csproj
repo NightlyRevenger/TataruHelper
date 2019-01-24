@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\ffxivapp-props\Common.props" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProjectGuid>{9510D5EF-208A-4897-A582-8EAE5C6E9406}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Sharlayan</RootNamespace>
+    <AssemblyName>Sharlayan</AssemblyName>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>bin\Release\.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <OutputPath>bin\Debug\</OutputPath>
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Costura, Version=3.1.0.0, Culture=neutral, PublicKeyToken=9919ef960d84173d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Costura.Fody.3.1.0\lib\net46\Costura.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.5.6\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net461\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AttachmentWorker.cs" />
+    <Compile Include="Core\ActionContainer.cs" />
+    <Compile Include="Core\ActorItem.cs" />
+    <Compile Include="Core\ActorItemBase.cs" />
+    <Compile Include="Core\ChatCleaner.cs" />
+    <Compile Include="Core\ChatEntry.cs" />
+    <Compile Include="Core\ChatLogItem.cs" />
+    <Compile Include="Core\CurrentPlayer.cs" />
+    <Compile Include="Core\EnmityItem.cs" />
+    <Compile Include="Core\ActionItem.cs" />
+    <Compile Include="Core\Enums\Actor.cs" />
+    <Compile Include="Core\Enums\Action.cs" />
+    <Compile Include="Core\Enums\Inventory.cs" />
+    <Compile Include="Core\Interfaces\IActionContainer.cs" />
+    <Compile Include="Core\Interfaces\IActorItem.cs" />
+    <Compile Include="Core\Interfaces\IChatLogItem.cs" />
+    <Compile Include="Core\Interfaces\ICurrentPlayer.cs" />
+    <Compile Include="Core\Interfaces\IEnmityItem.cs" />
+    <Compile Include="Core\Interfaces\IActionItem.cs" />
+    <Compile Include="Core\Interfaces\IInventoryContainer.cs" />
+    <Compile Include="Core\Interfaces\IInventoryItem.cs" />
+    <Compile Include="Core\Interfaces\IPartyMember.cs" />
+    <Compile Include="Core\Interfaces\IStatusItem.cs" />
+    <Compile Include="Core\Interfaces\ITargetInfo.cs" />
+    <Compile Include="Core\InventoryContainer.cs" />
+    <Compile Include="Core\InventoryItem.cs" />
+    <Compile Include="Core\PartyMember.cs" />
+    <Compile Include="Core\StatusItem.cs" />
+    <Compile Include="Core\TargetInfo.cs" />
+    <Compile Include="Delegates\ChatLogWorkerDelegate.cs" />
+    <Compile Include="Delegates\MonsterWorkerDelegate.cs" />
+    <Compile Include="Delegates\NPCWorkerDelegate.cs" />
+    <Compile Include="Delegates\PartyWorkerDelegate.cs" />
+    <Compile Include="Delegates\PCWorkerDelegate.cs" />
+    <Compile Include="Events\SignaturesFoundEvent.cs" />
+    <Compile Include="Events\ExceptionEvent.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Models\XIVDatabase\ActionItem.cs" />
+    <Compile Include="Models\XIVDatabase\MapItem.cs" />
+    <Compile Include="Models\ReadResults\ActionResult.cs" />
+    <Compile Include="Models\ReadResults\ActorResult.cs" />
+    <Compile Include="Models\ReadResults\ChatLogResult.cs" />
+    <Compile Include="Models\ReadResults\CurrentPlayerResult.cs" />
+    <Compile Include="Models\ReadResults\InventoryResult.cs" />
+    <Compile Include="Models\ReadResults\PartyResult.cs" />
+    <Compile Include="Models\ReadResults\TargetResult.cs" />
+    <Compile Include="Models\XIVDatabase\StatusItem.cs" />
+    <Compile Include="Models\Localization.cs" />
+    <Compile Include="Models\ChatLogPointers.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Core\Coordinate.cs" />
+    <Compile Include="Core\Interfaces\ICoordinate.cs" />
+    <Compile Include="MemoryHandler.cs" />
+    <Compile Include="Models\ProcessModel.cs" />
+    <Compile Include="Models\Structures\ActorItem.cs" />
+    <Compile Include="Models\Structures\ChatLogPointers.cs" />
+    <Compile Include="Models\Structures\CurrentPlayer.cs" />
+    <Compile Include="Models\Structures\EnmityItem.cs" />
+    <Compile Include="Models\Structures\HotBarItem.cs" />
+    <Compile Include="Models\Structures\InventoryContainer.cs" />
+    <Compile Include="Models\Structures\InventoryItem.cs" />
+    <Compile Include="Models\Structures\PartyMember.cs" />
+    <Compile Include="Models\Structures\RecastItem.cs" />
+    <Compile Include="Models\Structures\StatusItem.cs" />
+    <Compile Include="Models\Structures\StructuresContainer.cs" />
+    <Compile Include="Models\Structures\TargetInfo.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Models\Signature.cs" />
+    <Compile Include="Reader.Actor.cs" />
+    <Compile Include="Reader.ChatLog.cs" />
+    <Compile Include="Reader.cs" />
+    <Compile Include="Reader.Actions.cs" />
+    <Compile Include="Reader.CurrentPlayer.cs" />
+    <Compile Include="Reader.Inventory.cs" />
+    <Compile Include="Reader.PartyMembers.cs" />
+    <Compile Include="Reader.Target.cs" />
+    <Compile Include="Signatures.cs" />
+    <Compile Include="Scanner.cs" />
+    <Compile Include="UnsafeNativeMethods.cs" />
+    <Compile Include="Utilities\ActionLookup.cs" />
+    <Compile Include="Utilities\ActorItemResolver.cs" />
+    <Compile Include="Utilities\APIHelper.cs" />
+    <Compile Include="Utilities\BitConverter.cs" />
+    <Compile Include="Utilities\CurrentPlayerResolver.cs" />
+    <Compile Include="Utilities\JsonUtilities.cs" />
+    <Compile Include="Utilities\PartyMemberResolver.cs" />
+    <Compile Include="Utilities\StatusEffectLookup.cs" />
+    <Compile Include="Utilities\XMLCleaner.cs" />
+    <Compile Include="Utilities\ZoneLookup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="FodyWeavers.xml">
+      <SubType>Designer</SubType>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="packages.config" />
+    <None Include="Sharlayan.csproj.nuspec" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <Import Project="..\packages\Fody.3.1.3\build\Fody.targets" Condition="Exists('..\packages\Fody.3.1.3\build\Fody.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Fody.3.1.3\build\Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Fody.3.1.3\build\Fody.targets'))" />
+    <Error Condition="!Exists('..\packages\Costura.Fody.3.1.0\build\Costura.Fody.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Costura.Fody.3.1.0\build\Costura.Fody.targets'))" />
+  </Target>
+  <Import Project="..\packages\Costura.Fody.3.1.0\build\Costura.Fody.targets" Condition="Exists('..\packages\Costura.Fody.3.1.0\build\Costura.Fody.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
