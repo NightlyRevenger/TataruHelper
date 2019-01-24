@@ -23,7 +23,10 @@
 
 ### Translation Settings  
 
-![2.png](2.png)
+![2.png](2.png)  
+3b.1. **Translation Engine** - here you can change the engine. Personally i prefer DeepL but Google Translate does its work. Take which you prefer better.  
+3b.2. **FF Language** - this item should be the same as the game language.  
+3b.3. **Translate To** - choose the language that is most comfortable for you to read in.
 
 ### General  
 
