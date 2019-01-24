@@ -4,7 +4,7 @@
 ---
 ## Table of Contents
 1. [English](#english)
--- [New Features](#new-features)
+* [New Features](#new-features)
 -- [Installation](#installation)
 -- [How to use](#how-to-use)
 -- [Development](#development)
