@@ -49,6 +49,8 @@ If you want to translate the application into your language, let me know.
 ### License
 
 - **License, Hell Yeah!**
+---
+---
 
 #### Русский
 Создано Dark Team
