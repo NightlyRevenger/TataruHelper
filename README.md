@@ -1,7 +1,7 @@
 # Tataru Helper
 [Download Now](https://github.com/NightlyRevenger/TataruHelper/releases/latest) 
 -
-![https://github.com/NightlyRevenger/TataruHelper/releases/latest](https://i.imgur.com/dBckVf5.png)  
+![TataruHead](https://i.imgur.com/dBckVf5.png)  
 
 
 ---
