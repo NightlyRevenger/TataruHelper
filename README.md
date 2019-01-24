@@ -37,7 +37,7 @@ Tataru Helper - application for translation of in-game texts. The texts are unde
 
 Tataru Helper requires [Microsoft .NET Framework 4.6.1](https://www.microsoft.com/en-us/download/details.aspx?id=49982).
 
-1. Download the latest version of the application from [here](https://github.com/NightlyRevenger/TataruHelper/releases/latest)
+1. Download the latest version of the application from [here](https://github.com/NightlyRevenger/TataruHelper/releases/latest) (Setup.exe).
 2. Extract all the files in the zip archive(using WinRAR or [7-zip](https://www.7-zip.org/)) and place them everywhere you want.
 3. Open Tataru Helper, configure source and destination language and do the initial setup.
 4. Close the settings window and drag the floating window to the right place.
@@ -82,7 +82,7 @@ Tataru Helper - приложение для перевода внутриигр�
 
 Tataru Helper требуется [Microsoft .NET Framework 4.6.1](https://www.microsoft.com/en-us/download/details.aspx?id=49982).
 
-1. Скачайте последнюю версию приложения [здесь](https://github.com/NightlyRevenger/TataruHelper/releases/latest)
+1. Скачайте последнюю версию приложения [здесь](https://github.com/NightlyRevenger/TataruHelper/releases/latest) (Setup.exe).
 2. Разархивируйте все файлы из zip архива (используя WinRar или [7-zip](https://www.7-zip.org/)) и разместите их там, где удобно.
 3. Откройте Tataru Helper, настройте исходный и целевой языки и проведите начальную настройку.
 4. Закройте окно настроек и переместите окно приложения в удобное место.
