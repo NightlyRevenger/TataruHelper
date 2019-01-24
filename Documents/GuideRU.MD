@@ -1,38 +1,38 @@
 ## Подробное руководство по интерфейсу  
 * [Настройки внешнего вида](#настройки-внешнего-вида)  
-* [Translation Settings](#translation-settings)  
-* [General](#general)  
+* [Настройки перевода](#настройки-перевода)  
+* [Основные настройки](#основные-настройки)  
 
-### Chat Appearance  
+### Настройки внешнего вида  
 
 ![1.png](1.png)
-1. **Language:** You can choose interface language here. There are two languages for your convenience. You can switch between Russian and English. If you want, you can make your own translation.
-2.  **FF Status:** This line shows how well the application works. In good conditions there is a phrase here *Process found*. If you see a phrase *Couldn't find FFXIV process.* make sure that application was launched with administrator rights and you are playing FFXIV with DirectX 11 enabled.
-3.  **Chat Appearance:** under this tab you can configure an appearance of the Chat Window. 
-4.  **Font Size:** here you can change font size of your translation. That's all.
-5.  **Font Color:** you can choose font color here separately. The first replica of a person will be displayed in one color, and the second replica will be displayed in another. This way they will alternate. Or you can use the same color for both of them.  
+1. **Язык:** в данном пункте меню можно изменить язык интерфейса программы. На выбор есть два языка - Русский и Английский. Если вам очень хочется, вы можете перевести приложение на свой собственный язык.
+2.  **FF Статус:** данная строка показывает подключилось ли приложение к игре. Если всё хорошо, то вы увидите надпись *Процесс найден*. Если высвечивается сообщение *Не удалось найти процесс FFXIV*, нужно проверить, запускается ли приложение от имени администратора и выбран ли DirectX 11 в настройках Final Fantasy XIV.
+3.  **Настройки внешнего вида:** в данном разделе можно настроить внешний вид окна чата.
+4.  **Размер шрифта:** данный пункт меняет размер шрифта. На этом, в принципе, всё. 
+5.  **Цвет шрифта:** здесь можно выбрать различный цвет текста, который будет использоваться в окне перевода. Первая реплика будет отображаться одним цветом, а вторая реплика - другим. Таким образом реплики будут чередоваться по цветам. Или же можно выбрать один цвет и весь текст будет одинакового цвета.  
 	 ![rgb.png](rgb.png)
-    * You can configure your color in RGB format.
-    * Line *A* will help you to change transparency of your color.
+    * Цвета настраиваются в формате RGB.
+    * Пункт *A* в дополнительный настройках позволит настроить прозрачность цвета.
 
-6. Under the **Paragraph Settings** line you can add the required number of spaces at the beginning of each sentence by changing **Spacing** count.
-7. **Line Break Height:** will increase the distance between the text blocks. It will help you to read more clear.
-8. **Background Color:** you can change the background color of you Chat Box. There are a lot of settings with color customization and transparency. Color can be set in RGB or HEX. Parameter A - background transparency (under the Advanced settings).
-9. **Show/Hide Chat Window:** to make sure that you've set up your chat window correctly, you can show or hide it.
-10. **Reset Chat Position:** you can reset the position of your Chat Box if you drag it outside the screen.
+6. **Ширина отступа** позволяет настроить ширину отступа в начале каждой новой строчки. Единица равна одному пробелу. 
+7. **Межабзацный интервал:** отвечает за расстояние между блоками текста. Это сделает текст более читаемым. 
+8. **Цвет фона:** вы можете изменить цвет фона у окна чата. В данном разделе большой выбор по настройке цветов и прозрачности. Цвета настраиваются в формате RGB или HEX. Параметр *A* отвечает за прозрачность фона (в разделе Advanced).
+9. **Показать/Скрыть окно перевода:** чтобы проверить как вы настроили окно чата, его можно показать или скрыть. 
+10. **Сбросить окно:** данная кнопка сбросит положение чата, если вы перетащили его в недоступное место.
 
-### Translation Settings  
+### Настройки перевода  
 
 ![2.png](2.png)  
-1. **Translation Engine:** here you can change the engine. Personally i prefer DeepL but Google Translate does its work. Take which you prefer better.  
-2. **FF Language:** this item should be the same as the game language.  
-3. **Translate To:** choose the language that is most comfortable for you to read in.
+1. **Сервис перевода:** здесь меняется сервис перевода. Лично мне нравится больше DeepL, но Google Translate тоже неплохо справляется со своей работой. Попробуйте разные и выберите то, что вам понравится больше. 
+2. **Язык игры:** данный пункт должен соответсвовать языку в игре.  
+3. **Язык перевода:** выберите тот язык, на котором вам комфортнее всего читать. 
 
-### General  
+### Основные настройки  
 
 ![3.png](3.png)
-1. **Click Through:** this item will allow you to make clicks through the window so you won't be in trouble during the game.
-2.  **Always On Top:** it is worth turning on this item. It will make Chat Box to be always at the top. So you can always read the text.
-3.  **Hide To Tray:** enabling this will hide the Settings window when minimizing.
-4.  **Show/Hide Chat Window Hotkey:** to hide a Chat Box when it is not needed and call it up when it is needed, you can specify a hotkey. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc.
-5.  **Click Through Hotkey:** to turn on/off clicks through the windows you can use hotkey. Rules are similar with Show/Hide Chat Window hotkey, but keybinds must be different!
+1. **Игнорировать нажатия:** данный пункт позволит игнорировать нажатия по окну чата, чтобы вы случайно не нажимали на него во время игры.
+2.  **Поверх всех окон:** стоит включить данный пункт. Таким образом окно чата всегда будет поверх всех окон, чтобы вы всегда могли прочитать переведенный текст. 
+3.  **Свернуть в трей:** при сворачивании окна настроек, оно будет попадать в трей. 
+4.  **Горячая клавиша Показать/Скрыть окно:** для вызова или скрытия окна чата можно использовать горячие клавиши. Комбинация обязательно должна иметь вид Ctrl/Shift/Alt + Любая клавиша или Ctrl+Shift+Alt + Любая клавиша, и всё в таком духе.
+5.  **Горячая клавиша Игнорировать нажатия:** чтобы быстро включить/выключить игнорирование нажатий по окну чата, можно использовать горячую клавишу. Правила для горячих клавиш такие же как и для *Показать/Скрыть окно*. Но сочетание обязательно должно быть другим!
