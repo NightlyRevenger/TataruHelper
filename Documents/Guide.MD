@@ -5,7 +5,7 @@
 3.  **Chat Appearance** - under this tab you can configure an appearance of the Chat Window. 
 4.  **Font Size** - here you can change font size of your translation. That's all.
 5.  **Font Color** - you can choose font color here separately. The first replica of a person will be displayed in one color, and the second replica will be displayed in another. This way they will alternate. Or you can use the same color for both of them.  
-	* ![rgb.png](rgb.png)
+	 ![rgb.png](rgb.png)
     * You can configure your color in RGB format.
     * Line *A* will help you to change transparency of your color.
 
