@@ -1,5 +1,5 @@
 ## In depth interface guide
-* [Chat Appearance](#chat-appearance)
+* [Chat Appearance](#chat-appearance)  
 
 ###Chat Appearance
 ![1.png](1.png)
