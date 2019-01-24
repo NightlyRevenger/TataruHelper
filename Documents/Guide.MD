@@ -31,7 +31,8 @@
 ### General  
 
 ![3.png](3.png)
-1. **Click Through:** this item will allow you to make clicks through the window so you won't be in trouble during the game.
+1. **Click Through:** this item will allow you to make clicks through the window so you won't be in trouble during the game.   
+	* If this option is disabled, pressing the RMB on the chat window will open the context menu. You can use it to open the settings window or close the application.
 2.  **Always On Top:** it is worth turning on this item. It will make Chat Box to be always at the top. So you can always read the text.
 3.  **Hide To Tray:** enabling this will hide the Settings window when minimizing.
 4.  **Show/Hide Chat Window Hotkey:** to hide a Chat Box when it is not needed and call it up when it is needed, you can specify a hotkey. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc.
