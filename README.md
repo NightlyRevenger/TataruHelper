@@ -61,7 +61,7 @@ If you want to translate the application into your language, let me know.
 
 ## License
 ```
-[MIT](/LICENCE)
+[MIT](/LICENSE)
 ```
 ## Credits
 A lot of thanks to many who contribute to open-source projects. The following were instrumental to building this app:
@@ -109,6 +109,6 @@ Tataru Helper требуется [Microsoft .NET Framework 4.6.1](https://www.mi
 
 ## Лицензия
 ```
-[MIT](/LICENCE) 
+[MIT](/LICENSE) 
 ```
 
