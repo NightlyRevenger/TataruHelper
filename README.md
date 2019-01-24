@@ -61,7 +61,7 @@ If you want to translate the application into your language, let me know.
 
 ## License
 ```
-[MIT](/LICENSE)
+[MIT](master/LICENSE)
 ```
 ## Credits
 A lot of thanks to many who contribute to open-source projects. The following were instrumental to building this app:
