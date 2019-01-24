@@ -116,7 +116,7 @@ namespace FFXIITataruHelper
         private void About_Click(object sender, RoutedEventArgs e)
         {
             string caption = "TataruHelper v" + Convert.ToString(System.Reflection.Assembly.GetEntryAssembly().GetName().Version);
-            string text = "TataruHelper" + Environment.NewLine + "GitHub:";
+            string text = "TataruHelper" + Environment.NewLine + "GitHub: "+ UpdatePath;
 
             MessageBoxResult result = Xceed.Wpf.Toolkit.MessageBox.Show(text, caption, MessageBoxButton.OK);
         }
