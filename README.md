@@ -3,20 +3,20 @@
 
 ---
 ## Table of Contents
-1. [English](#english)
-  * [New Features](#new-features)
-* [Installation](#installation)
-* [How to use](#how-to-use)
-* [Development](#development)
-* [ToDoList](#todolist)
-* [License](#license)
-2. [Русский](#русский)
-* [Новые функции](#новые-функции)
-* [Установка](#установка)
-* [Как пользоваться]()
-* [Разработка](#как-пользоваться)
-* [Список планов](#список-планов)
-* [Лицензия](#лицензия)
+* [English](#english)
+   * [New Features](#new-features)
+   * [Installation](#installation)
+   * [How to use](#how-to-use)
+   * [Development](#development)
+   * [ToDoList](#todolist)
+   * [License](#license)
+* [Русский](#русский)
+   * [Новые функции](#новые-функции)
+   * [Установка](#установка)
+   * [Как пользоваться]()
+   * [Разработка](#как-пользоваться)
+   * [Список планов](#список-планов)
+   * [Лицензия](#лицензия)
 ---
 
 #### English
