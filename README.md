@@ -77,7 +77,8 @@ A lot of thanks to many who contribute to open-source projects. The following we
 [BondTech.HotKeyManagement](https://github.com/bondtech/HotKey-Manager-for-WinForm-and-WPF-Apps)  
 [NotifyIcon WPF](https://bitbucket.org/hardcodet/notifyicon-wpf/)  
 [Sharlayan](https://github.com/FFXIVAPP/sharlayan)  
-[Tataru Art by Nezusagi](https://www.deviantart.com/nezusagi)
+[Tataru Art by Nezusagi](https://www.deviantart.com/nezusagi)  
+[Squirrel.Windows](https://github.com/Squirrel/Squirrel.Windows)
 
 ---
 ---
@@ -135,6 +136,7 @@ Final Fantasy XIV в режиме **DirectX 11** и **64 bit**.
 [BondTech.HotKeyManagement](https://github.com/bondtech/HotKey-Manager-for-WinForm-and-WPF-Apps)  
 [NotifyIcon WPF](https://bitbucket.org/hardcodet/notifyicon-wpf/)  
 [Sharlayan](https://github.com/FFXIVAPP/sharlayan)  
-[Tataru Art by Nezusagi](https://www.deviantart.com/nezusagi)
+[Tataru Art by Nezusagi](https://www.deviantart.com/nezusagi)  
+[Squirrel.Windows](https://github.com/Squirrel/Squirrel.Windows)
 
 
