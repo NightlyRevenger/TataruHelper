@@ -73,7 +73,8 @@ A lot of thanks to many who contribute to open-source projects. The following we
 [WPF Toolkit™](https://github.com/xceedsoftware/wpftoolkit)  
 [BondTech.HotKeyManagement](https://github.com/bondtech/HotKey-Manager-for-WinForm-and-WPF-Apps)  
 [NotifyIcon WPF](https://bitbucket.org/hardcodet/notifyicon-wpf/)  
-[Sharlayan](https://github.com/FFXIVAPP/sharlayan)
+[Sharlayan](https://github.com/FFXIVAPP/sharlayan)  
+[Tataru Art by Nezusagi](https://www.deviantart.com/nezusagi)
 
 ---
 ---
@@ -127,6 +128,7 @@ Tataru Helper требуется [Microsoft .NET Framework 4.6.1](https://www.mi
 [WPF Toolkit™](https://github.com/xceedsoftware/wpftoolkit)  
 [BondTech.HotKeyManagement](https://github.com/bondtech/HotKey-Manager-for-WinForm-and-WPF-Apps)  
 [NotifyIcon WPF](https://bitbucket.org/hardcodet/notifyicon-wpf/)  
-[Sharlayan](https://github.com/FFXIVAPP/sharlayan)
+[Sharlayan](https://github.com/FFXIVAPP/sharlayan)  
+[Tataru Art by Nezusagi](https://www.deviantart.com/nezusagi)
 
 
