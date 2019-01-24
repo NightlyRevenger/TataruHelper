@@ -33,7 +33,7 @@ Tataru Helper - application for translation of in-game texts in Japan MMORPG - F
 
 ## New Features!
 
-  - Soon(tm)
+  - Soon™
 
 
 ## Installation
@@ -47,7 +47,7 @@ Tataru Helper requires [Microsoft .NET Framework 4.6.1](https://www.microsoft.co
 4. Everything's ready!
 
 ## How to use
-- Soon(tm)
+- Soon™
 
 ## Development
 
@@ -59,7 +59,7 @@ If you want to translate the application into your language, let me know.
 
 ## ToDoList
 
- - Soon(tm)
+ - Soon™
 
 ## License
 
@@ -88,7 +88,7 @@ Tataru Helper - приложение для перевода внутриигр�
 
 ## Новые функции!
 
-  - Soon(tm)
+  - Soon™
 
 
 ## Установка
@@ -102,7 +102,7 @@ Tataru Helper требуется [Microsoft .NET Framework 4.6.1](https://www.mi
 4. Всё готово!
 
 ## Как пользоваться
-- Soon(tm)
+- Soon™
 
 ## Разработка
 
@@ -113,7 +113,7 @@ Tataru Helper требуется [Microsoft .NET Framework 4.6.1](https://www.mi
 
 ## Список планов
 
- - Soon(tm)
+ - Soon™
 
 ## Лицензия
 
