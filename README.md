@@ -1,5 +1,5 @@
 # Tataru Helper
-![TataruHead](https://i.imgur.com/8gAUa60.png)
+![TataruHead](https://i.imgur.com/dBckVf5.png)
 
 ---
 ## Table of Contents
