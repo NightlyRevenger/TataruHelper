@@ -4,7 +4,19 @@
 ---
 ## Table of Contents
 1. [English](#english)
+-- [New Features](#new-features)
+-- [Installation](#installation)
+-- [How to use](#how-to-use)
+-- [Development](#development)
+-- [ToDoList](#todolist)
+-- [License](#license)
 2. [Русский](#русский)
+-- [Новые функции](#новые-функции)
+-- [Установка](#установка)
+-- [Как пользоваться]()
+-- [Разработка](#как-пользоваться)
+-- [Список планов](#список-планов)
+-- [Лицензия](#лицензия)
 ---
 
 #### English
@@ -16,12 +28,12 @@ Tataru Helper - application for translation of in-game texts. The texts are unde
   - You can freely change the translator engine and use various translation methods.
   - Tataru Taru
 
-# New Features!
+## New Features!
 
   - Soon(tm)
 
 
-### Installation
+## Installation
 
 Tataru Helper requires [Microsoft .NET Framework 4.6.1](https://www.microsoft.com/en-us/download/details.aspx?id=49982).
 
@@ -31,10 +43,10 @@ Tataru Helper requires [Microsoft .NET Framework 4.6.1](https://www.microsoft.co
 4. Close the settings window and drag the floating window to the right place.
 4. Everything's ready!
 
-### How to use
+## How to use
 - Soon(tm)
 
-### Development
+## Development
 
 Want to contribute? Great!
 
@@ -42,11 +54,11 @@ If you want to translate the application into your language, let me know.
 
 
 
-### ToDoList
+## ToDoList
 
  - Soon(tm)
 
-### License
+## License
 
 - **License, Hell Yeah!**
 ---
@@ -61,12 +73,12 @@ Tataru Helper - приложение для перевода внутриигр�
   - Вы можете переключаться между различными механизмами перевода. 
   - Татару Тару
 
-# Новые функции!
+## Новые функции!
 
   - Soon(tm)
 
 
-### Установка
+## Установка
 
 Tataru Helper требуется [Microsoft .NET Framework 4.6.1](https://www.microsoft.com/en-us/download/details.aspx?id=49982).
 
@@ -76,20 +88,20 @@ Tataru Helper требуется [Microsoft .NET Framework 4.6.1](https://www.mi
 4. Закройте окно настроек и переместите окно приложения в удобное место.
 4. Всё готово!
 
-### Как пользоваться
+## Как пользоваться
 - Soon(tm)
 
-### Разработка
+## Разработка
 
 Хотите поучаствовать в разработке? Отлично!
 
 Если вы хотите перевести приложение на свой язык, дайте мне знать.
 
 
-### Список планов
+## Список планов
 
  - Soon(tm)
 
-### Лицензия
+## Лицензия
 
 - **Еее, у нас есть лицензия!**
