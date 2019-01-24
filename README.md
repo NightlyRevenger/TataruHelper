@@ -1,4 +1,4 @@
-[Licence agreement](/LICENSE)
+[Licence agreement](master/LICENSE)
 # Tataru Helper
 ![TataruHead](https://i.imgur.com/dBckVf5.png)
 
