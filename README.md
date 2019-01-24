@@ -1,8 +1,8 @@
 # Tataru Helper
 
 ### Table of Contents
-1. [English](####English)
-2. [Русский](####Russian)
+1. [English](#english)
+2. [Русский](#russian)
 
 
 #### English
