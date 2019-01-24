@@ -51,7 +51,7 @@ Final Fantasy XIV with **DirectX 11** and **x64**.
 4. Everything's ready!
 
 ## How to use
-- In depth guide [here](Documents/Guide.MD)
+- In depth guide [here](Documents/Guide.MD).
 
 ## Development
 
