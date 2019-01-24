@@ -64,7 +64,13 @@ If you want to translate the application into your language, let me know.
 [MIT](/LICENSE)
 
 ## Credits
+
 A lot of thanks to many who contribute to open-source projects. The following were instrumental to building this app:
+[WPF Toolkit™](https://github.com/xceedsoftware/wpftoolkit)
+[BondTech.HotKeyManagement](https://github.com/bondtech/HotKey-Manager-for-WinForm-and-WPF-Apps)
+[NotifyIcon WPF](https://bitbucket.org/hardcodet/notifyicon-wpf/)
+[Sharlayan](https://github.com/FFXIVAPP/sharlayan)
+
 ---
 ---
 
@@ -110,5 +116,13 @@ Tataru Helper требуется [Microsoft .NET Framework 4.6.1](https://www.mi
 ## Лицензия
 
 [MIT](/LICENSE)
+
+## Благодарности
+
+Большое спасибо тем, кто совершает вклад в развитие open-souce проектов. Особая благодарность следующим проектам:
+[WPF Toolkit™](https://github.com/xceedsoftware/wpftoolkit)
+[BondTech.HotKeyManagement](https://github.com/bondtech/HotKey-Manager-for-WinForm-and-WPF-Apps)
+[NotifyIcon WPF](https://bitbucket.org/hardcodet/notifyicon-wpf/)
+[Sharlayan](https://github.com/FFXIVAPP/sharlayan)
 
 
