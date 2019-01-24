@@ -1,7 +1,8 @@
 # Tataru Helper
 [Download Now](https://github.com/NightlyRevenger/TataruHelper/releases/latest)(Setup.exe) 
 -
-![LiveAction2](Documents/LiveAction2.gif) ![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)
+![LiveAction2](Documents/LiveAction2.gif)  
+![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)
 
 
 
