@@ -42,7 +42,7 @@ Tataru Helper - application for translation of in-game texts in Japan MMORPG - F
 
 Tataru Helper requires:  
 [Microsoft .NET Framework 4.6.1](https://www.microsoft.com/en-us/download/details.aspx?id=49982)  
-Final Fantasy XIV with *DirectX 11* and *64 bit*.
+Final Fantasy XIV with **DirectX 11** and **64 bit**.
 
 1. Download the latest version of the application from [here](https://github.com/NightlyRevenger/TataruHelper/releases/latest) (Setup.exe).
 2. Extract all the files in the zip archive(using WinRAR or [7-zip](https://www.7-zip.org/)) and place them everywhere you want.
@@ -100,7 +100,7 @@ Tataru Helper - приложение для перевода внутриигр�
 
 Tataru Helper требуется:  
 [Microsoft .NET Framework 4.6.1](https://www.microsoft.com/en-us/download/details.aspx?id=49982)  
-Final Fantasy XIV в режиме *DirectX 11* и *64 bit*.
+Final Fantasy XIV в режиме **DirectX 11** и **64 bit**.
 
 1. Скачайте последнюю версию приложения [здесь](https://github.com/NightlyRevenger/TataruHelper/releases/latest) (Setup.exe).
 2. Разархивируйте все файлы из zip архива (используя WinRar или [7-zip](https://www.7-zip.org/)) и разместите их там, где удобно.
