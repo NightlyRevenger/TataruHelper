@@ -1,9 +1,11 @@
 # Tataru Helper
 ![TataruHead](https://i.imgur.com/661lNH1.png)
+
+---
 ## Table of Contents
 1. [English](#english)
 2. [Русский](#русский)
-
+---
 
 #### English
 Powered by Dark Team
