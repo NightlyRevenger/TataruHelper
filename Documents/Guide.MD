@@ -1,11 +1,11 @@
 ## In depth interface guide
-![1.png](Documents/1.png)
+![1.png](1.png)
 1. **Language:** You can choose interface language here. There are two languages for your convenience. You can switch between Russian and English. If you want, you can make your own translation.
 2.  **FF Status:** This line shows how well the application works. In good conditions there is a phrase here *Process found*. If you see a phrase *Couldn't find FFXIV process.* make sure that application was launched with administrator rights and you are playing FFXIV with DirectX 11 enabled.
 3.  **Chat Appearance** - under this tab you can configure an appearance of the Chat Window. 
 4.  **Font Size** - here you can change font size of your translation. That's all.
 5.  **Font Color** - you can choose font color here separately. The first replica of a person will be displayed in one color, and the second replica will be displayed in another. This way they will alternate. Or you can use the same color for both of them.  
-	* ![rgb.png](Documents/rgb.png)
+	* ![rgb.png](rgb.png)
     * You can configure your color in RGB format.
     * Line *A* will help you to change transparency of your color.
 
