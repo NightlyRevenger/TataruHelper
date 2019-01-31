@@ -1,0 +1,148 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2019-01-24 11:00+0300\n"
+"PO-Revision-Date: 2019-01-24 12:50+0300\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 2.2.1\n"
+"X-Poedit-Basepath: ../..\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
+"X-Poedit-KeywordsList: GetString;GetPluralString:1,2;"
+"GetParticularString:1c,2;GetParticularPluralString:1c,2,3;_;_n:1,2;"
+"_p:1c,2;_pn:1c,2,3\\n\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#: LanguagueWrapper.cs:80
+msgid "Settings"
+msgstr "Настройки"
+
+#: LanguagueWrapper.cs:82
+msgid "Language"
+msgstr "Язык"
+
+#: LanguagueWrapper.cs:83
+msgid "English"
+msgstr "English"
+
+#: LanguagueWrapper.cs:84
+msgid "Russian"
+msgstr "Русский"
+
+#: LanguagueWrapper.cs:86
+msgid "Help"
+msgstr "Помощь"
+
+#: LanguagueWrapper.cs:88
+msgid "Chat Appearance"
+msgstr "Настройки внешнего вида"
+
+#: LanguagueWrapper.cs:89
+msgid "Translation Settings"
+msgstr "Настройки перевода"
+
+#: LanguagueWrapper.cs:90
+msgid "General Behavior"
+msgstr "Основные настройки"
+
+#: LanguagueWrapper.cs:92
+msgid "Font Settings"
+msgstr "Настройки шрифта"
+
+#: LanguagueWrapper.cs:93
+msgid "Font Size"
+msgstr "Размер шрифта"
+
+#: LanguagueWrapper.cs:95
+msgid "Font Color"
+msgstr "Цвет шрифта"
+
+#: LanguagueWrapper.cs:96
+msgid "Color 1"
+msgstr "Цвет 1"
+
+#: LanguagueWrapper.cs:97
+msgid "Color 2"
+msgstr "Цвет 2"
+
+#: LanguagueWrapper.cs:99
+msgid "Background Color"
+msgstr "Цвет фона"
+
+#: LanguagueWrapper.cs:101
+msgid "Paragraph Settings"
+msgstr "Настройки вывода"
+
+#: LanguagueWrapper.cs:102
+msgid "Interval Width"
+msgstr "Ширина отступа"
+
+#: LanguagueWrapper.cs:103
+msgid "Line Break Height"
+msgstr "Межабзацный интервал"
+
+#: LanguagueWrapper.cs:106
+msgid "Translation Engine"
+msgstr "Сервис перевода"
+
+#: LanguagueWrapper.cs:107
+msgid "FF Language"
+msgstr "Язык игры"
+
+#: LanguagueWrapper.cs:108
+msgid "Traslate To"
+msgstr "Язык перевода"
+
+#: LanguagueWrapper.cs:110
+msgid "Hotkeys"
+msgstr "Горячие клавиши"
+
+#: LanguagueWrapper.cs:111
+msgid "Show/hide Chat Window"
+msgstr "Показать/Скрыть окно перевода"
+
+#: LanguagueWrapper.cs:112 LanguagueWrapper.cs:115
+msgid "Click Through"
+msgstr "Игнорировать нажатия"
+
+#: LanguagueWrapper.cs:114
+msgid "Other"
+msgstr "Прочее"
+
+#: LanguagueWrapper.cs:116 LanguagueWrapper.cs:119
+msgid "Always On Top"
+msgstr "Поверх всех окон"
+
+#: LanguagueWrapper.cs:117 LanguagueWrapper.cs:120
+msgid "Hide to Tray"
+msgstr "Свернуть в трей"
+
+#: LanguagueWrapper.cs:122
+msgid "Show Chat Window"
+msgstr "Показать окно перевода"
+
+#: LanguagueWrapper.cs:123
+msgid "Hide Chat Window"
+msgstr "Скрыть окно перевода"
+
+#: LanguagueWrapper.cs:125
+msgid "Reset Chat Position"
+msgstr "Сбросить положение окна"
+
+#: LanguagueWrapper.cs:129 LanguagueWrapper.cs:131
+msgid "Translation engine error. Consider switching to other engine."
+msgstr ""
+"Ошибка сервиса перевода. Попробуйте переключиться на другой переводчик."
+
+#: LanguagueWrapper.cs:133
+msgid "Couldn't find FFXIV process."
+msgstr "Не удалось найти процесс FFXIV."
+
+#: LanguagueWrapper.cs:137 LanguagueWrapper.cs:139
+msgid "Process found:"
+msgstr "Процесс найден:"
