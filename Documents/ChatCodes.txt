@@ -1,0 +1,51 @@
+0039 - System Messages
+0B3A - Own Battle System Messages
+5B3A - Other's Battle System Messages
+... - Gathering System Messages
+003C - Error Messages
+
+///echo will print messages in the chat log that only you can see\\\
+0038 - Echo 
+
+... - Novice Network Notifications
+... - Free Company Announcements
+... - PvP Team Announcements
+2246 - Free Company Member Login Notifications
+... - PvP Team Member Login Notifications
+... - Retainer Sale Notifications
+003D - NPC Dialogue
+0044 - NPC Dialogue(Announcements)
+0843 - Loot Notices
+... - Own Progression Messages
+2040 - Party Members' Progression Messages
+1040 - Others' Progression Messages
+0841 - Own Loot Messages
+1041 - Others' Loot Messages 
+... - Own Synthesis Messages
+... - Others' Synthesis Messages
+... - Own Gathering Messages
+... - Others' Fishing Messages
+0048 - Periodic Recruitment Notifications
+... - Sign Messages for PC Targets
+084A - Random Number Messages
+
+
+000A - Say
+000B - Shout
+000E - Party Chat
+000C - Tell (OUT)
+000D - Tell (IN)
+0010 - LinkShell Chat 1
+0011 - LinkShell Chat 2
+0012 - LinkShell Chat 3
+0013 - LinkShell Chat 4
+0014 - LinkShell Chat 5
+0015 - LinkShell Chat 6
+0016 - LinkShell Chat 7
+0017 - LinkShell Chat 8
+0018 - FreeCompany Chat
+001C - Custom Emotes
+001D - Standart Emotes
+001E - Yell
+000F - Alliance
+
