@@ -95,7 +95,7 @@ Discord: xDarkOne#6486
 Telegram: [click](https://t.me/xDarkOne)  
 VK: [click](https://vk.com/velikov_ra)  
 NightlyRevenger(developer):  
-[nightlyrevenger@yandex.ru](https://mailto:nightlyrevenger@yandex.ru)  
+[nightlyrevenger@yandex.ru](mailto:nightlyrevenger@yandex.ru)  
 
 ---
 ---
@@ -166,5 +166,5 @@ Discord: xDarkOne#6486
 Telegram: [click](https://t.me/xDarkOne)  
 VK: [click](https://vk.com/velikov_ra)  
 NightlyRevenger(developer):  
-[nightlyrevenger@yandex.ru](https://mailto:nightlyrevenger@yandex.ru)  
+[nightlyrevenger@yandex.ru](mailto:nightlyrevenger@yandex.ru)  
 
