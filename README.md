@@ -28,7 +28,7 @@
 #### English
 Powered by Dark Team
 
-Tataru Helper - application for translation of in-game texts in Japan MMORPG - Final Fantasy XIV. The texts are understood as MSQ, cutscenes, quests, NPC replicas, etc.
+Tataru Helper - application for translation of in-game texts in Japanese developed MMORPG - Final Fantasy XIV. The texts are understood as MSQ, cutscenes, quests, NPC replicas, etc.
 
   - You can choose the source and destination language.
   - You can freely change the translator engine and use various translation methods.
