@@ -3,7 +3,7 @@
 [Скачать](https://github.com/NightlyRevenger/TataruHelper/releases/latest)( ---> Скачайте Setup.exe) 
 -
 ![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)  
-<iframe width="560" height="315" src="https://www.youtube.com/embed/mXTZVIz8zHo" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Demonstration](https://img.youtube.com/vi/mXTZVIz8zHo/0.jpg)](https://www.youtube.com/watch?v=mXTZVIz8zHo)
 
 ---
 ## Table of Contents
