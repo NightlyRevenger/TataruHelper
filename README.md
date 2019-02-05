@@ -15,6 +15,7 @@
    * [ToDoList](#todolist)
    * [License](#license)  
    * [Credits](#credits)  
+   * [Contacts](#contacts)  
 * [Русский](#русский)
    * [Новые функции](#новые-функции)
    * [Установка](#установка)
@@ -22,7 +23,8 @@
    * [Разработка](#как-пользоваться)
    * [Список планов](#список-планов)
    * [Лицензия](#лицензия)  
-   * [Благодарности](#благодарности)
+   * [Благодарности](#благодарности)  
+   * [Контакты](#контакты) 
 ---
 
 #### English
@@ -83,7 +85,15 @@ A lot of thanks to many who contribute to open-source projects. The following we
 [NotifyIcon WPF](https://bitbucket.org/hardcodet/notifyicon-wpf/)  
 [Sharlayan](https://github.com/FFXIVAPP/sharlayan)  
 [Tataru Art by Nezusagi](https://www.deviantart.com/nezusagi)  
-[Squirrel.Windows](https://github.com/Squirrel/Squirrel.Windows)
+[Squirrel.Windows](https://github.com/Squirrel/Squirrel.Windows)  
+
+## Contacts
+
+If you have any questions you can contact with me in:  
+Discord: xDarkOne#6486  
+Telegram: [click](https://t.me/xDarkOne)  
+VK: [click](https://vk.com/velikov_ra)
+
 
 ---
 ---
@@ -147,4 +157,10 @@ P.S. В дальнейшем, не нужно запускать приложе�
 [Tataru Art by Nezusagi](https://www.deviantart.com/nezusagi)  
 [Squirrel.Windows](https://github.com/Squirrel/Squirrel.Windows)
 
+## Контакты
+
+Если у вас есть какие-то вопросы, вы можете связаться со мной:  
+Discord: xDarkOne#6486  
+Telegram: [click](https://t.me/xDarkOne)  
+VK: [click](https://vk.com/velikov_ra)
 
