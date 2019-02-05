@@ -90,10 +90,12 @@ A lot of thanks to many who contribute to open-source projects. The following we
 ## Contacts
 
 If you have any questions you can contact with me in:  
+xDarkOne:  
 Discord: xDarkOne#6486  
 Telegram: [click](https://t.me/xDarkOne)  
-VK: [click](https://vk.com/velikov_ra)
-
+VK: [click](https://vk.com/velikov_ra)  
+NightlyRevenger(developer):  
+[nightlyrevenger@yandex.ru](https://mailto:nightlyrevenger@yandex.ru)  
 
 ---
 ---
@@ -162,5 +164,7 @@ P.S. В дальнейшем, не нужно запускать приложе�
 Если у вас есть какие-то вопросы, вы можете связаться со мной:  
 Discord: xDarkOne#6486  
 Telegram: [click](https://t.me/xDarkOne)  
-VK: [click](https://vk.com/velikov_ra)
+VK: [click](https://vk.com/velikov_ra)  
+NightlyRevenger(developer):  
+[nightlyrevenger@yandex.ru](https://mailto:nightlyrevenger@yandex.ru)  
 
