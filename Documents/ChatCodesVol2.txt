@@ -2,9 +2,6 @@
 
 003C - Error Messages
 
-///echo will print messages in the chat log that only you can see\\\
-0038 - Echo 
-
 
 003D - NPC Dialogue
 0044 - NPC Dialogue(Announcements)
@@ -27,8 +24,6 @@
 0016 - LinkShell Chat 7
 0017 - LinkShell Chat 8
 0018 - FreeCompany Chat
-001C - Custom Emotes
-001D - Standart Emotes
 001E - Yell
 000F - Alliance
 
