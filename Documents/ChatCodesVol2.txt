@@ -17,7 +17,6 @@
 000A - Say
 000B - Shout
 000E - Party Chat
-000C - Tell (OUT)
 000D - Tell (IN)
 0010 - LinkShell Chat 1
 0011 - LinkShell Chat 2
