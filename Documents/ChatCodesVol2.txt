@@ -1,29 +1,30 @@
-0039 - System Messages
+0039 - System Messages #ffcccccc
 
-003C - Error Messages
-
-
-003D - NPC Dialogue
-0044 - NPC Dialogue(Announcements)
+003C - Error Messages #ffff4a4a
 
 
-0048 - Periodic Recruitment Notifications
+003D - NPC Dialogue #ffabd647
+0044 - NPC Dialogue(Announcements) #ffabd647
+
+
+0048 - Periodic Recruitment Notifications #ffcccccc
 
 
 
-000A - Say
-000B - Shout
-000E - Party Chat
-000D - Tell (IN)
-0010 - LinkShell Chat 1
-0011 - LinkShell Chat 2
-0012 - LinkShell Chat 3
-0013 - LinkShell Chat 4
-0014 - LinkShell Chat 5
-0015 - LinkShell Chat 6
-0016 - LinkShell Chat 7
-0017 - LinkShell Chat 8
-0018 - FreeCompany Chat
-001E - Yell
-000F - Alliance
+000A - Say #fff7f7f7
+000B - Shout #ffa666
+000E - Party Chat #ff66e5ff
+000D - Tell (IN) #ffffb8de
+0018 - FreeCompany  #ffabdbe5
+001E - Yell #ffffff00
+000F - Alliance #ffff7f00
+
+0010 - LinkShell Chat 1 #ffd4ff7d
+0011 - LinkShell Chat 2 #ffd4ff7d
+0012 - LinkShell Chat 3 #ffd4ff7d
+0013 - LinkShell Chat 4 #ffd4ff7d
+0014 - LinkShell Chat 5 #ffd4ff7d
+0015 - LinkShell Chat 6 #ffd4ff7d
+0016 - LinkShell Chat 7 #ffd4ff7d
+0017 - LinkShell Chat 8 #ffd4ff7d
 
