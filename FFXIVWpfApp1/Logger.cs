@@ -17,9 +17,11 @@ namespace FFXIITataruHelper
     {
         public static ConcurrentQueue<string> LogQueue = new ConcurrentQueue<string>();
         public static ConcurrentQueue<string> ConsoleLogQueue = new ConcurrentQueue<string>();
+        public static ConcurrentQueue<string> ChatLogQueue = new ConcurrentQueue<string>();
 
         static Mutex mut1 = new Mutex();
         static Mutex mut2 = new Mutex();
+        static Mutex mut3 = new Mutex();
 
         public static void WriteLog(string InputString)
         {
@@ -69,6 +71,22 @@ namespace FFXIITataruHelper
             ConsoleLogQueue.Enqueue(res);
 
             mut2.ReleaseMutex();
+        }
+
+        public static void WriteChatLog(string InputString)
+        {
+            mut3.WaitOne();
+
+            string res = "";
+
+            //string time = DateTime.Now.ToString();
+
+            //res = time + Environment.NewLine;
+            res += InputString;// + Environment.NewLine;
+
+            ChatLogQueue.Enqueue(res);
+
+            mut3.ReleaseMutex();
         }
     }
 }

@@ -32,12 +32,12 @@ namespace FFXIITataruHelper
             }
         }
 
-        public static void UIThreadAsync(this Window @this, Action code)
+        public static async Task UIThreadAsync(this Window @this, Action code)
         {
 
             if (!(@this.Dispatcher.CheckAccess()))
             {
-                @this.Dispatcher.BeginInvoke(code);
+                await @this.Dispatcher.BeginInvoke(code);
             }
             else
             {

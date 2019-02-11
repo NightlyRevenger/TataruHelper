@@ -1,8 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-
-
+using FFXIITataruHelper.EventArguments;
 using FFXIITataruHelper.FFHandlers;
 using FFXIITataruHelper.Translation;
 using FFXIITataruHelper.WinUtils;
@@ -31,200 +30,58 @@ namespace FFXIITataruHelper
     /// </summary>
     public partial class ChatWindow : Window
     {
-        public string FFXIVLanguague
-        {
-            get { return _AppLogic.FFXIVLanguague; }
-            set { _AppLogic.FFXIVLanguague = value; }
-        }
-
-        public string TargetLanguage
-        {
-            get { return _AppLogic.TargetLanguage; }
-            set { _AppLogic.TargetLanguage = value; }
-        }
-
-        public WebTranslator.TranslationEngine TranslationEngine
-        {
-            get { return _AppLogic.TranslationEngine; }
-            set { _AppLogic.TranslationEngine = value; }
-        }
-
-        public ReadOnlyCollection<TranslatorLanguague> CurrentLanguages
-        {
-            get { return _AppLogic.CurrentLanguages; }
-        }
-
-        public int InsertSpaceCount { get; set; }
-
-        public int LineBreakeHight { get; set; }
-
-        public Color FontColor1
-        {
-            get
-            {
-                return _FontColor1.Color;
-            }
-            set
-            {
-                _FontColor1 = new SolidColorBrush(value);
-            }
-        }
-
-        public Color FontColor2
-        {
-            get
-            {
-                return _FontColor2.Color;
-            }
-            set
-            {
-                _FontColor2 = new SolidColorBrush(value);
-            }
-        }
-
-        public SolidColorBrush FormBackGround
-        {
-            get
-            {
-                return (SolidColorBrush)this.Background;
-            }
-
-            set
-            {
-                this.Background = value;
-                if (_IsClickThrought)
-                    MakeWindowClickThrought();
-            }
-        }
-
-        public bool IsClickThrought
-        {
-            get
-            {
-                return _IsClickThrought;
-            }
-
-            set
-            {
-                _IsClickThrought = value;
-
-                if (_IsClickThrought)
-                {
-                    MakeWindowClickThrought();
-                }
-                else
-                {
-                    MakeWindowClickbale();
-                }
-            }
-        }
-
-        public int ChatFontSize
-        {
-            get
-            {
-                return (int)Math.Round(ChatRtb.FontSize);
-            }
-            set
-            {
-                ChatRtb.FontSize = value;
-            }
-        }
-
-        public AppLogic _AppLogic;
-
-        private IntPtr ChatWinHandle;
+        private Window _SettigsWindow;
 
         private WindowResizer _WindowResizer;
 
         private MouseHooker _MouseHooker;
 
-        private Window _SettigsWindow;
-
         private bool _IsClickThrought;
 
-        private SolidColorBrush _FontColor1;
-        private SolidColorBrush _FontColor2;
+        private TataruModel _TataruModel;
+        private TataruUIModel _TataruUIModel;
 
-        private int _CurrFontColor = -1;
-
-        private int MaxTranslatedSentences;
-
-        public ChatWindow(Window settigsWindow)
+        public ChatWindow(Window settigsWindow, TataruModel tataruModel)
         {
-            _WindowResizer = new WindowResizer(this);
-            _SettigsWindow = settigsWindow;
-            _SettigsWindow.Loaded += OnSettingsWindowLoaded;
-
-            _FontColor1 = new SolidColorBrush(Colors.Black);
-            _FontColor2 = new SolidColorBrush(Colors.White);
-
-            LineBreakeHight = 1;
-            InsertSpaceCount = 0;
-
             InitializeComponent();
 
-            this.ShowInTaskbar = false;
-
-            ChatRtb.AcceptsTab = true;
-
-            _AppLogic = new AppLogic();
-
-            TranslationEngine = 0;
-
-            ChatRtb.BorderThickness = new Thickness(0);
-
-            ChatRtb.Document.Blocks.Clear();
-
-            MaxTranslatedSentences = GlobalSettings.MaxTranslatedSentencesCount;
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            _AppLogic.Start();
-
-            _AppLogic.NewTransaltionEvent += ShowTransaltions;
-            _AppLogic.FFXIVWindowEvent += OnFFXIVWindowEvent;
-            _AppLogic.FFXIVProcessEventEvent += OnFFXIVProcessEventEvent;
-
-            ChatWinHandle = (new WindowInteropHelper(this).Handle);
-
-            _AppLogic.AddExclusionWindowHandler(ChatWinHandle);
-
-            _MouseHooker = null;
-
-            _MouseHooker = new MouseHooker();
-            _MouseHooker.LowLevelMouseEvent += OnLowLevelMousEvent;
-        }
-
-        void ShowTransaltions(object sender, AppLogic.NewTranslationEventArgs e)
-        {
-            this.UIThread(() =>
+            try
             {
-                for (int i = 0; i < e.Sentence.Count; i++)
-                {
-                    ShowTransaltedText(e.Sentence[i]);
-                }
-            });
+                _TataruModel = tataruModel;
+                _TataruUIModel = _TataruModel.TataruUIModel;
+                InitTataruModel();
+
+                _WindowResizer = new WindowResizer(this);
+
+                _SettigsWindow = settigsWindow;
+
+                this.ShowInTaskbar = false;
+
+                ChatRtb.AcceptsTab = true;
+
+                ChatRtb.BorderThickness = new Thickness(0);
+
+                ChatRtb.Document.Blocks.Clear();
+            }
+            catch (Exception e)
+            {
+                Logger.WriteLog(e);
+            }
         }
 
-        void ShowTransaltedText(TranslatedMsg translatedMsg)
+        void ShowTransaltedText(string translatedMsg, Color color)
         {
             try
             {
-                if (translatedMsg.OriginalText.Length >= 1 && translatedMsg.TranslatedText.Length <= 1)
-                {
-                    translatedMsg.TranslatedText = (string)_SettigsWindow.Resources["TranslationEngineError"];
-                }
-
-                translatedMsg.TranslatedText = translatedMsg.TranslatedText.Trim(new char[] { ' ' });
+                translatedMsg = translatedMsg.Trim(new char[] { ' ' });
 
                 ChatRtb.AppendText(Environment.NewLine);
                 ChatRtb.CaretPosition = ChatRtb.CaretPosition.DocumentEnd;
-                if (InsertSpaceCount > 0)
+
+                if (_TataruUIModel.ParagraphSpaceCount > 0)
                 {
                     string whiteSpaces = String.Empty;
-                    for (int i = 0; i < InsertSpaceCount; i++)
+                    for (int i = 0; i < _TataruUIModel.ParagraphSpaceCount; i++)
                     {
                         whiteSpaces += " ";
                     }
@@ -232,19 +89,14 @@ namespace FFXIITataruHelper
                 }
 
                 Paragraph p = (ChatRtb.Document.Blocks.LastBlock) as Paragraph;
-                p.Margin = new Thickness(0, LineBreakeHight, 0, 0);
+                p.Margin = new Thickness(0, _TataruUIModel.LineBreakeHeight, 0, 0);
 
-                SolidColorBrush tmpColor = Brushes.Red;
-                if (_CurrFontColor < 0)
-                    tmpColor = _FontColor1;
-                else
-                    tmpColor = _FontColor2;
-                _CurrFontColor = _CurrFontColor * -1;
+                SolidColorBrush tmpColor = new SolidColorBrush(color);
 
                 int nameInd = 0;
-                if ((nameInd = translatedMsg.TranslatedText.IndexOf(":")) > 0)
+                if ((nameInd = translatedMsg.IndexOf(":")) > 0)
                 {
-                    string msgText = translatedMsg.TranslatedText;
+                    string msgText = translatedMsg;
                     string name = String.Empty;
                     string text = String.Empty;
 
@@ -264,7 +116,7 @@ namespace FFXIITataruHelper
                 else
                 {
                     TextRange tr = new TextRange(ChatRtb.Document.ContentEnd, ChatRtb.Document.ContentEnd);
-                    tr.Text = translatedMsg.TranslatedText;
+                    tr.Text = translatedMsg;
 
                     tr.ApplyPropertyValue(TextElement.ForegroundProperty, tmpColor);
                 }
@@ -277,49 +129,333 @@ namespace FFXIITataruHelper
             }
         }
 
-        void OnFFXIVProcessEventEvent(object sender, AppLogic.FFProcessEventArgs e)
+        void ShowErorrText(TranslationArrivedEventArgs ea)
         {
-            this.UIThreadAsync(() =>
+            if (ea.ErrorCode == 1)
             {
-                var _win = ((MainWindow)_SettigsWindow);
-                if (e.IsRunning)
-                    _win.FFStatusText.Content = ((string)_win.Resources["FFStatusTextFound"]) + " " + e.Text;
-                else
-                    _win.FFStatusText.Content = ((string)_win.Resources["FFStatusText"]);
+                string text = ((string)_SettigsWindow.Resources["TranslationEngineSwitchMsg"]) + " " + Convert.ToString(_TataruUIModel.TranslationEngine);
 
-            });
+                ShowTransaltedText(text, ea.Color);
+            }
         }
-        void OnFFXIVWindowEvent(object sender, WindowState e)
+
+        #region **UserActions.
+
+        public void ClearChat()
         {
             this.UIThread(() =>
             {
-                if (e == WindowState.Minimized)
-                    this.Hide();
-                else
-                    this.Show();
+                ChatRtb.Document.Blocks.Clear();
             });
         }
 
-        void OnSettingsWindowLoaded(object sender, RoutedEventArgs e)
-        {
-            var tmpWin = (FFXIITataruHelper.MainWindow)sender;
-            var tmp = new WindowInteropHelper(tmpWin).Handle;
+        #endregion
 
-            _AppLogic.AddExclusionWindowHandler(tmp);
+        #region **WindowEvents.
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            _TataruModel.FFMemoryReader.AddExclusionWindowHandler((new WindowInteropHelper(this).Handle));
+            _MouseHooker = null;
+
+            //_MouseHooker = new MouseHooker();
+            //_MouseHooker.LowLevelMouseEvent += OnLowLevelMousEvent;
         }
 
-        void OnLowLevelMousEvent(object sender, MouseHooker.LowLevelMouseEventArgs e)
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (e.MouseMessages == MouseHooker.MouseMessages.WM_MOUSEWHEEL)
+            if (_MouseHooker != null)
+                _MouseHooker.UnHook();
+        }
+
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            if (this.WindowState == WindowState.Normal)
             {
-                this.UIThreadAsync(() =>
+                var loc = _TataruUIModel.ChatWindowRectangle;
+
+                loc.Y = (float)this.Top;
+                loc.X = (float)this.Left;
+
+                _TataruUIModel.ChatWindowRectangle = loc;//*/
+            }
+        }
+
+        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Normal)
+            {
+
+                var loc = _TataruUIModel.ChatWindowRectangle;
+
+                loc.Width = (float)this.Width;
+                loc.Height = (float)this.Height;
+
+                _TataruUIModel.ChatWindowRectangle = loc;//*/
+            }
+
+            //SaveWindowPositionAndSize();
+        }
+
+        #endregion
+
+        #region **UiEvents.
+
+        private async Task OnChatFontSizeChange(IntegerValueChangeEventArgs ea)
+        {
+            await this.UIThreadAsync(() =>
+            {
+                if (ea.NewValue != (int)Math.Round(ChatRtb.FontSize))
                 {
-                    if (!IsClickThrought)
+                    ChatRtb.FontSize = ea.NewValue;
+                }
+            });
+        }
+
+        private async Task OnBackgroundColorChange(ColorChangeEventArgs ea)
+        {
+            await this.UIThreadAsync(() =>
+            {
+                if (((SolidColorBrush)this.Background).Color != ea.NewColor)
+                {
+                    this.Background = new SolidColorBrush(ea.NewColor);
+
+                    if (_TataruUIModel.IsChatClickThrough)
+                        MakeWindowClickThrought();
+
+
+                    if (((SolidColorBrush)this.Background).Color.A == 0)
                     {
-                        var bc = this.FormBackGround.Color;
+                        try
+                        {
+                            if (_MouseHooker != null)
+                            {
+                                _MouseHooker.LowLevelMouseEvent -= OnLowLevelMousEvent;
+                                _MouseHooker.Dispose();
+                                _MouseHooker = null;
+                            }
+
+                            _MouseHooker = new MouseHooker();
+                            _MouseHooker.LowLevelMouseEvent += OnLowLevelMousEvent;
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.WriteLog(e);
+                        }
+                    }
+                    else
+                    {
+
+                        if (_MouseHooker != null)
+                        {
+                            try
+                            {
+                                _MouseHooker.LowLevelMouseEvent -= OnLowLevelMousEvent;
+                                _MouseHooker.Dispose();
+                                _MouseHooker = null;
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.WriteLog(e);
+                            }
+                        }
+                    }//*/
+                }
+            });
+        }
+
+        private async Task OnChatWindowRectangleChanged(RectangleDValueChangeEventArgs ea)
+        {
+            await this.UIThreadAsync(() =>
+            {
+                System.Drawing.RectangleD winRect = new System.Drawing.RectangleD(this.Left, this.Top, this.Width, this.Height);
+
+                if (ea.NewValue.X < 2 || ea.NewValue.Y < 2 || ea.NewValue.Width < 2 || ea.NewValue.Height < 2)
+                {
+                    if (((TataruUIModel)ea.Sender).ChatWindowRectangle != winRect)
+                        ((TataruUIModel)ea.Sender).ChatWindowRectangle = winRect;
+                    return;
+                }
+
+
+                if (ea.NewValue != winRect)
+                {
+                    var newRect = ea.NewValue;
+
+                    if (newRect.X != winRect.X && newRect.Y != winRect.Y)
+                    {
+                        this.Left = newRect.X;
+                        this.Top = newRect.Y;
+                    }
+
+                    if (newRect.Width != winRect.Width && newRect.Height != winRect.Height)
+                    {
+                        this.Width = newRect.Width;
+                        this.Height = newRect.Height;
+                    }
+                }
+                //*/
+            });
+        }
+
+        private async Task OnChatClickThroughChange(BooleanChangeEventArgs ea)
+        {
+            await this.UIThreadAsync(() =>
+            {
+                if (ea.NewValue != _IsClickThrought)
+                {
+                    _IsClickThrought = ea.NewValue;
+                    if (_IsClickThrought)
+                        MakeWindowClickThrought();
+                    else
+                        MakeWindowClickbale();
+                }
+            });
+        }
+
+        private async Task OnChatAlwaysOnTopChange(BooleanChangeEventArgs ea)
+        {
+            await this.UIThreadAsync(() =>
+            {
+                if (ea.NewValue != this.Topmost)
+                {
+                    this.Topmost = ea.NewValue;
+                }
+            });
+        }
+
+        private async Task OnFFWindowStateChange(WindowStateChangeEventArgs ea)
+        {
+            await this.UIThreadAsync(() =>
+            {
+                if (ea.NewWindowState != ea.OldWindowState)
+                {
+                    if (ea.NewWindowState == WindowState.Minimized)
+                        this.Hide();
+                    else
+                        this.Show();
+                }
+            });
+        }
+
+        private async Task OnTranslationArrived(TranslationArrivedEventArgs ea)
+        {
+            await this.UIThreadAsync(() =>
+            {
+                if (ea.ErrorCode == 0)
+                {
+                    ShowTransaltedText(ea.Text, ea.Color);
+                }
+                else
+                {
+                    ShowErorrText(ea);
+                }
+            });
+        }
+
+        #endregion
+
+        #region **Initialization.
+
+        void InitTataruModel()
+        {
+            var UIModel = _TataruModel.TataruUIModel;
+
+            UIModel.ChatFontSizeChanged += OnChatFontSizeChange;
+
+            UIModel.BackgroundColorChanged += OnBackgroundColorChange;
+
+            //UIModel.ParagraphSpaceCountChanged += OnIntervalWidthChange;
+            //UIModel.LineBreakeHeightChanged += OnLineBreakHeightChange;
+
+            UIModel.ChatWindowRectangleChanged += OnChatWindowRectangleChanged;
+
+            UIModel.IsChatClickThroughChanged += OnChatClickThroughChange;
+            UIModel.IsChatAlwaysOnTopChanged += OnChatAlwaysOnTopChange;
+
+            _TataruModel.FFMemoryReader.FFWindowStateChanged += OnFFWindowStateChange;
+
+
+            _TataruModel.ChatProcessor.TranslationArrived += OnTranslationArrived;
+        }
+
+        #endregion
+
+        #region **WindowResize.
+
+        // for each rectangle, assign the following method to its MouseEnter event.
+        private void DisplayResizeCursor(object sender, MouseEventArgs e)
+        {
+            _WindowResizer.displayResizeCursor(sender);
+        }
+
+        private void DisplayDragCursor(object sender, MouseEventArgs e)
+        {
+            _WindowResizer.DisplayDragCursor(sender);
+        }
+
+        // for each rectangle, assign the following method to its MouseLeave event.
+        private void ResetCursor(object sender, MouseEventArgs e)
+        {
+            _WindowResizer.resetCursor();
+        }
+
+        // for each rectangle, assign the following method to its PreviewMouseDown event.
+        private void Resize(object sender, MouseButtonEventArgs e)
+        {
+            _WindowResizer.resizeWindow(sender);
+        }
+
+        // finally, you may use the following method to enable dragging!
+        private void Drag(object sender, MouseButtonEventArgs e)
+        {
+            _WindowResizer.dragWindow(sender, e);
+        }
+
+        #endregion
+
+        #region **System.
+
+        void MakeWindowClickThrought()
+        {
+            try
+            {
+                var hwnd = new WindowInteropHelper(this).Handle;
+                var style = Win32Interfaces.GetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE);
+                Win32Interfaces.SetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE, style | Win32Interfaces.WS_EX_LAYERED | Win32Interfaces.WS_EX_TRANSPARENT);
+            }
+            catch (Exception e)
+            {
+                Logger.WriteLog(Convert.ToString(e));
+            }
+        }
+
+        void MakeWindowClickbale()
+        {
+            try
+            {
+                var hwnd = new WindowInteropHelper(this).Handle;
+                var style = Win32Interfaces.GetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE);
+                Win32Interfaces.SetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE, style ^ Win32Interfaces.WS_EX_LAYERED ^ Win32Interfaces.WS_EX_TRANSPARENT);
+            }
+            catch (Exception e)
+            {
+                Logger.WriteLog(Convert.ToString(e));
+            }
+        }
+
+        async Task OnLowLevelMousEvent(LowLevelMouseEventArgs ea)
+        {
+            if (ea.MouseMessages == MouseHooker.MouseMessages.WM_MOUSEWHEEL)
+            {
+                await this.UIThreadAsync(() =>
+                {
+                    if (!_TataruUIModel.IsChatClickThrough)
+                    {
+                        var bc = ((SolidColorBrush)this.Background).Color;
                         if (bc.A == 0)
                         {
-                            var data = e.MouseEventFlags.mouseData;
+                            var data = ea.MouseEventFlags.mouseData;
                             uint fxdData = ((data & 0xFFFF0000) >> 16);
                             uint realData = 0;
 
@@ -327,7 +463,7 @@ namespace FFXIITataruHelper
 
                             string msg = String.Empty;
 
-                            if (IsLowLevelMousOver(e.MouseEventFlags.pt))
+                            if (IsLowLevelMousOver(ea.MouseEventFlags.pt))
                             {
                                 if (fxdData < 32000)
                                 {
@@ -368,96 +504,20 @@ namespace FFXIITataruHelper
             return false;
         }
 
-        void MakeWindowClickThrought()
+        void OnFFXIVWindowEvent(object sender, WindowState e)
         {
-            try
+            this.UIThread(() =>
             {
-                var hwnd = new WindowInteropHelper(this).Handle;
-                var style = Win32Interfaces.GetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE);
-                Win32Interfaces.SetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE, style | Win32Interfaces.WS_EX_LAYERED | Win32Interfaces.WS_EX_TRANSPARENT);
-            }
-            catch (Exception e)
-            {
-                Logger.WriteLog(Convert.ToString(e));
-            }
-        }
-
-        void MakeWindowClickbale()
-        {
-            try
-            {
-                var hwnd = new WindowInteropHelper(this).Handle;
-                var style = Win32Interfaces.GetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE);
-                Win32Interfaces.SetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE, style ^ Win32Interfaces.WS_EX_LAYERED ^ Win32Interfaces.WS_EX_TRANSPARENT);
-            }
-            catch (Exception e)
-            {
-                Logger.WriteLog(Convert.ToString(e));
-            }
-        }
-
-        // for each rectangle, assign the following method to its MouseEnter event.
-        private void DisplayResizeCursor(object sender, MouseEventArgs e)
-        {
-            _WindowResizer.displayResizeCursor(sender);
-        }
-
-        private void DisplayDragCursor(object sender, MouseEventArgs e)
-        {
-            _WindowResizer.DisplayDragCursor(sender);
-        }
-
-        // for each rectangle, assign the following method to its MouseLeave event.
-        private void ResetCursor(object sender, MouseEventArgs e)
-        {
-            _WindowResizer.resetCursor();
-        }
-
-        // for each rectangle, assign the following method to its PreviewMouseDown event.
-        private void Resize(object sender, MouseButtonEventArgs e)
-        {
-            _WindowResizer.resizeWindow(sender);
-        }
-
-        // finally, you may use the following method to enable dragging!
-        private void Drag(object sender, MouseButtonEventArgs e)
-        {
-            _WindowResizer.dragWindow();
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            _AppLogic.Stop();
-            _AppLogic.Dispose();
-
-            if (_MouseHooker != null)
-                _MouseHooker.UnHook();
-        }
-
-        private void Window_LocationChanged(object sender, EventArgs e)
-        {
-            SaveWindowPositionAndSize();
-        }
-
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            SaveWindowPositionAndSize();
-        }
-
-        void SaveWindowPositionAndSize()
-        {
-            if (this.WindowState == WindowState.Normal)
-            {
-                GlobalSettings.ChatWinTop = this.Top;
-                GlobalSettings.ChatWinLeft = this.Left;
-
-                GlobalSettings.ChatWinHeight = this.Height;
-                GlobalSettings.ChatWinWidth = this.Width;
-            }
+                if (e == WindowState.Minimized)
+                    this.Hide();
+                else
+                    this.Show();
+            });
         }
 
         void Settings_Click(object sender, RoutedEventArgs e)
         {
+
             Helper.Unminimize(_SettigsWindow);
 
             _SettigsWindow.Visibility = Visibility.Visible;
@@ -469,5 +529,7 @@ namespace FFXIITataruHelper
         {
             ((MainWindow)_SettigsWindow).ShutDown();
         }
+
+        #endregion
     }
 }

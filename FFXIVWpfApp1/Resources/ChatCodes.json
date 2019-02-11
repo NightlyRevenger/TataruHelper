@@ -6,8 +6,14 @@
     "Color": "#FFCCCCCC"
   },
   {
+    "ChatCode": "0038",
+    "MsgType": 3,
+    "Name": "Echo",
+    "Color": "#FF74C8CC"
+  },
+  {
     "ChatCode": "003C",
-    "MsgType": 1,
+    "MsgType": 3,
     "Name": "Error",
     "Color": "#FFFF4A4A"
   },
@@ -25,97 +31,97 @@
   },
   {
     "ChatCode": "0048",
-    "MsgType": 1,
+    "MsgType": 3,
     "Name": "Recruitment",
     "Color": "#FFCCCCCC"
   },
   {
     "ChatCode": "000A",
-    "MsgType": 1,
+    "MsgType": 3,
     "Name": "Say",
     "Color": "#FFF7F7F7"
   },
   {
     "ChatCode": "000B",
-    "MsgType": 1,
+    "MsgType": 3,
     "Name": "Shout",
     "Color": "#FFFFA666"
   },
   {
     "ChatCode": "000E",
-    "MsgType": 1,
+    "MsgType": 3,
     "Name": "Party",
     "Color": "#FF66E5FF"
   },
   {
     "ChatCode": "000D",
-    "MsgType": 1,
+    "MsgType": 3,
     "Name": "Tell",
     "Color": "#FFFFB8DE"
   },
   {
     "ChatCode": "0018",
-    "MsgType": 1,
+    "MsgType": 3,
     "Name": "FreeCompany",
     "Color": "#FFABDBE5"
   },
   {
     "ChatCode": "001E",
-    "MsgType": 1,
+    "MsgType": 3,
     "Name": "Yell",
     "Color": "#FFFFFF00"
   },
   {
     "ChatCode": "000F",
-    "MsgType": 1,
+    "MsgType": 3,
     "Name": "Alliance",
     "Color": "#FFFF7F00"
   },
   {
     "ChatCode": "0010",
-    "MsgType": 1,
+    "MsgType": 3,
     "Name": "LinkShell1",
     "Color": "#FFD4FF7D"
   },
   {
     "ChatCode": "0011",
-    "MsgType": 1,
+    "MsgType": 3,
     "Name": "LinkShell2",
     "Color": "#FFD4FF7D"
   },
   {
     "ChatCode": "0012",
-    "MsgType": 1,
+    "MsgType": 3,
     "Name": "LinkShell3",
     "Color": "#FFD4FF7D"
   },
   {
     "ChatCode": "0013",
-    "MsgType": 1,
+    "MsgType": 3,
     "Name": "LinkShell4",
     "Color": "#FFD4FF7D"
   },
   {
     "ChatCode": "0014",
-    "MsgType": 1,
+    "MsgType": 3,
     "Name": "LinkShell5",
     "Color": "#FFD4FF7D"
   },
   {
     "ChatCode": "0015",
-    "MsgType": 1,
+    "MsgType": 3,
     "Name": "LinkShell6",
     "Color": "#FFD4FF7D"
   },
   {
     "ChatCode": "0016",
-    "MsgType": 1,
+    "MsgType": 3,
     "Name": "LinkShell7",
     "Color": "#FFD4FF7D"
   },
   {
     "ChatCode": "0017",
-    "MsgType": 1,
+    "MsgType": 3,
     "Name": "LinkShell8",
     "Color": "#FFD4FF7D"
   }

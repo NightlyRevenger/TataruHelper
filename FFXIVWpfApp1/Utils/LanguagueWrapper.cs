@@ -12,7 +12,7 @@ using System.Windows;
 
 namespace FFXIITataruHelper
 {
-    class LanguagueWrapper
+    public class LanguagueWrapper
     {
         Window _Window;
 
@@ -29,7 +29,7 @@ namespace FFXIITataruHelper
 
             set
             {
-                if (value != _CurrentLanguage)
+                if (value != _CurrentLanguage || true)
                 {
                     SetLanguague(value);
 
@@ -52,13 +52,16 @@ namespace FFXIITataruHelper
         {
             string path = _DirPath;
 
-            if (languague == Languages.English)
-                path += GlobalSettings.en_US_LanguaguePath;
+            if (languague != Languages.None)
+            {
+                if (languague == Languages.English)
+                    path += GlobalSettings.en_US_LanguaguePath;
 
-            if (languague == Languages.Russian)
-                path += GlobalSettings.ru_RU_LanguaguePath;
+                if (languague == Languages.Russian)
+                    path += GlobalSettings.ru_RU_LanguaguePath;
 
-            LoadDynamicTranslation(path);
+                LoadDynamicTranslation(path);
+            }
         }
 
 
@@ -98,18 +101,31 @@ namespace FFXIITataruHelper
 
             _Window.Resources["BackgroundColor"] = catalog.GetString("Background Color");
 
+            _Window.Resources["ColorPickerStandardButtonHeader"] = catalog.GetString("Standard");
+            _Window.Resources["ColorPickerAdvancedButtonHeader"] = catalog.GetString("Advanced");
+            _Window.Resources["ColorPickerStandardColorsHeader"] = catalog.GetString("Standard Colors");
+            _Window.Resources["ColorPickerRecentColorsHeader"] = catalog.GetString("Recent Colors");
+
             _Window.Resources["ParagraphSettings"] = catalog.GetString("Paragraph Settings");
             _Window.Resources["IntervalWidth"] = catalog.GetString("Interval Width");
             _Window.Resources["LineBreakHeight"] = catalog.GetString("Line Break Height");
 
+            _Window.Resources["ChatCodes"] = catalog.GetString("Chat Codes");
 
             _Window.Resources["TranslationEngine"] = catalog.GetString("Translation Engine");
             _Window.Resources["FFLanguage"] = catalog.GetString("FF Language");
             _Window.Resources["TraslateTo"] = catalog.GetString("Traslate To");
 
             _Window.Resources["Hotkeys"] = catalog.GetString("Hotkeys");
+
             _Window.Resources["ShowHideChatWindowHK"] = catalog.GetString("Show/hide Chat Window");
+            _Window.Resources["ShowHideChatWindowHKToolTip"] = catalog.GetString("Show Hide Chat Window Hotkey Tooltip");
+
             _Window.Resources["ClickThroughHK"] = catalog.GetString("Click Through");
+            _Window.Resources["ClickThroughHKToolTip"] = catalog.GetString("Click Through HotKey ToolTip");
+
+            _Window.Resources["ClearChatHK"] = catalog.GetString("Clear Chat");
+            _Window.Resources["ClearChatHKToolTip"] = catalog.GetString("Clear Chat HotKey ToolTip");
 
             _Window.Resources["OtherSett"] = catalog.GetString("Other");
             _Window.Resources["ClickThroughCB"] = catalog.GetString("Click Through");
@@ -124,19 +140,55 @@ namespace FFXIITataruHelper
 
             _Window.Resources["ResetChatPosition"] = catalog.GetString("Reset Chat Position");
 
+            /*
             if (!_Window.Resources.Contains("TranslationEngineError"))
             {
                 _Window.Resources.Add("TranslationEngineError", catalog.GetString("Translation engine error. Consider switching to other engine."));
-            }
+            }//*/
+
             _Window.Resources["TranslationEngineError"] = catalog.GetString("Translation engine error. Consider switching to other engine.");
+
+            _Window.Resources["FFStatusLable"] = catalog.GetString("FF Status:");
 
             _Window.Resources["FFStatusText"] = catalog.GetString("Couldn't find FFXIV process.");
 
+            /*
             if (!_Window.Resources.Contains("FFStatusTextFound"))
             {
                 _Window.Resources.Add("FFStatusTextFound", catalog.GetString("Process found:"));
-            }
+            }//*/
             _Window.Resources["FFStatusTextFound"] = catalog.GetString("Process found:");
+
+            /*
+            if (!_Window.Resources.Contains("TranslationEngineSwitchMsg"))
+            {
+                _Window.Resources.Add("TranslationEngineSwitchMsg", catalog.GetString("Translation engine error. Switching to:"));
+            }//*/
+
+            _Window.Resources["TranslationEngineSwitchMsg"] = catalog.GetString("Translation engine error. Switching to:");
+
+            _Window.Resources["CkSystem"] = catalog.GetString("System");
+            _Window.Resources["CkEcho"] = catalog.GetString("Echo");
+            _Window.Resources["CkError"] = catalog.GetString("Error");
+            _Window.Resources["CkNPCD"] = catalog.GetString("NPCD");
+            _Window.Resources["CkNPCA"] = catalog.GetString("NPCA");
+            _Window.Resources["CkRecruitment"] = catalog.GetString("Recruitment");
+            _Window.Resources["CkSay"] = catalog.GetString("Say");
+            _Window.Resources["CkShout"] = catalog.GetString("Shout");
+            _Window.Resources["CkParty"] = catalog.GetString("Party");
+            _Window.Resources["CkTell"] = catalog.GetString("Tell");
+            _Window.Resources["CkFreeCompany"] = catalog.GetString("FreeCompany");
+            _Window.Resources["CkYell"] = catalog.GetString("Yell");
+            _Window.Resources["CkAlliance"] = catalog.GetString("Alliance");
+            _Window.Resources["CkLinkShell1"] = catalog.GetString("LinkShell1");
+            _Window.Resources["CkLinkShell2"] = catalog.GetString("LinkShell2");
+            _Window.Resources["CkLinkShell3"] = catalog.GetString("LinkShell3");
+            _Window.Resources["CkLinkShell4"] = catalog.GetString("LinkShell4");
+            _Window.Resources["CkLinkShell5"] = catalog.GetString("LinkShell5");
+            _Window.Resources["CkLinkShell6"] = catalog.GetString("LinkShell6");
+            _Window.Resources["CkLinkShell7"] = catalog.GetString("LinkShell7");
+            _Window.Resources["CkLinkShell8"] = catalog.GetString("LinkShell8");
+
         }
     }
 }

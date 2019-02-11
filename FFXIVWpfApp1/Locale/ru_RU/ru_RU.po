@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2019-01-24 11:00+0300\n"
-"PO-Revision-Date: 2019-01-24 12:50+0300\n"
+"POT-Creation-Date: 2019-02-11 00:08+0300\n"
+"PO-Revision-Date: 2019-02-11 18:32+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: ru_RU\n"
@@ -18,131 +18,277 @@ msgstr ""
 "_p:1c,2;_pn:1c,2,3\\n\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#: LanguagueWrapper.cs:80
+#: Utils/LanguagueWrapper.cs:83
 msgid "Settings"
 msgstr "Настройки"
 
-#: LanguagueWrapper.cs:82
+#: Utils/LanguagueWrapper.cs:85
 msgid "Language"
 msgstr "Язык"
 
-#: LanguagueWrapper.cs:83
+#: Utils/LanguagueWrapper.cs:86
 msgid "English"
 msgstr "English"
 
-#: LanguagueWrapper.cs:84
+#: Utils/LanguagueWrapper.cs:87
 msgid "Russian"
 msgstr "Русский"
 
-#: LanguagueWrapper.cs:86
+#: Utils/LanguagueWrapper.cs:89
 msgid "Help"
 msgstr "Помощь"
 
-#: LanguagueWrapper.cs:88
+#: Utils/LanguagueWrapper.cs:91
 msgid "Chat Appearance"
 msgstr "Настройки внешнего вида"
 
-#: LanguagueWrapper.cs:89
+#: Utils/LanguagueWrapper.cs:92
 msgid "Translation Settings"
 msgstr "Настройки перевода"
 
-#: LanguagueWrapper.cs:90
+#: Utils/LanguagueWrapper.cs:93
 msgid "General Behavior"
 msgstr "Основные настройки"
 
-#: LanguagueWrapper.cs:92
+#: Utils/LanguagueWrapper.cs:95
 msgid "Font Settings"
 msgstr "Настройки шрифта"
 
-#: LanguagueWrapper.cs:93
+#: Utils/LanguagueWrapper.cs:96
 msgid "Font Size"
 msgstr "Размер шрифта"
 
-#: LanguagueWrapper.cs:95
+#: Utils/LanguagueWrapper.cs:98
 msgid "Font Color"
 msgstr "Цвет шрифта"
 
-#: LanguagueWrapper.cs:96
+#: Utils/LanguagueWrapper.cs:99
 msgid "Color 1"
 msgstr "Цвет 1"
 
-#: LanguagueWrapper.cs:97
+#: Utils/LanguagueWrapper.cs:100
 msgid "Color 2"
 msgstr "Цвет 2"
 
-#: LanguagueWrapper.cs:99
+#: Utils/LanguagueWrapper.cs:102
 msgid "Background Color"
 msgstr "Цвет фона"
 
-#: LanguagueWrapper.cs:101
+#: Utils/LanguagueWrapper.cs:104
+msgid "Standard"
+msgstr "Стандартные"
+
+#: Utils/LanguagueWrapper.cs:105
+msgid "Advanced"
+msgstr "Дополнительные"
+
+#: Utils/LanguagueWrapper.cs:106
+msgid "Standard Colors"
+msgstr "Стандартные цвета"
+
+#: Utils/LanguagueWrapper.cs:107
+msgid "Recent Colors"
+msgstr "Недавние цвета"
+
+#: Utils/LanguagueWrapper.cs:109
 msgid "Paragraph Settings"
 msgstr "Настройки вывода"
 
-#: LanguagueWrapper.cs:102
+#: Utils/LanguagueWrapper.cs:110
 msgid "Interval Width"
 msgstr "Ширина отступа"
 
-#: LanguagueWrapper.cs:103
+#: Utils/LanguagueWrapper.cs:111
 msgid "Line Break Height"
 msgstr "Межабзацный интервал"
 
-#: LanguagueWrapper.cs:106
+#: Utils/LanguagueWrapper.cs:113
+msgid "Chat Codes"
+msgstr "Чат коды"
+
+#: Utils/LanguagueWrapper.cs:115
 msgid "Translation Engine"
 msgstr "Сервис перевода"
 
-#: LanguagueWrapper.cs:107
+#: Utils/LanguagueWrapper.cs:116
 msgid "FF Language"
 msgstr "Язык игры"
 
-#: LanguagueWrapper.cs:108
+#: Utils/LanguagueWrapper.cs:117
 msgid "Traslate To"
 msgstr "Язык перевода"
 
-#: LanguagueWrapper.cs:110
+#: Utils/LanguagueWrapper.cs:119
 msgid "Hotkeys"
 msgstr "Горячие клавиши"
 
-#: LanguagueWrapper.cs:111
+#: Utils/LanguagueWrapper.cs:121
 msgid "Show/hide Chat Window"
-msgstr "Показать/Скрыть окно перевода"
+msgstr "Показать/Скрыть окно"
 
-#: LanguagueWrapper.cs:112 LanguagueWrapper.cs:115
+#: Utils/LanguagueWrapper.cs:122
+msgid "Show Hide Chat Window Hotkey Tooltip"
+msgstr ""
+"Горячие клавиши для вызова или скрытия окна чата. Комбинация обязательно "
+"должна иметь вид Ctrl/Shift/Alt + Любая клавиша или Ctrl+Shift+Alt + "
+"Любая клавиша, и всё в таком духе. Горячие клавиши не должны "
+"повторяться. Если не получается назначить клавишу, значит она уже занята "
+"приложением или системой. Пример: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, "
+"ALT+SHIFT+Y, SHIFT+CTRL+G и др."
+
+#: Utils/LanguagueWrapper.cs:124 Utils/LanguagueWrapper.cs:131
 msgid "Click Through"
 msgstr "Игнорировать нажатия"
 
-#: LanguagueWrapper.cs:114
+#: Utils/LanguagueWrapper.cs:125
+msgid "Click Through HotKey ToolTip"
+msgstr ""
+"Горячая клавиша для того, чтобы включить/выключить игнорирование нажатий "
+"по окну чата. Комбинация обязательно должна иметь вид Ctrl/Shift/Alt + "
+"Любая клавиша или Ctrl+Shift+Alt + Любая клавиша, и всё в таком духе. "
+"Горячие клавиши не должны повторяться. Если не получается назначить "
+"клавишу, значит она уже занята приложением или системой. Пример: CTRL+Q, "
+"CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G и др."
+
+#: Utils/LanguagueWrapper.cs:127
+msgid "Clear Chat"
+msgstr "Очистить чат"
+
+#: Utils/LanguagueWrapper.cs:128
+msgid "Clear Chat HotKey ToolTip"
+msgstr ""
+"Горячая клавиша для того, чтобы очистить окно чата от текста. Комбинация "
+"обязательно должна иметь вид Ctrl/Shift/Alt + Любая клавиша или Ctrl"
+"+Shift+Alt + Любая клавиша, и всё в таком духе. Горячие клавиши не "
+"должны повторяться. Если не получается назначить клавишу, значит она уже "
+"занята приложением или системой. Пример: CTRL+Q, CTRL+ALT+R, SHIFT+ALT"
+"+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G и др."
+
+#: Utils/LanguagueWrapper.cs:130
 msgid "Other"
 msgstr "Прочее"
 
-#: LanguagueWrapper.cs:116 LanguagueWrapper.cs:119
+#: Utils/LanguagueWrapper.cs:132 Utils/LanguagueWrapper.cs:135
 msgid "Always On Top"
 msgstr "Поверх всех окон"
 
-#: LanguagueWrapper.cs:117 LanguagueWrapper.cs:120
+#: Utils/LanguagueWrapper.cs:133 Utils/LanguagueWrapper.cs:136
 msgid "Hide to Tray"
 msgstr "Свернуть в трей"
 
-#: LanguagueWrapper.cs:122
+#: Utils/LanguagueWrapper.cs:138
 msgid "Show Chat Window"
 msgstr "Показать окно перевода"
 
-#: LanguagueWrapper.cs:123
+#: Utils/LanguagueWrapper.cs:139
 msgid "Hide Chat Window"
 msgstr "Скрыть окно перевода"
 
-#: LanguagueWrapper.cs:125
+#: Utils/LanguagueWrapper.cs:141
 msgid "Reset Chat Position"
-msgstr "Сбросить положение окна"
+msgstr "Сбросить окно"
 
-#: LanguagueWrapper.cs:129 LanguagueWrapper.cs:131
+#: Utils/LanguagueWrapper.cs:149
 msgid "Translation engine error. Consider switching to other engine."
 msgstr ""
 "Ошибка сервиса перевода. Попробуйте переключиться на другой переводчик."
 
-#: LanguagueWrapper.cs:133
+#: Utils/LanguagueWrapper.cs:151
+msgid "FF Status:"
+msgstr "FF Статус:"
+
+#: Utils/LanguagueWrapper.cs:153
 msgid "Couldn't find FFXIV process."
 msgstr "Не удалось найти процесс FFXIV."
 
-#: LanguagueWrapper.cs:137 LanguagueWrapper.cs:139
+#: Utils/LanguagueWrapper.cs:160
 msgid "Process found:"
 msgstr "Процесс найден:"
+
+#: Utils/LanguagueWrapper.cs:168
+msgid "Translation engine error. Switching to:"
+msgstr "Ошибка сервиса перевода. Переключение на:"
+
+#: Utils/LanguagueWrapper.cs:170
+msgid "System"
+msgstr "System"
+
+#: Utils/LanguagueWrapper.cs:171
+msgid "Echo"
+msgstr "Echo"
+
+#: Utils/LanguagueWrapper.cs:172
+msgid "Error"
+msgstr "Error"
+
+#: Utils/LanguagueWrapper.cs:173
+msgid "NPCD"
+msgstr "NPC"
+
+#: Utils/LanguagueWrapper.cs:174
+msgid "NPCA"
+msgstr "NPC(Объявления)"
+
+#: Utils/LanguagueWrapper.cs:175
+msgid "Recruitment"
+msgstr "Recruitment"
+
+#: Utils/LanguagueWrapper.cs:176
+msgid "Say"
+msgstr "Say"
+
+#: Utils/LanguagueWrapper.cs:177
+msgid "Shout"
+msgstr "Shout"
+
+#: Utils/LanguagueWrapper.cs:178
+msgid "Party"
+msgstr "Party"
+
+#: Utils/LanguagueWrapper.cs:179
+msgid "Tell"
+msgstr "Tell"
+
+#: Utils/LanguagueWrapper.cs:180
+msgid "FreeCompany"
+msgstr "FreeCompany"
+
+#: Utils/LanguagueWrapper.cs:181
+msgid "Yell"
+msgstr "Yell"
+
+#: Utils/LanguagueWrapper.cs:182
+msgid "Alliance"
+msgstr "Alliance"
+
+#: Utils/LanguagueWrapper.cs:183
+msgid "LinkShell1"
+msgstr "LinkShell 1"
+
+#: Utils/LanguagueWrapper.cs:184
+msgid "LinkShell2"
+msgstr "LinkShell 2"
+
+#: Utils/LanguagueWrapper.cs:185
+msgid "LinkShell3"
+msgstr "LinkShell 3"
+
+#: Utils/LanguagueWrapper.cs:186
+msgid "LinkShell4"
+msgstr "LinkShell 4"
+
+#: Utils/LanguagueWrapper.cs:187
+msgid "LinkShell5"
+msgstr "LinkShell 5"
+
+#: Utils/LanguagueWrapper.cs:188
+msgid "LinkShell6"
+msgstr "LinkShell 6"
+
+#: Utils/LanguagueWrapper.cs:189
+msgid "LinkShell7"
+msgstr "LinkShell 7"
+
+#: Utils/LanguagueWrapper.cs:190
+msgid "LinkShell8"
+msgstr "LinkShell 8"

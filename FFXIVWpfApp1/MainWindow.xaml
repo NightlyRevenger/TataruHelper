@@ -5,15 +5,19 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:FFXIITataruHelper"
+        xmlns:draw="clr-namespace:System.Drawing;assembly=System.Drawing"
+        xmlns:utils="clr-namespace:WpfXamlExtensions;assembly=WpfXamlExtensions"
         xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="FFXIITataruHelper.MainWindow"
         mc:Ignorable="d"
-        Icon="Resources/tray_icon.ico"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    Icon="Resources/tray_icon.ico"
         MinHeight="290"
         MinWidth="225"    
-        Title="{DynamicResource SettingsWindowName}" Height="536.08" Width="425.3" ResizeMode="CanResize" Closing="Window_Closing" Closed="Window_Closed" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged">
+        Title="{DynamicResource SettingsWindowName}" Height="470.08" Width="428.3" ResizeMode="CanResize" Closing="Window_Closing" Closed="Window_Closed" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged">
+
     <Grid>
         <DockPanel>
-            <Menu DockPanel.Dock="Top">
+            <Menu DockPanel.Dock="Top" Background="White" BorderThickness="0,0,0,1">
                 <MenuItem Header="{DynamicResource DocLanguage}">
                     <MenuItem Header="{DynamicResource DocLanguageRu}" Click="RuLanguage_Click" />
                     <MenuItem Header="{DynamicResource DocLanguageEn}" Click="EnLanguage_Click"/>
@@ -22,8 +26,10 @@
                     <MenuItem Header="{DynamicResource DockAbout}"  Click="About_Click"/>
                 </MenuItem>
             </Menu>
-            <StackPanel>
-            </StackPanel>
+            <Border BorderThickness="0,1,0,0" BorderBrush="LightGray">
+                <StackPanel>
+                </StackPanel>
+            </Border>
         </DockPanel>
         <tb:TaskbarIcon x:Name="TaskBarIcon" IconSource="Resources/tray_icon.ico" TrayMouseDoubleClick="TBDoubleClick" ToolTipText="Tataru Helper">
             <tb:TaskbarIcon.ContextMenu>
@@ -39,37 +45,22 @@
         <TabControl Margin="10,62,10,57">
             <TabItem Header="{DynamicResource ChatAppearance}">
                 <Grid Background="#FFFFFFFF">
-                    <WrapPanel>
-                        <GroupBox Header="{DynamicResource FontSettings}" Margin="5,5,5,5" Height="256" VerticalAlignment="Top" Width="180">
-                            <Grid Margin="0">
-                                <GroupBox Height="85" Margin="0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="168">
-                                    <StackPanel Margin="0">
-                                        <Label Content="{DynamicResource FontSize}" HorizontalAlignment="Left" Height="25" VerticalAlignment="Top" Width="141"/>
-                                        <xctk:IntegerUpDown x:Name="ChatFontSize" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="141" ValueChanged="ChatFontSize_ValueChanged" Minimum="1"/>
-                                    </StackPanel>
-                                </GroupBox>
-                                <GroupBox Header="{DynamicResource FontColor}" Height="145" Margin="0,90,0,-1" VerticalAlignment="Top" HorizontalAlignment="Left" Width="168">
-                                    <StackPanel Margin="0">
-                                        <Label Content="{DynamicResource FontColor1}" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="137"/>
-                                        <xctk:ColorPicker x:Name="FontColor1" HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="137" Closed="FontColor1_Closed" SelectedColorChanged="FontColor1_SelectedColorChanged"/>
-                                        <Label Content="{DynamicResource FontColor2}" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="137"/>
-                                        <xctk:ColorPicker x:Name="FontColor2" HorizontalAlignment="Left" Height="27" VerticalAlignment="Top" Width="137" Closed="FontColor2_Closed" SelectedColorChanged="FontColor2_SelectedColorChanged"/>
-                                    </StackPanel>
-                                </GroupBox>
-                            </Grid>
+                    <WrapPanel Orientation="Vertical">
+                        <GroupBox Header="{DynamicResource FontSettings}" Margin="5,5,5,5" Height="159" VerticalAlignment="Top" Width="180">
+                            <StackPanel Margin="0">
+                                <Label Content="{DynamicResource FontSize}" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="158" />
+                                <xctk:IntegerUpDown x:Name="ChatFontSize" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="140" ValueChanged="ChatFontSize_ValueChanged" Minimum="1"/>
+                                <Label Content="{DynamicResource BackgroundColor}" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="152"/>
+                                <xctk:ColorPicker x:Name="BackgroundColor" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="140" SelectedColorChanged="BackgroundColor_SelectedColorChanged" Closed="BackgroundColor_Closed" 
+                                                          StandardButtonHeader="{DynamicResource ColorPickerStandardButtonHeader}" AdvancedButtonHeader="{DynamicResource ColorPickerAdvancedButtonHeader}" StandardColorsHeader="{DynamicResource ColorPickerStandardColorsHeader}" RecentColorsHeader="{DynamicResource ColorPickerRecentColorsHeader}"/>
+                            </StackPanel>
                         </GroupBox>
                         <GroupBox Header="{DynamicResource ParagraphSettings}" Margin="5,5,5,5" HorizontalAlignment="Left" Height="159" VerticalAlignment="Top" Width="180">
                             <StackPanel Margin="0">
-                                <Label Content="{DynamicResource IntervalWidth}" HorizontalAlignment="Left" Margin="0" Height="31" VerticalAlignment="Top" Width="158"/>
+                                <Label Content="{DynamicResource IntervalWidth}" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="158"/>
                                 <xctk:IntegerUpDown x:Name="IntervalWidth" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="140" ValueChanged="IntervalWidth_ValueChanged" Minimum="0" />
                                 <Label Content="{DynamicResource LineBreakHeight}" HorizontalAlignment="Left" Margin="0" Height="31" VerticalAlignment="Top" Width="158"/>
                                 <xctk:IntegerUpDown x:Name="LineBreakeHeight" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="140" ValueChanged="LineBreakeHeight_ValueChanged" Minimum="0" />
-                            </StackPanel>
-                        </GroupBox>
-                        <GroupBox HorizontalAlignment="Left" Height="82" Margin="5,5,5,5" VerticalAlignment="Top" Width="180">
-                            <StackPanel Margin="0">
-                                <Label Content="{DynamicResource BackgroundColor}" HorizontalAlignment="Left" Height="28" VerticalAlignment="Top" Width="152"/>
-                                <xctk:ColorPicker x:Name="BackgroundColor" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="148" SelectedColorChanged="BackgroundColor_SelectedColorChanged" Closed="BackgroundColor_Closed" Margin="4,0,0,0"/>
                             </StackPanel>
                         </GroupBox>
                     </WrapPanel>
@@ -78,6 +69,21 @@
             <TabItem Header="{DynamicResource TranslationSettings}">
                 <Grid Background="#FFFFFFFF">
                     <WrapPanel>
+                        <GroupBox Header="{DynamicResource ChatCodes}" HorizontalAlignment="Left"  Margin="5,5,5,5" Width="180">
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" CanContentScroll="True">
+                                <ItemsControl ItemsSource="{Binding ChatCodes}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid  Height="25" Width="145" Margin="0,0,0,1">
+                                                <CheckBox Margin="0,0,10,0" IsChecked="{Binding IsChecked, Mode=TwoWay}" Content="{utils:ResourceBinding Name}"></CheckBox>
+                                                <xctk:ColorPicker Margin="0,0,5,0" Height="20" Width="20" VerticalAlignment="Top" ShowDropDownButton="False" SelectedColor="{Binding Color}" HorizontalAlignment="Right"
+                                                                  StandardButtonHeader="{DynamicResource ColorPickerStandardButtonHeader}" AdvancedButtonHeader="{DynamicResource ColorPickerAdvancedButtonHeader}" StandardColorsHeader="{DynamicResource ColorPickerStandardColorsHeader}" RecentColorsHeader="{DynamicResource ColorPickerRecentColorsHeader}"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </GroupBox>
                         <GroupBox HorizontalAlignment="Left" Height="190"  Margin="5,5,5,5"  VerticalAlignment="Top" Width="180">
                             <StackPanel Margin="0">
                                 <Label Content="{DynamicResource TranslationEngine}" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="154" Margin="0"/>
@@ -85,6 +91,7 @@
                                     <TextBlock><Run Text="Google Translate"/></TextBlock>
                                     <TextBlock><Run Text="Multillect Translation"/></TextBlock>
                                     <TextBlock><Run Text="DeepL"/></TextBlock>
+                                    <TextBlock><Run Text="Yandex"/></TextBlock>
                                 </ComboBox>
                                 <Label Content="{DynamicResource FFLanguage}" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="154" Margin="0"/>
                                 <ComboBox x:Name="TransalteFromCombo"  HorizontalAlignment="Left" Height="24" Margin="0" Width="154" SelectionChanged="FFXIVLanguague_SelectionChanged">
@@ -103,18 +110,43 @@
                             </StackPanel>
                         </GroupBox>
                     </WrapPanel>
-
                 </Grid>
             </TabItem>
             <TabItem Header="{DynamicResource GeneralBehavior}">
                 <Grid Background="#FFFFFFFF">
                     <WrapPanel>
-                        <GroupBox  Header="{DynamicResource Hotkeys}" Margin="5,5,5,5" VerticalAlignment="Top" Width="180" Height="145" >
+                        <GroupBox  Header="{DynamicResource Hotkeys}" Margin="5,5,5,5" VerticalAlignment="Top" Width="180" Height="210" >
                             <StackPanel>
                                 <Label Content="{DynamicResource ShowHideChatWindowHK}" HorizontalAlignment="Left" Margin="0" Height="31" VerticalAlignment="Top"/>
-                                <TextBox x:Name="ShowHideChatWinHotKeyTb" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Empty" Width="140" VerticalAlignment="Top" UndoLimit="2" IsReadOnlyCaretVisible="True" IsReadOnly="True" IsUndoEnabled="False" PreviewMouseRightButtonDown ="ShowHideChatWinHotKeyTb_MouseRightButtonDown" />
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox x:Name="ShowHideChatWinHotKeyTb" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Empty" Width="140" VerticalAlignment="Top" UndoLimit="2" IsReadOnlyCaretVisible="True" IsReadOnly="True" IsUndoEnabled="False" PreviewMouseRightButtonDown ="ShowHideChatWinHotKeyTb_MouseRightButtonDown" />
+                                    <Image Height="20" Width="20" Source="{Binding Source={x:Static draw:SystemIcons.Question}, Converter={utils:IconToImageSourceConverter}, Mode=OneWay}" Margin="4,0,0,0">
+                                        <Image.ToolTip>
+                                            <DynamicResource ResourceKey="ShowHideChatWindowHKToolTip" />
+                                        </Image.ToolTip>
+                                    </Image>
+                                </StackPanel>
+
                                 <Label Content="{DynamicResource ClickThroughHK}" HorizontalAlignment="Left" Margin="0" Height="31" VerticalAlignment="Top" Width="140"/>
-                                <TextBox x:Name="ClickThroughHotKeyTb" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Empty" Width="140" VerticalAlignment="Top" UndoLimit="2" IsReadOnlyCaretVisible="True" IsReadOnly="True" IsUndoEnabled="False"  PreviewMouseRightButtonDown ="ClickThroughHotKeyTb_MouseRightButtonDown"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox x:Name="ClickThroughHotKeyTb" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Empty" Width="140" VerticalAlignment="Top" UndoLimit="2" IsReadOnlyCaretVisible="True" IsReadOnly="True" IsUndoEnabled="False"  PreviewMouseRightButtonDown ="ClickThroughHotKeyTb_MouseRightButtonDown"/>
+                                    <Image Height="20" Width="20" Source="{Binding Source={x:Static draw:SystemIcons.Question}, Converter={utils:IconToImageSourceConverter}, Mode=OneWay}" Margin="4,0,0,0">
+                                        <Image.ToolTip>
+                                            <DynamicResource ResourceKey="ClickThroughHKToolTip" />
+                                        </Image.ToolTip>
+                                    </Image>
+                                </StackPanel>
+
+                                <Label Content="{DynamicResource ClearChatHK}" HorizontalAlignment="Left" Margin="0" Height="31" VerticalAlignment="Top" Width="140"/>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox x:Name="ClearChatHotKeyTb" HorizontalAlignment="Left" Height="27" TextWrapping="Wrap" Text="Empty" Width="140" VerticalAlignment="Top" UndoLimit="2" IsReadOnlyCaretVisible="True" IsReadOnly="True" IsUndoEnabled="False"  PreviewMouseRightButtonDown ="ClearChatHotKeyTb_MouseRightButtonDown"/>
+                                    <Image Height="20" Width="20" Source="{Binding Source={x:Static draw:SystemIcons.Question}, Converter={utils:IconToImageSourceConverter}, Mode=OneWay}" Margin="4,0,0,0">
+                                        <Image.ToolTip>
+                                            <DynamicResource ResourceKey="ClearChatHKToolTip" />
+                                        </Image.ToolTip>
+                                    </Image>
+                                </StackPanel>
+
                             </StackPanel>
                         </GroupBox>
                         <GroupBox Header="{DynamicResource OtherSett}" Margin="5,5,5,5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="180" Height="145">

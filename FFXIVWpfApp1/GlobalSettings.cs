@@ -15,40 +15,11 @@ namespace FFXIITataruHelper
 {
     static class GlobalSettings
     {
-        public static string BackgroundColor = "#90909090";
-
-        public static string Font1Color = "#FFFFFFFF";
-
-        public static string Font2Color = "#FF000000";
-
-        public static bool IsClickThrough = false;
-
-        public static bool IsAlwaysOnTop = false;
-
-        public static bool IsHideToTray = false;
-
-        public static int FontSize = 24;
-
-        public static List<string> RecentBackgroundColors = new List<string>(new string[] { "#00FFFFFF" });
-
-        public static List<string> RecentFont1Colors = new List<string>(new string[] { "#FFFFFFFF" });
-        public static List<string> RecentFont2Colors = new List<string>(new string[] { "#FF000000" });
-
-        public static string HotKeysFilePath = "../HotKeys.json";
-
-        public static int LineBreakHeight = 0;
-
-        public static int InsertSpaceCount = 0;
-
-        public static int CurrentTranslationEngine = 0;
-
-        public static int CurrentFFXIVLanguage = 0;
-
-        public static int CurrentTranslateToLanguage = 0;
+        public static string OldHotKeysFilePath = "../HotKeys.json";
 
         public static List<string> FFXIVLanguagles = new List<string>(new string[] { "English", "Chinese", "Japanese", "French", "German", "Korean" });
 
-        public static string ChatCodesFilePath = "ChatCodes.json";
+        public static string ChatCodesFilePath = @"Resources\ChatCodes.json";
 
         public static string GoogleTranslateLanguages = "Resources/GoogleTranslateLanguages.json";
 
@@ -56,7 +27,7 @@ namespace FFXIITataruHelper
 
         public static string DeeplLanguages = "Resources/DeeplLanguages.json";
 
-        public static int CurentLanguague = (int)LanguagueWrapper.Languages.English;
+        public static string YandexLanguages = "Resources/YandexTranslateLanguages.json";
 
         public static string LocalisationDirPath = @"Locale\";
 
@@ -72,18 +43,16 @@ namespace FFXIITataruHelper
 
         public static int TranslationDelay = 33;
 
+        public static int TranslatorWaitTime = 2000;
+
         public static int MaxTranslatedSentencesCount = 1;
 
-        public static double MainWinHeight = 0;
+        public static int MaxTranslateTryCount = 3;
 
-        public static double MainWinWidth = 0;
+        public static string OldSettings = "../AppSettings.json";
 
-        public static double ChatWinTop = 0;
+        public static string Settings = "../UserSettings.json";
 
-        public static double ChatWinLeft = 0;
-
-        public static double ChatWinHeight = 0;
-
-        public static double ChatWinWidth = 0;
+        public static string BlackList = @"Resources\MsgBlackList.json";
     }
 }

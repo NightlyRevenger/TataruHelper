@@ -66,6 +66,8 @@ namespace FFXIITataruHelper.Translation
                     var strDeepLHandshakeResp = DeeplWebReader.GetWebData(handShakeUrl, WebApi.WebReader.WebMethods.POST, strDeepLHandshakeRequest);
                     var DeepLHandshakeResp = JsonConvert.DeserializeObject<DeepLResponse.DeepLHandshakeResponse>(strDeepLHandshakeResp);
 
+                    Logger.WriteLog(strDeepLHandshakeResp);
+
                     _DeepLId++;
 
                     _IsFirstTime = false;

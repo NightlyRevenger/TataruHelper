@@ -10,31 +10,27 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using FFXIITataruHelper.EventArguments;
+using System.Threading;
 
 namespace FFXIITataruHelper.WinUtils
 {
     public class MouseHooker : IDisposable
     {
-        public delegate void LowLevelMouseEventHandler(object sender, LowLevelMouseEventArgs e);
-
-        public class LowLevelMouseEventArgs
+        public event AsyncEventHandler<LowLevelMouseEventArgs> LowLevelMouseEvent
         {
-            public LowLevelMouseEventArgs(MouseMessages mouseMessages, MSLLHOOKSTRUCT mouseEventFlags)
-            {
-                MouseMessages = mouseMessages;
-                MouseEventFlags = mouseEventFlags;
-            }
-            public MouseMessages MouseMessages { get; }
-            public MSLLHOOKSTRUCT MouseEventFlags { get; }
+            add { this._LowLevelMouseEvent.Register(value); }
+            remove { this._LowLevelMouseEvent.Unregister(value); }
         }
-
-        public event LowLevelMouseEventHandler LowLevelMouseEvent = delegate { };
+        private AsyncEvent<LowLevelMouseEventArgs> _LowLevelMouseEvent;
 
         public MouseHooker()
         {
             _proc = HookCallback;
 
             _hookID = SetHook(_proc);
+
+            _LowLevelMouseEvent = new AsyncEvent<LowLevelMouseEventArgs>(EventErrorHandler, "LowLevelMouseEvent");
         }
 
         private LowLevelMouseProc _proc;
@@ -45,6 +41,8 @@ namespace FFXIITataruHelper.WinUtils
             using (Process curProcess = Process.GetCurrentProcess())
             using (ProcessModule curModule = curProcess.MainModule)
             {
+                //return SetWindowsHookEx(WH_MOUSE, proc, GetModuleHandle(curModule.ModuleName), (uint)Thread.CurrentThread.ManagedThreadId);
+                //return SetWindowsHookEx(WH_MOUSE, proc, GetModuleHandle(curModule.ModuleName), (uint)AppDomain.GetCurrentThreadId());
                 return SetWindowsHookEx(WH_MOUSE_LL, proc, GetModuleHandle(curModule.ModuleName), 0);
             }
         }
@@ -90,11 +88,15 @@ namespace FFXIITataruHelper.WinUtils
         {
             if (nCode >= 0)
             {
-                if (LowLevelMouseEvent != null)
+                var hookStruct = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
+
+                var ea = new LowLevelMouseEventArgs(this)
                 {
-                    var hookStruct = (MSLLHOOKSTRUCT)Marshal.PtrToStructure(lParam, typeof(MSLLHOOKSTRUCT));
-                    LowLevelMouseEvent(this, new LowLevelMouseEventArgs((MouseMessages)wParam, hookStruct));
-                }
+                    MouseMessages = (MouseMessages)wParam,
+                    MouseEventFlags = hookStruct
+                };
+                _LowLevelMouseEvent.InvokeAsync(ea);
+
             }
 
             return CallNextHookEx(_hookID, nCode, wParam, lParam);
@@ -139,6 +141,17 @@ namespace FFXIITataruHelper.WinUtils
         public void Dispose()
         {
             UnHook();
+        }
+
+        private void EventErrorHandler(string evname, Exception ex)
+        {
+            string text = evname + Environment.NewLine + Convert.ToString(ex);
+            Logger.WriteLog(text);
+        }
+
+        ~MouseHooker()
+        {
+            Dispose();
         }
     }
 }

@@ -1,0 +1,94 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:FFXIITataruHelper"
+                    xmlns:system="clr-namespace:System;assembly=mscorlib">
+
+    <system:String x:Key="SettingsWindowName">Settings</system:String>
+
+    <system:String x:Key="DocLanguage">Language</system:String>
+    <system:String x:Key="DocLanguageEn">English</system:String>
+    <system:String x:Key="DocLanguageRu">Russian</system:String>
+
+    <system:String x:Key="DockHelp">Help</system:String>
+
+    <system:String x:Key="DockAbout">About</system:String>
+
+    <system:String x:Key="FFStatusLable">FF Status:</system:String>
+
+    <system:String x:Key="FFStatusText">Couldn't find FFXIV process.</system:String>
+    <system:String x:Key="FFStatusTextFound">Process found:</system:String>
+
+    <system:String x:Key="ChatAppearance">Chat Appearance</system:String>
+    <system:String x:Key="TranslationSettings">Translation Settings</system:String>
+    <system:String x:Key="GeneralBehavior">General Behavior</system:String>
+
+    <system:String x:Key="FontSettings">Font Settings</system:String>
+    <system:String x:Key="FontSize">Font Size</system:String>
+
+    <system:String x:Key="FontColor">Font Color</system:String>
+    <system:String x:Key="FontColor1">Color 1</system:String>
+    <system:String x:Key="FontColor2">Color 2</system:String>
+
+    <system:String x:Key="BackgroundColor">Background Color</system:String>
+
+    <system:String x:Key="ColorPickerStandardButtonHeader">Standard</system:String>
+    <system:String x:Key="ColorPickerAdvancedButtonHeader">Advanced</system:String>
+
+    <system:String x:Key="ColorPickerStandardColorsHeader">Standard Colors</system:String>
+    <system:String x:Key="ColorPickerRecentColorsHeader">Recent Colors</system:String>
+
+    <system:String x:Key="ParagraphSettings">Paragraph Settings</system:String>
+    <system:String x:Key="IntervalWidth">Interval Width</system:String>
+    <system:String x:Key="LineBreakHeight">Line Break Height</system:String>
+
+    <system:String x:Key="ChatCodes">Chat Codes</system:String>
+
+    <system:String x:Key="TranslationEngine">Translation Engine</system:String>
+    <system:String x:Key="FFLanguage">FF Language</system:String>
+    <system:String x:Key="TraslateTo">Traslate To</system:String>
+
+    <system:String x:Key="Hotkeys">Hotkeys</system:String>
+    <system:String x:Key="ShowHideChatWindowHK">Show/hide Chat Window</system:String>
+    <system:String x:Key="ShowHideChatWindowHKToolTip">Show Hide Chat Window Hotkey Tooltip</system:String>
+    <system:String x:Key="ClickThroughHK">Click Through</system:String>
+    <system:String x:Key="ClickThroughHKToolTip">Click Through HotKey ToolTip</system:String>
+    <system:String x:Key="ClearChatHK">Clear Chat</system:String>
+    <system:String x:Key="ClearChatHKToolTip">Clear Chat HotKey ToolTip</system:String>
+
+    <system:String x:Key="OtherSett">Other</system:String>
+    <system:String x:Key="ClickThroughCB">Click Through</system:String>
+    <system:String x:Key="AlwaysOnTopCB">Always On Top</system:String>
+    <system:String x:Key="HideToTrayCB">Hide to Tray</system:String>
+
+    <system:String x:Key="ShowChatBox">Show Chat Window</system:String>
+    <system:String x:Key="HideChatBox">Hide Chat Window</system:String>
+
+    <system:String x:Key="ResetChatPosition">Reset Chat Position</system:String>
+
+    <system:String x:Key="TranslationEngineError">Translation engine error. Consider switching to other engine.</system:String>
+
+    <system:String x:Key="TranslationEngineSwitchMsg">Translation engine error. Switching to:</system:String>
+
+    <system:String x:Key="CkSystem">System</system:String>
+    <system:String x:Key="CkEcho">Echo</system:String>
+    <system:String x:Key="CkError">Error</system:String>
+    <system:String x:Key="CkNPCD">NPCD</system:String>
+    <system:String x:Key="CkNPCA">NPCA</system:String>
+    <system:String x:Key="CkRecruitment">Recruitment</system:String>
+    <system:String x:Key="CkSay">Say</system:String>
+    <system:String x:Key="CkShout">Shout</system:String>
+    <system:String x:Key="CkParty">Party</system:String>
+    <system:String x:Key="CkTell">Tell</system:String>
+    <system:String x:Key="CkFreeCompany">FreeCompany</system:String>
+    <system:String x:Key="CkYell">Yell</system:String>
+    <system:String x:Key="CkAlliance">Alliance</system:String>
+    <system:String x:Key="CkLinkShell1">LinkShell1</system:String>
+    <system:String x:Key="CkLinkShell2">LinkShell2</system:String>
+    <system:String x:Key="CkLinkShell3">LinkShell3</system:String>
+    <system:String x:Key="CkLinkShell4">LinkShell4</system:String>
+    <system:String x:Key="CkLinkShell5">LinkShell5</system:String>
+    <system:String x:Key="CkLinkShell6">LinkShell6</system:String>
+    <system:String x:Key="CkLinkShell7">LinkShell7</system:String>
+    <system:String x:Key="CkLinkShell8">LinkShell8</system:String>
+
+</ResourceDictionary>

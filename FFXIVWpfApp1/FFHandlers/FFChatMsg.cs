@@ -1,8 +1,6 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,17 +9,17 @@ using System.Threading.Tasks;
 
 namespace FFXIITataruHelper.FFHandlers
 {
-    enum MsgType : int { Translate = 1, Check = 2 };
-
-    struct ChatMsgType
+    public struct FFChatMsg
     {
-        public string ChatCode { get; set; }
-        public MsgType MsgType { get; set; }
+        public string Text { get; internal set; }
+        public string Code { get; internal set; }
+        public DateTime TimeStamp { get; internal set; }
 
-        public ChatMsgType(string chatCode, MsgType msgType)
+        public FFChatMsg(string text, string code, DateTime timeStamp)
         {
-            ChatCode = chatCode;
-            MsgType = msgType;
+            Text = text;
+            Code = code;
+            TimeStamp = timeStamp;
         }
     }
 }

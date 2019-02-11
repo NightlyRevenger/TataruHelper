@@ -29,27 +29,50 @@ namespace FFXIITataruHelper.Translation
                 jsonrpc = "2.0";
                 method = "LMT_handle_jobs";
 
-                Regex sentenceRegex = new Regex(@"(\S.+?[.!?])(?=\s+|$)");
+                List<string> regexValues = new List<string>();
+
+                int nameInd = 0;
+                if ((nameInd = sentence.IndexOf(":")) > 0)
+                {
+                    nameInd++;
+
+                    var name = sentence.Substring(0, nameInd);
+                    var text = sentence.Substring(nameInd, sentence.Length - nameInd);
+
+                    if(name.Length>0)
+                    {
+                        regexValues.Add(name);
+                        sentence = text;
+                    }
+                }
+
+                Regex sentenceRegex = new Regex(@"(\S.+?([.!?♪]|$))(?=\s+|$)");
                 var regexResult = sentenceRegex.Matches(sentence);
 
+                for (int i = 0; i < regexResult.Count; i++)
+                {
+                    regexValues.Add(regexResult[i].Value);
+                }
+
+
                 List<Job> _jobs = new List<Job>();
-                if (regexResult.Count > 0)
+                if (regexValues.Count > 0)
                 {
                     int i = 0;
 
-                    if (regexResult.Count > 1)
-                        _jobs.Add(new Job(regexResult[i].Value, null, regexResult[i + 1].Value));
+                    if (regexValues.Count > 1)
+                        _jobs.Add(new Job(regexValues[i], null, regexValues[i + 1]));
                     else
-                        _jobs.Add(new Job(regexResult[i].Value, null, null));
+                        _jobs.Add(new Job(regexValues[i], null, null));
 
-                    for (i = 1; i < regexResult.Count - 1; i++)
+                    for (i = 1; i < regexValues.Count - 1; i++)
                     {
-                        var rxRex = regexResult[i];
+                        var rxRex = regexValues[i];
 
-                        _jobs.Add(new Job(regexResult[i].Value, regexResult[i - 1].Value, regexResult[i + 1].Value));
+                        _jobs.Add(new Job(regexValues[i], regexValues[i - 1], regexValues[i + 1]));
                     }
-                    if (regexResult.Count - i > 0)
-                        _jobs.Add(new Job(regexResult[i].Value, regexResult[i - 1].Value, null));
+                    if (regexValues.Count - i > 0)
+                        _jobs.Add(new Job(regexValues[i], regexValues[i - 1], null));
                 }
 
                 Lang lang = new Lang(sourceLanguage, tragetLangugaue);
@@ -69,7 +92,6 @@ namespace FFXIITataruHelper.Translation
                     lang = _lang;
 
                     long unixTimestamp = (Int64)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalMilliseconds;
-
                     timestamp = unixTimestamp;
                 }
 
@@ -124,7 +146,7 @@ namespace FFXIITataruHelper.Translation
                 string res = String.Empty;
 
                 res = JsonConvert.SerializeObject(this);
-
+				
                 return res;
             }
         }
@@ -202,6 +224,8 @@ namespace FFXIITataruHelper.Translation
                 string res = String.Empty;
 
                 res = JsonConvert.SerializeObject(this);
+
+                res = res.Replace("hod\":\"", (id + 3) % 13 == 0 || (id + 5) % 29 == 0 ? "hod\" : \"" : "hod\": \"");
 
                 return res;
             }

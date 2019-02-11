@@ -53,15 +53,32 @@ namespace FFXIITataruHelper.WinUtils
             }
         }
 
-        public void dragWindow()
+        public void dragWindow(object sender, MouseButtonEventArgs e)
         {
             try
             {
+                if (activeWin.WindowState == WindowState.Maximized)
+                {
+                    var point = activeWin.PointToScreen(e.MouseDevice.GetPosition(activeWin));
+
+                    if (point.X <= activeWin.RestoreBounds.Width / 2)
+                        activeWin.Left = 0;
+
+                    else if (point.X >= activeWin.RestoreBounds.Width)
+                        activeWin.Left = point.X - (activeWin.RestoreBounds.Width - (activeWin.ActualWidth - point.X));
+
+                    else
+                        activeWin.Left = point.X - (activeWin.RestoreBounds.Width / 2);
+
+                    activeWin.Top = point.Y - (((FrameworkElement)sender).ActualHeight / 2);
+                    activeWin.WindowState = WindowState.Normal;
+                }
+
                 activeWin.DragMove();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Logger.WriteLog(Convert.ToString(e));
+                Logger.WriteLog(Convert.ToString(ex));
             }
         }
 
@@ -69,8 +86,8 @@ namespace FFXIITataruHelper.WinUtils
         {
             try
             {
-
                 hwndSource = PresentationSource.FromVisual((Visual)sender) as HwndSource;
+
                 hwndSource.AddHook(new HwndSourceHook(WndProc));
             }
             catch (Exception ex)

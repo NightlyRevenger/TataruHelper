@@ -13,7 +13,7 @@ using System.Windows.Input;
 
 namespace FFXIITataruHelper.WinUtils
 {
-    class HotKeyCombination
+    public class HotKeyCombination : IEquatable<HotKeyCombination>
     {
         [JsonIgnore]
         public ModifierKeys ModifierKey { get { return _ModifierKey; } }
@@ -46,11 +46,11 @@ namespace FFXIITataruHelper.WinUtils
         private string _Name;
 
         [JsonProperty]
-        private List<Key> _Keys;
+        private List<System.Windows.Input.Key> _Keys;
 
         public HotKeyCombination()
         {
-            _Name = "";
+            _Name = String.Empty;
 
             _Keys = new List<Key>();
 
@@ -75,7 +75,9 @@ namespace FFXIITataruHelper.WinUtils
             _ModifierKey = hotKeyCombination._ModifierKey;
             _NormalKey = hotKeyCombination._NormalKey;
 
-            _Keys = hotKeyCombination._Keys;
+            _Name = hotKeyCombination._Name;
+
+            _Keys = hotKeyCombination._Keys.ToList();
         }
 
         public void AddKey(Key key)
@@ -135,7 +137,8 @@ namespace FFXIITataruHelper.WinUtils
                     _ModifierKey = _ModifierKey | ModifierKeys.Alt;
             }
         }
-        public string toLogString()
+
+        public string CombinationKeysName()
         {
             string res = "Empty";
             if (_Keys.Count > 0)
@@ -147,6 +150,7 @@ namespace FFXIITataruHelper.WinUtils
             }
             res = res.Remove(res.Length - 1, 1);
             res = res.Replace("Left", "");
+            res = res.Replace("Right", "");
 
             return res;
         }
@@ -162,6 +166,47 @@ namespace FFXIITataruHelper.WinUtils
             }
 
             return false;
+        }
+
+        public bool Equals(HotKeyCombination other) => this == other;
+
+        public static bool operator ==(HotKeyCombination left, HotKeyCombination right)
+        {
+            if (ReferenceEquals(left, right))
+                return true;
+
+            if (ReferenceEquals(left, null))
+                return false;
+
+            if (ReferenceEquals(right, null))
+                return false;
+
+            return left.NormalKey == right.NormalKey && left.ModifierKey == right.ModifierKey && left.Name == right.Name;
+        }
+
+        public static bool operator !=(HotKeyCombination left, HotKeyCombination right) => !(left == right);
+
+        public override bool Equals(object obj)
+        {
+            if(obj is HotKeyCombination)
+            {
+                return this == (HotKeyCombination)obj;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode()
+        {
+            int result = 17;
+            unchecked
+            {
+                result = result * 23 + this.ModifierKey.GetHashCode();
+                result = result * 23 + this.NormalKey.GetHashCode();
+                result = result * 23 + this.Name.GetHashCode();
+            }
+
+            return result;
         }
     }
 }

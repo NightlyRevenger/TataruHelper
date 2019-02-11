@@ -115,12 +115,11 @@ namespace FFXIITataruHelper
 
                             try
                             {
-                                int len = a.GetLength(1);
                                 Type typeTest = a[i, 1].GetType();
 
                                 var arr = (Newtonsoft.Json.Linq.JArray)(a[i, 1]);
 
-                                len = arr.Count;
+                                int len = arr.Count;
 
                                 filedVal = field.GetValue(null);
 
@@ -163,18 +162,6 @@ namespace FFXIITataruHelper
 
         }
 
-        public static Point GetDpiSafeLocation(Point location)
-        {
-            PresentationSource source = PresentationSource.FromVisual(Application.Current.MainWindow);
-            if (source != null)
-            {
-                double dpiX = 96.0 * source.CompositionTarget.TransformToDevice.M11;
-                double dpiY = 96.0 * source.CompositionTarget.TransformToDevice.M22;
-                return new Point(location.X * 96.0 / dpiX, location.Y * 96.0 / dpiY);
-            }
-            return location;
-        }
-
         public static T GetLast<T>(this IList<T> list)
         {
             if (list == null)
@@ -194,6 +181,14 @@ namespace FFXIITataruHelper
             dict.Add(key, value);
 
             return true;
+        }
+
+        public static IList<T> Swap<T>(this IList<T> list, int indexA, int indexB)
+        {
+            T tmp = list[indexA];
+            list[indexA] = list[indexB];
+            list[indexB] = tmp;
+            return list;
         }
 
         public static Key RealKey(this KeyEventArgs e)
@@ -218,6 +213,11 @@ namespace FFXIITataruHelper
         {
             var hwnd = (HwndSource.FromVisual(window) as HwndSource).Handle;
             Win32Interfaces.ShowWindow(hwnd, Win32Interfaces.ShowWindowCommands.Restore);
+        }
+
+        public static string ClearBlackListString(string text)
+        {
+            return text;
         }
     }
 }

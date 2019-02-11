@@ -22,7 +22,8 @@ namespace FFXIITataruHelper.Translation
         {
             GoogleTranslate = 0,
             Multillect = 1,
-            DeepL = 2
+            DeepL = 2,
+            Yandex = 3
         }
 
         public string SourceLanguage
@@ -104,11 +105,15 @@ namespace FFXIITataruHelper.Translation
 
         private ReadOnlyCollection<TranslatorLanguague> DeeplLanguages;
 
+        private ReadOnlyCollection<TranslatorLanguague> YandexLanguages;
+
         private List<ReadOnlyCollection<TranslatorLanguague>> _TranslatorsLanguages;
 
         WebApi.WebReader GoogleWebRead;
 
         WebApi.WebReader MultillectWebRead;
+
+        WebApi.WebReader YandexWebRead;
 
         DeepLTranslator _DeepLTranslator;
 
@@ -118,6 +123,7 @@ namespace FFXIITataruHelper.Translation
         {
             GoogleWebRead = new WebApi.WebReader(@"translate.google.com");
             MultillectWebRead = new WebApi.WebReader(@"translate.multillect.com");
+            YandexWebRead = new WebApi.WebReader(@"translate.yandex.net");
 
             _DeepLTranslator = new DeepLTranslator();
 
@@ -128,24 +134,29 @@ namespace FFXIITataruHelper.Translation
             GoogleRx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
-        public void LoadLanguagues()
+        public void LoadLanguagues(string glTrPath, string MultTrPath, string deepPath, string YaTrPath)
         {
             try
             {
-                var tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(GlobalSettings.GoogleTranslateLanguages);
+                var tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(glTrPath);
                 GoogleLanguages = new ReadOnlyCollection<TranslatorLanguague>(tmpList);
 
                 _TranslatorsLanguages.Add(GoogleLanguages);
 
-                tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(GlobalSettings.MultillectTranslateLanguages);
+                tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(MultTrPath);
                 MultillectLanguages = new ReadOnlyCollection<TranslatorLanguague>(tmpList);
 
                 _TranslatorsLanguages.Add(MultillectLanguages);
 
-                tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(GlobalSettings.DeeplLanguages);
+                tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(deepPath);
                 DeeplLanguages = new ReadOnlyCollection<TranslatorLanguague>(tmpList);
 
                 _TranslatorsLanguages.Add(DeeplLanguages);
+
+                tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(YaTrPath);
+                YandexLanguages = new ReadOnlyCollection<TranslatorLanguague>(tmpList);
+
+                _TranslatorsLanguages.Add(YandexLanguages);
 
                 _SourceLanguage = CurrentLanguages[0];
                 _TargetLanguage = CurrentLanguages[1];
@@ -178,8 +189,36 @@ namespace FFXIITataruHelper.Translation
                         result = DeeplTranslate(inSentence, _SourceLanguage.LanguageCode, _TargetLanguage.LanguageCode);
                         break;
                     }
+                case TranslationEngine.Yandex:
+                    {
+                        result = YandexTranslate(inSentence, _SourceLanguage.LanguageCode, _TargetLanguage.LanguageCode);
+                        break;
+                    }
+                default:
+                    {
+                        result = String.Empty;
+                        break;
+                    }
             }
             return result;
+        }
+
+        public async Task<string> TransalteAsync(string inSentence)
+        {
+            string result = String.Empty;
+
+            await Task.Run(() =>
+            {
+                result = Transalte(inSentence);
+            });
+
+            return result;
+        }
+
+        public ReadOnlyCollection<ReadOnlyCollection<TranslatorLanguague>> GetAllSupportedLanguages()
+        {
+            var translatorLanguagues = new ReadOnlyCollection<ReadOnlyCollection<TranslatorLanguague>>(_TranslatorsLanguages);
+            return translatorLanguagues;
         }
 
         private string GoogleTranslate(string sentence, string inLang, string outLang)
@@ -239,6 +278,38 @@ namespace FFXIITataruHelper.Translation
         private string DeeplTranslate(string sentence, string inLang, string outLang)
         {
             return _DeepLTranslator.Translate(sentence, inLang, outLang);
+        }
+
+        private string YandexTranslate(string sentence, string inLang, string outLang)
+        {
+            string result = String.Empty;
+            try
+            {
+                string _outLang = outLang;
+                string _inLang = inLang;
+
+                string _baseUrl = @"https://translate.yandex.net/api/v1.5/tr.json/translate?lang={0}-{1}&key={2}";
+                string url = string.Format(_baseUrl, _inLang, _outLang, "");
+
+                var tmpResult = YandexWebRead.GetWebData(url, WebApi.WebReader.WebMethods.POST, "text=" + sentence);
+
+                var resp = JsonConvert.DeserializeObject<YandexResponse>(tmpResult);
+
+                if (resp.code == 200)
+                {
+                    for (int i = 0; i < resp.text.Count; i++)
+                    {
+                        result += resp.text[i] + " ";
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                Logger.WriteLog(Convert.ToString(e));
+            }
+
+            return result;
         }
     }
 }
