@@ -14,6 +14,7 @@
    * [License](#license)  
    * [Credits](#credits)  
    * [Contacts](#contacts)  
+   * [Support](#support)  
 * [Русский](#русский)
    * [Установка](#установка)
    * [Как пользоваться](#как-пользоваться)
@@ -21,6 +22,7 @@
    * [Лицензия](#лицензия)  
    * [Благодарности](#благодарности)  
    * [Контакты](#контакты) 
+   * [Поддержка](#поддержка)  
 ---
 
 #### English
@@ -83,6 +85,14 @@ Telegram: [click](https://t.me/xDarkOne)
 VK: [click](https://vk.com/velikov_ra)  
 NightlyRevenger(developer):  
 [nightlyrevenger@yandex.ru](mailto:nightlyrevenger@yandex.ru)  
+
+## Support
+
+If you want to support this project, use the links below:  
+MasterCard(Sberbank): 5469 3800 2554 9048  
+Yandex.Money: [4100172621059](https://money.yandex.ru/to/4100172621059)  
+PayPal: [paypal.me/xdarkone](https://www.paypal.me/xdarkone)  
+Patreon: - [TataruHelper](https://www.patreon.com/TataruHelper)  
 
 ---
 ---
@@ -147,4 +157,12 @@ VK: [click](https://vk.com/velikov_ra)
 Twitch: [click](https://www.twitch.tv/xdark0ne)  
 NightlyRevenger(developer):  
 [nightlyrevenger@yandex.ru](mailto:nightlyrevenger@yandex.ru)  
+
+## Поддержка
+
+Если вы хотите поддержать проект, воспользуйтесь ссылками ниже:  
+MasterCard(Сбербанк): 5469 3800 2554 9048  
+Яндекс.Деньги: [4100172621059](https://money.yandex.ru/to/4100172621059)  
+PayPal: [paypal.me/xdarkone](https://www.paypal.me/xdarkone)  
+Patreon: - [TataruHelper](https://www.patreon.com/TataruHelper)  
 
