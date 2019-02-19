@@ -8,20 +8,16 @@
 ---
 ## Table of Contents
 * [English](#english)
-   * [New features](#new-features)
    * [Installation](#installation)
    * [How to use](#how-to-use)
    * [Development](#development)
-   * [ToDoList](#todolist)
    * [License](#license)  
    * [Credits](#credits)  
    * [Contacts](#contacts)  
 * [Русский](#русский)
-   * [Новые функции](#новые-функции)
    * [Установка](#установка)
    * [Как пользоваться](#как-пользоваться)
    * [Разработка](#как-пользоваться)
-   * [Список планов](#список-планов)
    * [Лицензия](#лицензия)  
    * [Благодарности](#благодарности)  
    * [Контакты](#контакты) 
@@ -36,10 +32,6 @@ Tataru Helper - application for translation of in-game texts in Japanese develop
   - You can freely change the translator engine and use various translation methods.
   - Automatic updates.
   - Tataru Taru!
-
-## New features!
-
-  - Soon™
 
 
 ## Installation
@@ -67,11 +59,6 @@ Want to contribute? Great!
 
 If you want to translate the application into your language, let me know.
 
-
-
-## ToDoList
-
- - Soon™
 
 ## License
 
@@ -110,10 +97,6 @@ Tataru Helper - приложение для перевода внутриигр�
   - Автоматические обновления.
   - Татару Тару!
 
-## Новые функции!
-
-  - Soon™
-
 
 ## Установка
 
@@ -141,10 +124,6 @@ P.S. В дальнейшем, не нужно запускать приложе�
 Если вы хотите перевести приложение на свой язык, дайте мне знать.
 
 
-## Планы
-
- - Soon™
-
 ## Лицензия
 
 [MIT](/LICENSE)
@@ -165,6 +144,7 @@ P.S. В дальнейшем, не нужно запускать приложе�
 Discord: xDarkOne#6486  
 Telegram: [click](https://t.me/xDarkOne)  
 VK: [click](https://vk.com/velikov_ra)  
+Twitch: [click](https://www.twitch.tv/xdark0ne)  
 NightlyRevenger(developer):  
 [nightlyrevenger@yandex.ru](mailto:nightlyrevenger@yandex.ru)  
 
