@@ -86,6 +86,7 @@ xDarkOne:
 Discord: xDarkOne#6486  
 Telegram: [click](https://t.me/xDarkOne)  
 VK: [click](https://vk.com/velikov_ra)  
+Twitch: [xDark0ne](https://www.twitch.tv/xdark0ne)  
 NightlyRevenger(developer):  
 [nightlyrevenger@yandex.ru](mailto:nightlyrevenger@yandex.ru)  
 
@@ -157,7 +158,7 @@ P.S. В дальнейшем, не нужно запускать приложе�
 Discord: xDarkOne#6486  
 Telegram: [click](https://t.me/xDarkOne)  
 VK: [click](https://vk.com/velikov_ra)  
-Twitch: [click](https://www.twitch.tv/xdark0ne)  
+Twitch: [xDark0ne](https://www.twitch.tv/xdark0ne)  
 NightlyRevenger(developer):  
 [nightlyrevenger@yandex.ru](mailto:nightlyrevenger@yandex.ru)  
 
