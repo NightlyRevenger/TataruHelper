@@ -43,15 +43,12 @@ namespace FFXIITataruHelper
                 {
                     try
                     {
-
                         _UpdateManager = await UpdateManager.GitHubUpdateManager(UpdatePath,null,null,null,CmdArgsStatus.PreRelease);
 
                         //var updates = await _UpdateManager.CheckForUpdate();
                         //var lastVersion = updates?.ReleasesToApply?.OrderBy(x => x.Version).LastOrDefault();
 
                         releaseEntry = await _UpdateManager.UpdateApp();
-
-
                     }
                     catch (Exception e)
                     {

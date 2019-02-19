@@ -39,8 +39,9 @@ namespace FFXIITataruHelper.Translation
                     var name = sentence.Substring(0, nameInd);
                     var text = sentence.Substring(nameInd, sentence.Length - nameInd);
 
-                    if(name.Length>0)
+                    if (name.Length > 0)
                     {
+                        name = name.Replace(":", " :");
                         regexValues.Add(name);
                         sentence = text;
                     }
@@ -91,8 +92,7 @@ namespace FFXIITataruHelper.Translation
 
                     lang = _lang;
 
-                    long unixTimestamp = (Int64)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalMilliseconds;
-                    timestamp = unixTimestamp;
+                    timestamp = (Int64)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalMilliseconds;
                 }
 
                 public List<Job> jobs { get; set; }
@@ -146,7 +146,7 @@ namespace FFXIITataruHelper.Translation
                 string res = String.Empty;
 
                 res = JsonConvert.SerializeObject(this);
-				
+
                 return res;
             }
         }
@@ -224,8 +224,6 @@ namespace FFXIITataruHelper.Translation
                 string res = String.Empty;
 
                 res = JsonConvert.SerializeObject(this);
-
-                res = res.Replace("hod\":\"", (id + 3) % 13 == 0 || (id + 5) % 29 == 0 ? "hod\" : \"" : "hod\": \"");
 
                 return res;
             }

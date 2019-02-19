@@ -27,6 +27,10 @@ namespace FFXIITataruHelper
 
         public bool IsHideToTray { get; set; } = false;
 
+        public bool IsAutoHide { get; set; } = false;
+
+        public TimeSpan AutoHideTimeout { get; set; } = new TimeSpan(0, 5, 0);
+
         public int FontSize { get; set; } = 14;
 
         public List<Color> RecentBackgroundColors { get; set; } = new List<Color>(new Color[] { (Color)ColorConverter.ConvertFromString("#4B000000") });
@@ -75,6 +79,10 @@ namespace FFXIITataruHelper
 
             IsHideToTray = false;
 
+            IsAutoHide = false;
+
+            AutoHideTimeout = new TimeSpan(0, 5, 0);
+
             FontSize = 14;
 
             RecentBackgroundColors = new List<Color>(new Color[] { (Color)ColorConverter.ConvertFromString("#4B000000") });
@@ -121,6 +129,10 @@ namespace FFXIITataruHelper
             IsAlwaysOnTop = userSettings.IsAlwaysOnTop;
 
             IsHideToTray = userSettings.IsHideToTray;
+
+            IsAutoHide = userSettings.IsAutoHide;
+
+            AutoHideTimeout = userSettings.AutoHideTimeout;
 
             FontSize = userSettings.FontSize;
 

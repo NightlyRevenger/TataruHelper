@@ -33,7 +33,7 @@ namespace FFXIITataruHelper
     /// <summary>
     /// Interaction logic for MainWindow.xaml//
     /// </summary>
-    public partial class MainWindow : Window //-V3072
+    public partial class MainWindow : Window //-V3072//
     {
         HotKeyManager _HotKeyManager;
 
@@ -58,9 +58,19 @@ namespace FFXIITataruHelper
 
         bool _IsShutDown;
 
+        OptimizeFootprint _OptimizeFootprint;
+
+        WinMessagesHandler _WinMessagesHandler;
+
         public MainWindow()
         {
             _IsShutDown = false;
+
+            if (Utils.TataruSingleInstance.IsOnlyInstance == false)
+            {
+                ShutDown();
+                return;
+            }//*/
 
             InitializeComponent();
             try
@@ -112,12 +122,12 @@ namespace FFXIITataruHelper
             if (_ChatWindow.Visibility == Visibility.Visible)
             {
                 b.Content = (string)this.Resources["ShowChatBox"];
-                _ChatWindow.Hide();
+                _ChatWindow.UserHide();
             }
             else
             {
                 b.Content = (string)this.Resources["HideChatBox"];
-                _ChatWindow.Show();
+                _ChatWindow.UserShow();
             }
         }
 
@@ -218,6 +228,17 @@ namespace FFXIITataruHelper
             _TataruUIModel.IsHideSettingsToTray = isHideToTray;
         }
 
+        private void AutoHide_Changed(object sender, RoutedEventArgs e)
+        {
+            var isAutoHide = (bool)((CheckBox)sender).IsChecked;
+            _TataruUIModel.IsAutoHide = isAutoHide;
+        }
+
+        private void AutoHideTimeOut_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
+        {
+            _TataruUIModel.AutoHideTimeout = new TimeSpan(0, 0, (int)e.NewValue);
+        }
+
         #endregion
 
         #region **WindowEvents
@@ -308,9 +329,21 @@ namespace FFXIITataruHelper
                 ClearChatHotKeyTb.KeyDown += ClearChatKeyDownBindHandler;
                 ClearChatHotKeyTb.KeyUp += ClearChathKeyUpBindHandler;
 
+                try
+                {
+                    Logger.WriteLog("TataruHelper v" + Convert.ToString(System.Reflection.Assembly.GetEntryAssembly().GetName().Version));
+                }
+                catch (Exception) { }
+
                 _Updater.StartUpdate();
 
                 this.DataContext = new TataruViewModel(_TataruModel.TataruUIModel);
+
+                _OptimizeFootprint = new OptimizeFootprint();
+                _OptimizeFootprint.Start();
+
+                _WinMessagesHandler = new WinMessagesHandler(this);
+                _WinMessagesHandler.ShowFirstInstance += OnShowFirstInstance;
             }
             catch (Exception ex)
             {
@@ -337,21 +370,29 @@ namespace FFXIITataruHelper
                     this.Hide();
                 }
                 else
-                {
                     e.Cancel = false;
-                }
 
                 if (e.Cancel == false)
                 {
-                    _ChatWindow.Close();
-                    _TataruModel.Stop();
+                    if (_OptimizeFootprint != null)
+                        _OptimizeFootprint.Stop();
+
+                    Utils.TataruSingleInstance.Stop();
+
+                    if (_ChatWindow != null)
+                        _ChatWindow.Close();
+
+                    if (_TataruModel != null)
+                        _TataruModel.Stop();
 
                     Task.Run(async () =>
                     {
-                        await _TataruModel.SaveSettings();
+                        if (_TataruModel != null)
+                            await _TataruModel.SaveSettings();
                     }).Wait();
 
-                    _LogWriter.Stop();
+                    if (_LogWriter != null)
+                        _LogWriter.Stop();
                 }
             }
             catch (Exception ex)
@@ -516,6 +557,30 @@ namespace FFXIITataruHelper
             });
         }
 
+        private async Task OnAutoHideChange(BooleanChangeEventArgs ea)
+        {
+            await this.UIThreadAsync(() =>
+            {
+                if (ea.NewValue != AutoHideBox.IsChecked)
+                {
+                    AutoHideBox.IsChecked = ea.NewValue;
+                }
+            });
+        }
+
+        private async Task OnAutoHideTimeOutChange(TimeSpanChangeEventArgs ea)
+        {
+            await this.UIThreadAsync(() =>
+            {
+                int totalSeconds = (int)Math.Round(ea.NewValue.TotalSeconds);
+
+                if (totalSeconds != AutoHideTimeOut.Value)
+                {
+                    AutoHideTimeOut.Value = totalSeconds;
+                }
+            });
+        }
+
         private async Task OnSettingsWindowSizeChange(PointDValueChangeEventArgs ea)
         {
             await this.UIThreadAsync(() =>
@@ -552,7 +617,6 @@ namespace FFXIITataruHelper
         {
             await this.UIThreadAsync(() =>
             {
-
                 if (ea.IsRunningNew != ea.IsRunningOld)
                 {
                     if (ea.IsRunningNew)
@@ -584,6 +648,15 @@ namespace FFXIITataruHelper
             });
         }
 
+        private async Task OnShowFirstInstance(BooleanChangeEventArgs ea)
+        {
+            await this.UIThreadAsync(() =>
+            {
+                ShowSettingsWindow();
+
+                _ChatWindow.UserShow();
+            });
+        }
 
         #endregion
 
@@ -608,6 +681,8 @@ namespace FFXIITataruHelper
             UIModel.IsChatClickThroughChanged += OnChatClickThroughChange;
             UIModel.IsChatAlwaysOnTopChanged += OnChatAlwayOnTopChange;
             UIModel.IsHideSettingsToTrayChanged += OnHideSettingsToTrayChange;
+            UIModel.IsAutoHideChanged += OnAutoHideChange;
+            UIModel.AutoHideTimeoutChanged += OnAutoHideTimeOutChange;
 
             UIModel.SettingsWindowSizeChanged += OnSettingsWindowSizeChange;
 
@@ -886,13 +961,11 @@ namespace FFXIITataruHelper
                 {
                     if (_ChatWindow.Visibility == Visibility.Visible)
                     {
-                        Button2.Content = "Show ChatBox";
-                        _ChatWindow.Hide();
+                        _ChatWindow.UserHide();
                     }
                     else
                     {
-                        Button2.Content = "Hide ChatBox";
-                        _ChatWindow.Show();
+                        _ChatWindow.UserShow();
                     }
                 }
             }
@@ -920,30 +993,34 @@ namespace FFXIITataruHelper
 
         private void TBMenuChatWin_Click(object sender, RoutedEventArgs e)
         {
+            /*
             Helper.Unminimize(_ChatWindow);
 
             _ChatWindow.Visibility = Visibility.Visible;
             _ChatWindow.Activate();
+            _ChatWindow.Focus();//*/
+
+            _ChatWindow.UserShow();
             _ChatWindow.Focus();
         }
 
         private void TBMenuSettingsWin_Click(object sender, RoutedEventArgs e)
         {
-            Helper.Unminimize(this);
+            ShowSettingsWindow();
+        }
+        private void TBDoubleClick(object sender, RoutedEventArgs e)
+        {
 
-            this.Visibility = Visibility.Visible;
-            this.Activate();
-            this.Focus();
+            ShowSettingsWindow();
         }
 
-        private void TBDoubleClick(object sender, RoutedEventArgs e)
+        private void ShowSettingsWindow()
         {
             Helper.Unminimize(this);
 
             this.Visibility = Visibility.Visible;
             this.Activate();
             this.Focus();
-
         }
 
         private void TBMenuExit_Click(object sender, RoutedEventArgs e)

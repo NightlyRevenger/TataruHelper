@@ -171,6 +171,8 @@ namespace FFXIITataruHelper.Translation
         {
             string result = String.Empty;
 
+            inSentence = PreprocessSentence(inSentence);
+
             switch (_CurrentTranslationEngine)
             {
                 case TranslationEngine.GoogleTranslate:
@@ -310,6 +312,11 @@ namespace FFXIITataruHelper.Translation
             }
 
             return result;
+        }
+
+        private string PreprocessSentence(string sentence)
+        {
+            return sentence.Replace("&", " and ");
         }
     }
 }

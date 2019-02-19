@@ -49,6 +49,39 @@ namespace FFXIITataruHelper.WinUtils
         [DllImport("user32.dll")]
         public static extern bool ShowWindow(IntPtr hWnd, ShowWindowCommands nCmdShow);
 
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        public static extern IntPtr FindWindow(String lpClassName, String lpWindowName);
+
+        [DllImport("user32.dll")]
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        public const int SW_HIDE = 0;
+        public const int SW_SHOWNORMAL = 1;
+        public const int SW_SHOWMINIMIZED = 2;
+        public const int SW_SHOWMAXIMIZED = 3;
+        public const int SW_SHOWNOACTIVATE = 4;
+        public const int SW_RESTORE = 9;
+        public const int SW_SHOWDEFAULT = 10;
+
+        public const int HWND_BROADCAST = 0xffff;
+
+        [DllImport("User32.dll")]
+        public static extern bool ShowWindow(IntPtr handle, int nCmdShow);
+        [DllImport("User32.dll")]
+        public static extern bool IsIconic(IntPtr handle);
+
+        [DllImport("user32")]
+        public static extern bool PostMessage(IntPtr hwnd, int msg, IntPtr wparam, IntPtr lparam);
+
+        public static int RegisterWindowMessageM(string format, params object[] args)
+        {
+            string message = String.Format(format, args);
+            return RegisterWindowMessage(message);
+        }
+
+        [DllImport("user32")]
+        public static extern int RegisterWindowMessage(string message);
+
         public enum ShowWindowCommands : int
         {
             /// <summary>

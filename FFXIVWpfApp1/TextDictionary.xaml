@@ -58,6 +58,7 @@
     <system:String x:Key="OtherSett">Other</system:String>
     <system:String x:Key="ClickThroughCB">Click Through</system:String>
     <system:String x:Key="AlwaysOnTopCB">Always On Top</system:String>
+    <system:String x:Key="AutoHideCB">Auto Hide</system:String>
     <system:String x:Key="HideToTrayCB">Hide to Tray</system:String>
 
     <system:String x:Key="ShowChatBox">Show Chat Window</system:String>

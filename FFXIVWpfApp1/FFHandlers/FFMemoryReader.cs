@@ -38,6 +38,12 @@ namespace FFXIITataruHelper.FFHandlers
 
         #endregion
 
+        #region **Properties.
+
+        public System.Windows.WindowState FFWindowState { get; private set; }
+
+        #endregion
+
         #region **LocalVariables.
 
         bool _KeepWorking;
@@ -65,6 +71,8 @@ namespace FFXIITataruHelper.FFHandlers
         {
             _KeepWorking = true;
             _KeepReading = true;
+
+            FFWindowState = System.Windows.WindowState.Minimized;
 
             Task.Factory.StartNew(async () =>
             {
@@ -122,38 +130,36 @@ namespace FFXIITataruHelper.FFHandlers
                     Process[] processes = Process.GetProcessesByName(_FfProcessName);
                     if (processes.Length > 0)
                     {
-                        porcessNotFound = false;
-                        // supported: English, Chinese, Japanese, French, German, Korean
-                        string gameLanguage = "English";
-                        // whether to always hit API on start to get the latest sigs based on patchVersion, or use the local json cache (if the file doesn't exist, API will be hit)
-                        bool useLocalCache = true;
-                        // patchVersion of game, or latest//
-                        string patchVersion = "latest";
-                        Process process = processes[0];
-
-                        if (_FfXivProcess != null)
-                            _FfXivProcess.Dispose();
-
-                        _FfXivProcess = process;
-                        ProcessModel processModel = new ProcessModel
+                        try
                         {
-                            Process = process,
-                            IsWin64 = true
-                        };
+                            // supported: English, Chinese, Japanese, French, German, Korean
+                            string gameLanguage = "English";
+                            // whether to always hit API on start to get the latest sigs based on patchVersion, or use the local json cache (if the file doesn't exist, API will be hit)
+                            bool useLocalCache = true;
+                            // patchVersion of game, or latest//
+                            string patchVersion = "latest";
+                            Process process = processes[0];
 
-                        MemoryHandler.Instance.SetProcess(processModel, gameLanguage, patchVersion, useLocalCache);
+                            if (_FfXivProcess != null)
+                                _FfXivProcess.Dispose();
 
-                        _KeepReading = true;
-                        /*
-                        _KeepWorkingFFWin = true;
+                            _FfXivProcess = process;
+                            ProcessModel processModel = new ProcessModel
+                            {
+                                Process = process,
+                                IsWin64 = true
+                            };
 
-                        WatchFFWindowState();
+                            MemoryHandler.Instance.SetProcess(processModel, gameLanguage, patchVersion, useLocalCache);
 
-                        if (FFXIVProcessEventEvent != null)
+                            porcessNotFound = false;
+                            _KeepReading = true;
+                        }
+                        catch (Exception e)
                         {
-                            string text = processes[0].ProcessName;
-                            FFXIVProcessEventEvent(this, new FFProcessEventArgs(text, true));
-                        }//*/
+                            await Task.Delay(GlobalSettings.LookForPorcessDelay);
+                            Logger.WriteLog(e);
+                        }
                     }
                     else
                     {
@@ -172,6 +178,7 @@ namespace FFXIITataruHelper.FFHandlers
             Task.Factory.StartNew(async () =>
             {
                 System.Windows.WindowState FFXIVPrevWindowState = System.Windows.WindowState.Minimized;
+                FFWindowState = System.Windows.WindowState.Minimized;
 
                 bool _isRunningPrev = false;
                 while (_KeepWorking && _KeepReading)
@@ -221,6 +228,8 @@ namespace FFXIITataruHelper.FFHandlers
 
                                 _FFWindowStateChanged.InvokeAsync(ea);
                             }
+
+                            FFWindowState = FFXIVPrevWindowState;
                         }
 
                         Process[] processes = Process.GetProcessesByName(_FfProcessName);
@@ -242,6 +251,8 @@ namespace FFXIITataruHelper.FFHandlers
                             _KeepReading = false;
 
                             _isRunningPrev = false;
+
+                            FFWindowState = System.Windows.WindowState.Minimized;
                         }
                         else
                         {
@@ -260,12 +271,12 @@ namespace FFXIITataruHelper.FFHandlers
                                 };
 
                                 _FFWindowStateChanged.InvokeAsync(ea);
+
+                                FFWindowState = System.Windows.WindowState.Normal;
                             }
 
                             _isRunningPrev = true;
                         }
-
-
                     }
                     catch (Exception e)
                     {
@@ -377,6 +388,7 @@ namespace FFXIITataruHelper.FFHandlers
             Task.Run(async () =>
             {
                 await Task.Delay(2000);
+
                 _FFxivChat.Enqueue(new FFChatMsg(@"_1_ Dakshina:Once you have finished the task, feel free to disssmount your marid.", "003D", DateTime.Now));
                 _FFxivChat.Enqueue(new FFChatMsg(@"_2_ Dakshina:Once you have finished the task, feel free to disssmount your marid. It will make its own way back here.", "003D", DateTime.Now));
                 _FFxivChat.Enqueue(new FFChatMsg(@"_3_ Inoshishi Bugyo:But...the boar will not be next year's totem animal... <sigh>", "", DateTime.Now));
@@ -387,6 +399,10 @@ namespace FFXIITataruHelper.FFHandlers
                 _FFxivChat.Enqueue(new FFChatMsg(@"_8_ Dakshina:Once you have finished the task, feel free to disssmount your marid. It will make its own way back here.", "", DateTime.Now));
                 _FFxivChat.Enqueue(new FFChatMsg(@"_9_ Lydirlona:Mayhap you have heard that Rowena's House of Splendors is expanding its operations. I am proud to say that these rumors are true.", "003D", DateTime.Now));
                 _FFxivChat.Enqueue(new FFChatMsg(@"_10_ Inoshishi Bugyo:But...the boar will not be next year's totem animal... <sigh>", "003D", DateTime.Now));//*/
+                _FFxivChat.Enqueue(new FFChatMsg(@"Conrad:Ahhh, don't fret over that. You're not the first person to take up arms against the Empire under a false name. We'd do the same if we had any sense....My condolences for your loss, child.", "003D", DateTime.Now));
+                _FFxivChat.Enqueue(new FFChatMsg(@"Conrad:My comrades and I must confer on your proposal. A moment, if you please...", "003D", DateTime.Now));
+                _FFxivChat.Enqueue(new FFChatMsg(@"Conrad:Allow me to welcome you once more to Rhalgr's Reach, our humble headquarters.", "003D", DateTime.Now));
+                _FFxivChat.Enqueue(new FFChatMsg(@"Conrad:My name is Conrad Kemp, and I have the dubious honor of overseeing operations here.", "003D", DateTime.Now));//*/
             });
         }
     }

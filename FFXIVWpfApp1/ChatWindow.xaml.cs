@@ -38,6 +38,10 @@ namespace FFXIITataruHelper
 
         private bool _IsClickThrought;
 
+        private DateTime _TextArrivedTime;
+        private bool _KeepWorking;
+        private bool _AutoHidden;
+
         private TataruModel _TataruModel;
         private TataruUIModel _TataruUIModel;
 
@@ -62,6 +66,11 @@ namespace FFXIITataruHelper
                 ChatRtb.BorderThickness = new Thickness(0);
 
                 ChatRtb.Document.Blocks.Clear();
+
+                _TextArrivedTime = DateTime.UtcNow;
+
+                _KeepWorking = true;
+                _AutoHidden = false;
             }
             catch (Exception e)
             {
@@ -149,6 +158,19 @@ namespace FFXIITataruHelper
             });
         }
 
+        public void UserHide()
+        {
+            _TataruUIModel.IsHiddenByUser = true;
+            this.Hide();
+        }
+
+        public void UserShow()
+        {
+            this.Show();
+            _TataruUIModel.IsHiddenByUser = false;
+            _TextArrivedTime = DateTime.UtcNow;
+        }
+
         #endregion
 
         #region **WindowEvents.
@@ -158,12 +180,15 @@ namespace FFXIITataruHelper
             _TataruModel.FFMemoryReader.AddExclusionWindowHandler((new WindowInteropHelper(this).Handle));
             _MouseHooker = null;
 
+            AutoHideStatusCheck();
             //_MouseHooker = new MouseHooker();
             //_MouseHooker.LowLevelMouseEvent += OnLowLevelMousEvent;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            _KeepWorking = false;
+
             if (_MouseHooker != null)
                 _MouseHooker.UnHook();
         }
@@ -177,7 +202,8 @@ namespace FFXIITataruHelper
                 loc.Y = (float)this.Top;
                 loc.X = (float)this.Left;
 
-                _TataruUIModel.ChatWindowRectangle = loc;//*/
+                if (_TataruUIModel.ChatWindowRectangle != loc)
+                    _TataruUIModel.ChatWindowRectangle = loc;
             }
         }
 
@@ -185,16 +211,14 @@ namespace FFXIITataruHelper
         {
             if (this.WindowState == WindowState.Normal)
             {
-
                 var loc = _TataruUIModel.ChatWindowRectangle;
 
                 loc.Width = (float)this.Width;
                 loc.Height = (float)this.Height;
 
-                _TataruUIModel.ChatWindowRectangle = loc;//*/
+                if (_TataruUIModel.ChatWindowRectangle != loc)
+                    _TataruUIModel.ChatWindowRectangle = loc;
             }
-
-            //SaveWindowPositionAndSize();
         }
 
         #endregion
@@ -328,12 +352,23 @@ namespace FFXIITataruHelper
         {
             await this.UIThreadAsync(() =>
             {
+                if (ea.IsRunningNew != ea.IsRunningOld)
+                {
+                    _TataruUIModel.IsHiddenByUser = false;
+                    _TextArrivedTime = DateTime.UtcNow;
+                    _AutoHidden = false;
+                }
+
                 if (ea.NewWindowState != ea.OldWindowState)
                 {
                     if (ea.NewWindowState == WindowState.Minimized)
                         this.Hide();
-                    else
-                        this.Show();
+
+                    else if (_TataruUIModel.IsHiddenByUser == false)
+                    {
+                        if (_AutoHidden == false)
+                            this.Show();
+                    }
                 }
             });
         }
@@ -342,6 +377,10 @@ namespace FFXIITataruHelper
         {
             await this.UIThreadAsync(() =>
             {
+
+                _TextArrivedTime = DateTime.UtcNow;
+                ShowWindow();
+
                 if (ea.ErrorCode == 0)
                 {
                     ShowTransaltedText(ea.Text, ea.Color);
@@ -350,6 +389,18 @@ namespace FFXIITataruHelper
                 {
                     ShowErorrText(ea);
                 }
+                _TextArrivedTime = DateTime.UtcNow;
+            });
+        }
+
+        private async Task OnAutoHideChange(BooleanChangeEventArgs ea)
+        {
+            await this.UIThreadAsync(() =>
+            {
+                _TextArrivedTime = DateTime.UtcNow;
+
+                if (ea.NewValue == false)
+                    ShowWindow();
             });
         }
 
@@ -375,6 +426,7 @@ namespace FFXIITataruHelper
 
             _TataruModel.FFMemoryReader.FFWindowStateChanged += OnFFWindowStateChange;
 
+            UIModel.IsAutoHideChanged += OnAutoHideChange;
 
             _TataruModel.ChatProcessor.TranslationArrived += OnTranslationArrived;
         }
@@ -528,6 +580,49 @@ namespace FFXIITataruHelper
         void Exit_Click(object sender, RoutedEventArgs e)
         {
             ((MainWindow)_SettigsWindow).ShutDown();
+        }
+
+        void ShowWindow()
+        {
+            if (this.Visibility != Visibility.Visible)
+            {
+                if (_TataruUIModel.IsHiddenByUser == false)
+                {
+                    if(_TataruModel.FFMemoryReader.FFWindowState!= WindowState.Minimized)
+                        this.Show();
+                }
+            }
+        }
+
+        void AutoHideStatusCheck()
+        {
+            Task.Factory.StartNew(async () =>
+            {
+                while (_KeepWorking)
+                {
+                    if (_TataruUIModel.IsAutoHide)
+                    {
+                        var ts = DateTime.UtcNow - _TextArrivedTime;
+                        if (ts > _TataruUIModel.AutoHideTimeout)
+                        {
+                            this.UIThread(() =>
+                            {
+                                if (this.Visibility == Visibility.Visible)
+                                {
+                                    _AutoHidden = true;
+                                    this.Hide();
+                                }
+                            });
+                        }
+                        else
+                            _AutoHidden = false;
+                    }
+                    else
+                        _AutoHidden = false;
+
+                    await Task.Delay(GlobalSettings.AutoHideDelay);
+                }
+            }, TaskCreationOptions.LongRunning);
         }
 
         #endregion

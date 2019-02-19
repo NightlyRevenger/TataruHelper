@@ -118,6 +118,20 @@ namespace FFXIITataruHelper
         }
         private AsyncEvent<BooleanChangeEventArgs> _IsHideSettingsToTrayChanged;
 
+        public event AsyncEventHandler<BooleanChangeEventArgs> IsAutoHideChanged
+        {
+            add { this._IsAutoHideChanged.Register(value); }
+            remove { this._IsAutoHideChanged.Unregister(value); }
+        }
+        private AsyncEvent<BooleanChangeEventArgs> _IsAutoHideChanged;
+
+        public event AsyncEventHandler<TimeSpanChangeEventArgs> AutoHideTimeoutChanged
+        {
+            add { this._AutoHideTimeoutChanged.Register(value); }
+            remove { this._AutoHideTimeoutChanged.Unregister(value); }
+        }
+        private AsyncEvent<TimeSpanChangeEventArgs> _AutoHideTimeoutChanged;
+
         public event AsyncEventHandler<PointDValueChangeEventArgs> SettingsWindowSizeChanged
         {
             add { this._SettingsWindowSizeChanged.Register(value); }
@@ -429,6 +443,46 @@ namespace FFXIITataruHelper
             }
         }
 
+        public bool IsAutoHide
+        {
+            get { return _IsAutoHide; }
+            set
+            {
+                var oldValue = _IsAutoHide;
+                _IsAutoHide = value;
+
+                var ea = new BooleanChangeEventArgs(this)
+                {
+                    OldValue = oldValue,
+                    NewValue = value
+                };
+
+                _IsAutoHideChanged.InvokeAsync(ea);
+            }
+        }
+
+        public TimeSpan AutoHideTimeout
+        {
+            get { return _AutoHideTimeout; }
+
+            set
+            {
+                if (value.TotalSeconds < 10)
+                    value = new TimeSpan(0, 0, 10);
+
+                var oldValue = _AutoHideTimeout;
+                _AutoHideTimeout = value;
+
+                var ea = new TimeSpanChangeEventArgs(this)
+                {
+                    OldValue = oldValue,
+                    NewValue = value
+                };
+
+                _AutoHideTimeoutChanged.InvokeAsync(ea);
+            }
+        }
+
         public System.Drawing.PointD SettingsWindowSize
         {
             get { return _SettingsWindowSize; }
@@ -507,6 +561,15 @@ namespace FFXIITataruHelper
             }
         }
 
+        public bool IsHiddenByUser
+        {
+            get { return _IsHiddenByUser; }
+            set
+            {
+                _IsHiddenByUser = value;
+            }
+        }
+
         #endregion
 
         #region **LocalVariables.
@@ -539,6 +602,10 @@ namespace FFXIITataruHelper
 
         bool _IsHideSettingsToTray;
 
+        bool _IsAutoHide;
+
+        TimeSpan _AutoHideTimeout;
+
         System.Drawing.PointD _SettingsWindowSize = new System.Drawing.PointD(0.0, 0.0);
 
         System.Drawing.RectangleD _ChatWindowRectangle = new System.Drawing.RectangleD(0.0, 0.0, 0.0, 0.0);
@@ -550,6 +617,8 @@ namespace FFXIITataruHelper
         Dictionary<string, ChatMsgType> _ChatCodes;
 
         int _UiLanguage;
+
+        bool _IsHiddenByUser;
 
         #endregion
 
@@ -577,7 +646,10 @@ namespace FFXIITataruHelper
 
             this._IsChatClickThroughChanged = new AsyncEvent<BooleanChangeEventArgs>(this.EventErrorHandler, "IsChatClickThroughChanged");
             this._IsChatAlwaysOnTopChanged = new AsyncEvent<BooleanChangeEventArgs>(this.EventErrorHandler, "IsChatAlwaysOnTopChanged");
-            this._IsHideSettingsToTrayChanged = new AsyncEvent<BooleanChangeEventArgs>(this.EventErrorHandler, "IsChatAlwaysOnTopChanged");
+            this._IsHideSettingsToTrayChanged = new AsyncEvent<BooleanChangeEventArgs>(this.EventErrorHandler, "IsHideSettingsToTrayChanged");
+            this._IsAutoHideChanged = new AsyncEvent<BooleanChangeEventArgs>(this.EventErrorHandler, "IsAutoHideChanged");
+
+            this._AutoHideTimeoutChanged = new AsyncEvent<TimeSpanChangeEventArgs>(this.EventErrorHandler, "AutoHideTimeoutChanged");
 
             this._SettingsWindowSizeChanged = new AsyncEvent<PointDValueChangeEventArgs>(this.EventErrorHandler, "SettingsWindowSizeChanged");
             this._ChatWindowRectangleChanged = new AsyncEvent<RectangleDValueChangeEventArgs>(this.EventErrorHandler, "ChatWindowRectangleChanged");
@@ -591,6 +663,7 @@ namespace FFXIITataruHelper
             _ShowHideChatKeys = new HotKeyCombination("ShowHideChatWin");
             _ClickThoughtChatKeys = new HotKeyCombination("ClickThoughtChatWin");
 
+            _IsHiddenByUser = false;
         }
 
         public void SetSettings(UserSettings userSettings)
@@ -618,6 +691,10 @@ namespace FFXIITataruHelper
             IsChatAlwaysOnTop = userSettings.IsAlwaysOnTop;
 
             IsHideSettingsToTray = userSettings.IsHideToTray;
+
+            IsAutoHide = userSettings.IsAutoHide;
+
+            AutoHideTimeout = userSettings.AutoHideTimeout;
 
             if (userSettings.ShowHideChatKeys != null)
                 ShowHideChatKeys = new HotKeyCombination(userSettings.ShowHideChatKeys);
@@ -692,6 +769,10 @@ namespace FFXIITataruHelper
             userSettings.IsAlwaysOnTop = IsChatAlwaysOnTop;
 
             userSettings.IsHideToTray = IsHideSettingsToTray;
+
+            userSettings.IsAutoHide = IsAutoHide;
+
+            userSettings.AutoHideTimeout = AutoHideTimeout;
 
             userSettings.ShowHideChatKeys = new HotKeyCombination(ShowHideChatKeys);
 

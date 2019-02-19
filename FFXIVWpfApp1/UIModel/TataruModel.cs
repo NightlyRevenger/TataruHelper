@@ -91,7 +91,10 @@ namespace FFXIITataruHelper
                     var userSettings = Helper.LoadJsonData<UserSettings>(GlobalSettings.Settings);
 
                     if (userSettings == null)
+                    {
                         userSettings = new UserSettings();
+                        Logger.WriteLog("userSettings == null");
+                    }
 
                     _WebTranslator.LoadLanguagues(GlobalSettings.GoogleTranslateLanguages, GlobalSettings.MultillectTranslateLanguages,
                         GlobalSettings.DeeplLanguages, GlobalSettings.YandexLanguages);

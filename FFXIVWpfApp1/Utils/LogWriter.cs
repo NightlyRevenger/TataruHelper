@@ -16,17 +16,29 @@ namespace FFXIITataruHelper
     class LogWriter
     {
         //Thread _WriteThread;
-        bool _keepWorking;
-        TextWriter tsw;
+        const int _MaxLogFileSize = 5242880;
+        //const int _MaxLogFileSize = 10485760;
+        //const int _MaxLogFileSize = 2000;//
+
+        bool _KeepWorking;
+        TextWriter _logTextWriter;
+        StreamWriter _logStreamWriter;
 
         TextWriter chatsw = null;
+
+        string LogFileName = @"Log.txt";
+        string BackUpLogFileName = @"Log_old.txt";
+
+
+        string ChatLogFileName = @"ChatLog.txt";
 
         public LogWriter()
         {
             //_WriteThread = new Thread(EntryPoint);
-            _keepWorking = true;
+            _KeepWorking = true;
 
-            tsw = new StreamWriter(@"Log.txt", true);
+            _logStreamWriter = new StreamWriter(LogFileName, true);
+            _logTextWriter = _logStreamWriter;
         }
 
         public void StartWriting()
@@ -55,13 +67,13 @@ namespace FFXIITataruHelper
             string str = null;
 
             bool dequeueFalg = false;
-            while (_keepWorking)
+            while (_KeepWorking)
             {
                 dequeueFalg = false;
                 if (Logger.LogQueue.TryDequeue(out str))
                 {
-                    tsw.WriteLine(str);
-                    tsw.Flush();
+                    _logTextWriter.WriteLine(str);
+                    _logTextWriter.Flush();
                     dequeueFalg = true;
                 }
                 if (Logger.ConsoleLogQueue.TryDequeue(out str))
@@ -73,7 +85,7 @@ namespace FFXIITataruHelper
                 if (Logger.ChatLogQueue.TryDequeue(out str))
                 {
                     if (chatsw == null)
-                        chatsw = new StreamWriter(@"ChatLog.txt", true);
+                        chatsw = new StreamWriter(ChatLogFileName, true);
 
                     chatsw.WriteLine(str);
                     chatsw.Flush();
@@ -83,49 +95,81 @@ namespace FFXIITataruHelper
                 if (!dequeueFalg)
                 {
                     //Thread.Sleep(33);
-                    SpinWait.SpinUntil(() => Logger.LogQueue.IsEmpty == false || Logger.ConsoleLogQueue.IsEmpty == false || Logger.ChatLogQueue.IsEmpty == false);
+                    //_KeepWorking = false;
+                    SpinWait.SpinUntil(() => (Logger.LogQueue.IsEmpty == false || Logger.ConsoleLogQueue.IsEmpty == false || Logger.ChatLogQueue.IsEmpty == false) || !_KeepWorking);
+                    if (_KeepWorking)
+                    {
+                        LimitLogFileSize();
+                    }
+                }
+            }
+
+            ReleaseResources();
+        }
+
+        private void LimitLogFileSize()
+        {
+            if (_logStreamWriter != null && _logTextWriter != null)
+            {
+                if (_logStreamWriter.BaseStream.Length >= _MaxLogFileSize)
+                {
+                    try
+                    {
+                        _logTextWriter.Flush();
+                        _logTextWriter.Close();
+                        _logTextWriter.Dispose();
+
+                        _logStreamWriter.Close();
+                        _logStreamWriter.Dispose();
+
+                        if (File.Exists(BackUpLogFileName))
+                            File.Delete(BackUpLogFileName);
+
+                        if (File.Exists(LogFileName))
+                        {
+                            File.Copy(LogFileName, BackUpLogFileName);
+                            File.Delete(LogFileName);
+                        }
+
+                        _logStreamWriter = new StreamWriter(LogFileName, true);
+                        _logTextWriter = _logStreamWriter;
+                    }
+                    catch (Exception) { }
+                }
+            }
+        }
+
+        void ReleaseResources()
+        {
+            try
+            {
+                if (_logTextWriter != null)
+                {
+                    _logTextWriter.Flush();
+                    _logTextWriter.Close();
+                }
+
+                if (chatsw != null)
+                {
+                    chatsw.Flush();
+                    chatsw.Close();
                 }
 
             }
-
+            catch { }
         }
 
         public void Stop()
         {
-            SpinWait.SpinUntil(() => Logger.LogQueue.IsEmpty == true && Logger.ConsoleLogQueue.IsEmpty == true, GlobalSettings.SpiWaitTimeOutMS);
-
-            _keepWorking = false;
-
-            try
-            {
-                tsw.Flush();
-                tsw.Close();
-
-                if (chatsw != null)
-                {
-                    chatsw.Flush();
-                    chatsw.Close();
-                }
-
-            }
-            catch { }
+            _KeepWorking = false;
         }
 
         ~LogWriter()
         {
-            try
-            {
-                _keepWorking = false;
-                tsw.Flush();
-                tsw.Close();
-
-                if (chatsw != null)
-                {
-                    chatsw.Flush();
-                    chatsw.Close();
-                }
-            }
-            catch { }
+            _KeepWorking = false;
+            ReleaseResources();
         }
+
+
     }
 }

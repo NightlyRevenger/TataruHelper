@@ -215,6 +215,12 @@ namespace FFXIITataruHelper
             Win32Interfaces.ShowWindow(hwnd, Win32Interfaces.ShowWindowCommands.Restore);
         }
 
+        public static void Unminimize(IntPtr window)
+        {
+            var hwnd = window;
+            Win32Interfaces.ShowWindow(hwnd, Win32Interfaces.ShowWindowCommands.Restore);
+        }
+
         public static string ClearBlackListString(string text)
         {
             return text;

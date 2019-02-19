@@ -14,14 +14,10 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <SccProjectName>
-    </SccProjectName>
-    <SccLocalPath>
-    </SccLocalPath>
-    <SccAuxPath>
-    </SccAuxPath>
-    <SccProvider>
-    </SccProvider>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
     <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -157,6 +153,7 @@
     <Compile Include="EventArguments\RectangleFValueChangeEventArgs.cs" />
     <Compile Include="EventArguments\StringValueChangeEventArgs.cs" />
     <Compile Include="EventArguments\TatruEventArgs.cs" />
+    <Compile Include="EventArguments\TimeSpanChangeEventArgs.cs" />
     <Compile Include="EventArguments\TranslationArrivedEventArgs.cs" />
     <Compile Include="EventArguments\TranslationEngineChangeEventArgs.cs" />
     <Compile Include="EventArguments\WindowStateChangeEventArgs.cs" />
@@ -177,8 +174,10 @@
     <Compile Include="Translation\DeepL\DeepLRequest.cs" />
     <Compile Include="Translation\DeepL\DeepLResponse.cs" />
     <Compile Include="Translation\DeepL\DeepLTranslator.cs" />
+    <Compile Include="Utils\OptimizeFootprint.cs" />
     <Compile Include="Utils\PointD.cs" />
     <Compile Include="Utils\RectangleD.cs" />
+    <Compile Include="Utils\TataruSingleInstance.cs" />
     <Compile Include="Utils\SizeD.cs" />
     <Compile Include="Utils\Updater.cs" />
     <Compile Include="ViewModel\ChatCodeViewModel.cs" />
@@ -195,6 +194,7 @@
     <Compile Include="Translation\WebTranslator.cs" />
     <Compile Include="WinUtils\Win32Interfaces.cs" />
     <Compile Include="WinUtils\WindowResizer.cs" />
+    <Compile Include="WinUtils\WinMessagesHandler.cs" />
     <Page Include="ChatWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

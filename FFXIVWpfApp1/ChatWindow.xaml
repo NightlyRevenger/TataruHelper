@@ -7,8 +7,8 @@
         mc:Ignorable="d"
         AllowsTransparency="True"
         WindowStyle="None"
-        MinHeight="20"
-        MinWidth="20"
+        MinHeight="30"
+        MinWidth="30"
         Title="ChatWindow" Height="320" Width="480" Loaded="Window_Loaded" Closing="Window_Closing" LocationChanged="Window_LocationChanged" SizeChanged="Window_SizeChanged">
     <Grid>
         <RichTextBox x:Name="ChatRtb" Margin="15,15,15,15" Background="#00000000" IsReadOnly="True" IsUndoEnabled="False">

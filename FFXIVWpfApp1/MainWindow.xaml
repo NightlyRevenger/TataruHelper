@@ -12,7 +12,9 @@
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
     Icon="Resources/tray_icon.ico"
         MinHeight="290"
-        MinWidth="225"    
+        MinWidth="225"
+        MaxWidth="684"
+        MaxHeight="988"
         Title="{DynamicResource SettingsWindowName}" Height="470.08" Width="428.3" ResizeMode="CanResize" Closing="Window_Closing" Closed="Window_Closed" Loaded="Window_Loaded" SizeChanged="Window_SizeChanged">
 
     <Grid>
@@ -49,7 +51,7 @@
                         <GroupBox Header="{DynamicResource FontSettings}" Margin="5,5,5,5" Height="159" VerticalAlignment="Top" Width="180">
                             <StackPanel Margin="0">
                                 <Label Content="{DynamicResource FontSize}" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="158" />
-                                <xctk:IntegerUpDown x:Name="ChatFontSize" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="140" ValueChanged="ChatFontSize_ValueChanged" Minimum="1"/>
+                                <xctk:IntegerUpDown x:Name="ChatFontSize" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="140" ValueChanged="ChatFontSize_ValueChanged" Minimum="1" Maximum="100" />
                                 <Label Content="{DynamicResource BackgroundColor}" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="152"/>
                                 <xctk:ColorPicker x:Name="BackgroundColor" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="140" SelectedColorChanged="BackgroundColor_SelectedColorChanged" Closed="BackgroundColor_Closed" 
                                                           StandardButtonHeader="{DynamicResource ColorPickerStandardButtonHeader}" AdvancedButtonHeader="{DynamicResource ColorPickerAdvancedButtonHeader}" StandardColorsHeader="{DynamicResource ColorPickerStandardColorsHeader}" RecentColorsHeader="{DynamicResource ColorPickerRecentColorsHeader}"/>
@@ -58,9 +60,9 @@
                         <GroupBox Header="{DynamicResource ParagraphSettings}" Margin="5,5,5,5" HorizontalAlignment="Left" Height="159" VerticalAlignment="Top" Width="180">
                             <StackPanel Margin="0">
                                 <Label Content="{DynamicResource IntervalWidth}" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="158"/>
-                                <xctk:IntegerUpDown x:Name="IntervalWidth" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="140" ValueChanged="IntervalWidth_ValueChanged" Minimum="0" />
+                                <xctk:IntegerUpDown x:Name="IntervalWidth" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="140" ValueChanged="IntervalWidth_ValueChanged" Minimum="0" Maximum="100" />
                                 <Label Content="{DynamicResource LineBreakHeight}" HorizontalAlignment="Left" Margin="0" Height="31" VerticalAlignment="Top" Width="158"/>
-                                <xctk:IntegerUpDown x:Name="LineBreakeHeight" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="140" ValueChanged="LineBreakeHeight_ValueChanged" Minimum="0" />
+                                <xctk:IntegerUpDown x:Name="LineBreakeHeight" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="140" ValueChanged="LineBreakeHeight_ValueChanged" Minimum="0" Maximum="100" />
                             </StackPanel>
                         </GroupBox>
                     </WrapPanel>
@@ -150,11 +152,15 @@
                             </StackPanel>
                         </GroupBox>
                         <GroupBox Header="{DynamicResource OtherSett}" Margin="5,5,5,5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="180" Height="145">
-                            <StackPanel >
-                                <CheckBox x:Name="ClickThroughBox" Content="{DynamicResource ClickThroughCB}" Checked="ClickThroughBox_Changed" Unchecked="ClickThroughBox_Changed" HorizontalAlignment="Left" Height="21" VerticalAlignment="Top" Width="158" Margin="0,20,0,0"/>
-                                <CheckBox x:Name="AlwayOnTopBox" Content="{DynamicResource AlwaysOnTopCB}" HorizontalAlignment="Left" Height="21" VerticalAlignment="Top" Width="158" Checked="AlwayOnTopBox_Changed" Unchecked="AlwayOnTopBox_Changed" />
-                                <CheckBox x:Name="HideToTray" Content="{DynamicResource HideToTrayCB}" HorizontalAlignment="Left" Height="21" VerticalAlignment="Top" Width="158" Checked="HideToTray_Changed" Unchecked="HideToTray_Changed" Margin="0,20,0,0"/>
-                            </StackPanel>
+                            <Grid>
+                                <CheckBox x:Name="AlwayOnTopBox" Content="{DynamicResource AlwaysOnTopCB}" HorizontalAlignment="Left" Height="21" VerticalAlignment="Top" Width="158" Checked="AlwayOnTopBox_Changed" Unchecked="AlwayOnTopBox_Changed" Margin="0,5,0,0" />
+                                <CheckBox x:Name="ClickThroughBox" Content="{DynamicResource ClickThroughCB}" Checked="ClickThroughBox_Changed" Unchecked="ClickThroughBox_Changed" HorizontalAlignment="Left" Height="21" VerticalAlignment="Top" Width="158" Margin="0,27,0,0"/>
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0,55,0,0">
+                                    <CheckBox x:Name="AutoHideBox" Content="{DynamicResource AutoHideCB}" Checked="AutoHide_Changed" Unchecked="AutoHide_Changed" HorizontalAlignment="Left" Height="21" VerticalAlignment="Top" Width="80" Margin="0,5,0,0"/>
+                                    <xctk:IntegerUpDown x:Name="AutoHideTimeOut" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="86" ValueChanged="AutoHideTimeOut_ValueChanged" Minimum="5" Maximum="3600"/>
+                                </StackPanel>
+                                <CheckBox x:Name="HideToTray" Content="{DynamicResource HideToTrayCB}" HorizontalAlignment="Left" Height="21" VerticalAlignment="Bottom" Width="158" Checked="HideToTray_Changed" Unchecked="HideToTray_Changed" Margin="0,0,0,2"/>
+                            </Grid>
                         </GroupBox>
                     </WrapPanel>
                 </Grid>

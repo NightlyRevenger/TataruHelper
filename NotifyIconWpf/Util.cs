@@ -1,9 +1,6 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-
-
-
 // hardcodet.net NotifyIcon for WPF
 // Copyright (c) 2009 - 2013 Philipp Sumi
 // Contact and Information: http://www.hardcodet.net

@@ -207,6 +207,7 @@ namespace FFXIITataruHelper
                 {
                     translation = await _WebTranslator.TransalteAsync(text);
                 }).Wait(GlobalSettings.TranslatorWaitTime);
+                //}).Wait();
 
                 _LastTranslationTime = DateTime.UtcNow;
 
