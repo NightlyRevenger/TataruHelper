@@ -1,30 +1,31 @@
 # Tataru Helper
 [Download Now](https://github.com/NightlyRevenger/TataruHelper/releases/latest)( ---> Download Setup.exe)  
+-
 [Скачать](https://github.com/NightlyRevenger/TataruHelper/releases/latest)( ---> Скачайте Setup.exe) 
 -
 ![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)  
 [Demonstration/Демонстрация](https://youtu.be/7HiQXzmkQuw)
+-  
+[Donations/](https://github.com/NightlyRevenger/TataruHelper/blob/master/README.md#support)[Поддержка](https://github.com/NightlyRevenger/TataruHelper/blob/master/README.md#поддержка)
 -
 ---
 ## Table of Contents
 * [English](#english)
-   * [New features](#new-features)
    * [Installation](#installation)
    * [How to use](#how-to-use)
    * [Development](#development)
-   * [ToDoList](#todolist)
    * [License](#license)  
    * [Credits](#credits)  
    * [Contacts](#contacts)  
+   * [Support](#support)  
 * [Русский](#русский)
-   * [Новые функции](#новые-функции)
    * [Установка](#установка)
    * [Как пользоваться](#как-пользоваться)
    * [Разработка](#как-пользоваться)
-   * [Список планов](#список-планов)
    * [Лицензия](#лицензия)  
    * [Благодарности](#благодарности)  
    * [Контакты](#контакты) 
+   * [Поддержка](#поддержка)  
 ---
 
 #### English
@@ -36,10 +37,6 @@ Tataru Helper - application for translation of in-game texts in Japanese develop
   - You can freely change the translator engine and use various translation methods.
   - Automatic updates.
   - Tataru Taru!
-
-## New features!
-
-  - Soon™
 
 
 ## Installation
@@ -68,11 +65,6 @@ Want to contribute? Great!
 If you want to translate the application into your language, let me know.
 
 
-
-## ToDoList
-
- - Soon™
-
 ## License
 
 [MIT](/LICENSE)
@@ -94,8 +86,17 @@ xDarkOne:
 Discord: xDarkOne#6486  
 Telegram: [click](https://t.me/xDarkOne)  
 VK: [click](https://vk.com/velikov_ra)  
+Twitch: [xDark0ne](https://www.twitch.tv/xdark0ne)  
 NightlyRevenger(developer):  
 [nightlyrevenger@yandex.ru](mailto:nightlyrevenger@yandex.ru)  
+
+## Support
+
+If you want to support this project, use the links below:  
+MasterCard(Sberbank): 5469 3800 2554 9048  
+Yandex.Money: [4100172621059](https://money.yandex.ru/to/4100172621059)  
+PayPal: [paypal.me/xdarkone](https://www.paypal.me/xdarkone)  
+Patreon: [TataruHelper](https://www.patreon.com/TataruHelper)  
 
 ---
 ---
@@ -109,10 +110,6 @@ Tataru Helper - приложение для перевода внутриигр�
   - Вы можете переключаться между различными механизмами перевода. 
   - Автоматические обновления.
   - Татару Тару!
-
-## Новые функции!
-
-  - Soon™
 
 
 ## Установка
@@ -141,10 +138,6 @@ P.S. В дальнейшем, не нужно запускать приложе�
 Если вы хотите перевести приложение на свой язык, дайте мне знать.
 
 
-## Планы
-
- - Soon™
-
 ## Лицензия
 
 [MIT](/LICENSE)
@@ -165,6 +158,15 @@ P.S. В дальнейшем, не нужно запускать приложе�
 Discord: xDarkOne#6486  
 Telegram: [click](https://t.me/xDarkOne)  
 VK: [click](https://vk.com/velikov_ra)  
+Twitch: [xDark0ne](https://www.twitch.tv/xdark0ne)  
 NightlyRevenger(developer):  
 [nightlyrevenger@yandex.ru](mailto:nightlyrevenger@yandex.ru)  
+
+## Поддержка
+
+Если вы хотите поддержать проект, воспользуйтесь ссылками ниже:  
+MasterCard(Сбербанк): 5469 3800 2554 9048  
+Яндекс.Деньги: [4100172621059](https://money.yandex.ru/to/4100172621059)  
+PayPal: [paypal.me/xdarkone](https://www.paypal.me/xdarkone)  
+Patreon: [TataruHelper](https://www.patreon.com/TataruHelper)  
 
