@@ -11,6 +11,7 @@
         MinWidth="30"
         Title="ChatWindow" Height="320" Width="480" Loaded="Window_Loaded" Closing="Window_Closing" LocationChanged="Window_LocationChanged" SizeChanged="Window_SizeChanged">
     <Grid>
+        <MediaElement Visibility="Collapsed" x:Name="MediaElement" LoadedBehavior="Play" UnloadedBehavior="Close" MediaEnded="MediaElement_OnMediaEnded"></MediaElement>
         <RichTextBox x:Name="ChatRtb" Margin="15,15,15,15" Background="#00000000" IsReadOnly="True" IsUndoEnabled="False">
             <FlowDocument>
                 <Paragraph>
@@ -37,6 +38,7 @@
                 <MenuItem Header="Exit" Click="Exit_Click"/>
             </ContextMenu>
         </Grid.ContextMenu>
-
+        
     </Grid>
+    
 </Window>
