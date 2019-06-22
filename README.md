@@ -83,7 +83,8 @@ A lot of thanks to many who contribute to open-source projects. The following we
 
 ## Contacts
 
-Here is our discord server [click](https://discord.gg/bSrpbd9)  
+Here is our discord server: [click](https://discord.gg/bSrpbd9)  
+
 If you have any questions you can contact with me in:  
 xDarkOne:  
 Discord: xDarkOne#6486  
@@ -157,7 +158,8 @@ P.S. В дальнейшем, не нужно запускать приложе�
 
 ## Контакты
 
-Ссылка на наш Discord сервер [click](https://discord.gg/bSrpbd9)  
+Ссылка на наш Discord сервер: [click](https://discord.gg/bSrpbd9)  
+
 Если у вас есть какие-то вопросы, вы можете связаться со мной:  
 Discord: xDarkOne#6486  
 Telegram: [click](https://t.me/xDarkOne)  
