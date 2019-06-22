@@ -3,7 +3,7 @@
 -
 [Скачать](https://github.com/NightlyRevenger/TataruHelper/releases/latest)( ---> Скачайте Setup.exe) 
 -
-[Our Discord Server](https://discord.gg/bSrpbd9)  
+[Tataru's Discord Server](https://discord.gg/bSrpbd9)  
 -
 ![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)  
 [Demonstration/Демонстрация](https://youtu.be/7HiQXzmkQuw)
