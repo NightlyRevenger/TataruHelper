@@ -1,9 +1,9 @@
 # Tataru Helper
 [Download Now](https://github.com/NightlyRevenger/TataruHelper/releases/latest)( ---> Download Setup.exe)  
 -
-[Tataru's Discord Server](https://discord.gg/bSrpbd9)( ---> Download Setup.exe)  
--
 [Скачать](https://github.com/NightlyRevenger/TataruHelper/releases/latest)( ---> Скачайте Setup.exe) 
+-
+[Our Discord Server](https://discord.gg/bSrpbd9)  
 -
 ![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)  
 [Demonstration/Демонстрация](https://youtu.be/7HiQXzmkQuw)
@@ -83,6 +83,7 @@ A lot of thanks to many who contribute to open-source projects. The following we
 
 ## Contacts
 
+Here is our discord server [click](https://discord.gg/bSrpbd9)  
 If you have any questions you can contact with me in:  
 xDarkOne:  
 Discord: xDarkOne#6486  
@@ -156,6 +157,7 @@ P.S. В дальнейшем, не нужно запускать приложе�
 
 ## Контакты
 
+Ссылка на наш Discord сервер [click](https://discord.gg/bSrpbd9)  
 Если у вас есть какие-то вопросы, вы можете связаться со мной:  
 Discord: xDarkOne#6486  
 Telegram: [click](https://t.me/xDarkOne)  
