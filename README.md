@@ -45,7 +45,6 @@ Tataru Helper - application for translation of in-game texts in Japanese develop
 Tataru Helper requires:  
 [Microsoft .NET Framework 4.6.2 ](https://www.microsoft.com/net/download/dotnet-framework-runtime)or above.   
 Final Fantasy XIV with **DirectX 11** and **x64**.  
-You should run the game in borderless of windowed mode. Technology for fullscreen mode isn't there yet.
 
 1. Download the latest version of the application from [here](https://github.com/NightlyRevenger/TataruHelper/releases/latest) (Setup.exe).
 2. Run the Setup.exe file, after receiving message that Windows protected your PC, press more info and run anyway. The shortcut will be placed on the desktop.
@@ -119,7 +118,6 @@ Tataru Helper - приложение русификатор для перево�
 Tataru Helper требуется:  
 [Microsoft .NET Framework 4.6.2 ](https://www.microsoft.com/net/download/dotnet-framework-runtime)или выше.  
 Final Fantasy XIV в режиме **DirectX 11** и **x64**.  
-Вам нужно запускать игру в borderless или оконном режиме. Технологии для полного экрана еще не приехали. 
 
 1. Скачайте последнюю версию приложения [здесь](https://github.com/NightlyRevenger/TataruHelper/releases/latest) (Setup.exe).
 2. Запустите файл Setup.exe, после этого вылетит предупреждение о том, что Windows защитила ваш компьютер. Нажмите Подробнее, а затем - Выполнить в любом случае. Ярлык автоматически будет создан на рабочем столе.
