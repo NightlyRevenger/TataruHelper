@@ -1,6 +1,8 @@
 # Tataru Helper
 [Download Now](https://github.com/NightlyRevenger/TataruHelper/releases/latest)( ---> Download Setup.exe)  
 -
+[Tataru's Discord Server](https://discord.gg/bSrpbd9)( ---> Download Setup.exe)  
+-
 [Скачать](https://github.com/NightlyRevenger/TataruHelper/releases/latest)( ---> Скачайте Setup.exe) 
 -
 ![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)  
