@@ -45,6 +45,7 @@ Tataru Helper - application for translation of in-game texts in Japanese develop
 ## Installation
 
 Tataru Helper requires:  
+Windows 7 **x64** or later (**x64 systems only**)  
 [Microsoft .NET Framework 4.6.2 ](https://www.microsoft.com/net/download/dotnet-framework-runtime)or above.   
 Final Fantasy XIV with **DirectX 11** and **x64**.  
 
@@ -120,6 +121,7 @@ Tataru Helper - приложение-русификатор для перево�
 ## Установка
 
 Tataru Helper требуется:  
+Windows 7 **x64** или новее (**только для 64 битных систем**)  
 [Microsoft .NET Framework 4.6.2 ](https://www.microsoft.com/net/download/dotnet-framework-runtime)или выше.  
 Final Fantasy XIV в режиме **DirectX 11** и **x64**.  
 
