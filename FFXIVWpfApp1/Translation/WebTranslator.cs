@@ -85,6 +85,11 @@ namespace FFXIITataruHelper.Translation
             }
         }
 
+        public TranslatorLanguague TargetTranslatorLanguague
+        {
+            get => _TargetLanguage;
+        }
+
         public ReadOnlyCollection<TranslatorLanguague> CurrentLanguages
         {
             get

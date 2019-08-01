@@ -570,6 +570,16 @@ namespace FFXIITataruHelper
             }
         }
 
+        public bool IsTextReader
+        {
+            get { return _IsTextReader; }
+            set
+            {
+                _IsTextReader = value;
+            }
+        }
+
+
         #endregion
 
         #region **LocalVariables.
@@ -619,6 +629,8 @@ namespace FFXIITataruHelper
         int _UiLanguage;
 
         bool _IsHiddenByUser;
+
+        bool _IsTextReader;
 
         #endregion
 

@@ -2,26 +2,15 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using FFXIITataruHelper.EventArguments;
-using FFXIITataruHelper.FFHandlers;
-using FFXIITataruHelper.Translation;
+using FFXIITataruHelper.Utils;
 using FFXIITataruHelper.WinUtils;
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace FFXIITataruHelper
 {
@@ -121,6 +110,11 @@ namespace FFXIITataruHelper
                     tr2.Text = text;
                     tr2.ApplyPropertyValue(TextElement.ForegroundProperty, tmpColor);
                     tr2.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Normal);
+
+                    if (_TataruUIModel.IsTextReader)
+                    {
+                        _TataruModel.TextToSpeeach.Play(text);
+                    }
                 }
                 else
                 {

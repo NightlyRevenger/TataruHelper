@@ -86,7 +86,7 @@
                                 </ItemsControl>
                             </ScrollViewer>
                         </GroupBox>
-                        <GroupBox HorizontalAlignment="Left" Height="190"  Margin="5,5,5,5"  VerticalAlignment="Top" Width="180">
+                        <GroupBox HorizontalAlignment="Left" Height="194"  Margin="5,5,5,5"  VerticalAlignment="Top" Width="180">
                             <StackPanel Margin="0">
                                 <Label Content="{DynamicResource TranslationEngine}" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="154" Margin="0"/>
                                 <ComboBox x:Name="TransaltorComboBox" HorizontalAlignment="Left" Height="24" Margin="0" Width="154" SelectionChanged="TransaltorComboBox_SelectionChanged">
@@ -109,6 +109,7 @@
                                     <TextBlock><Run Text="en"/></TextBlock>
                                     <TextBlock><Run Text="fr"/></TextBlock>
                                 </ComboBox>
+                                <CheckBox x:Name="TextReader" Content="{DynamicResource TextReader}" HorizontalAlignment="Left" Height="21" VerticalAlignment="Bottom" Width="158" Checked="TextToVoice_Changed" Unchecked="TextToVoice_Changed" Margin="0,10,0,2"/>
                             </StackPanel>
                         </GroupBox>
                     </WrapPanel>

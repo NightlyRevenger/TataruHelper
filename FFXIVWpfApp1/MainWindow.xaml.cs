@@ -239,6 +239,12 @@ namespace FFXIITataruHelper
             _TataruUIModel.AutoHideTimeout = new TimeSpan(0, 0, (int)e.NewValue);
         }
 
+        private void TextToVoice_Changed(object sender, RoutedEventArgs e)
+        {
+            var isTextReader = (bool)((CheckBox)sender).IsChecked;
+            _TataruUIModel.IsTextReader = isTextReader;
+        }
+
         #endregion
 
         #region **WindowEvents

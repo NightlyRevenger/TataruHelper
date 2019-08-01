@@ -4,6 +4,7 @@
 using FFXIITataruHelper.EventArguments;
 using FFXIITataruHelper.FFHandlers;
 using FFXIITataruHelper.Translation;
+using FFXIITataruHelper.Utils;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -34,6 +35,12 @@ namespace FFXIITataruHelper
             get { return _ChatProcessor; }
         }
 
+        public TextToSpeeach TextToSpeeach
+        {
+            get { return _TextToSpeeach; }
+        }
+
+
         #endregion
 
         #region **Events.
@@ -55,6 +62,8 @@ namespace FFXIITataruHelper
 
         ChatProcessor _ChatProcessor;
 
+        TextToSpeeach _TextToSpeeach;
+
         #endregion
 
         public TataruModel()
@@ -69,6 +78,8 @@ namespace FFXIITataruHelper
             _FFMemoryReader.Start();
 
             _ChatProcessor = new ChatProcessor(_FFMemoryReader, _WebTranslator, _TataruUIModel);
+
+            _TextToSpeeach = new TextToSpeeach(_WebTranslator);
         }
 
         public void Stop()

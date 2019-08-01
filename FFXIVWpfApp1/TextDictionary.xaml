@@ -46,6 +46,7 @@
     <system:String x:Key="TranslationEngine">Translation Engine</system:String>
     <system:String x:Key="FFLanguage">FF Language</system:String>
     <system:String x:Key="TraslateTo">Traslate To</system:String>
+    <system:String x:Key="TextReader">Text Reader</system:String>
 
     <system:String x:Key="Hotkeys">Hotkeys</system:String>
     <system:String x:Key="ShowHideChatWindowHK">Show/hide Chat Window</system:String>
