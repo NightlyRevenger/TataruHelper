@@ -31,7 +31,7 @@
 ---
 
 #### English
-Powered by Dark Team
+Powered by Tataru's Team
 
 Tataru Helper - application for translation of in-game texts in Japanese developed MMORPG - Final Fantasy XIV. The texts are understood as MSQ, cutscenes, quests, NPC replicas, etc.
 
@@ -107,7 +107,7 @@ Patreon: [TataruHelper](https://www.patreon.com/TataruHelper)
 ---
 
 #### Русский
-Создано Dark Team
+Создано Tataru's Team
 
 Tataru Helper - приложение-русификатор для перевода внутриигровых текстов в японской MMORPG - Final Fantasy XIV. Под текстами понимаются MSQ, катсцены, квесты, реплики NPC и прочее.
 
