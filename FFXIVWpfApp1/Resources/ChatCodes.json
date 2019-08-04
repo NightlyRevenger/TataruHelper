@@ -124,5 +124,11 @@
     "MsgType": 3,
     "Name": "LinkShell8",
     "Color": "#FFD4FF7D"
+  },
+  {
+    "ChatCode": "001B",
+    "MsgType": 3,
+    "Name": "NoviceNetwork",
+    "Color": "#FFD4FF7D"
   }
 ]

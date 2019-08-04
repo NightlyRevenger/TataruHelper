@@ -36,5 +36,7 @@ namespace Sharlayan.Models.Structures {
         public StatusItem StatusItem { get; set; } = new StatusItem();
 
         public TargetInfo TargetInfo { get; set; } = new TargetInfo();
+
+        public DialogPanelPointers DialogPanelPointers { get; set; } = new DialogPanelPointers();
     }
 }

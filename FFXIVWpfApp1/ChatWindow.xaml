@@ -9,7 +9,7 @@
         WindowStyle="None"
         MinHeight="30"
         MinWidth="30"
-        Title="ChatWindow" Height="320" Width="480" Loaded="Window_Loaded" Closing="Window_Closing" LocationChanged="Window_LocationChanged" SizeChanged="Window_SizeChanged">
+        Title="{DynamicResource ChatWindowName}" Height="320" Width="480" Loaded="Window_Loaded" Closing="Window_Closing" LocationChanged="Window_LocationChanged" SizeChanged="Window_SizeChanged" Deactivated="Window_Deactivated">
     <Grid>
         <RichTextBox x:Name="ChatRtb" Margin="15,15,15,15" Background="#00000000" IsReadOnly="True" IsUndoEnabled="False">
             <FlowDocument>
@@ -23,14 +23,14 @@
                 </Style>
             </RichTextBox.Resources>
         </RichTextBox>
-        <Rectangle x:Name="top" Opacity="0.0" Fill="#FFF4F4F5" Height="15" Margin="0" Stroke="Black" VerticalAlignment="Top" MouseEnter="DisplayDragCursor" MouseLeave="ResetCursor" PreviewMouseDown="Drag"/>
-        <Rectangle x:Name="left" Opacity="0.0" Fill="#FFF4F4F5" HorizontalAlignment="Left" Margin="0" Stroke="Black" Width="15" MouseEnter="DisplayResizeCursor" MouseLeave="ResetCursor" PreviewMouseDown="Resize" />
-        <Rectangle x:Name="right" Opacity="0.0" Fill="#FFF4F4F5" HorizontalAlignment="Right" Margin="0" Stroke="Black" Width="15" MouseEnter="DisplayResizeCursor" MouseLeave="ResetCursor" PreviewMouseDown="Resize"/>
-        <Rectangle x:Name="bottom" Opacity="0.0" Fill="#FFF4F4F5" Height="15" Margin="0" Stroke="Black" VerticalAlignment="Bottom" MouseEnter="DisplayResizeCursor" MouseLeave="ResetCursor" PreviewMouseDown="Resize"/>
-        <Rectangle x:Name="topLeft" Opacity="0.0" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="15" Margin="0" Stroke="Black" VerticalAlignment="Top" Width="15" MouseEnter="DisplayResizeCursor" MouseLeave="ResetCursor" PreviewMouseDown="Resize" />
-        <Rectangle x:Name="topRight" Opacity="0.0" Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="15" Margin="0" Stroke="Black" VerticalAlignment="Top" Width="15" MouseEnter="DisplayResizeCursor" MouseLeave="ResetCursor" PreviewMouseDown="Resize"/>
-        <Rectangle x:Name="bottomRight" Opacity="0.0" Fill="#FFF4F4F5" HorizontalAlignment="Right" Height="15" Margin="0" Stroke="Black" VerticalAlignment="Bottom" Width="15" MouseEnter="DisplayResizeCursor" MouseLeave="ResetCursor" PreviewMouseDown="Resize" />
-        <Rectangle x:Name="bottomLeft" Opacity="0.0" Fill="#FFF4F4F5" HorizontalAlignment="Left" Height="15" Margin="0" Stroke="Black" VerticalAlignment="Bottom" Width="15" MouseEnter="DisplayResizeCursor" MouseLeave="ResetCursor" PreviewMouseDown="Resize" />
+        <Rectangle x:Name="top" Opacity="0.0" Fill="#00000000" Height="15" Margin="0" Stroke="Black" VerticalAlignment="Top" MouseEnter="DisplayDragCursor" MouseLeave="ResetCursor" PreviewMouseDown="Drag" />
+        <Rectangle x:Name="left" Opacity="0.0" Fill="#00000000" HorizontalAlignment="Left" Margin="0" Stroke="Black" Width="15" MouseEnter="DisplayResizeCursor" MouseLeave="ResetCursor" PreviewMouseDown="Resize" />
+        <Rectangle x:Name="right" Opacity="0.0" Fill="#00000000" HorizontalAlignment="Right" Margin="0" Stroke="Black" Width="15" MouseEnter="DisplayResizeCursor" MouseLeave="ResetCursor" PreviewMouseDown="Resize"/>
+        <Rectangle x:Name="bottom" Opacity="0.0" Fill="#00000000" Height="15" Margin="0" Stroke="Black" VerticalAlignment="Bottom" MouseEnter="DisplayResizeCursor" MouseLeave="ResetCursor" PreviewMouseDown="Resize"/>
+        <Rectangle x:Name="topLeft" Opacity="0.0" Fill="#00000000" HorizontalAlignment="Left" Height="15" Margin="0" Stroke="Black" VerticalAlignment="Top" Width="15" MouseEnter="DisplayResizeCursor" MouseLeave="ResetCursor" PreviewMouseDown="Resize" />
+        <Rectangle x:Name="topRight" Opacity="0.0" Fill="#00000000" HorizontalAlignment="Right" Height="15" Margin="0" Stroke="Black" VerticalAlignment="Top" Width="15" MouseEnter="DisplayResizeCursor" MouseLeave="ResetCursor" PreviewMouseDown="Resize"/>
+        <Rectangle x:Name="bottomRight" Opacity="0.0" Fill="#00000000" HorizontalAlignment="Right" Height="15" Margin="0" Stroke="Black" VerticalAlignment="Bottom" Width="15" MouseEnter="DisplayResizeCursor" MouseLeave="ResetCursor" PreviewMouseDown="Resize" />
+        <Rectangle x:Name="bottomLeft" Opacity="0.0" Fill="#00000000" HorizontalAlignment="Left" Height="15" Margin="0" Stroke="Black" VerticalAlignment="Bottom" Width="15" MouseEnter="DisplayResizeCursor" MouseLeave="ResetCursor" PreviewMouseDown="Resize" />
         <Grid.ContextMenu>
             <ContextMenu>
                 <MenuItem Header="Settings" Click="Settings_Click" />

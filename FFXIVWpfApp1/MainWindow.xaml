@@ -23,9 +23,13 @@
                 <MenuItem Header="{DynamicResource DocLanguage}">
                     <MenuItem Header="{DynamicResource DocLanguageRu}" Click="RuLanguage_Click" />
                     <MenuItem Header="{DynamicResource DocLanguageEn}" Click="EnLanguage_Click"/>
+                    <MenuItem Header="{DynamicResource DocLanguageEs}" Click="EsLanguage_Click"/>
+                    <MenuItem Header="{DynamicResource DocLanguagePl}" Click="PlLanguage_Click"/>
                 </MenuItem>
                 <MenuItem Header="{DynamicResource DockHelp}">
                     <MenuItem Header="{DynamicResource DockAbout}"  Click="About_Click"/>
+                </MenuItem>
+                <MenuItem Header="{DynamicResource DockPatrons}" Click="Patrons_Click">
                 </MenuItem>
             </Menu>
             <Border BorderThickness="0,1,0,0" BorderBrush="LightGray">
@@ -79,7 +83,7 @@
                                             <Grid  Height="25" Width="145" Margin="0,0,0,1">
                                                 <CheckBox Margin="0,0,10,0" IsChecked="{Binding IsChecked, Mode=TwoWay}" Content="{utils:ResourceBinding Name}"></CheckBox>
                                                 <xctk:ColorPicker Margin="0,0,5,0" Height="20" Width="20" VerticalAlignment="Top" ShowDropDownButton="False" SelectedColor="{Binding Color}" HorizontalAlignment="Right"
-                                                                  StandardButtonHeader="{DynamicResource ColorPickerStandardButtonHeader}" AdvancedButtonHeader="{DynamicResource ColorPickerAdvancedButtonHeader}" StandardColorsHeader="{DynamicResource ColorPickerStandardColorsHeader}" RecentColorsHeader="{DynamicResource ColorPickerRecentColorsHeader}"/>
+                                                                  StandardButtonHeader="{DynamicResource ColorPickerStandardButtonHeader}" AdvancedButtonHeader="{DynamicResource ColorPickerAdvancedButtonHeader}" StandardColorsHeader="{DynamicResource ColorPickerStandardColorsHeader}" AvailableColorsHeader="{DynamicResource ColorPickerAvailableColorsHeader}" RecentColorsHeader="{DynamicResource ColorPickerRecentColorsHeader}"/>
                                             </Grid>
                                         </DataTemplate>
                                     </ItemsControl.ItemTemplate>
@@ -151,14 +155,25 @@
 
                             </StackPanel>
                         </GroupBox>
-                        <GroupBox Header="{DynamicResource OtherSett}" Margin="5,5,5,5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="180" Height="145">
+                        <GroupBox Header="{DynamicResource OtherSett}" Margin="5,5,5,5" HorizontalAlignment="Left" VerticalAlignment="Top" Width="184" Height="210">
                             <Grid>
-                                <CheckBox x:Name="AlwayOnTopBox" Content="{DynamicResource AlwaysOnTopCB}" HorizontalAlignment="Left" Height="21" VerticalAlignment="Top" Width="158" Checked="AlwayOnTopBox_Changed" Unchecked="AlwayOnTopBox_Changed" Margin="0,5,0,0" />
+                                <CheckBox KeyboardNavigation.TabIndex="0" x:Name="AlwayOnTopBox" Content="{DynamicResource AlwaysOnTopCB}" HorizontalAlignment="Left" Height="21" VerticalAlignment="Top" Width="158" Checked="AlwayOnTopBox_Changed" Unchecked="AlwayOnTopBox_Changed" Margin="0,5,0,0" />
                                 <CheckBox x:Name="ClickThroughBox" Content="{DynamicResource ClickThroughCB}" Checked="ClickThroughBox_Changed" Unchecked="ClickThroughBox_Changed" HorizontalAlignment="Left" Height="21" VerticalAlignment="Top" Width="158" Margin="0,27,0,0"/>
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0,55,0,0">
                                     <CheckBox x:Name="AutoHideBox" Content="{DynamicResource AutoHideCB}" Checked="AutoHide_Changed" Unchecked="AutoHide_Changed" HorizontalAlignment="Left" Height="21" VerticalAlignment="Top" Width="80" Margin="0,5,0,0"/>
                                     <xctk:IntegerUpDown x:Name="AutoHideTimeOut" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="86" ValueChanged="AutoHideTimeOut_ValueChanged" Minimum="5" Maximum="3600"/>
                                 </StackPanel>
+                                <CheckBox x:Name="DirectMemoryBox" Visibility="Visible" HorizontalAlignment="Left" Height="21" VerticalAlignment="Bottom" Checked="DirectMemoryReading_Changed" Unchecked="DirectMemoryReading_Changed" Margin="0,0,0,75">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{DynamicResource DirectMemoryCB}"/>
+                                        <Image Height="20" Width="20" Source="{Binding Source={x:Static draw:SystemIcons.Question}, Converter={utils:IconToImageSourceConverter}, Mode=OneWay}" Margin="4,0,0,0">
+                                            <Image.ToolTip>
+                                                <DynamicResource ResourceKey="DirectMemoryToolTip" />
+                                            </Image.ToolTip>
+                                        </Image>
+                                    </StackPanel>
+                                </CheckBox>
+                                <CheckBox x:Name="StreamerWindowBox" Visibility="Hidden" Content="{DynamicResource StreamerWindowCB}" HorizontalAlignment="Left" Height="21" VerticalAlignment="Bottom" Width="158" Checked="StreamerWindow_Changed" Unchecked="StreamerWindow_Changed" Margin="0,0,0,35"/>
                                 <CheckBox x:Name="HideToTray" Content="{DynamicResource HideToTrayCB}" HorizontalAlignment="Left" Height="21" VerticalAlignment="Bottom" Width="158" Checked="HideToTray_Changed" Unchecked="HideToTray_Changed" Margin="0,0,0,2"/>
                             </Grid>
                         </GroupBox>

@@ -30,7 +30,7 @@ namespace FFXIITataruHelper
     /// </summary>
     public partial class ChatWindow : Window
     {
-        private Window _SettigsWindow;
+        protected Window _SettigsWindow;
 
         private WindowResizer _WindowResizer;
 
@@ -39,11 +39,11 @@ namespace FFXIITataruHelper
         private bool _IsClickThrought;
 
         private DateTime _TextArrivedTime;
-        private bool _KeepWorking;
+        protected bool _KeepWorking;
         private bool _AutoHidden;
 
-        private TataruModel _TataruModel;
-        private TataruUIModel _TataruUIModel;
+        protected TataruModel _TataruModel;
+        protected TataruUIModel _TataruUIModel;
 
         public ChatWindow(Window settigsWindow, TataruModel tataruModel)
         {
@@ -66,6 +66,8 @@ namespace FFXIITataruHelper
                 ChatRtb.BorderThickness = new Thickness(0);
 
                 ChatRtb.Document.Blocks.Clear();
+
+                ChatRtb.IsUndoEnabled = false;
 
                 _TextArrivedTime = DateTime.UtcNow;
 
@@ -120,7 +122,18 @@ namespace FFXIITataruHelper
                     TextRange tr2 = new TextRange(ChatRtb.Document.ContentEnd, ChatRtb.Document.ContentEnd);
                     tr2.Text = text;
                     tr2.ApplyPropertyValue(TextElement.ForegroundProperty, tmpColor);
-                    tr2.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Normal);
+                    tr2.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Normal);//*/
+                    /*
+                    Utils.TextPath textPath = new Utils.TextPath();
+                    textPath.Text = translatedMsg;
+                    textPath.Stroke = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
+                    textPath.Fill = tmpColor;
+                    textPath.StrokeThickness = 0.1;
+
+                    var para = new Paragraph();
+                    para.Inlines.Add(textPath);
+
+                    ChatRtb.Document.Blocks.Add(para);//*/
                 }
                 else
                 {
@@ -175,7 +188,7 @@ namespace FFXIITataruHelper
 
         #region **WindowEvents.
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        protected virtual void Window_Loaded(object sender, RoutedEventArgs e)
         {
             _TataruModel.FFMemoryReader.AddExclusionWindowHandler((new WindowInteropHelper(this).Handle));
             _MouseHooker = null;
@@ -193,7 +206,7 @@ namespace FFXIITataruHelper
                 _MouseHooker.UnHook();
         }
 
-        private void Window_LocationChanged(object sender, EventArgs e)
+        protected virtual void Window_LocationChanged(object sender, EventArgs e)
         {
             if (this.WindowState == WindowState.Normal)
             {
@@ -207,7 +220,7 @@ namespace FFXIITataruHelper
             }
         }
 
-        private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
+        protected virtual void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (this.WindowState == WindowState.Normal)
             {
@@ -219,6 +232,12 @@ namespace FFXIITataruHelper
                 if (_TataruUIModel.ChatWindowRectangle != loc)
                     _TataruUIModel.ChatWindowRectangle = loc;
             }
+        }
+
+        protected virtual void Window_Deactivated(object sender, EventArgs e)
+        {
+            int t = 0;
+            t++;
         }
 
         #endregion
@@ -236,7 +255,7 @@ namespace FFXIITataruHelper
             });
         }
 
-        private async Task OnBackgroundColorChange(ColorChangeEventArgs ea)
+        protected virtual async Task OnBackgroundColorChange(ColorChangeEventArgs ea)
         {
             await this.UIThreadAsync(() =>
             {
@@ -288,7 +307,7 @@ namespace FFXIITataruHelper
             });
         }
 
-        private async Task OnChatWindowRectangleChanged(RectangleDValueChangeEventArgs ea)
+        protected virtual async Task OnChatWindowRectangleChanged(RectangleDValueChangeEventArgs ea)
         {
             await this.UIThreadAsync(() =>
             {
@@ -322,7 +341,7 @@ namespace FFXIITataruHelper
             });
         }
 
-        private async Task OnChatClickThroughChange(BooleanChangeEventArgs ea)
+        protected virtual async Task OnChatClickThroughChange(BooleanChangeEventArgs ea)
         {
             await this.UIThreadAsync(() =>
             {
@@ -337,7 +356,7 @@ namespace FFXIITataruHelper
             });
         }
 
-        private async Task OnChatAlwaysOnTopChange(BooleanChangeEventArgs ea)
+        protected virtual async Task OnChatAlwaysOnTopChange(BooleanChangeEventArgs ea)
         {
             await this.UIThreadAsync(() =>
             {
@@ -348,7 +367,7 @@ namespace FFXIITataruHelper
             });
         }
 
-        private async Task OnFFWindowStateChange(WindowStateChangeEventArgs ea)
+        protected virtual async Task OnFFWindowStateChange(WindowStateChangeEventArgs ea)
         {
             await this.UIThreadAsync(() =>
             {
@@ -373,7 +392,7 @@ namespace FFXIITataruHelper
             });
         }
 
-        private async Task OnTranslationArrived(TranslationArrivedEventArgs ea)
+        protected async Task OnTranslationArrived(TranslationArrivedEventArgs ea)
         {
             await this.UIThreadAsync(() =>
             {
@@ -393,7 +412,7 @@ namespace FFXIITataruHelper
             });
         }
 
-        private async Task OnAutoHideChange(BooleanChangeEventArgs ea)
+        protected virtual async Task OnAutoHideChange(BooleanChangeEventArgs ea)
         {
             await this.UIThreadAsync(() =>
             {
@@ -436,30 +455,30 @@ namespace FFXIITataruHelper
         #region **WindowResize.
 
         // for each rectangle, assign the following method to its MouseEnter event.
-        private void DisplayResizeCursor(object sender, MouseEventArgs e)
+        protected virtual void DisplayResizeCursor(object sender, MouseEventArgs e)
         {
             _WindowResizer.displayResizeCursor(sender);
         }
 
-        private void DisplayDragCursor(object sender, MouseEventArgs e)
+        protected virtual void DisplayDragCursor(object sender, MouseEventArgs e)
         {
             _WindowResizer.DisplayDragCursor(sender);
         }
 
         // for each rectangle, assign the following method to its MouseLeave event.
-        private void ResetCursor(object sender, MouseEventArgs e)
+        protected virtual void ResetCursor(object sender, MouseEventArgs e)
         {
             _WindowResizer.resetCursor();
         }
 
         // for each rectangle, assign the following method to its PreviewMouseDown event.
-        private void Resize(object sender, MouseButtonEventArgs e)
+        protected virtual void Resize(object sender, MouseButtonEventArgs e)
         {
             _WindowResizer.resizeWindow(sender);
         }
 
         // finally, you may use the following method to enable dragging!
-        private void Drag(object sender, MouseButtonEventArgs e)
+        protected virtual void Drag(object sender, MouseButtonEventArgs e)
         {
             _WindowResizer.dragWindow(sender, e);
         }
@@ -468,7 +487,7 @@ namespace FFXIITataruHelper
 
         #region **System.
 
-        void MakeWindowClickThrought()
+        protected void MakeWindowClickThrought()
         {
             try
             {
@@ -482,7 +501,7 @@ namespace FFXIITataruHelper
             }
         }
 
-        void MakeWindowClickbale()
+        protected void MakeWindowClickbale()
         {
             try
             {
@@ -588,13 +607,13 @@ namespace FFXIITataruHelper
             {
                 if (_TataruUIModel.IsHiddenByUser == false)
                 {
-                    if(_TataruModel.FFMemoryReader.FFWindowState!= WindowState.Minimized)
+                    if (_TataruModel.FFMemoryReader.FFWindowState != WindowState.Minimized)
                         this.Show();
                 }
             }
         }
 
-        void AutoHideStatusCheck()
+        protected virtual void AutoHideStatusCheck()
         {
             Task.Factory.StartNew(async () =>
             {
@@ -620,9 +639,23 @@ namespace FFXIITataruHelper
                     else
                         _AutoHidden = false;
 
-                    await Task.Delay(GlobalSettings.AutoHideDelay);
+                    await Task.Delay(GlobalSettings.AutoHideWatcherDelay);
                 }
             }, TaskCreationOptions.LongRunning);
+        }
+
+        protected override void OnClosed(EventArgs e)
+        {
+            _TataruUIModel.ChatFontSizeChanged -= OnChatFontSizeChange;
+            _TataruUIModel.BackgroundColorChanged -= OnBackgroundColorChange;
+            _TataruUIModel.ChatWindowRectangleChanged -= OnChatWindowRectangleChanged;
+            _TataruUIModel.IsChatClickThroughChanged -= OnChatClickThroughChange;
+            _TataruUIModel.IsChatAlwaysOnTopChanged -= OnChatAlwaysOnTopChange;
+            _TataruModel.FFMemoryReader.FFWindowStateChanged -= OnFFWindowStateChange;
+            _TataruUIModel.IsAutoHideChanged -= OnAutoHideChange;
+            _TataruModel.ChatProcessor.TranslationArrived -= OnTranslationArrived;
+
+            base.OnClosed(e);
         }
 
         #endregion

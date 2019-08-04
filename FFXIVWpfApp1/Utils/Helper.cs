@@ -225,5 +225,13 @@ namespace FFXIITataruHelper
         {
             return text;
         }
+
+        public static bool IsStringLettersEqual(string str1, string str2)
+        {
+            String onlyLetters1 = new String(str1.Where(Char.IsLetter).ToArray());
+            String onlyLetters2 = new String(str2.Where(Char.IsLetter).ToArray());
+
+            return onlyLetters1== onlyLetters2;
+        }
     }
 }

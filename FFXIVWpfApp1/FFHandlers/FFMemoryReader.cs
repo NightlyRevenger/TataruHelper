@@ -42,12 +42,24 @@ namespace FFXIITataruHelper.FFHandlers
 
         public System.Windows.WindowState FFWindowState { get; private set; }
 
+        public bool UseDirectReading
+        {
+            get { return _UseDirectReading; }
+            set { _UseDirectReading = value; }
+        }
+
         #endregion
 
         #region **LocalVariables.
 
         bool _KeepWorking;
         bool _KeepReading;
+
+        bool _UseDirectReadingInternal;
+
+        bool _UseDirectReading;
+
+        int DirectTextsMissedCount;
 
         private Process _FfXivProcess = null;
         private string _FfProcessName;
@@ -65,6 +77,9 @@ namespace FFXIITataruHelper.FFHandlers
 
             _FFWindowStateChanged = new AsyncEvent<WindowStateChangeEventArgs>(EventErrorHandler, "FFWindowStateChanged");
             _FFChatMessageArrived = new AsyncEvent<ChatMessageArrivedEventArgs>(EventErrorHandler, "FFChatMessageArrived");
+
+            _UseDirectReadingInternal = true;
+            DirectTextsMissedCount = 0;
         }
 
         public void Start()
@@ -253,6 +268,8 @@ namespace FFXIITataruHelper.FFHandlers
                             _isRunningPrev = false;
 
                             FFWindowState = System.Windows.WindowState.Minimized;
+
+                            MemoryHandler.Instance.UnsetProcess();
                         }
                         else
                         {
@@ -267,7 +284,7 @@ namespace FFXIITataruHelper.FFHandlers
 
                                     IsRunningOld = _isRunningPrev,
                                     IsRunningNew = true,
-                                    Text = processes[0].ProcessName
+                                    Text = processes[0].ProcessName + ".exe" + "  PID: " + processes[0].Id.ToString()
                                 };
 
                                 _FFWindowStateChanged.InvokeAsync(ea);
@@ -294,17 +311,27 @@ namespace FFXIITataruHelper.FFHandlers
             int _previousArrayIndex = 0;
             int _previousOffset = 0;
 
+            ChatLogResult previousPanelResults = new ChatLogResult();
 
             while (_KeepWorking && _KeepReading)
             {
                 try
                 {
                     ChatLogResult readResult = Reader.GetChatLog(_previousArrayIndex, _previousOffset);
-
-                    var chatLogEntries = readResult.ChatLogItems;
-
                     _previousArrayIndex = readResult.PreviousArrayIndex;
                     _previousOffset = readResult.PreviousOffset;
+
+                    if (_UseDirectReadingInternal && _UseDirectReading)
+                    {
+                        var directDialog = Reader.GetDirectDialog();
+                        readResult.ChatLogItems.AddRange(directDialog.ChatLogItems);
+
+                        ClearMessagesList(readResult, previousPanelResults, directDialog);
+                    }
+                    if (DirectTextsMissedCount > GlobalSettings.MaxСonsecutiveNotFromLogSentences)
+                        _UseDirectReadingInternal = false;
+
+                    var chatLogEntries = readResult.ChatLogItems;
 
                     if (readResult.ChatLogItems.Count > 0)
                     {
@@ -321,6 +348,45 @@ namespace FFXIITataruHelper.FFHandlers
 
                 await Task.Delay(GlobalSettings.MemoryReaderDelay);
             }
+        }
+
+        void ClearMessagesList(ChatLogResult chatLogResult, ChatLogResult previousPanelResults, ChatLogResult panelResult)
+        {
+            bool messgaesDeleted = false;
+            bool previousCount = previousPanelResults.ChatLogItems.Count > 0 && chatLogResult.ChatLogItems.Count > 0;
+            for (int i = 0; i < previousPanelResults.ChatLogItems.Count; i++)
+            {
+                var pvPanel = previousPanelResults.ChatLogItems[i];
+                var panel = chatLogResult.ChatLogItems.FirstOrDefault(x => Helper.IsStringLettersEqual(x.Line, pvPanel.Line));
+                if (panel != null)
+                {
+                    if (panelResult.ChatLogItems.FirstOrDefault(x => Helper.IsStringLettersEqual(x.Line, panel.Line)) == null)
+                        chatLogResult.ChatLogItems.Remove(panel);
+
+                    var rmCount = previousPanelResults.ChatLogItems.RemoveAll(x => Helper.IsStringLettersEqual(x.Line, panel.Line));
+                    messgaesDeleted = true;
+
+                    if (i - rmCount > -2)
+                        i = i - rmCount;
+                }
+            }
+
+            if (previousCount)
+            {
+                if (messgaesDeleted == false)
+                    DirectTextsMissedCount++;
+                else
+                    DirectTextsMissedCount = 0;
+            }
+
+            if (previousPanelResults.ChatLogItems.Count > 200)
+            {
+                int startPos = 0;
+                int count = previousPanelResults.ChatLogItems.Count / 2;
+                previousPanelResults.ChatLogItems.RemoveRange(startPos, count);
+            }
+
+            previousPanelResults.ChatLogItems.AddRange(panelResult.ChatLogItems);
         }
 
         private void ChatMessageEvetRiser()

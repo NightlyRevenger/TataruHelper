@@ -29,6 +29,8 @@ namespace FFXIITataruHelper
 
         public bool IsAutoHide { get; set; } = false;
 
+        public bool IsDirecMemoryReading { get; set; } = true;
+
         public TimeSpan AutoHideTimeout { get; set; } = new TimeSpan(0, 5, 0);
 
         public int FontSize { get; set; } = 14;
@@ -81,6 +83,8 @@ namespace FFXIITataruHelper
 
             IsAutoHide = false;
 
+            IsDirecMemoryReading = true;
+
             AutoHideTimeout = new TimeSpan(0, 5, 0);
 
             FontSize = 14;
@@ -131,6 +135,8 @@ namespace FFXIITataruHelper
             IsHideToTray = userSettings.IsHideToTray;
 
             IsAutoHide = userSettings.IsAutoHide;
+
+            IsDirecMemoryReading = userSettings.IsDirecMemoryReading;
 
             AutoHideTimeout = userSettings.AutoHideTimeout;
 

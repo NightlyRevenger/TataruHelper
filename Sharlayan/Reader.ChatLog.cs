@@ -52,6 +52,8 @@ namespace Sharlayan {
             List<List<byte>> buffered = new List<List<byte>>();
 
             try {
+                var LineCount = (uint)MemoryHandler.Instance.GetPlatformUInt(chatPointerMap);
+
                 ChatLogReader.Indexes.Clear();
                 ChatLogReader.ChatLogPointers = new ChatLogPointers {
                     LineCount = (uint) MemoryHandler.Instance.GetPlatformUInt(chatPointerMap),

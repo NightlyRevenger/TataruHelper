@@ -14,10 +14,14 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -63,15 +67,6 @@
   <PropertyGroup />
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'ReleaseDeploy|AnyCPU'">
-    <OutputPath>bin\ReleaseDeploy\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="DeltaCompressionDotNet, Version=1.1.0.0, Culture=neutral, PublicKeyToken=1d14d6e5194e7f4a, processorArchitecture=MSIL">
@@ -140,7 +135,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="AppWindows\AboutWin.xaml.cs">
+      <DependentUpon>AboutWin.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="AppWindows\PatreonWin.xaml.cs">
+      <DependentUpon>PatreonWin.xaml</DependentUpon>
+    </Compile>
     <Compile Include="AsyncEvent.cs" />
+    <Compile Include="ChatStreamWindow.cs" />
     <Compile Include="EventArguments\BooleanChangeEventArgs.cs" />
     <Compile Include="EventArguments\ChatMessageArrivedEventArgs.cs" />
     <Compile Include="EventArguments\ChatMsgTypeChangeEventArgs.cs" />
@@ -179,6 +181,7 @@
     <Compile Include="Utils\RectangleD.cs" />
     <Compile Include="Utils\TataruSingleInstance.cs" />
     <Compile Include="Utils\SizeD.cs" />
+    <Compile Include="Utils\TextPath.cs" />
     <Compile Include="Utils\Updater.cs" />
     <Compile Include="ViewModel\ChatCodeViewModel.cs" />
     <Compile Include="ViewModel\TataruViewModel.cs" />
@@ -195,6 +198,14 @@
     <Compile Include="WinUtils\Win32Interfaces.cs" />
     <Compile Include="WinUtils\WindowResizer.cs" />
     <Compile Include="WinUtils\WinMessagesHandler.cs" />
+    <Page Include="AppWindows\AboutWin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="AppWindows\PatreonWin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ChatWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -246,6 +257,18 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Locale\en_US\en_US.po">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Locale\es_ES\es_ES.mo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Locale\es_ES\es_ES.po">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Locale\pl_PL\pl_PL.mo">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Locale\pl_PL\pl_PL.po">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Locale\ru_RU\ru_RU.mo">
@@ -316,6 +339,21 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Tataru_img.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\patreon_logo.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\heavy_heart.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

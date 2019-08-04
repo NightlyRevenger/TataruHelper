@@ -1,0 +1,153 @@
+﻿2019-01-29 18:42:20> Program: Starting Squirrel Updater: --releaseDir=..\..\..\Release --releasify=..\..\..\TataruHelper.0.9.5.nupkg --no-msi
+2019-01-29 18:42:20> Program: Bootstrapper EXE found at:D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\packages\squirrel.windows.1.9.0\tools\Setup.exe
+2019-01-29 18:42:20> Program: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.5.nupkg
+2019-01-29 18:42:20> ReleasePackage: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.5.nupkg => D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper-0.9.5-full.nupkg
+2019-01-29 18:42:20> ReleasePackage: Extracting dependent packages: []
+2019-01-29 18:42:20> ReleasePackage: Removing unnecessary data
+2019-01-29 18:42:20> ReleasePackage: No release notes found in C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\TataruHelper.nuspec
+2019-01-29 18:42:21> Program: Building embedded zip file for Setup.exe
+2019-01-29 18:42:54> Program: Starting Squirrel Updater: --releaseDir=..\..\..\Release --releasify=..\..\..\TataruHelper.0.9.6.nupkg --no-msi
+2019-01-29 18:42:54> Program: Bootstrapper EXE found at:D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\packages\squirrel.windows.1.9.0\tools\Setup.exe
+2019-01-29 18:42:54> Program: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.6.nupkg
+2019-01-29 18:42:54> ReleasePackage: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.6.nupkg => D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper-0.9.6-full.nupkg
+2019-01-29 18:42:54> ReleasePackage: Extracting dependent packages: []
+2019-01-29 18:42:54> ReleasePackage: Removing unnecessary data
+2019-01-29 18:42:54> ReleasePackage: No release notes found in C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\TataruHelper.nuspec
+2019-01-29 18:42:54> Program: Building embedded zip file for Setup.exe
+2019-02-03 21:31:16> Program: Starting Squirrel Updater: --releaseDir=..\..\..\Release --releasify=..\..\..\TataruHelper.0.9.7.nupkg --no-msi
+2019-02-03 21:31:16> Program: Bootstrapper EXE found at:D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\packages\squirrel.windows.1.9.0\tools\Setup.exe
+2019-02-03 21:31:16> Program: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.7.nupkg
+2019-02-03 21:31:16> ReleasePackage: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.7.nupkg => D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper-0.9.7-full.nupkg
+2019-02-03 21:31:16> ReleasePackage: Extracting dependent packages: []
+2019-02-03 21:31:16> ReleasePackage: Removing unnecessary data
+2019-02-03 21:31:16> ReleasePackage: No release notes found in C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\TataruHelper.nuspec
+2019-02-03 21:31:17> DeltaPackageBuilder: Extracting ..\..\..\Release\TataruHelper-0.9.6-full.nupkg and D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper-0.9.7-full.nupkg into C:\Users\Alexander\AppData\Local\SquirrelTemp\tempb
+2019-02-03 21:31:17> DeltaPackageBuilder: \lib\net45\DeltaCompressionDotNet.dll hasn't changed, writing dummy file
+2019-02-03 21:31:17> DeltaPackageBuilder: \lib\net45\DeltaCompressionDotNet.MsDelta.dll hasn't changed, writing dummy file
+2019-02-03 21:31:17> DeltaPackageBuilder: \lib\net45\DeltaCompressionDotNet.PatchApi.dll hasn't changed, writing dummy file
+2019-02-03 21:31:17> DeltaPackageBuilder: Delta patching C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\lib\net45\Hardcodet.Wpf.TaskbarNotification.dll => C:\Users\Alexander\AppData\Local\SquirrelTemp\tempb\lib\net45\Hardcodet.Wpf.TaskbarNotification.dll
+2019-02-03 21:31:18> DeltaPackageBuilder: Delta patching C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\lib\net45\HotKeyManagement.WPF.4.dll => C:\Users\Alexander\AppData\Local\SquirrelTemp\tempb\lib\net45\HotKeyManagement.WPF.4.dll
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\Mono.Cecil.dll hasn't changed, writing dummy file
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\Mono.Cecil.Mdb.dll hasn't changed, writing dummy file
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\Mono.Cecil.Pdb.dll hasn't changed, writing dummy file
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\Mono.Cecil.Rocks.dll hasn't changed, writing dummy file
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\Newtonsoft.Json.dll hasn't changed, writing dummy file
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\NGettext.dll hasn't changed, writing dummy file
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\NuGet.Squirrel.dll hasn't changed, writing dummy file
+2019-02-03 21:31:18> DeltaPackageBuilder: Delta patching C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\lib\net45\Sharlayan.dll => C:\Users\Alexander\AppData\Local\SquirrelTemp\tempb\lib\net45\Sharlayan.dll
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\SharpCompress.dll hasn't changed, writing dummy file
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\Splat.dll hasn't changed, writing dummy file
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\Squirrel.dll hasn't changed, writing dummy file
+2019-02-03 21:31:18> DeltaPackageBuilder: Delta patching C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\lib\net45\TataruHelper.exe => C:\Users\Alexander\AppData\Local\SquirrelTemp\tempb\lib\net45\TataruHelper.exe
+2019-02-03 21:31:18> DeltaPackageBuilder: Delta patching C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\lib\net45\TataruHelper_ExecutionStub.exe => C:\Users\Alexander\AppData\Local\SquirrelTemp\tempb\lib\net45\TataruHelper_ExecutionStub.exe
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\Xceed.Wpf.Toolkit.dll hasn't changed, writing dummy file
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\Locale\en_US\en_US.mo hasn't changed, writing dummy file
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\Locale\en_US\en_US.po hasn't changed, writing dummy file
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\Locale\ru_RU\ru_RU.mo hasn't changed, writing dummy file
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\Locale\ru_RU\ru_RU.po hasn't changed, writing dummy file
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\Resources\DeeplLanguages.json hasn't changed, writing dummy file
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\Resources\GoogleTranslateLanguages.json hasn't changed, writing dummy file
+2019-02-03 21:31:18> DeltaPackageBuilder: \lib\net45\Resources\MultillectTranslateLanguages.json hasn't changed, writing dummy file
+2019-02-03 21:31:18> Program: Building embedded zip file for Setup.exe
+2019-02-03 21:31:52> Program: Starting Squirrel Updater: --releaseDir=..\..\..\Release --releasify=..\..\..\TataruHelper.0.9.7.nupkg --no-msi
+2019-02-03 21:31:52> Program: Bootstrapper EXE found at:D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\packages\squirrel.windows.1.9.0\tools\Setup.exe
+2019-02-03 21:31:52> Program: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.7.nupkg
+2019-02-03 21:31:52> ReleasePackage: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.7.nupkg => D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper-0.9.7-full.nupkg
+2019-02-03 21:31:53> ReleasePackage: Extracting dependent packages: []
+2019-02-03 21:31:53> ReleasePackage: Removing unnecessary data
+2019-02-03 21:31:53> ReleasePackage: No release notes found in C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\TataruHelper.nuspec
+2019-02-03 21:31:53> Program: Building embedded zip file for Setup.exe
+2019-02-03 21:37:55> Program: Starting Squirrel Updater: --releaseDir=..\..\..\Release --releasify=..\..\..\TataruHelper.0.9.8.nupkg --no-msi
+2019-02-03 21:37:55> Program: Bootstrapper EXE found at:D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\packages\squirrel.windows.1.9.0\tools\Setup.exe
+2019-02-03 21:37:55> Program: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.8.nupkg
+2019-02-03 21:37:55> ReleasePackage: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.8.nupkg => D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper-0.9.8-full.nupkg
+2019-02-03 21:37:56> ReleasePackage: Extracting dependent packages: []
+2019-02-03 21:37:56> ReleasePackage: Removing unnecessary data
+2019-02-03 21:37:56> ReleasePackage: No release notes found in C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\TataruHelper.nuspec
+2019-02-03 21:37:56> Program: Building embedded zip file for Setup.exe
+2019-06-28 22:59:59> Program: Starting Squirrel Updater: --releaseDir=..\..\..\Release --releasify=..\..\..\TataruHelper.0.9.18.nupkg --no-msi --framework-version=net462
+2019-06-28 22:59:59> Program: Bootstrapper EXE found at:D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\packages\squirrel.windows.1.9.0\tools\Setup.exe
+2019-06-28 22:59:59> Program: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.18.nupkg
+2019-06-28 22:59:59> ReleasePackage: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.18.nupkg => D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper-0.9.18-full.nupkg
+2019-06-28 22:59:59> ReleasePackage: Extracting dependent packages: []
+2019-06-28 22:59:59> ReleasePackage: Removing unnecessary data
+2019-06-28 22:59:59> ReleasePackage: No release notes found in C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\TataruHelper.nuspec
+2019-06-28 23:00:00> Program: Building embedded zip file for Setup.exe
+2019-06-28 23:01:24> Program: Starting Squirrel Updater: --releaseDir=..\..\..\Release --releasify=..\..\..\TataruHelper.0.9.19.nupkg --no-msi --framework-version=net462
+2019-06-28 23:01:24> Program: Bootstrapper EXE found at:D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\packages\squirrel.windows.1.9.0\tools\Setup.exe
+2019-06-28 23:01:24> Program: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.19.nupkg
+2019-06-28 23:01:24> ReleasePackage: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.19.nupkg => D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper-0.9.19-full.nupkg
+2019-06-28 23:01:25> ReleasePackage: Extracting dependent packages: []
+2019-06-28 23:01:25> ReleasePackage: Removing unnecessary data
+2019-06-28 23:01:25> ReleasePackage: No release notes found in C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\TataruHelper.nuspec
+2019-06-28 23:01:25> Program: Building embedded zip file for Setup.exe
+2019-06-28 23:04:54> Program: Starting Squirrel Updater: --releaseDir=..\..\..\Release --releasify=..\..\..\TataruHelper.0.9.20.nupkg --no-msi --framework-version=net462
+2019-06-28 23:04:54> Program: Bootstrapper EXE found at:D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\packages\squirrel.windows.1.9.0\tools\Setup.exe
+2019-06-28 23:04:54> Program: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.20.nupkg
+2019-06-28 23:04:54> ReleasePackage: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.20.nupkg => D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper-0.9.20-full.nupkg
+2019-06-28 23:04:54> ReleasePackage: Extracting dependent packages: []
+2019-06-28 23:04:54> ReleasePackage: Removing unnecessary data
+2019-06-28 23:04:54> ReleasePackage: No release notes found in C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\TataruHelper.nuspec
+2019-06-28 23:04:54> Program: Building embedded zip file for Setup.exe
+2019-06-29 03:07:00> Program: Starting Squirrel Updater: --releaseDir=..\..\..\Release --releasify=..\..\..\TataruHelper.0.9.20.nupkg --no-msi --framework-version=net462
+2019-06-29 03:07:00> Program: Bootstrapper EXE found at:D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\packages\squirrel.windows.1.9.0\tools\Setup.exe
+2019-06-29 03:07:00> Program: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.20.nupkg
+2019-06-29 03:07:00> ReleasePackage: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.20.nupkg => D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper-0.9.20-full.nupkg
+2019-06-29 03:07:01> ReleasePackage: Extracting dependent packages: []
+2019-06-29 03:07:01> ReleasePackage: Removing unnecessary data
+2019-06-29 03:07:01> ReleasePackage: No release notes found in C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\TataruHelper.nuspec
+2019-06-29 03:07:01> Program: Building embedded zip file for Setup.exe
+2019-06-29 03:09:13> Program: Starting Squirrel Updater: --releaseDir=..\..\..\Release --releasify=..\..\..\TataruHelper.0.9.21.nupkg --no-msi --framework-version=net462
+2019-06-29 03:09:13> Program: Bootstrapper EXE found at:D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\packages\squirrel.windows.1.9.0\tools\Setup.exe
+2019-06-29 03:09:13> Program: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.21.nupkg
+2019-06-29 03:09:13> ReleasePackage: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.21.nupkg => D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper-0.9.21-full.nupkg
+2019-06-29 03:09:13> ReleasePackage: Extracting dependent packages: []
+2019-06-29 03:09:13> ReleasePackage: Removing unnecessary data
+2019-06-29 03:09:13> ReleasePackage: No release notes found in C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\TataruHelper.nuspec
+2019-06-29 03:09:13> DeltaPackageBuilder: Extracting ..\..\..\Release\TataruHelper-0.9.20-full.nupkg and D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper-0.9.21-full.nupkg into C:\Users\Alexander\AppData\Local\SquirrelTemp\tempb
+2019-06-29 03:09:14> DeltaPackageBuilder: \lib\net45\DeltaCompressionDotNet.dll hasn't changed, writing dummy file
+2019-06-29 03:09:14> DeltaPackageBuilder: \lib\net45\DeltaCompressionDotNet.MsDelta.dll hasn't changed, writing dummy file
+2019-06-29 03:09:14> DeltaPackageBuilder: \lib\net45\DeltaCompressionDotNet.PatchApi.dll hasn't changed, writing dummy file
+2019-06-29 03:09:14> DeltaPackageBuilder: Delta patching C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\lib\net45\Hardcodet.Wpf.TaskbarNotification.dll => C:\Users\Alexander\AppData\Local\SquirrelTemp\tempb\lib\net45\Hardcodet.Wpf.TaskbarNotification.dll
+2019-06-29 03:09:14> DeltaPackageBuilder: Delta patching C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\lib\net45\HotKeyManagement.WPF.4.dll => C:\Users\Alexander\AppData\Local\SquirrelTemp\tempb\lib\net45\HotKeyManagement.WPF.4.dll
+2019-06-29 03:09:14> DeltaPackageBuilder: \lib\net45\Mono.Cecil.dll hasn't changed, writing dummy file
+2019-06-29 03:09:14> DeltaPackageBuilder: \lib\net45\Mono.Cecil.Mdb.dll hasn't changed, writing dummy file
+2019-06-29 03:09:14> DeltaPackageBuilder: \lib\net45\Mono.Cecil.Pdb.dll hasn't changed, writing dummy file
+2019-06-29 03:09:14> DeltaPackageBuilder: \lib\net45\Mono.Cecil.Rocks.dll hasn't changed, writing dummy file
+2019-06-29 03:09:14> DeltaPackageBuilder: \lib\net45\Newtonsoft.Json.dll hasn't changed, writing dummy file
+2019-06-29 03:09:14> DeltaPackageBuilder: \lib\net45\NGettext.dll hasn't changed, writing dummy file
+2019-06-29 03:09:14> DeltaPackageBuilder: \lib\net45\NuGet.Squirrel.dll hasn't changed, writing dummy file
+2019-06-29 03:09:14> DeltaPackageBuilder: Delta patching C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\lib\net45\Sharlayan.dll => C:\Users\Alexander\AppData\Local\SquirrelTemp\tempb\lib\net45\Sharlayan.dll
+2019-06-29 03:09:14> DeltaPackageBuilder: \lib\net45\SharpCompress.dll hasn't changed, writing dummy file
+2019-06-29 03:09:14> DeltaPackageBuilder: \lib\net45\Splat.dll hasn't changed, writing dummy file
+2019-06-29 03:09:15> DeltaPackageBuilder: \lib\net45\Squirrel.dll hasn't changed, writing dummy file
+2019-06-29 03:09:15> DeltaPackageBuilder: Delta patching C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\lib\net45\TataruHelper.exe => C:\Users\Alexander\AppData\Local\SquirrelTemp\tempb\lib\net45\TataruHelper.exe
+2019-06-29 03:09:15> DeltaPackageBuilder: Delta patching C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\lib\net45\TataruHelper_ExecutionStub.exe => C:\Users\Alexander\AppData\Local\SquirrelTemp\tempb\lib\net45\TataruHelper_ExecutionStub.exe
+2019-06-29 03:09:15> DeltaPackageBuilder: \lib\net45\WpfXamlExtensions.dll hasn't changed, writing dummy file
+2019-06-29 03:09:15> DeltaPackageBuilder: \lib\net45\Xceed.Wpf.Toolkit.dll hasn't changed, writing dummy file
+2019-06-29 03:09:15> DeltaPackageBuilder: \lib\net45\Locale\en_US\en_US.mo hasn't changed, writing dummy file
+2019-06-29 03:09:15> DeltaPackageBuilder: \lib\net45\Locale\en_US\en_US.po hasn't changed, writing dummy file
+2019-06-29 03:09:15> DeltaPackageBuilder: \lib\net45\Locale\ru_RU\ru_RU.mo hasn't changed, writing dummy file
+2019-06-29 03:09:15> DeltaPackageBuilder: \lib\net45\Locale\ru_RU\ru_RU.po hasn't changed, writing dummy file
+2019-06-29 03:09:15> DeltaPackageBuilder: \lib\net45\Resources\ChatCodes.json hasn't changed, writing dummy file
+2019-06-29 03:09:15> DeltaPackageBuilder: \lib\net45\Resources\DeeplLanguages.json hasn't changed, writing dummy file
+2019-06-29 03:09:15> DeltaPackageBuilder: \lib\net45\Resources\GoogleTranslateLanguages.json hasn't changed, writing dummy file
+2019-06-29 03:09:15> DeltaPackageBuilder: \lib\net45\Resources\MultillectTranslateLanguages.json hasn't changed, writing dummy file
+2019-06-29 03:09:15> DeltaPackageBuilder: \lib\net45\Resources\YandexTranslateLanguages.json hasn't changed, writing dummy file
+2019-06-29 03:09:15> Program: Building embedded zip file for Setup.exe
+2019-06-29 03:09:29> Program: Starting Squirrel Updater: --releaseDir=..\..\..\Release --releasify=..\..\..\TataruHelper.0.9.21.nupkg --no-msi --framework-version=net462
+2019-06-29 03:09:29> Program: Bootstrapper EXE found at:D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\packages\squirrel.windows.1.9.0\tools\Setup.exe
+2019-06-29 03:09:29> Program: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.21.nupkg
+2019-06-29 03:09:29> ReleasePackage: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.21.nupkg => D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper-0.9.21-full.nupkg
+2019-06-29 03:09:29> ReleasePackage: Extracting dependent packages: []
+2019-06-29 03:09:29> ReleasePackage: Removing unnecessary data
+2019-06-29 03:09:29> ReleasePackage: No release notes found in C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\TataruHelper.nuspec
+2019-06-29 03:09:30> Program: Building embedded zip file for Setup.exe
+2019-06-29 03:09:44> Program: Starting Squirrel Updater: --releaseDir=..\..\..\Release --releasify=..\..\..\TataruHelper.0.9.21.nupkg --no-msi --framework-version=net462
+2019-06-29 03:09:44> Program: Bootstrapper EXE found at:D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\packages\squirrel.windows.1.9.0\tools\Setup.exe
+2019-06-29 03:09:44> Program: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.21.nupkg
+2019-06-29 03:09:44> ReleasePackage: Creating release package: D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper.0.9.21.nupkg => D:\BP\C_sharp\FFXIV\FFXIVWpfApp1-stable\Release\TataruHelper-0.9.21-full.nupkg
+2019-06-29 03:09:44> ReleasePackage: Extracting dependent packages: []
+2019-06-29 03:09:44> ReleasePackage: Removing unnecessary data
+2019-06-29 03:09:44> ReleasePackage: No release notes found in C:\Users\Alexander\AppData\Local\SquirrelTemp\tempa\TataruHelper.nuspec
+2019-06-29 03:09:44> Program: Building embedded zip file for Setup.exe

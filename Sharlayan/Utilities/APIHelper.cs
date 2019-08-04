@@ -14,6 +14,7 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 namespace Sharlayan.Utilities {
+    using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.IO;
@@ -39,7 +40,7 @@ namespace Sharlayan.Utilities {
                 EnsureDictionaryValues(actions, file);
             }
             else {
-                APIResponseToDictionary(actions, file, $"https://raw.githubusercontent.com/FFXIVAPP/sharlayan-resources/master/xivdatabase/{patchVersion}/actions.json");
+                APIResponseToDictionary(actions, file, String.Format(GlobalSettings.FFxivActions, patchVersion));
             }
         }
 
@@ -53,7 +54,7 @@ namespace Sharlayan.Utilities {
                 return JsonConvert.DeserializeObject<IEnumerable<Signature>>(json, Constants.SerializerSettings);
             }
             else {
-                var json = APIResponseToJSON($"https://raw.githubusercontent.com/FFXIVAPP/sharlayan-resources/master/signatures/{patchVersion}/{architecture}.json");
+                var json = APIResponseToJSON(String.Format(GlobalSettings.FFxivSignatures, patchVersion, architecture));
                 IEnumerable<Signature> resolved = JsonConvert.DeserializeObject<IEnumerable<Signature>>(json, Constants.SerializerSettings);
 
                 File.WriteAllText(file, JsonConvert.SerializeObject(resolved, Formatting.Indented, Constants.SerializerSettings), Encoding.GetEncoding(932));
@@ -68,7 +69,7 @@ namespace Sharlayan.Utilities {
                 EnsureDictionaryValues(statusEffects, file);
             }
             else {
-                APIResponseToDictionary(statusEffects, file, $"https://raw.githubusercontent.com/FFXIVAPP/sharlayan-resources/master/xivdatabase/{patchVersion}/statuses.json");
+                APIResponseToDictionary(statusEffects, file, String.Format(GlobalSettings.FFxivStatuses, patchVersion));
             }
         }
 
@@ -81,7 +82,7 @@ namespace Sharlayan.Utilities {
                 return EnsureClassValues<StructuresContainer>(file);
             }
 
-            return APIResponseToClass<StructuresContainer>(file, $"https://raw.githubusercontent.com/FFXIVAPP/sharlayan-resources/master/structures/{patchVersion}/{architecture}.json");
+            return APIResponseToClass<StructuresContainer>(file, String.Format(GlobalSettings.FFxivStructures, patchVersion, architecture));
         }
 
         public static void GetZones(ConcurrentDictionary<uint, MapItem> mapInfos, string patchVersion = "latest") {
@@ -94,7 +95,7 @@ namespace Sharlayan.Utilities {
                 EnsureDictionaryValues(mapInfos, file);
             }
             else {
-                APIResponseToDictionary(mapInfos, file, $"https://raw.githubusercontent.com/FFXIVAPP/sharlayan-resources/master/xivdatabase/{patchVersion}/zones.json");
+                APIResponseToDictionary(mapInfos, file, String.Format(GlobalSettings.FFxivZones, patchVersion));
             }
         }
 

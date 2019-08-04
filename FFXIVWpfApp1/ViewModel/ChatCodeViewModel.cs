@@ -16,7 +16,7 @@ namespace FFXIITataruHelper.ViewModel
     {
         string _Code;
         string _Name;
-        string _VisibleName;
+        //string _VisibleName;
         Color _Color;
 
         bool _IsChecked;
@@ -41,6 +41,7 @@ namespace FFXIITataruHelper.ViewModel
             }
         }
 
+        /*
         public string VisibleName
         {
             get { return _VisibleName; }
@@ -49,7 +50,7 @@ namespace FFXIITataruHelper.ViewModel
                 _Name = value;
                 OnPropertyChanged("VisibleName");
             }
-        }
+        }//*/
 
         public Color Color
         {

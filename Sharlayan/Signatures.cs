@@ -52,6 +52,20 @@ namespace Sharlayan {
 
         public const string ZoneInformationKey = "ZONEINFO";
 
+        public const string DialogPanelName = "DIALOGPANEL_NAME";
+
+        public const string DialogPanelText = "DIALOGPANEL_TEXT";
+
+        public const string DialogPanelTextLegth = "DIALOGPANEL_TEXT_LENGTH";
+
+        public const string CutsceneText1 = "CUTSCENE_TEXT1";
+
+        public const string CutsceneText2 = "CUTSCENE_TEXT2";
+
+        public const string CutsceneTextLength = "CUTSCENE_TEXT_LENGTH";
+
+        public const string CutsceneDetector = "CUTSCENE_DETECTOR";
+
         public static IEnumerable<Signature> Resolve(ProcessModel processModel, string patchVersion = "latest") {
             return APIHelper.GetSignatures(processModel, patchVersion);
         }

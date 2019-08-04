@@ -35,13 +35,19 @@ namespace FFXIITataruHelper
 
         public static string en_US_LanguaguePath = @"en_US\en_US.mo";
 
+        public static string es_ES_LanguaguePath = @"es_es\es_ES.mo";
+
+        public static string pl_PL_LanguaguePath = @"pl_PL\pl_PL.mo";
+
         public static int SpiWaitTimeOutMS = 500;
 
         public static int LookForPorcessDelay = 500;
 
-        public static int AutoHideDelay = 500;
+        public static int AutoHideWatcherDelay = 500;
 
         public static int MemoryReaderDelay = 33;
+
+        public static int MaxСonsecutiveNotFromLogSentences = 10000;
 
         public static int TranslationDelay = 33;
 

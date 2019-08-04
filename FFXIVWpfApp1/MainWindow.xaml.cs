@@ -40,6 +40,8 @@ namespace FFXIITataruHelper
         ChatWindow _ChatWindow;
         LogWriter _LogWriter;
 
+        ChatStreamWindow _ChatStreamWindow;
+
         string _GitPath = @"https://github.com/NightlyRevenger/TataruHelper";
 
         string _EmptyHKString = "Empty";
@@ -133,10 +135,28 @@ namespace FFXIITataruHelper
 
         private void About_Click(object sender, RoutedEventArgs e)
         {
+            /*
             string caption = "TataruHelper v" + Convert.ToString(System.Reflection.Assembly.GetEntryAssembly().GetName().Version);
             string text = "TataruHelper" + Environment.NewLine + "GitHub: " + _GitPath;
 
-            MessageBoxResult result = Xceed.Wpf.Toolkit.MessageBox.Show(text, caption, MessageBoxButton.OK);
+            MessageBoxResult result = Xceed.Wpf.Toolkit.MessageBox.Show(text, caption, MessageBoxButton.OK);//*/
+            var _AboutWin = new AboutWin();
+            _AboutWin.Show();
+        }
+
+        private void Patrons_Click(object sender, RoutedEventArgs e)
+        {
+            /*
+            string caption = "TataruHelper v" + Convert.ToString(System.Reflection.Assembly.GetEntryAssembly().GetName().Version);
+            string text = "TataruHelper" + Environment.NewLine + "GitHub: " + _GitPath;
+
+            MessageBoxResult result = Xceed.Wpf.Toolkit.MessageBox.Show(text, caption, MessageBoxButton.OK);//*/
+            var patreonWin = new PatreonWin();
+            patreonWin.Show();
+
+            patreonWin.Resources["DearPatrons"] = this.Resources["DearPatrons"];
+            patreonWin.Resources["PatronsMsg"] = this.Resources["PatronsMsg"];
+            patreonWin.Resources["PatronsThankYou"] = this.Resources["PatronsThankYou"];
         }
 
         private void RuLanguage_Click(object sender, RoutedEventArgs e)
@@ -147,6 +167,16 @@ namespace FFXIITataruHelper
         private void EnLanguage_Click(object sender, RoutedEventArgs e)
         {
             _TataruUIModel.UiLanguage = (int)LanguagueWrapper.Languages.English;
+        }
+
+        private void EsLanguage_Click(object sender, RoutedEventArgs e)
+        {
+            _TataruUIModel.UiLanguage = (int)LanguagueWrapper.Languages.Spanish;
+        }
+
+        private void PlLanguage_Click(object sender, RoutedEventArgs e)
+        {
+            _TataruUIModel.UiLanguage = (int)LanguagueWrapper.Languages.Polish;
         }
 
         private void ChatFontSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -232,6 +262,36 @@ namespace FFXIITataruHelper
         {
             var isAutoHide = (bool)((CheckBox)sender).IsChecked;
             _TataruUIModel.IsAutoHide = isAutoHide;
+        }
+
+        private void DirectMemoryReading_Changed(object sender, RoutedEventArgs e)
+        {
+            var isDirectMemoryReading = (bool)((CheckBox)sender).IsChecked;
+            _TataruUIModel.IsDirecMemoryReading = isDirectMemoryReading;
+
+        }
+
+        private void StreamerWindow_Changed(object sender, RoutedEventArgs e)
+        {
+            var checled = (bool)((CheckBox)sender).IsChecked;
+
+            if (checled)
+            {
+                if (_ChatStreamWindow == null)
+                {
+                    _ChatStreamWindow = new ChatStreamWindow(this, _TataruModel);
+                    _ChatStreamWindow.Show();
+                }
+            }
+            else
+            {
+                if (_ChatStreamWindow != null)
+                {
+                    _ChatStreamWindow.Close();
+                    _ChatStreamWindow = null;
+                }
+            }
+            //*/
         }
 
         private void AutoHideTimeOut_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -568,6 +628,19 @@ namespace FFXIITataruHelper
             });
         }
 
+        private async Task OnDirecMemoryReadingChange(BooleanChangeEventArgs ea)
+        {
+            await this.UIThreadAsync(() =>
+            {
+                if (ea.NewValue != DirectMemoryBox.IsChecked)
+                {
+                    DirectMemoryBox.IsChecked = ea.NewValue;
+                }
+
+                _TataruModel.FFMemoryReader.UseDirectReading = ea.NewValue;
+            });
+        }
+
         private async Task OnAutoHideTimeOutChange(TimeSpanChangeEventArgs ea)
         {
             await this.UIThreadAsync(() =>
@@ -682,6 +755,7 @@ namespace FFXIITataruHelper
             UIModel.IsChatAlwaysOnTopChanged += OnChatAlwayOnTopChange;
             UIModel.IsHideSettingsToTrayChanged += OnHideSettingsToTrayChange;
             UIModel.IsAutoHideChanged += OnAutoHideChange;
+            UIModel.IsDirecMemoryReadingChanged += OnDirecMemoryReadingChange;
             UIModel.AutoHideTimeoutChanged += OnAutoHideTimeOutChange;
 
             UIModel.SettingsWindowSizeChanged += OnSettingsWindowSizeChange;
@@ -693,7 +767,6 @@ namespace FFXIITataruHelper
             UIModel.ColorListChanged += OnColorListChange;
 
             _TataruModel.FFMemoryReader.FFWindowStateChanged += OnFFWindowStateChange;
-
         }
 
         private void Init()
@@ -983,6 +1056,9 @@ namespace FFXIITataruHelper
                 if (e.HotKey.Name == _ClearChat.Name)
                 {
                     _ChatWindow.ClearChat();
+
+                    if (_ChatStreamWindow != null)
+                        _ChatWindow.ClearChat();
                 }
             }
         }

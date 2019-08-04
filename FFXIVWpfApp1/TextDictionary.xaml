@@ -4,14 +4,21 @@
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
     <system:String x:Key="SettingsWindowName">Settings</system:String>
+    <system:String x:Key="ChatWindowName">Chat Window</system:String>
+    <system:String x:Key="StreamWindowName">Stream Chat Window</system:String>
+    <system:String x:Key="PatreonWindowName">Patrons</system:String>
 
     <system:String x:Key="DocLanguage">Language</system:String>
     <system:String x:Key="DocLanguageEn">English</system:String>
     <system:String x:Key="DocLanguageRu">Russian</system:String>
+    <system:String x:Key="DocLanguageEs">Spanish</system:String>
+    <system:String x:Key="DocLanguagePl">Polish</system:String>
 
     <system:String x:Key="DockHelp">Help</system:String>
 
     <system:String x:Key="DockAbout">About</system:String>
+
+    <system:String x:Key="DockPatrons">Patrons</system:String>
 
     <system:String x:Key="FFStatusLable">FF Status:</system:String>
 
@@ -34,6 +41,7 @@
     <system:String x:Key="ColorPickerStandardButtonHeader">Standard</system:String>
     <system:String x:Key="ColorPickerAdvancedButtonHeader">Advanced</system:String>
 
+    <system:String x:Key="ColorPickerAvailableColorsHeader">Available Colors</system:String>
     <system:String x:Key="ColorPickerStandardColorsHeader">Standard Colors</system:String>
     <system:String x:Key="ColorPickerRecentColorsHeader">Recent Colors</system:String>
 
@@ -49,7 +57,7 @@
 
     <system:String x:Key="Hotkeys">Hotkeys</system:String>
     <system:String x:Key="ShowHideChatWindowHK">Show/hide Chat Window</system:String>
-    <system:String x:Key="ShowHideChatWindowHKToolTip">Show Hide Chat Window Hotkey Tooltip</system:String>
+    <system:String x:Key="ShowHideChatWindowHKToolTip">Show Hide Ch at Window Hotkey Tooltip</system:String>
     <system:String x:Key="ClickThroughHK">Click Through</system:String>
     <system:String x:Key="ClickThroughHKToolTip">Click Through HotKey ToolTip</system:String>
     <system:String x:Key="ClearChatHK">Clear Chat</system:String>
@@ -59,6 +67,9 @@
     <system:String x:Key="ClickThroughCB">Click Through</system:String>
     <system:String x:Key="AlwaysOnTopCB">Always On Top</system:String>
     <system:String x:Key="AutoHideCB">Auto Hide</system:String>
+    <system:String x:Key="StreamerWindowCB">Streamer Window</system:String>
+    <system:String x:Key="DirectMemoryCB">Direct Memory Reading</system:String>
+    <system:String x:Key="DirectMemoryToolTip">Direct Memory Tooltip</system:String>
     <system:String x:Key="HideToTrayCB">Hide to Tray</system:String>
 
     <system:String x:Key="ShowChatBox">Show Chat Window</system:String>
@@ -91,5 +102,9 @@
     <system:String x:Key="CkLinkShell6">LinkShell6</system:String>
     <system:String x:Key="CkLinkShell7">LinkShell7</system:String>
     <system:String x:Key="CkLinkShell8">LinkShell8</system:String>
+
+    <system:String x:Key="DearPatrons">Dear Patrons!</system:String>
+    <system:String x:Key="PatronsMsg">We express our great appreciation to the people who support our project and motivate us for new achievements.</system:String>
+    <system:String x:Key="PatronsThankYou">Thank you</system:String>
 
 </ResourceDictionary>

@@ -125,6 +125,13 @@ namespace FFXIITataruHelper
         }
         private AsyncEvent<BooleanChangeEventArgs> _IsAutoHideChanged;
 
+        public event AsyncEventHandler<BooleanChangeEventArgs> IsDirecMemoryReadingChanged
+        {
+            add { this._IsDirecMemoryReadingChanged.Register(value); }
+            remove { this._IsDirecMemoryReadingChanged.Unregister(value); }
+        }
+        private AsyncEvent<BooleanChangeEventArgs> _IsDirecMemoryReadingChanged;
+
         public event AsyncEventHandler<TimeSpanChangeEventArgs> AutoHideTimeoutChanged
         {
             add { this._AutoHideTimeoutChanged.Register(value); }
@@ -461,6 +468,24 @@ namespace FFXIITataruHelper
             }
         }
 
+        public bool IsDirecMemoryReading
+        {
+            get { return _IsDirecMemoryReading; }
+            set
+            {
+                var oldValue = _IsDirecMemoryReading;
+                _IsDirecMemoryReading = value;
+
+                var ea = new BooleanChangeEventArgs(this)
+                {
+                    OldValue = oldValue,
+                    NewValue = value
+                };
+
+                _IsDirecMemoryReadingChanged.InvokeAsync(ea);
+            }
+        }
+
         public TimeSpan AutoHideTimeout
         {
             get { return _AutoHideTimeout; }
@@ -604,6 +629,8 @@ namespace FFXIITataruHelper
 
         bool _IsAutoHide;
 
+        bool _IsDirecMemoryReading;
+
         TimeSpan _AutoHideTimeout;
 
         System.Drawing.PointD _SettingsWindowSize = new System.Drawing.PointD(0.0, 0.0);
@@ -648,6 +675,7 @@ namespace FFXIITataruHelper
             this._IsChatAlwaysOnTopChanged = new AsyncEvent<BooleanChangeEventArgs>(this.EventErrorHandler, "IsChatAlwaysOnTopChanged");
             this._IsHideSettingsToTrayChanged = new AsyncEvent<BooleanChangeEventArgs>(this.EventErrorHandler, "IsHideSettingsToTrayChanged");
             this._IsAutoHideChanged = new AsyncEvent<BooleanChangeEventArgs>(this.EventErrorHandler, "IsAutoHideChanged");
+            this._IsDirecMemoryReadingChanged = new AsyncEvent<BooleanChangeEventArgs>(this.EventErrorHandler, "IsDirecMemoryReadingChanged");
 
             this._AutoHideTimeoutChanged = new AsyncEvent<TimeSpanChangeEventArgs>(this.EventErrorHandler, "AutoHideTimeoutChanged");
 
@@ -693,6 +721,8 @@ namespace FFXIITataruHelper
             IsHideSettingsToTray = userSettings.IsHideToTray;
 
             IsAutoHide = userSettings.IsAutoHide;
+
+            IsDirecMemoryReading = userSettings.IsDirecMemoryReading;
 
             AutoHideTimeout = userSettings.AutoHideTimeout;
 
@@ -771,6 +801,8 @@ namespace FFXIITataruHelper
             userSettings.IsHideToTray = IsHideSettingsToTray;
 
             userSettings.IsAutoHide = IsAutoHide;
+
+            userSettings.IsDirecMemoryReading = IsDirecMemoryReading;
 
             userSettings.AutoHideTimeout = AutoHideTimeout;
 
