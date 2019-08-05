@@ -16,7 +16,7 @@
 * [English](#english)
    * [Installation](#installation)
    * [How to use](#how-to-use)
-   * [Development/Translation](#development)
+   * [Development/Translation](#developmenttranslation)
    * [License](#license)  
    * [Credits](#credits)  
    * [Contacts](#contacts)  
