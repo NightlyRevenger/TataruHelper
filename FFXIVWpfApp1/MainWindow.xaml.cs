@@ -2,28 +2,17 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Xceed.Wpf.Toolkit;
 using System.Windows.Interop;
 using BondTech.HotKeyManagement.WPF._4;
-using System.IO;
-using NGettext;
 using FFXIITataruHelper.WinUtils;
 using FFXIITataruHelper.Translation;
-using Squirrel;
-using System.Threading;
 using FFXIITataruHelper.EventArguments;
 using System.Collections.ObjectModel;
 using FFXIITataruHelper.ViewModel;
@@ -33,7 +22,7 @@ namespace FFXIITataruHelper
     /// <summary>
     /// Interaction logic for MainWindow.xaml//
     /// </summary>
-    public partial class MainWindow : Window //-V3072//
+    public partial class MainWindow : Window //-V3072
     {
         HotKeyManager _HotKeyManager;
 

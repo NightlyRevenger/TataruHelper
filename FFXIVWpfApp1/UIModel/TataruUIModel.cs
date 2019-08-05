@@ -7,8 +7,6 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Media;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using static FFXIITataruHelper.Translation.WebTranslator;
 using System.Collections.ObjectModel;
 using FFXIITataruHelper.Translation;
