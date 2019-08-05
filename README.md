@@ -16,7 +16,7 @@
 * [English](#english)
    * [Installation](#installation)
    * [How to use](#how-to-use)
-   * [Development](#development)
+   * [Development/Translation](#development)
    * [License](#license)  
    * [Credits](#credits)  
    * [Contacts](#contacts)  
@@ -24,7 +24,7 @@
 * [Русский](#русский)
    * [Установка](#установка)
    * [Как пользоваться](#как-пользоваться)
-   * [Разработка](#как-пользоваться)
+   * [Разработка/Перевод](#как-пользоваться)
    * [Лицензия](#лицензия)  
    * [Благодарности](#благодарности)  
    * [Контакты](#контакты) 
@@ -62,11 +62,11 @@ P.S. After that, there is no need to run the application through Setup.exe. This
 ## How to use
 - In depth guide [here](Documents/Guide.MD).
 
-## Development
+## Development/Translation
 
 Want to contribute? Great!
 
-If you want to translate the application into your language, let me know.
+If you want to translate the application into your language, proceed [here](https://crowdin.com/project/tataru-helper).
 
 
 ## License
@@ -138,11 +138,11 @@ P.S. В дальнейшем, не нужно запускать приложе�
 ## Как пользоваться
 - Подробное руководство по использованию русификатора [тут](Documents/GuideRU.MD).
 
-## Разработка
+## Разработка/Перевод
 
 Хотите поучаствовать в разработке? Отлично!
 
-Если вы хотите перевести приложение на свой язык, дайте мне знать.
+Если вы хотите перевести приложение на свой язык, перейдите по [ссылке](https://crowdin.com/project/tataru-helper).
 
 
 ## Лицензия
