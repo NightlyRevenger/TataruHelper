@@ -205,7 +205,7 @@ namespace FFXIITataruHelper.Translation
             return result;
         }
 
-        public async Task<string> TransalteAsync(string inSentence)
+        public async Task<string> TranslateAsync(string inSentence)
         {
             string result = String.Empty;
 
