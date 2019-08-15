@@ -317,13 +317,13 @@ namespace FFXIITataruHelper
                     TranslateToCombo.Items.Add(lang[i].ShownName);
                 }
 
-                for (int i = 0; i < GlobalSettings.FFXIVLanguagles.Count; i++)
+                for (int i = 0; i < GlobalSettings.FFXIVLanguages.Count; i++)
                 {
-                    var lng = lang.Where(x => x.ShownName.ToLower().Contains(GlobalSettings.FFXIVLanguagles[i].ToLower())).ToList();
+                    var lng = lang.Where(x => x.ShownName.ToLower().Contains(GlobalSettings.FFXIVLanguages[i].ToLower())).ToList();
 
                     if (lng.Count > 0)
                     {
-                        TransalteFromCombo.Items.Add(GlobalSettings.FFXIVLanguagles[i]);
+                        TransalteFromCombo.Items.Add(GlobalSettings.FFXIVLanguages[i]);
                     }
                 }
 

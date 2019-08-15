@@ -11,7 +11,7 @@ namespace FFXIITataruHelper
     {
         public static string OldHotKeysFilePath = "../HotKeys.json";
 
-        public static List<string> FFXIVLanguagles = new List<string>(new string[] { "English", "Chinese", "Japanese", "French", "German", "Korean" });
+        public static List<string> FFXIVLanguages = new List<string>(new string[] { "English", "Chinese", "Japanese", "French", "German", "Korean" });
 
         public static string ChatCodesFilePath = @"Resources\ChatCodes.json";
 

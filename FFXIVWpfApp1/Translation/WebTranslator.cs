@@ -134,7 +134,7 @@ namespace FFXIITataruHelper.Translation
             GoogleRx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
-        public void LoadLanguagues(string glTrPath, string MultTrPath, string deepPath, string YaTrPath)
+        public void LoadLanguages(string glTrPath, string MultTrPath, string deepPath, string YaTrPath)
         {
             try
             {
@@ -167,7 +167,7 @@ namespace FFXIITataruHelper.Translation
             }
         }
 
-        public string Transalte(string inSentence)
+        public string Translate(string inSentence)
         {
             string result = String.Empty;
 
@@ -205,13 +205,13 @@ namespace FFXIITataruHelper.Translation
             return result;
         }
 
-        public async Task<string> TransalteAsync(string inSentence)
+        public async Task<string> TranslateAsync(string inSentence)
         {
             string result = String.Empty;
 
             await Task.Run(() =>
             {
-                result = Transalte(inSentence);
+                result = Translate(inSentence);
             });
 
             return result;

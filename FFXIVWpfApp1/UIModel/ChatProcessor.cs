@@ -204,7 +204,7 @@ namespace FFXIITataruHelper
                 string translation = string.Empty;
                 Task.Run(async () =>
                 {
-                    translation = await _WebTranslator.TransalteAsync(text);
+                    translation = await _WebTranslator.TranslateAsync(text);
                 }).Wait(GlobalSettings.TranslatorWaitTime);
                 //}).Wait();
 
