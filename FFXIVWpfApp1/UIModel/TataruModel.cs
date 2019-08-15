@@ -94,7 +94,7 @@ namespace FFXIITataruHelper
                         Logger.WriteLog("userSettings == null");
                     }
 
-                    _WebTranslator.LoadLanguagues(GlobalSettings.GoogleTranslateLanguages, GlobalSettings.MultillectTranslateLanguages,
+                    _WebTranslator.LoadLanguages(GlobalSettings.GoogleTranslateLanguages, GlobalSettings.MultillectTranslateLanguages,
                         GlobalSettings.DeeplLanguages, GlobalSettings.YandexLanguages);
 
                     LoadAllOldSettings(userSettings);
