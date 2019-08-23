@@ -6,8 +6,10 @@ using FFXIITataruHelper.Translation;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FFXIITataruHelper
@@ -40,7 +42,7 @@ namespace FFXIITataruHelper
 
         #region **LocalVariables.
 
-        string SystemSettingFileName = "../AppSysSettings.json";
+        string SystemSettingFileName = "AppSysSettings.json";
 
         string OldSettingFileName = "../AppSettings.json";
         string OldHotKeysFileName = "../HotKeys.json";
@@ -53,11 +55,20 @@ namespace FFXIITataruHelper
 
         ChatProcessor _ChatProcessor;
 
+        Task _SaveSettingsTask = null;
+
+        CancellationTokenSource _SaveSettingsCancellationTokenSource;
+
+        DateTime SettingsChangeTime = DateTime.UtcNow;
+        DateTime SettingsSaveTime = DateTime.UtcNow;
+
         #endregion
 
         public TataruModel()
         {
             CmdArgsStatus.LoadArgs();
+
+            _SaveSettingsCancellationTokenSource = new CancellationTokenSource();
 
             _WebTranslator = new WebTranslator();
 
@@ -72,6 +83,7 @@ namespace FFXIITataruHelper
         public void Stop()
         {
             _FFMemoryReader.Stop();
+            _SaveSettingsCancellationTokenSource.Cancel();
         }
 
         public async Task LoadSettings()
@@ -95,17 +107,67 @@ namespace FFXIITataruHelper
                     }
 
                     _WebTranslator.LoadLanguages(GlobalSettings.GoogleTranslateLanguages, GlobalSettings.MultillectTranslateLanguages,
-                        GlobalSettings.DeeplLanguages, GlobalSettings.YandexLanguages);
+                        GlobalSettings.DeeplLanguages, GlobalSettings.YandexLanguages, GlobalSettings.AmazonLanguages);
 
                     LoadAllOldSettings(userSettings);
 
                     TataruUIModel.SetSettings(userSettings);
+
+                    _TataruUIModel.PropertyChanged += OnUiSettingsChanged;
+                    SettingsChangeTime = DateTime.UtcNow;
+                    SettingsSaveTime = DateTime.UtcNow;
+
+                    WatchAndSaveChangedSettings();
                 }
                 catch (Exception e)
                 {
                     Logger.WriteLog(e);
                 }
             });
+        }
+
+        void OnUiSettingsChanged(object sender, PropertyChangedEventArgs e)
+        {
+            SettingsChangeTime = DateTime.UtcNow;
+        }
+
+        private void WatchAndSaveChangedSettings()
+        {
+            Task.Factory.StartNew(async () =>
+            {
+                try
+                {
+                    var token = _SaveSettingsCancellationTokenSource.Token;
+
+                    while (!token.IsCancellationRequested)
+                    {
+                        try
+                        {
+                            SpinWait.SpinUntil(() => ((DateTime.UtcNow - SettingsChangeTime).TotalMilliseconds > GlobalSettings.SettingsSaveDelay
+                            && (SettingsChangeTime - SettingsSaveTime).TotalMilliseconds > 0) ||
+                            token.IsCancellationRequested);
+
+                            if (!token.IsCancellationRequested)
+                            {
+                                await SaveSettings();
+                                SettingsSaveTime = DateTime.UtcNow;
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Logger.WriteLog(e);
+                            await Task.Delay(GlobalSettings.SettingsSaveDelay);
+                        }
+                    }
+
+
+                }
+                catch (Exception e)
+                {
+                    Logger.WriteLog(e);
+                }
+
+            }, TaskCreationOptions.LongRunning);
         }
 
         public async Task SaveSettings()

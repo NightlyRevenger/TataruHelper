@@ -102,12 +102,6 @@ namespace FFXIITataruHelper.FFHandlers
             }, TaskCreationOptions.LongRunning);
         }
 
-        public void Stop()
-        {
-            _KeepWorking = false;
-            _KeepReading = false;
-        }
-
         public void AddExclusionWindowHandler(IntPtr handler)
         {
             _ExclusionWindowHandlers.Add(handler);
@@ -240,7 +234,7 @@ namespace FFXIITataruHelper.FFHandlers
                                     Text = ""
                                 };
 
-                                _FFWindowStateChanged.InvokeAsync(ea);
+                                _FFWindowStateChanged.InvokeAsync(ea).Forget();
                             }
 
                             FFWindowState = FFXIVPrevWindowState;
@@ -260,7 +254,7 @@ namespace FFXIITataruHelper.FFHandlers
                                 Text = ""
                             };
 
-                            _FFWindowStateChanged.InvokeAsync(ea);
+                            _FFWindowStateChanged.InvokeAsync(ea).Forget();
 
                             _KeepReading = false;
 
@@ -286,7 +280,7 @@ namespace FFXIITataruHelper.FFHandlers
                                     Text = processes[0].ProcessName + ".exe" + "  PID: " + processes[0].Id.ToString()
                                 };
 
-                                _FFWindowStateChanged.InvokeAsync(ea);
+                                _FFWindowStateChanged.InvokeAsync(ea).Forget();
 
                                 FFWindowState = System.Windows.WindowState.Normal;
                             }
@@ -327,8 +321,9 @@ namespace FFXIITataruHelper.FFHandlers
 
                         ClearMessagesList(readResult, previousPanelResults, directDialog);
                     }
-                    if (DirectTextsMissedCount > GlobalSettings.MaxСonsecutiveNotFromLogSentences)
-                        _UseDirectReadingInternal = false;
+
+                    //if (DirectTextsMissedCount > GlobalSettings.MaxСonsecutiveNotFromLogSentences)
+                    //    _UseDirectReadingInternal = false;
 
                     var chatLogEntries = readResult.ChatLogItems;
 
@@ -440,6 +435,12 @@ namespace FFXIITataruHelper.FFHandlers
         {
             string text = evname + Environment.NewLine + Convert.ToString(ex);
             Logger.WriteLog(text);
+        }
+
+        public void Stop()
+        {
+            _KeepWorking = false;
+            _KeepReading = false;
         }
 
         public void Dispose()

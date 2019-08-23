@@ -3,7 +3,7 @@
                     xmlns:local="clr-namespace:FFXIITataruHelper"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
     
-    <Style TargetType="ToolTip">
+    <Style TargetType="ToolTip" >
         <Style.Resources>
             <Style TargetType="ContentPresenter">
                 <Style.Resources>
@@ -13,7 +13,7 @@
                 </Style.Resources>
             </Style>
         </Style.Resources>
-        <Setter Property="MaxWidth" Value="400" />
+        <Setter Property="MaxWidth" Value="400"  />
     </Style>
 
 </ResourceDictionary>

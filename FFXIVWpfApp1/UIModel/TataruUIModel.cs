@@ -10,13 +10,18 @@ using System.Linq;
 using static FFXIITataruHelper.Translation.WebTranslator;
 using System.Collections.ObjectModel;
 using FFXIITataruHelper.Translation;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 
 namespace FFXIITataruHelper
 {
-    public class TataruUIModel
+    public class TataruUIModel : INotifyPropertyChanged
     {
 
         #region **Events.
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public event AsyncEventHandler<IntegerValueChangeEventArgs> ChatFontSizeChanged
         {
@@ -185,7 +190,7 @@ namespace FFXIITataruHelper
                     OldValue = oldSize,
                     NewValue = value
                 };
-                _ChatFontSizeChanged.InvokeAsync(ea);
+                _ChatFontSizeChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
             }
         }
 
@@ -204,7 +209,8 @@ namespace FFXIITataruHelper
                     NewColor = value,
                     ColorId = 0
                 };
-                _BackgroundColorChanged.InvokeAsync(ea);
+                _BackgroundColorChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
+
             }
         }
 
@@ -220,7 +226,8 @@ namespace FFXIITataruHelper
                     Colors = _RecentBackgroundColors,
                     ColorsId = 0
                 };
-                _ColorListChanged.InvokeAsync(ea);
+                _ColorListChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
+
             }
         }
 
@@ -241,7 +248,8 @@ namespace FFXIITataruHelper
                     OldValue = oldSize,
                     NewValue = value
                 };
-                _ParagraphSpaceCountChanged.InvokeAsync(ea);
+                _ParagraphSpaceCountChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
+
             }
         }
 
@@ -261,7 +269,8 @@ namespace FFXIITataruHelper
                     OldValue = oldSize,
                     NewValue = value
                 };
-                _LineBreakeHeightChanged.InvokeAsync(ea);
+                _LineBreakeHeightChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
+
             }
         }
 
@@ -286,7 +295,8 @@ namespace FFXIITataruHelper
                     NewEngine = (int)value,
                     SupportedLanguages = supportedLanguages
                 };
-                _TranslationEngineChanged.InvokeAsync(ea);
+                _TranslationEngineChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
+
             }
         }
 
@@ -303,7 +313,8 @@ namespace FFXIITataruHelper
                     OldString = oldValue,
                     NewString = value
                 };
-                _FFLanguageChanged.InvokeAsync(ea);
+                _FFLanguageChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
+
             }
         }
 
@@ -321,7 +332,8 @@ namespace FFXIITataruHelper
                     OldString = oldValue,
                     NewString = value
                 };
-                _TranslateToLanguageChanged.InvokeAsync(ea);
+                _TranslateToLanguageChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
+
             }
         }
 
@@ -344,7 +356,8 @@ namespace FFXIITataruHelper
                     NewHotKeyCombination = value
                 };
 
-                _ShowHideChatCombinationChanged.InvokeAsync(ea);
+                _ShowHideChatCombinationChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
+
             }
         }
 
@@ -367,7 +380,8 @@ namespace FFXIITataruHelper
                     NewHotKeyCombination = value
                 };
 
-                _ClickThoughtChatCombinationChanged.InvokeAsync(ea);
+                _ClickThoughtChatCombinationChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
+
             }
         }
 
@@ -390,7 +404,8 @@ namespace FFXIITataruHelper
                     NewHotKeyCombination = value
                 };
 
-                _ClearChatCombinationChanged.InvokeAsync(ea);
+                _ClearChatCombinationChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
+
             }
         }
 
@@ -408,7 +423,8 @@ namespace FFXIITataruHelper
                     NewValue = value
                 };
 
-                _IsChatClickThroughChanged.InvokeAsync(ea);
+                _IsChatClickThroughChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
+
             }
         }
 
@@ -426,7 +442,7 @@ namespace FFXIITataruHelper
                     NewValue = value
                 };
 
-                _IsChatAlwaysOnTopChanged.InvokeAsync(ea);
+                _IsChatAlwaysOnTopChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
             }
         }
 
@@ -444,7 +460,7 @@ namespace FFXIITataruHelper
                     NewValue = value
                 };
 
-                _IsHideSettingsToTrayChanged.InvokeAsync(ea);
+                _IsHideSettingsToTrayChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
             }
         }
 
@@ -462,7 +478,7 @@ namespace FFXIITataruHelper
                     NewValue = value
                 };
 
-                _IsAutoHideChanged.InvokeAsync(ea);
+                _IsAutoHideChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
             }
         }
 
@@ -480,7 +496,7 @@ namespace FFXIITataruHelper
                     NewValue = value
                 };
 
-                _IsDirecMemoryReadingChanged.InvokeAsync(ea);
+                _IsDirecMemoryReadingChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
             }
         }
 
@@ -490,8 +506,8 @@ namespace FFXIITataruHelper
 
             set
             {
-                if (value.TotalSeconds < 10)
-                    value = new TimeSpan(0, 0, 10);
+                if (value.TotalSeconds < GlobalSettings.AutoTimeOutHideMinValueSeconds)
+                    value = new TimeSpan(0, 0, GlobalSettings.AutoTimeOutHideMinValueSeconds);
 
                 var oldValue = _AutoHideTimeout;
                 _AutoHideTimeout = value;
@@ -502,7 +518,9 @@ namespace FFXIITataruHelper
                     NewValue = value
                 };
 
-                _AutoHideTimeoutChanged.InvokeAsync(ea);
+                _AutoHideTimeoutChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
+
+                NotifyPropertyChanged();
             }
         }
 
@@ -520,7 +538,7 @@ namespace FFXIITataruHelper
                     NewValue = value
                 };
 
-                _SettingsWindowSizeChanged.InvokeAsync(ea);
+                _SettingsWindowSizeChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
             }
         }
 
@@ -538,7 +556,7 @@ namespace FFXIITataruHelper
                     NewValue = value
                 };
 
-                _ChatWindowRectangleChanged.InvokeAsync(ea);
+                _ChatWindowRectangleChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
             }
         }
 
@@ -556,14 +574,19 @@ namespace FFXIITataruHelper
                     ChatCodes = _ChatCodes
                 };
 
-                _ChatCodesChanged.InvokeAsync(ea);
+                _ChatCodesChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
             }
         }
 
         public int IsFirstTime
         {
             get { return _IsFirstTime; }
-            set { _IsFirstTime = value; }
+            set
+            {
+                _IsFirstTime = value;
+
+                Task.Run(() => NotifyPropertyChanged());
+            }
         }
 
         public int UiLanguage
@@ -580,7 +603,8 @@ namespace FFXIITataruHelper
                     NewValue = value
                 };
 
-                _UiLanguageChanged.InvokeAsync(ea);
+                _UiLanguageChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
+
             }
         }
 
@@ -825,6 +849,11 @@ namespace FFXIITataruHelper
         {
             string text = evname + Environment.NewLine + Convert.ToString(ex);
             Logger.WriteLog(text);
+        }
+
+        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

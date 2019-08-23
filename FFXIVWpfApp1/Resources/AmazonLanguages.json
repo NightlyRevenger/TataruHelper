@@ -1,0 +1,107 @@
+[
+  {
+    "ShownName": "Arabic",
+    "NativeName": "Arabic",
+    "LanguageCode": "ar"
+  },
+  {
+    "ShownName": "Chinese (Simplified)",
+    "NativeName": "Chinese (Simplified)",
+    "LanguageCode": "zh"
+  },
+  {
+    "ShownName": "Chinese (Traditional)",
+    "NativeName": "Chinese (Traditional)",
+    "LanguageCode": "zh-TW"
+  },
+  {
+    "ShownName": "Czech",
+    "NativeName": "Czech",
+    "LanguageCode": "cs"
+  },
+  {
+    "ShownName": "Danish",
+    "NativeName": "Danish",
+    "LanguageCode": "da"
+  },
+  {
+    "ShownName": "Dutch",
+    "NativeName": "Dutch",
+    "LanguageCode": "nl"
+  },
+  {
+    "ShownName": "English",
+    "NativeName": "English",
+    "LanguageCode": "en"
+  },
+  {
+    "ShownName": "Finnish",
+    "NativeName": "Finnish",
+    "LanguageCode": "fi"
+  },
+  {
+    "ShownName": "French",
+    "NativeName": "French",
+    "LanguageCode": "fr"
+  },
+  {
+    "ShownName": "German",
+    "NativeName": "German",
+    "LanguageCode": "de"
+  },
+  {
+    "ShownName": "Hebrew",
+    "NativeName": "Hebrew",
+    "LanguageCode": "he"
+  },
+  {
+    "ShownName": "Indonesian",
+    "NativeName": "Indonesian",
+    "LanguageCode": "id"
+  },
+  {
+    "ShownName": "Italian",
+    "NativeName": "Italian",
+    "LanguageCode": "it"
+  },
+  {
+    "ShownName": "Japanese",
+    "NativeName": "Japanese",
+    "LanguageCode": "ja"
+  },
+  {
+    "ShownName": "Korean",
+    "NativeName": "Korean",
+    "LanguageCode": "ko"
+  },
+  {
+    "ShownName": "Polish",
+    "NativeName": "Polish",
+    "LanguageCode": "pl"
+  },
+  {
+    "ShownName": "Portuguese",
+    "NativeName": "Portuguese",
+    "LanguageCode": "pt"
+  },
+  {
+    "ShownName": "Russian",
+    "NativeName": "Russian",
+    "LanguageCode": "ru"
+  },
+  {
+    "ShownName": "Spanish",
+    "NativeName": "Spanish",
+    "LanguageCode": "es"
+  },
+  {
+    "ShownName": "Swedish",
+    "NativeName": "Swedish",
+    "LanguageCode": "sv"
+  },
+  {
+    "ShownName": "Turkish",
+    "NativeName": "Turkish",
+    "LanguageCode": "tr"
+  }
+]

@@ -66,6 +66,7 @@ namespace FFXIITataruHelper
         {
             _TranslationEngines.Add(new EngineDescription(TranslationEngine.DeepL, 10));
             _TranslationEngines.Add(new EngineDescription(TranslationEngine.GoogleTranslate, 9));
+            _TranslationEngines.Add(new EngineDescription(TranslationEngine.Amazon, 6));
             _TranslationEngines.Add(new EngineDescription(TranslationEngine.Yandex, 5));
             _TranslationEngines.Add(new EngineDescription(TranslationEngine.Multillect, 1));
 
@@ -228,7 +229,7 @@ namespace FFXIITataruHelper
                         ErrorCode = errorCode,
                         Color = color,
                     };
-                    _TranslationArrived.InvokeAsync(ea);
+                    _TranslationArrived.InvokeAsync(ea).Forget();
                 }
                 else
                 {

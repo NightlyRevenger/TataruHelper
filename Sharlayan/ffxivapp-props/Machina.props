@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Choose>
+    <When Condition="'$(Configuration)|$(Platform)'=='Debug|x86'">
+      <ItemGroup>
+		<ProjectReference Include="..\..\machina\Machina\Machina.csproj">
+		  <Project>{2681c607-a075-4070-be13-34f0a395119e}</Project>
+		  <Name>Machina</Name>
+		</ProjectReference>
+      </ItemGroup>
+    </When>
+  </Choose>
+</Project>

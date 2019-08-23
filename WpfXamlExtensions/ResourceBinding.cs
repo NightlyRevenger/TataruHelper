@@ -222,8 +222,6 @@ namespace WpfXamlExtensions
 
         #endregion
 
-
-
         #region Nested types
 
         private class HelperConverter : IMultiValueConverter

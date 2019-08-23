@@ -21,10 +21,12 @@
         <DockPanel>
             <Menu DockPanel.Dock="Top" Background="White" BorderThickness="0,0,0,1">
                 <MenuItem Header="{DynamicResource DocLanguage}">
-                    <MenuItem Header="{DynamicResource DocLanguageRu}" Click="RuLanguage_Click" />
-                    <MenuItem Header="{DynamicResource DocLanguageEn}" Click="EnLanguage_Click"/>
-                    <MenuItem Header="{DynamicResource DocLanguageEs}" Click="EsLanguage_Click"/>
-                    <MenuItem Header="{DynamicResource DocLanguagePl}" Click="PlLanguage_Click"/>
+                    <MenuItem Header="{DynamicResource DocLanguageRu}" Command="{Binding SwitchLanguageCommand}" CommandParameter="Russian" />
+                    <MenuItem Header="{DynamicResource DocLanguageEn}" Command="{Binding SwitchLanguageCommand}" CommandParameter="English"/>
+                    <MenuItem Header="{DynamicResource DocLanguageEs}" Command="{Binding SwitchLanguageCommand}" CommandParameter="Spanish"/>
+                    <MenuItem Header="{DynamicResource DocLanguagePl}" Command="{Binding SwitchLanguageCommand}" CommandParameter="Polish" />
+                    <MenuItem Header="{DynamicResource DocLanguageKr}" Command="{Binding SwitchLanguageCommand}" CommandParameter="Korean" />
+                    <MenuItem Header="{DynamicResource DocLanguagePtBr}" Command="{Binding SwitchLanguageCommand}" CommandParameter="PortugueseBR" />
                 </MenuItem>
                 <MenuItem Header="{DynamicResource DockHelp}">
                     <MenuItem Header="{DynamicResource DockAbout}"  Click="About_Click"/>
@@ -98,6 +100,7 @@
                                     <TextBlock><Run Text="Multillect Translation"/></TextBlock>
                                     <TextBlock><Run Text="DeepL"/></TextBlock>
                                     <TextBlock><Run Text="Yandex"/></TextBlock>
+                                    <TextBlock><Run Text="Amazon"/></TextBlock>
                                 </ComboBox>
                                 <Label Content="{DynamicResource FFLanguage}" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="154" Margin="0"/>
                                 <ComboBox x:Name="TransalteFromCombo"  HorizontalAlignment="Left" Height="24" Margin="0" Width="154" SelectionChanged="FFXIVLanguague_SelectionChanged">
@@ -161,7 +164,7 @@
                                 <CheckBox x:Name="ClickThroughBox" Content="{DynamicResource ClickThroughCB}" Checked="ClickThroughBox_Changed" Unchecked="ClickThroughBox_Changed" HorizontalAlignment="Left" Height="21" VerticalAlignment="Top" Width="158" Margin="0,27,0,0"/>
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Margin="0,55,0,0">
                                     <CheckBox x:Name="AutoHideBox" Content="{DynamicResource AutoHideCB}" Checked="AutoHide_Changed" Unchecked="AutoHide_Changed" HorizontalAlignment="Left" Height="21" VerticalAlignment="Top" Width="80" Margin="0,5,0,0"/>
-                                    <xctk:IntegerUpDown x:Name="AutoHideTimeOut" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="86" ValueChanged="AutoHideTimeOut_ValueChanged" Minimum="5" Maximum="3600"/>
+                                    <xctk:IntegerUpDown x:Name="AutoHideTimeOut" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="86" ValueChanged="AutoHideTimeOut_ValueChanged" Minimum="1" Maximum="36000"/>
                                 </StackPanel>
                                 <CheckBox x:Name="DirectMemoryBox" Visibility="Visible" HorizontalAlignment="Left" Height="21" VerticalAlignment="Bottom" Checked="DirectMemoryReading_Changed" Unchecked="DirectMemoryReading_Changed" Margin="0,0,0,75">
                                     <StackPanel Orientation="Horizontal">

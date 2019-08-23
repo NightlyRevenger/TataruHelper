@@ -39,6 +39,7 @@ namespace Sharlayan {
 
         public void Dispose() {
             this._scanTimer.Elapsed -= this.ScanTimerElapsed;
+            _scanTimer.Dispose();
         }
 
         /// <summary>

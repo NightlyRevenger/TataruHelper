@@ -23,7 +23,8 @@ namespace FFXIITataruHelper.Translation
             GoogleTranslate = 0,
             Multillect = 1,
             DeepL = 2,
-            Yandex = 3
+            Yandex = 3,
+            Amazon = 4
         }
 
         public string SourceLanguage
@@ -107,6 +108,8 @@ namespace FFXIITataruHelper.Translation
 
         private ReadOnlyCollection<TranslatorLanguague> YandexLanguages;
 
+        private ReadOnlyCollection<TranslatorLanguague> AmazonLanguages;
+
         private List<ReadOnlyCollection<TranslatorLanguague>> _TranslatorsLanguages;
 
         WebApi.WebReader GoogleWebRead;
@@ -117,6 +120,10 @@ namespace FFXIITataruHelper.Translation
 
         DeepLTranslator _DeepLTranslator;
 
+        Amazon.Translate.AmazonTranslateClient amazonTranslateClient;
+
+        private bool amazonLoaded = false;
+
         private Regex GoogleRx;
 
         public WebTranslator()
@@ -124,6 +131,17 @@ namespace FFXIITataruHelper.Translation
             GoogleWebRead = new WebApi.WebReader(@"translate.google.com");
             MultillectWebRead = new WebApi.WebReader(@"translate.multillect.com");
             YandexWebRead = new WebApi.WebReader(@"translate.yandex.net");
+
+            Task.Run(() =>
+            {
+                try
+                {
+                    amazonTranslateClient = new Amazon.Translate.AmazonTranslateClient(@"", @"", Amazon.RegionEndpoint.EUCentral1);
+                    amazonLoaded = true;
+                }
+                catch (Exception ex)
+                { Logger.WriteLog(Convert.ToString(ex)); }
+            });
 
             _DeepLTranslator = new DeepLTranslator();
 
@@ -134,7 +152,7 @@ namespace FFXIITataruHelper.Translation
             GoogleRx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
-        public void LoadLanguages(string glTrPath, string MultTrPath, string deepPath, string YaTrPath)
+        public void LoadLanguages(string glTrPath, string MultTrPath, string deepPath, string YaTrPath, string AmazonTrPath)
         {
             try
             {
@@ -157,6 +175,11 @@ namespace FFXIITataruHelper.Translation
                 YandexLanguages = new ReadOnlyCollection<TranslatorLanguague>(tmpList);
 
                 _TranslatorsLanguages.Add(YandexLanguages);
+
+                tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(AmazonTrPath);
+                AmazonLanguages = new ReadOnlyCollection<TranslatorLanguague>(tmpList);
+
+                _TranslatorsLanguages.Add(AmazonLanguages);
 
                 _SourceLanguage = CurrentLanguages[0];
                 _TargetLanguage = CurrentLanguages[1];
@@ -194,6 +217,11 @@ namespace FFXIITataruHelper.Translation
                 case TranslationEngine.Yandex:
                     {
                         result = YandexTranslate(inSentence, _SourceLanguage.LanguageCode, _TargetLanguage.LanguageCode);
+                        break;
+                    }
+                case TranslationEngine.Amazon:
+                    {
+                        result = AmazonTranslate(inSentence, _SourceLanguage.LanguageCode, _TargetLanguage.LanguageCode);
                         break;
                     }
                 default:
@@ -287,11 +315,12 @@ namespace FFXIITataruHelper.Translation
             string result = String.Empty;
             try
             {
+                string yaApiKey = @"";
                 string _outLang = outLang;
                 string _inLang = inLang;
 
                 string _baseUrl = @"https://translate.yandex.net/api/v1.5/tr.json/translate?lang={0}-{1}&key={2}";
-                string url = string.Format(_baseUrl, _inLang, _outLang, "");
+                string url = string.Format(_baseUrl, _inLang, _outLang, yaApiKey);
 
                 var tmpResult = YandexWebRead.GetWebData(url, WebApi.WebReader.WebMethods.POST, "text=" + sentence);
 
@@ -310,6 +339,49 @@ namespace FFXIITataruHelper.Translation
             {
                 Logger.WriteLog(Convert.ToString(e));
             }
+
+            return result;
+        }
+
+        private string AmazonTranslate(string sentence, string inLang, string outLang)
+        {
+            string result = string.Empty;
+
+            try
+            {
+                if (!amazonLoaded)
+                    Task.Run(async () =>
+                    {
+                        var startTime = DateTime.Now;
+                        while (!amazonLoaded && (DateTime.Now - startTime).TotalMilliseconds < GlobalSettings.TranslatorWaitTime)
+                        {
+                            await Task.Delay(100);
+                        }
+                    }).Wait();
+
+                if (amazonLoaded)
+                {
+
+                    Amazon.Translate.Model.TranslateTextRequest translateTextRequest = new Amazon.Translate.Model.TranslateTextRequest();
+                    translateTextRequest.SourceLanguageCode = inLang;
+                    translateTextRequest.TargetLanguageCode = outLang;
+                    translateTextRequest.Text = sentence;
+
+                    Task.Run(async () =>
+                    {
+                        try
+                        {
+                            var res = await amazonTranslateClient.TranslateTextAsync(translateTextRequest);
+                            result = res.TranslatedText;
+                        }
+                        catch (Exception ex)
+                        { Logger.WriteLog(Convert.ToString(ex)); }
+
+                    }).Wait(GlobalSettings.TranslatorWaitTime);
+                }
+            }
+            catch (Exception e)
+            { Logger.WriteLog(Convert.ToString(e)); }
 
             return result;
         }

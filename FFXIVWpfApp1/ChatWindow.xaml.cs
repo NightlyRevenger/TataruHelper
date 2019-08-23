@@ -301,13 +301,12 @@ namespace FFXIITataruHelper
             {
                 System.Drawing.RectangleD winRect = new System.Drawing.RectangleD(this.Left, this.Top, this.Width, this.Height);
 
-                if (ea.NewValue.X < 2 || ea.NewValue.Y < 2 || ea.NewValue.Width < 2 || ea.NewValue.Height < 2)
+                if (ea.NewValue.Width < 30 || ea.NewValue.Height < 30)
                 {
                     if (((TataruUIModel)ea.Sender).ChatWindowRectangle != winRect)
                         ((TataruUIModel)ea.Sender).ChatWindowRectangle = winRect;
                     return;
                 }
-
 
                 if (ea.NewValue != winRect)
                 {

@@ -124,48 +124,18 @@ namespace FFXIITataruHelper
 
         private void About_Click(object sender, RoutedEventArgs e)
         {
-            /*
-            string caption = "TataruHelper v" + Convert.ToString(System.Reflection.Assembly.GetEntryAssembly().GetName().Version);
-            string text = "TataruHelper" + Environment.NewLine + "GitHub: " + _GitPath;
-
-            MessageBoxResult result = Xceed.Wpf.Toolkit.MessageBox.Show(text, caption, MessageBoxButton.OK);//*/
             var _AboutWin = new AboutWin();
             _AboutWin.Show();
         }
 
         private void Patrons_Click(object sender, RoutedEventArgs e)
         {
-            /*
-            string caption = "TataruHelper v" + Convert.ToString(System.Reflection.Assembly.GetEntryAssembly().GetName().Version);
-            string text = "TataruHelper" + Environment.NewLine + "GitHub: " + _GitPath;
-
-            MessageBoxResult result = Xceed.Wpf.Toolkit.MessageBox.Show(text, caption, MessageBoxButton.OK);//*/
             var patreonWin = new PatreonWin();
             patreonWin.Show();
 
             patreonWin.Resources["DearPatrons"] = this.Resources["DearPatrons"];
             patreonWin.Resources["PatronsMsg"] = this.Resources["PatronsMsg"];
             patreonWin.Resources["PatronsThankYou"] = this.Resources["PatronsThankYou"];
-        }
-
-        private void RuLanguage_Click(object sender, RoutedEventArgs e)
-        {
-            _TataruUIModel.UiLanguage = (int)LanguagueWrapper.Languages.Russian;
-        }
-
-        private void EnLanguage_Click(object sender, RoutedEventArgs e)
-        {
-            _TataruUIModel.UiLanguage = (int)LanguagueWrapper.Languages.English;
-        }
-
-        private void EsLanguage_Click(object sender, RoutedEventArgs e)
-        {
-            _TataruUIModel.UiLanguage = (int)LanguagueWrapper.Languages.Spanish;
-        }
-
-        private void PlLanguage_Click(object sender, RoutedEventArgs e)
-        {
-            _TataruUIModel.UiLanguage = (int)LanguagueWrapper.Languages.Polish;
         }
 
         private void ChatFontSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -361,7 +331,7 @@ namespace FFXIITataruHelper
             {
                 Init();
 
-                _TataruModel.LoadSettings();
+                _TataruModel.LoadSettings().Forget();
 
                 _TataruModel.FFMemoryReader.AddExclusionWindowHandler((new WindowInteropHelper(this).Handle));
 
@@ -396,7 +366,7 @@ namespace FFXIITataruHelper
             }
             catch (Exception ex)
             {
-                Logger.WriteLog(e);
+                Logger.WriteLog(ex);
             }
         }
 
@@ -1111,6 +1081,7 @@ namespace FFXIITataruHelper
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             e.Cancel = true;
+            _IsShutDown = true;
 
             if (_IsShutDown)
             {

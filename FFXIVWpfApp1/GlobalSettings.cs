@@ -23,15 +23,21 @@ namespace FFXIITataruHelper
 
         public static string YandexLanguages = "Resources/YandexTranslateLanguages.json";
 
-        public static string LocalisationDirPath = @"Locale\";
+        public static string AmazonLanguages = "Resources/AmazonLanguages.json";
 
-        public static string ru_RU_LanguaguePath = @"ru_RU\ru_RU.mo";
+        public static string LocalisationDirPath = @"Locale_cloud\";
 
-        public static string en_US_LanguaguePath = @"en_US\en_US.mo";
+        public static string ru_RU_LanguaguePath = @"ru\ru_RU.mo";
 
-        public static string es_ES_LanguaguePath = @"es_es\es_ES.mo";
+        public static string en_US_LanguaguePath = @"en\en_US.mo";
 
-        public static string pl_PL_LanguaguePath = @"pl_PL\pl_PL.mo";
+        public static string es_ES_LanguaguePath = @"es-ES\es_ES.mo";
+
+        public static string pl_PL_LanguaguePath = @"pl\pl_PL.mo";
+
+        public static string ko_KR_LanguaguePath = @"ko\ko_KR.mo";
+
+        public static string pt_BR_LanguaguePath = @"pt-BR\pt_BR.mo";
 
         public static int SpiWaitTimeOutMS = 500;
 
@@ -39,15 +45,17 @@ namespace FFXIITataruHelper
 
         public static int AutoHideWatcherDelay = 500;
 
+        public static int AutoTimeOutHideMinValueSeconds = 1;
+
         public static int MemoryReaderDelay = 33;
 
-        public static int MaxСonsecutiveNotFromLogSentences = 10000;
+        public static int MaxСonsecutiveNotFromLogSentences = 100000;
 
         public static int TranslationDelay = 33;
 
         public static int TranslatorWaitTime = 2500;
 
-        public static int MaxTranslatedSentencesCount = 1;
+        public static int SettingsSaveDelay = 2500;
 
         public static int MaxTranslateTryCount = 3;
 

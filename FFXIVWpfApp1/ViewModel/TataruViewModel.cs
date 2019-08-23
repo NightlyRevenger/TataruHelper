@@ -2,11 +2,13 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using FFXIITataruHelper.EventArguments;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Media;
 
 
@@ -28,10 +30,14 @@ namespace FFXIITataruHelper.ViewModel
 
         private TataruUIModel _TataruUIModel;
 
+        public TataruUICommand SwitchLanguageCommand { get; set; }
+
         public TataruViewModel(TataruUIModel tataruUIModel)
         {
             _TataruUIModel = tataruUIModel;
             _TataruUIModel.ChatCodesChanged += OnChatCodesChange;
+
+            SwitchLanguageCommand = new TataruUICommand(ChangeUILanguageCommand);
 
             ChatCodes = new BindingList<ChatCodeViewModel>()
             {
@@ -54,14 +60,6 @@ namespace FFXIITataruHelper.ViewModel
 
             ChatCodes = new BindingList<ChatCodeViewModel>(tmpViewModel);
 
-            /*
-            for (int i = 0; i < tmpCodeList.Count; i++)
-            {
-                bool isCheked = (tmpCodeList[i].MsgType == MsgType.Translate) ? true : false;
-
-                ChatCodes[i].IsChecked = isCheked;
-            }//*/
-
             _ChatCodes.ListChanged += ChatCodesChanged;
         }
 
@@ -79,12 +77,27 @@ namespace FFXIITataruHelper.ViewModel
             }
         }
 
+        private void ChangeUILanguageCommand(object parameter)
+        {
+            int lang = 2;
+            try
+            {
+                lang = (int)Enum.Parse(typeof(LanguagueWrapper.Languages), (string)parameter);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+            }
+
+
+            //_TataruUIModel.UiLanguage = (int)LanguagueWrapper.Languages.Korean;
+            _TataruUIModel.UiLanguage = lang;
+        }
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName]string prop = "")
         {
-            var localPropertyChanged = PropertyChanged;
-            if (localPropertyChanged != null)
-                localPropertyChanged(this, new PropertyChangedEventArgs(prop));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
     }
 }

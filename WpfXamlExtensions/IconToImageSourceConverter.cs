@@ -38,6 +38,7 @@ namespace WpfXamlExtensions
                 icon.Handle,
                 Int32Rect.Empty,
                 BitmapSizeOptions.FromEmptyOptions());
+
             return imageSource;
         }
 

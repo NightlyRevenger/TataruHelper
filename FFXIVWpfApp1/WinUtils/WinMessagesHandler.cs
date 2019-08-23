@@ -51,7 +51,7 @@ namespace FFXIITataruHelper.WinUtils
                     NewValue = true
                 };
 
-                _ShowFirstInstance.InvokeAsync(ea);
+                _ShowFirstInstance.InvokeAsync(ea).Forget();
             }
 
             return IntPtr.Zero;

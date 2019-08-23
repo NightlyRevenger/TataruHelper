@@ -10,9 +10,11 @@
 
     <system:String x:Key="DocLanguage">Language</system:String>
     <system:String x:Key="DocLanguageEn">English</system:String>
-    <system:String x:Key="DocLanguageRu">Russian</system:String>
-    <system:String x:Key="DocLanguageEs">Spanish</system:String>
-    <system:String x:Key="DocLanguagePl">Polish</system:String>
+    <system:String x:Key="DocLanguageRu">Русский</system:String>
+    <system:String x:Key="DocLanguageEs">Español</system:String>
+    <system:String x:Key="DocLanguagePl">Polski</system:String>
+    <system:String x:Key="DocLanguageKr">한국어</system:String>
+    <system:String x:Key="DocLanguagePtBr">Português brasileiro</system:String>
 
     <system:String x:Key="DockHelp">Help</system:String>
 
@@ -46,18 +48,18 @@
     <system:String x:Key="ColorPickerRecentColorsHeader">Recent Colors</system:String>
 
     <system:String x:Key="ParagraphSettings">Paragraph Settings</system:String>
-    <system:String x:Key="IntervalWidth">Interval Width</system:String>
+    <system:String x:Key="IntervalWidth">Spacing</system:String>
     <system:String x:Key="LineBreakHeight">Line Break Height</system:String>
 
     <system:String x:Key="ChatCodes">Chat Codes</system:String>
 
     <system:String x:Key="TranslationEngine">Translation Engine</system:String>
     <system:String x:Key="FFLanguage">FF Language</system:String>
-    <system:String x:Key="TraslateTo">Traslate To</system:String>
+    <system:String x:Key="TraslateTo">Translate To</system:String>
 
     <system:String x:Key="Hotkeys">Hotkeys</system:String>
     <system:String x:Key="ShowHideChatWindowHK">Show/hide Chat Window</system:String>
-    <system:String x:Key="ShowHideChatWindowHKToolTip">Show Hide Ch at Window Hotkey Tooltip</system:String>
+    <system:String x:Key="ShowHideChatWindowHKToolTip">Show Hide Chat Window Hotkey Tooltip</system:String>
     <system:String x:Key="ClickThroughHK">Click Through</system:String>
     <system:String x:Key="ClickThroughHKToolTip">Click Through HotKey ToolTip</system:String>
     <system:String x:Key="ClearChatHK">Clear Chat</system:String>
@@ -102,6 +104,7 @@
     <system:String x:Key="CkLinkShell6">LinkShell6</system:String>
     <system:String x:Key="CkLinkShell7">LinkShell7</system:String>
     <system:String x:Key="CkLinkShell8">LinkShell8</system:String>
+    <system:String x:Key="CkNoviceNetwork">NoviceNetwork</system:String>
 
     <system:String x:Key="DearPatrons">Dear Patrons!</system:String>
     <system:String x:Key="PatronsMsg">We express our great appreciation to the people who support our project and motivate us for new achievements.</system:String>
