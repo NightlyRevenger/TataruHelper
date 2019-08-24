@@ -5,7 +5,7 @@
 [Tataru's Discord Server](https://discord.gg/bSrpbd9)  
 -
 ---
-[ИНСТРУКЦИЯ НА РУССКОМ](Documents/README_RU.md)
+[ИНСТРУКЦИЯ НА РУССКОМ](Documents/README_RU.md) 
 [`KOREAN NAME`](Documents/README_KR.md)
 ---
 ![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)  
