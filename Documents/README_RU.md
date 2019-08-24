@@ -4,7 +4,7 @@
 -
 [Tataru's Discord Server](https://discord.gg/bSrpbd9)  
 -
-![TataruHead](/Tataru_img.png) ![LiveAction](/LiveAction.gif)  
+![TataruHead](./Tataru_img.png) ![LiveAction](./LiveAction.gif)  
 [Демонстрация](https://youtu.be/7HiQXzmkQuw)
 -  
 [Поддержка](https://github.com/NightlyRevenger/TataruHelper/blob/master/README.md#поддержка)
