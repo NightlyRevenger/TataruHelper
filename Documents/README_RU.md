@@ -2,7 +2,7 @@
 [![Crowdin](https://badges.crowdin.net/tataru-helper/localized.svg)](https://crowdin.com/project/tataru-helper)  ![Discord Shield](https://discordapp.com/api/guilds/592039000538349569/widget.png?style=shield)  
 [Скачать](https://github.com/NightlyRevenger/TataruHelper/releases/latest)( ---> Скачайте Setup.exe) 
 -
-[Tataru's Discord Server](https://discord.gg/bSrpbd9)  
+[Наш сервер Discord](https://discord.gg/bSrpbd9)  
 -
 ![TataruHead](./Tataru_img.png) ![LiveAction](./LiveAction.gif)  
 [Демонстрация](https://youtu.be/7HiQXzmkQuw)
@@ -50,7 +50,7 @@ Final Fantasy XIV в режиме **DirectX 11** и **x64**.
 P.S. В дальнейшем, не нужно запускать приложение через Setup.exe. Это установщик! Ярлык для запуска находится на рабочем столе или в меню пуск.
 
 ## Как пользоваться
-- Подробное руководство по использованию русификатора [тут](/GuideRU.MD).
+- Подробное руководство по использованию русификатора [тут](./GuideRU.MD).
 
 ## Разработка/Перевод
 
