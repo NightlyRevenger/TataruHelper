@@ -1,78 +1,73 @@
 # Tataru Helper
-[Download Now](https://github.com/NightlyRevenger/TataruHelper/releases/latest)(Setup.exe) 
+[![Crowdin](https://badges.crowdin.net/tataru-helper/localized.svg)](https://crowdin.com/project/tataru-helper)  ![Discord Shield](https://discordapp.com/api/guilds/592039000538349569/widget.png?style=shield)  
+[Download Now](https://github.com/NightlyRevenger/TataruHelper/releases/latest)( ---> Download Setup.exe)  
 -
-![TataruHead](https://i.imgur.com/dBckVf5.png)  
-
-
+[Скачать](https://github.com/NightlyRevenger/TataruHelper/releases/latest)( ---> Скачайте Setup.exe) 
+-
+[Tataru's Discord Server](https://discord.gg/bSrpbd9)  
+-
+![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)  
+[Demonstration/Демонстрация](https://youtu.be/7HiQXzmkQuw)
+-  
+[Donations/](https://github.com/NightlyRevenger/TataruHelper/blob/master/README.md#support)[Поддержка](https://github.com/NightlyRevenger/TataruHelper/blob/master/README.md#поддержка)
+-
 ---
 ## Table of Contents
 * [English](#english)
-   * [New features](#new-features)
    * [Installation](#installation)
    * [How to use](#how-to-use)
-   * [Development](#development)
-   * [ToDoList](#todolist)
-   * [License](#license)
-   * [Credits](#credits)
+   * [Development/Translation](#developmenttranslation)
+   * [License](#license)  
+   * [Credits](#credits)  
+   * [Contacts](#contacts)  
+   * [Support](#support)  
 * [Русский](#русский)
-   * [Новые функции](#новые-функции)
    * [Установка](#установка)
-   * [Как пользоваться]()
-   * [Разработка](#как-пользоваться)
-   * [Список планов](#список-планов)
-   * [Лицензия](#лицензия)
-   * [Благодарности](#благодарности)
-* [한국어](#한국어)
-   * [새로운 기능](#새로운-기능)
-   * [설치](#설치)
-   * [사용법](#사용법)
-   * [기여하기](#기여하기)
-   * [할 일 목록](#할-일-목록)
-   * [라이센스](#라이센스)
-   * [크레딧](#크레딧)
+   * [Как пользоваться](#как-пользоваться)
+   * [Разработка/Перевод](#разработкаперевод)
+   * [Лицензия](#лицензия)  
+   * [Благодарности](#благодарности)  
+   * [Контакты](#контакты) 
+   * [Поддержка](#поддержка)  
 ---
 
 #### English
-Powered by Dark Team
+Powered by Tataru's Team
 
-Tataru Helper - application for translation of in-game texts in Japan MMORPG - Final Fantasy XIV. The texts are understood as MSQ, cutscenes, quests, NPC replicas, etc.
+Tataru Helper - application for translation of in-game texts in Japanese developed MMORPG - Final Fantasy XIV. The texts are understood as MSQ, cutscenes, quests, NPC replicas, etc.
 
   - You can choose the source and destination language.
-  - You can freely change the translator engine and use various translation methods.
+  - You can freely change the translator engine and use various translation methods. 
+  - You can select a specific chat for translation. 
   - Automatic updates.
   - Tataru Taru!
-
-## New features!
-
-  - Soon™
 
 
 ## Installation
 
 Tataru Helper requires:  
+Windows 7 **x64** or later (**x64 systems only**).  
 [Microsoft .NET Framework 4.6.2 ](https://www.microsoft.com/net/download/dotnet-framework-runtime)or above.   
-Final Fantasy XIV with **DirectX 11** and **x64**.
+Final Fantasy XIV with **DirectX 11** and **x64**.  
 
 1. Download the latest version of the application from [here](https://github.com/NightlyRevenger/TataruHelper/releases/latest) (Setup.exe).
-2. Run the Setup.exe file, the shortcut will be placed on the desktop.
+2. Run the Setup.exe file, after receiving message that Windows protected your PC, press more info and run anyway. The shortcut will be placed on the desktop.
 3. Tataru Helper will start automatically, configure source and destination language and do the initial setup.
 4. Close the settings window and drag the floating window to the right place.
-4. Everything's ready!
+5. Make sure that the following messages are selected in the game's chat settings menu:
+![InGameSettings](/Documents/InGameSettings.png) 
+6. Everything's ready!  
+P.S. After that, there is no need to run the application through Setup.exe. This is the installer! The shortcut to launch the application is on the desktop or in the start menu.
 
 ## How to use
-- Soon™
+- In depth guide [here](Documents/Guide.MD).
 
-## Development
+## Development/Translation
 
 Want to contribute? Great!
 
-If you want to translate the application into your language, let me know.
+If you want to translate the application into your language, proceed [here](https://crowdin.com/project/tataru-helper).
 
-
-
-## ToDoList
-
- - Soon™
 
 ## License
 
@@ -86,52 +81,69 @@ A lot of thanks to many who contribute to open-source projects. The following we
 [NotifyIcon WPF](https://bitbucket.org/hardcodet/notifyicon-wpf/)  
 [Sharlayan](https://github.com/FFXIVAPP/sharlayan)  
 [Tataru Art by Nezusagi](https://www.deviantart.com/nezusagi)  
-[Squirrel.Windows](https://github.com/Squirrel/Squirrel.Windows)
+[Squirrel.Windows](https://github.com/Squirrel/Squirrel.Windows)  
+
+## Contacts
+
+Here is our discord server: [click](https://discord.gg/bSrpbd9)  
+
+If you have any questions you can contact with me in:  
+xDarkOne:  
+Discord: xDarkOne#6486  
+Telegram: [click](https://t.me/xDarkOne)  
+VK: [click](https://vk.com/velikov_ra)  
+Twitch: [xDark0ne](https://www.twitch.tv/xdark0ne)  
+NightlyRevenger(developer):  
+[nightlyrevenger@yandex.ru](mailto:nightlyrevenger@yandex.ru)  
+
+## Support
+
+If you want to support this project, use the links below:  
+MasterCard(Sberbank): 5469 3800 2554 9048  
+Yandex.Money: [4100172621059](https://money.yandex.ru/to/4100172621059)  
+PayPal: [paypal.me/xdarkone](https://www.paypal.me/xdarkone)  
+Patreon: [TataruHelper](https://www.patreon.com/TataruHelper)  
 
 ---
 ---
 
 #### Русский
-Создано Dark Team
+Создано Tataru's Team
 
-Tataru Helper - application for translation of in-game texts in Japan MMORPG - Final Fantasy XIV. The texts are understood as MSQ, cutscenes, quests, NPC replicas, etc.
-Tataru Helper - приложение для перевода внутриигровых текстов в японской MMORPG - Final Fantasy XIV. Под текстами понимаются MSQ, катсцены, квесты, реплики NPC и прочее.
+Tataru Helper - приложение-русификатор для перевода внутриигровых текстов в японской MMORPG - Final Fantasy XIV. Под текстами понимаются MSQ, катсцены, квесты, реплики NPC и прочее.
 
   - Вы можете выбрать исходный и целевой язык.
   - Вы можете переключаться между различными механизмами перевода. 
+  - Вы можете выбрать конкретный чат для перевода. 
   - Автоматические обновления.
   - Татару Тару!
-
-## Новые функции!
-
-  - Soon™
 
 
 ## Установка
 
 Tataru Helper требуется:  
+Windows 7 **x64** или новее (**только для 64 битных систем**).  
 [Microsoft .NET Framework 4.6.2 ](https://www.microsoft.com/net/download/dotnet-framework-runtime)или выше.  
-Final Fantasy XIV в режиме **DirectX 11** и **x64**.
+Final Fantasy XIV в режиме **DirectX 11** и **x64**.  
 
 1. Скачайте последнюю версию приложения [здесь](https://github.com/NightlyRevenger/TataruHelper/releases/latest) (Setup.exe).
-2. Запустите файл Setup.exe, ярлык автоматически будет создан на рабочем столе.
+2. Запустите файл Setup.exe, после этого вылетит предупреждение о том, что Windows защитила ваш компьютер. Нажмите Подробнее, а затем - Выполнить в любом случае. Ярлык автоматически будет создан на рабочем столе.
 3. Tataru Helper будет запущено автоматически, настройте исходный и целевой языки и проведите начальную настройку.
 4. Закройте окно настроек и переместите окно приложения в удобное место.
-4. Всё готово!
+5. Убедитесь, что в настройках чата в игре выбраны для вывода следующие сообщения:
+![InGameSettings](/Documents/InGameSettings.png) 
+6. Всё готово!  
+P.S. В дальнейшем, не нужно запускать приложение через Setup.exe. Это установщик! Ярлык для запуска находится на рабочем столе или в меню пуск.
 
 ## Как пользоваться
-- Soon™
+- Подробное руководство по использованию русификатора [тут](Documents/GuideRU.MD).
 
-## Разработка
+## Разработка/Перевод
 
 Хотите поучаствовать в разработке? Отлично!
 
-Если вы хотите перевести приложение на свой язык, дайте мне знать.
+Если вы хотите перевести приложение на свой язык, перейдите по [ссылке](https://crowdin.com/project/tataru-helper).
 
-
-## Список планов
-
- - Soon™
 
 ## Лицензия
 
@@ -147,67 +159,22 @@ Final Fantasy XIV в режиме **DirectX 11** и **x64**.
 [Tataru Art by Nezusagi](https://www.deviantart.com/nezusagi)  
 [Squirrel.Windows](https://github.com/Squirrel/Squirrel.Windows)
 
----
----
+## Контакты
 
+Ссылка на наш Discord сервер: [click](https://discord.gg/bSrpbd9)  
 
-#### 한국어
+Если у вас есть какие-то вопросы, вы можете связаться со мной:  
+Discord: xDarkOne#6486  
+Telegram: [click](https://t.me/xDarkOne)  
+VK: [click](https://vk.com/velikov_ra)  
+Twitch: [xDark0ne](https://www.twitch.tv/xdark0ne)  
+NightlyRevenger(developer):  
+[nightlyrevenger@yandex.ru](mailto:nightlyrevenger@yandex.ru)  
 
-Powered by Dark Team
+## Поддержка
 
-Tataru Helper - Final Fantasy XIV의 인-게임 텍스트를 번역하는 프로그램입니다. 메인 퀘스트, 컷신, 퀘스트 등을 포함합니다.
-
-  - 출발/도착 언어를 선택할 수 있습니다. You can choose the source and destination language.
-  - 여러 번역기 엔진과 번역 방법을 선택할 수 있습니다.
-  - 항상 자동으로 업데이트됩니다.
-  - *타타루!*
-
-## 새로운 기능
-
-  - Soon™
-
-
-## 설치
-
-Tataru Helper는
-[Microsoft .NET Framework 4.6.2](https://www.microsoft.com/net/download/dotnet-framework-runtime) 또는 그 이상,
-**DirectX 11**과 **64비트** 상태에서 구동되는 Final Fantasy XIV 클라이언트가 필요합니다.
-
-1. [여기서](https://github.com/NightlyRevenger/TataruHelper/releases/latest) 최신 버전의 Setup.exe를 다운로드해 주세요.
-2. Setup.exe를 실행하면, 프로그램이 설치되고 바탕 화면에 바로가기가 생성됩니다.
-3. 설치가 완료되면 Tataru Helper가 자동으로 실행됩니다. 번역될 언어와 단축키 등을 설정하세요.
-4. 설정 창을 닫고 오버레이를 적당한 위치로 옮기세요.
-4. 준비 끝!
-
-## 사용법
-
-  - Soon™
-
-
-## 기여하기
-
-개발에 기여하고 싶으신가요?
-
-이 프로그램을 다른 언어로 번역하거나 한국어 번역을 개선하고 싶으시다면, 개발자에게 알려주세요.
-
-
-## 할 일 목록
-
- - Soon™
-
-## 라이센스
-
-[MIT](/LICENSE)
-
-## 크레딧
-
-아래 프로젝트와 사람들의 도움을 받았습니다. 여러 오픈 소스 프로젝트에 참여해 주신 분들께 감사드립니다.
-
-[WPF Toolkit™](https://github.com/xceedsoftware/wpftoolkit)  
-[BondTech.HotKeyManagement](https://github.com/bondtech/HotKey-Manager-for-WinForm-and-WPF-Apps)  
-[NotifyIcon WPF](https://bitbucket.org/hardcodet/notifyicon-wpf/)  
-[Sharlayan](https://github.com/FFXIVAPP/sharlayan)  
-[Tataru Art by Nezusagi](https://www.deviantart.com/nezusagi)  
-[Squirrel.Windows](https://github.com/Squirrel/Squirrel.Windows)
-
----
+Если вы хотите поддержать проект, воспользуйтесь ссылками ниже:  
+MasterCard(Сбербанк): 5469 3800 2554 9048  
+Яндекс.Деньги: [4100172621059](https://money.yandex.ru/to/4100172621059)  
+PayPal: [paypal.me/xdarkone](https://www.paypal.me/xdarkone)  
+Patreon: [TataruHelper](https://www.patreon.com/TataruHelper)  
