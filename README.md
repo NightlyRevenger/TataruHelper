@@ -7,7 +7,7 @@
 ![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)  
 [Demonstration](https://youtu.be/7HiQXzmkQuw)
 -  
-[Donations/](https://github.com/NightlyRevenger/TataruHelper/blob/master/README.md#support)
+[Donations](https://github.com/NightlyRevenger/TataruHelper/blob/master/README.md#support)
 -
 ---
 ## Table of Contents
