@@ -4,7 +4,7 @@
 -
 [Tataru's Discord Server](https://discord.gg/bSrpbd9)  
 -
-![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)  
+![TataruHead](/Tataru_img.png) ![LiveAction](/LiveAction.gif)  
 [Демонстрация](https://youtu.be/7HiQXzmkQuw)
 -  
 [Поддержка](https://github.com/NightlyRevenger/TataruHelper/blob/master/README.md#поддержка)
@@ -45,12 +45,12 @@ Final Fantasy XIV в режиме **DirectX 11** и **x64**.
 3. Tataru Helper будет запущено автоматически, настройте исходный и целевой языки и проведите начальную настройку.
 4. Закройте окно настроек и переместите окно приложения в удобное место.
 5. Убедитесь, что в настройках чата в игре выбраны для вывода следующие сообщения:
-![InGameSettings](/Documents/InGameSettings.png) 
+![InGameSettings](/InGameSettings.png) 
 6. Всё готово!  
 P.S. В дальнейшем, не нужно запускать приложение через Setup.exe. Это установщик! Ярлык для запуска находится на рабочем столе или в меню пуск.
 
 ## Как пользоваться
-- Подробное руководство по использованию русификатора [тут](Documents/GuideRU.MD).
+- Подробное руководство по использованию русификатора [тут](/GuideRU.MD).
 
 ## Разработка/Перевод
 
