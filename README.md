@@ -1,6 +1,6 @@
 # Tataru Helper
 ---
-[ИНСТРУКЦИЯ НА РУССКОМ](README_%25%25/README_RU.md)
+[ИНСТРУКЦИЯ НА РУССКОМ](Documents/README_RU.md)
 ---
 [![Crowdin](https://badges.crowdin.net/tataru-helper/localized.svg)](https://crowdin.com/project/tataru-helper)  ![Discord Shield](https://discordapp.com/api/guilds/592039000538349569/widget.png?style=shield)  
 [Download Now](https://github.com/NightlyRevenger/TataruHelper/releases/latest)( ---> Download Setup.exe)  
