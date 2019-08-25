@@ -10,9 +10,9 @@
 
 ![TataruHead](./Tataru_img.png) ![LiveAction](./LiveAction.gif)
 
-# [Демонстрация](https://youtu.be/7HiQXzmkQuw)
+## [Демонстрация](https://youtu.be/7HiQXzmkQuw)
  
-# [Поддержка](https://github.com/NightlyRevenger/TataruHelper/blob/master/README.md#support)
+## [Поддержка](https://github.com/NightlyRevenger/TataruHelper/blob/master/README.md#support)
  
 ## Table of Contents
 
