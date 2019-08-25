@@ -21,6 +21,7 @@
    * [Credits](#credits)
    * [Contacts](#contacts)
    * [Support](#support)
+   
 ---
 
 #### YourLanguageHere
@@ -96,5 +97,4 @@ Yandex.Money: [4100172621059](https://money.yandex.ru/to/4100172621059)
 PayPal: [paypal.me/xdarkone](https://www.paypal.me/xdarkone)  
 Patreon: [TataruHelper](https://www.patreon.com/TataruHelper)  
 
----
 ---
