@@ -12,7 +12,7 @@
 -
 ---
 ## Table of Contents
-* [(Your Language Here)](#english)
+* [(YourLanguageHere)](#YourLanguageHere)
    * [Installation](#installation)
    * [How to use](#how-to-use)
    * [Development/Translation](#developmenttranslation)
