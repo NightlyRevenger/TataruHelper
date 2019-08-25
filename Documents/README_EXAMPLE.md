@@ -22,7 +22,7 @@
    * [Support](#support)
 ---
 
-#### English
+#### YourLanguageHere
 Powered by Tataru's Team
 
 Tataru Helper - application for translation of in-game texts in Japanese developed MMORPG - Final Fantasy XIV. The texts are understood as MSQ, cutscenes, quests, NPC replicas, etc.
