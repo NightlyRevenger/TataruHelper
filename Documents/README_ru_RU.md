@@ -14,7 +14,7 @@
 
 - [Поддержка](https://github.com/NightlyRevenger/TataruHelper/blob/master/README.md#support)
 
-## -
+##
 
 ## Table of Contents
 
