@@ -18,7 +18,7 @@
 
 ## 목차
 
-* [(YourLanguageHere)](#YourLanguageHere) 
+* [한국어](#한국어) 
    * [설치](#설치)
    * [사용법](#사용법)
    * [개발/번역](#개발번역)
@@ -29,7 +29,7 @@
 
 * * *
 
-#### YourLanguageHere
+#### 한국어
 
 Powered by Tataru's Team
 
