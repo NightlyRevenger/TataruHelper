@@ -8,7 +8,7 @@
 
 ## [ИНСТРУКЦИЯ НА РУССКОМ](Documents/README_ru_RU.md)  
 
-## [한국어 설명](Documents/README_KR.md) 
+## [한국어 설명](Documents/README_ko_KR.md) 
 
 * * *
 
