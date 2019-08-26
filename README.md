@@ -10,6 +10,8 @@
 
 ## [한국어 설명](Documents/README_KR.md) 
 
+* * *
+
 ![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)
 
 ## [Demonstration](https://youtu.be/7HiQXzmkQuw)
