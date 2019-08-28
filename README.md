@@ -33,7 +33,7 @@
 
 * * *
 
-#### YourLanguageHere
+#### English
 
 Powered by Tataru's Team
 
