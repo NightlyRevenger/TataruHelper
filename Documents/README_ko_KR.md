@@ -10,7 +10,7 @@
 
 ![TataruHead](./Tataru_img.png) ![LiveAction](./LiveAction.gif)
 
-## [Demonstration](https://youtu.be/sidQKrvuBl8)
+## [데모영상 (YouTube)](https://youtu.be/sidQKrvuBl8)
 
 ## [기부하기](https://github.com/NightlyRevenger/TataruHelper/blob/master/README.md#support)
 
