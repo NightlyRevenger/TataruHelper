@@ -1,11 +1,11 @@
 # Tataru Helper
 
 [![Current Version](https://img.shields.io/github/release/NightlyRevenger/TataruHelper)](https://github.com/NightlyRevenger/TataruHelper/releases) ![Github All Releases](https://img.shields.io/github/downloads/NightlyRevenger/TataruHelper/total.svg)  [![Crowdin](https://badges.crowdin.net/tataru-helper/localized.svg)](https://crowdin.com/project/tataru-helper) ![Discord Shield](https://discordapp.com/api/guilds/592039000538349569/widget.png?style=shield)
-<p align="center">
+
   <a href="https://discord.gg/HjJCwm5">
         <img src="https://img.shields.io/discord/308323056592486420?logo=discord"
             alt="chat on Discord"></a>
-</p>
+
 
 ## [Download Now](https://github.com/NightlyRevenger/TataruHelper/releases/latest)( \---> Download Setup.exe)
 
