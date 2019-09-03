@@ -1,13 +1,13 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-using FFXIITataruHelper.WinUtils;
+using FFXIVTataruHelper.WinUtils;
 using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace FFXIITataruHelper.Utils
+namespace FFXIVTataruHelper.Utils
 {
     static public class TataruSingleInstance
     {

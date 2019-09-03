@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:FFXIITataruHelper"
+                    xmlns:local="clr-namespace:FFXIVTataruHelper"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
 
     <system:String x:Key="SettingsWindowName">Settings</system:String>
@@ -27,9 +27,13 @@
     <system:String x:Key="FFStatusText">Couldn't find FFXIV process.</system:String>
     <system:String x:Key="FFStatusTextFound">Process found:</system:String>
 
+    <system:String x:Key="ChatWindowsTab">Chat Windows</system:String>
     <system:String x:Key="ChatAppearance">Chat Appearance</system:String>
     <system:String x:Key="TranslationSettings">Translation Settings</system:String>
     <system:String x:Key="GeneralBehavior">General Behavior</system:String>
+
+    <system:String x:Key="ChatWindowBehavior">Behavior</system:String>
+    <system:String x:Key="ChatWindowHotkeys">Hotkeys</system:String>
 
     <system:String x:Key="FontSettings">Font Settings</system:String>
     <system:String x:Key="FontSize">Font Size</system:String>
@@ -57,7 +61,6 @@
     <system:String x:Key="FFLanguage">FF Language</system:String>
     <system:String x:Key="TraslateTo">Translate To</system:String>
 
-    <system:String x:Key="Hotkeys">Hotkeys</system:String>
     <system:String x:Key="ShowHideChatWindowHK">Show/hide Chat Window</system:String>
     <system:String x:Key="ShowHideChatWindowHKToolTip">Show Hide Chat Window Hotkey Tooltip</system:String>
     <system:String x:Key="ClickThroughHK">Click Through</system:String>
@@ -109,5 +112,8 @@
     <system:String x:Key="DearPatrons">Dear Patrons!</system:String>
     <system:String x:Key="PatronsMsg">We express our great appreciation to the people who support our project and motivate us for new achievements.</system:String>
     <system:String x:Key="PatronsThankYou">Thank you</system:String>
+
+    <system:String x:Key="SettingsHide">Hide</system:String>
+    <system:String x:Key="SettingsExit">Exit</system:String>
 
 </ResourceDictionary>

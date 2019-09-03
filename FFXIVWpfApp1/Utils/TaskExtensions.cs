@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FFXIITataruHelper
+namespace FFXIVTataruHelper
 {
     static class TaskExtensions
     {

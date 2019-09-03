@@ -1,9 +1,12 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-using FFXIITataruHelper.FFHandlers;
-using FFXIITataruHelper.Translation;
+using FFXIVTataruHelper.FFHandlers;
+using FFXIVTataruHelper.TataruComponentModel;
+using FFXIVTataruHelper.Translation;
+using FFXIVTataruHelper.ViewModel;
 using Newtonsoft.Json;
+using System.Linq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -11,8 +14,11 @@ using System.IO;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using FFXIVTataruHelper.UIModel;
+using BondTech.HotKeyManagement.WPF._4;
+using FFXIVTataruHelper.EventArguments;
 
-namespace FFXIITataruHelper
+namespace FFXIVTataruHelper
 {
     public class TataruModel
     {
@@ -29,10 +35,33 @@ namespace FFXIITataruHelper
             get { return _FFMemoryReader; }
         }
 
+        public System.Windows.WindowState FFWindowState
+        {
+            get { return FFMemoryReader.FFWindowState; }
+        }
+
         public ChatProcessor ChatProcessor
         {
             get { return _ChatProcessor; }
         }
+
+
+        public WebTranslator WebTranslator
+        {
+            get { return _WebTranslator; }
+        }
+
+
+        public TataruViewModel TataruViewModel
+        {
+            get { return _TataruViewModel; }
+        }
+
+        public HotKeyManager HotKeyManager
+        {
+            get { return _HotKeyManager; }
+        }
+
 
         #endregion
 
@@ -44,8 +73,11 @@ namespace FFXIITataruHelper
 
         string SystemSettingFileName = "AppSysSettings.json";
 
-        string OldSettingFileName = "../AppSettings.json";
-        string OldHotKeysFileName = "../HotKeys.json";
+        List<PropertyBinder> _PropertyBinders;
+
+        List<ChatWindow> _ChatWindows;
+
+        TataruViewModel _TataruViewModel;
 
         TataruUIModel _TataruUIModel;
 
@@ -53,9 +85,13 @@ namespace FFXIITataruHelper
 
         WebTranslator _WebTranslator;
 
+        HotKeyManager _HotKeyManager;
+
         ChatProcessor _ChatProcessor;
 
-        Task _SaveSettingsTask = null;
+        private Object lockObj = new object();
+
+        bool deletingObject = false;
 
         CancellationTokenSource _SaveSettingsCancellationTokenSource;
 
@@ -68,65 +104,110 @@ namespace FFXIITataruHelper
         {
             CmdArgsStatus.LoadArgs();
 
+            _PropertyBinders = new List<PropertyBinder>();
+            _ChatWindows = new List<ChatWindow>();
+
+            _HotKeyManager = new HotKeyManager(UiWindow.Window);
+
             _SaveSettingsCancellationTokenSource = new CancellationTokenSource();
 
             _WebTranslator = new WebTranslator();
 
-            _TataruUIModel = new TataruUIModel(_WebTranslator.GetAllSupportedLanguages());
+            _TataruUIModel = new TataruUIModel();
 
             _FFMemoryReader = new FFMemoryReader();
-            _FFMemoryReader.Start();
 
-            _ChatProcessor = new ChatProcessor(_FFMemoryReader, _WebTranslator, _TataruUIModel);
+            _ChatProcessor = new ChatProcessor(_WebTranslator);
+
+            _TataruViewModel = new TataruViewModel(this);
+
+        }
+
+        public async Task InitializeComponent()
+        {
+            await Task.Run(() =>
+            {
+
+                _WebTranslator.LoadLanguages(GlobalSettings.GoogleTranslateLanguages, GlobalSettings.MultillectTranslateLanguages,
+                    GlobalSettings.DeeplLanguages, GlobalSettings.YandexLanguages, GlobalSettings.AmazonLanguages, GlobalSettings.PapagoLanguages);
+
+                _FFMemoryReader.Start();
+
+                InitEvents();
+            });
+        }
+
+        private void InitEvents()
+        {
+            _FFMemoryReader.FFChatMessageArrived += _ChatProcessor.OnFFChatMessageArrived;
+
+            _TataruUIModel.ChatWindowsListChangedAsync += AsyncOnSettingsWindowsListChanged;
+            ////////////////
+
+            _TataruViewModel.ChatWindowsListChangedAsync += AsyncOnViewModelWindowsListChanged;
+
+            _TataruViewModel.ChatWindowsListChangedAsync += OnViewModelChatWindowsListChanged;
         }
 
         public void Stop()
         {
+            foreach (var win in _ChatWindows)
+            {
+                win.Close();
+            }
             _FFMemoryReader.Stop();
             _SaveSettingsCancellationTokenSource.Cancel();
         }
 
-        public async Task LoadSettings()
+        public async Task AsyncLoadSettings()
         {
             await Task.Run(() =>
             {
-                try
-                {
-                    if (!Helper.LoadStaticFromJson(typeof(GlobalSettings), SystemSettingFileName))
-                    {
-                        Helper.SaveStaticToJson(typeof(GlobalSettings), SystemSettingFileName);
-                        Helper.LoadStaticFromJson(typeof(GlobalSettings), SystemSettingFileName);
-                    }
-
-                    var userSettings = Helper.LoadJsonData<UserSettings>(GlobalSettings.Settings);
-
-                    if (userSettings == null)
-                    {
-                        userSettings = new UserSettings();
-                        Logger.WriteLog("userSettings == null");
-                    }
-
-                    _WebTranslator.LoadLanguages(GlobalSettings.GoogleTranslateLanguages, GlobalSettings.MultillectTranslateLanguages,
-                        GlobalSettings.DeeplLanguages, GlobalSettings.YandexLanguages, GlobalSettings.AmazonLanguages);
-
-                    LoadAllOldSettings(userSettings);
-
-                    TataruUIModel.SetSettings(userSettings);
-
-                    _TataruUIModel.PropertyChanged += OnUiSettingsChanged;
-                    SettingsChangeTime = DateTime.UtcNow;
-                    SettingsSaveTime = DateTime.UtcNow;
-
-                    WatchAndSaveChangedSettings();
-                }
-                catch (Exception e)
-                {
-                    Logger.WriteLog(e);
-                }
+                LoadSettings();
             });
         }
 
-        void OnUiSettingsChanged(object sender, PropertyChangedEventArgs e)
+        public void LoadSettings()
+        {
+            try
+            {
+                if (!Helper.LoadStaticFromJson(typeof(GlobalSettings), SystemSettingFileName))
+                {
+                    Helper.SaveStaticToJson(typeof(GlobalSettings), SystemSettingFileName);
+                    Helper.LoadStaticFromJson(typeof(GlobalSettings), SystemSettingFileName);
+                }
+
+                var userSettings = Helper.LoadJsonData<UserSettings>(GlobalSettings.Settings);
+
+                LoadOldSettings(userSettings);
+
+                if (userSettings == null)
+                {
+                    userSettings = new UserSettings();
+                    Logger.WriteLog("userSettings == null");
+                }
+
+                for (int i = 0; i < userSettings.ChatWindows.Count; i++)
+                {
+                    userSettings.ChatWindows[i].WinId = i;
+                    userSettings.ChatWindows[i].Name = Convert.ToString(i + 1);
+                }
+
+                TataruUIModel.SetSettings(userSettings);
+
+                _TataruUIModel.PropertyChanged += OnUiSettingsChanged;
+                SettingsChangeTime = DateTime.UtcNow;
+                SettingsSaveTime = DateTime.UtcNow;
+
+                WatchAndSaveChangedSettings();
+            }
+            catch (Exception e)
+            {
+                Logger.WriteLog(e);
+            }
+        }
+
+        private void OnUiSettingsChanged(object sender, PropertyChangedEventArgs e)
         {
             SettingsChangeTime = DateTime.UtcNow;
         }
@@ -170,6 +251,339 @@ namespace FFXIITataruHelper
             }, TaskCreationOptions.LongRunning);
         }
 
+        private async Task AsyncOnSettingsWindowsListChanged(AsyncListChangedEventHandler<ChatWindowViewModelSettings> ea)
+        {
+            switch (ea.ChangedEventArgs.ListChangedType)
+            {
+                case ListChangedType.ItemAdded:
+                    {
+                        await UiWindow.Window.UIThreadAsync(() =>
+                        {
+                            ChatWindowViewModelSettings newElem = ea.ChangedElemnt;
+
+                            ChatWindowViewModel reslut = null;
+
+                            reslut = _TataruViewModel.ChatWindows.FirstOrDefault(x => x.WinId == newElem.WinId);
+
+
+                            if (reslut == null)
+                            {
+                                try
+                                {
+                                    TataruViewModel.AddNewChatWindow(newElem);
+                                }
+                                catch (Exception e)
+                                {
+                                    Logger.WriteLog(e);
+                                }
+
+                                var binder = new PropertyBinder(newElem, _TataruViewModel.ChatWindows[_TataruViewModel.ChatWindows.Count - 1]);
+                                CreateBinderCouples(binder);
+                                _PropertyBinders.Add(binder);
+                            }
+                        });
+                    }
+                    break;
+                case ListChangedType.ItemDeleted:
+                    {
+                        await Task.Run(() =>
+                        {
+                            SpinWait.SpinUntil(() => !deletingObject);
+                            lock (lockObj)
+                            {
+                                deletingObject = true;
+                            }
+                        });
+
+                        await UiWindow.Window.UIThreadAsync(() =>
+                        {
+                            try
+                            {
+                                ChatWindowViewModelSettings deletedElem = ea.ChangedElemnt;
+
+                                var elementToDelete = _TataruViewModel.ChatWindows.FirstOrDefault(x => x.WinId == deletedElem.WinId);
+
+                                if (elementToDelete != null)
+                                {
+
+                                    _TataruViewModel.DeleteChatWindow(_TataruViewModel.ChatWindows.IndexOf(elementToDelete));
+
+                                    RemoveChatWindow(_ChatWindows, elementToDelete.WinId);
+
+
+                                    var binder = _PropertyBinders.FirstOrDefault(x => x.Object1 == elementToDelete && x.Object2 == deletedElem);
+                                    if (binder == null)
+                                        binder = _PropertyBinders.FirstOrDefault(x => x.Object2 == elementToDelete && x.Object1 == deletedElem);
+
+                                    if (binder != null)
+                                    {
+                                        binder.Stop();
+
+                                        _PropertyBinders.Remove(binder);
+                                    }
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.WriteLog(e);
+                            }
+                        });
+
+                        deletingObject = false;
+                    }
+                    break;
+            }
+        }
+
+        private async Task AsyncOnViewModelWindowsListChanged(AsyncListChangedEventHandler<ChatWindowViewModel> ea)
+        {
+            switch (ea.ChangedEventArgs.ListChangedType)
+            {
+                case ListChangedType.ItemAdded:
+                    {
+                        await UiWindow.Window.UIThreadAsync(() =>
+                        {
+                            ChatWindowViewModel newElem = ea.ChangedElemnt;
+
+                            var reslut = _TataruUIModel.ChatWindows.FirstOrDefault(x => x.WinId == newElem.WinId);
+                            if (reslut == null)
+                            {
+                                var sett = newElem.GetSettings();
+                                _TataruUIModel.ChatWindows.Add(sett);
+
+                                var binder = new PropertyBinder(_TataruUIModel.ChatWindows[_TataruUIModel.ChatWindows.Count - 1], newElem);
+                                CreateBinderCouples(binder);
+                                _PropertyBinders.Add(binder);
+                            }
+                        });
+
+                    }
+                    break;
+                case ListChangedType.ItemDeleted:
+                    {
+                        await Task.Run(() =>
+                        {
+                            SpinWait.SpinUntil(() => !deletingObject);
+                            lock (lockObj)
+                            {
+                                deletingObject = true;
+                            }
+                        });
+
+                        await UiWindow.Window.UIThreadAsync(() =>
+                        {
+                            try
+                            {
+                                ChatWindowViewModel deletedElem = ea.ChangedElemnt;
+
+                                ChatWindowViewModelSettings reslut = _TataruUIModel.ChatWindows.FirstOrDefault(x => x.WinId == deletedElem.WinId);
+
+                                if (reslut != null)
+                                {
+                                    _TataruUIModel.ChatWindows.Remove(reslut);
+
+                                    RemoveChatWindow(_ChatWindows, reslut.WinId);
+
+                                    try
+                                    {
+                                        PropertyBinder binder = _PropertyBinders.FirstOrDefault(x => x.Object1 == reslut && x.Object2 == deletedElem);
+
+                                        if (binder == null)
+                                            binder = _PropertyBinders.FirstOrDefault(x => x.Object2 == reslut && x.Object1 == deletedElem);
+
+                                        if (binder != null)
+                                        {
+                                            binder.Stop();
+                                            _PropertyBinders.Remove(binder);
+                                        }
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        Logger.WriteLog(e);
+                                    }
+                                }
+                            }
+                            catch (Exception e)
+                            {
+                                Logger.WriteLog(e);
+                            }
+                        });
+
+                        deletingObject = false;
+                    }
+
+                    break;
+            }
+        }
+
+        private async Task OnViewModelChatWindowsListChanged(AsyncListChangedEventHandler<ChatWindowViewModel> ea)
+        {
+            await Task.Run(() =>
+            {
+                try
+                {
+                    switch (ea.ChangedEventArgs.ListChangedType)
+                    {
+                        case ListChangedType.ItemAdded:
+                            {
+                                UiWindow.Window.UIThread(() =>
+                                {
+                                    ChatWindowViewModel newElem = ea.ChangedElemnt;
+
+                                    _ChatWindows.Add(new ChatWindow(this, newElem));
+                                    _ChatWindows[_ChatWindows.Count - 1].Show();
+                                });
+                            }
+                            break;
+                        case ListChangedType.ItemDeleted:
+                            {
+
+                            }
+                            break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Logger.WriteLog(e);
+                }
+            });
+        }
+
+        private void CreateBinderCouples(PropertyBinder binder)
+        {
+            binder.AddPropertyCouple(new PropertyCouple<string, string>("Name", "Name"));
+            binder.AddPropertyCouple(new PropertyCouple<double, double>("ChatFontSize", "ChatFontSize"));
+            binder.AddPropertyCouple(new PropertyCouple<double, double>("LineBreakHeight", "LineBreakHeight"));
+            binder.AddPropertyCouple(new PropertyCouple<int, int>("SpacingCount", "SpacingCount"));
+
+            binder.AddPropertyCouple(new PropertyCouple<bool, bool>("IsAlwaysOnTop", "IsAlwaysOnTop"));
+            binder.AddPropertyCouple(new PropertyCouple<bool, bool>("IsClickThrough", "IsClickThrough"));
+            binder.AddPropertyCouple(new PropertyCouple<bool, bool>("IsAutoHide", "IsAutoHide"));
+
+            binder.AddPropertyCouple(new PropertyCouple<TimeSpan, TimeSpan>("AutoHideTimeout", "AutoHideTimeout"));
+
+            //binder.AddPropertyCouple(new PropertyCouple<bool, bool>("IsHiddenByUser", "IsHiddenByUser"));
+
+            binder.AddPropertyCouple(new PropertyCouple<System.Windows.Media.Color, System.Windows.Media.Color>("BackGroundColor", "BackGroundColor"));
+
+            binder.AddPropertyCouple(new PropertyCouple<System.Drawing.RectangleD, System.Drawing.RectangleD>("ChatWindowRectangle", "ChatWindowRectangle"));
+
+            binder.AddPropertyCouple(new PropertyCouple<TranslationEngineName, System.Windows.Data.CollectionView>("TranslationEngineName", "TranslationEngines",
+                (ref TranslationEngineName x, ref System.Windows.Data.CollectionView y) =>
+                {
+                    TranslationEngine result = null;
+                    foreach (TranslationEngine elem in y.SourceCollection)
+                        if (elem.EngineName == x)
+                        {
+                            result = elem;
+                            break;
+                        }
+
+                    if (result != null)
+                        if (!y.CurrentItem.Equals(result))
+                            y.MoveCurrentTo(result);
+
+                },
+                (ref System.Windows.Data.CollectionView y, ref TranslationEngineName x) =>
+                {
+                    x = ((TranslationEngine)y.CurrentItem).EngineName;
+                }));
+
+
+            binder.AddPropertyCouple(new PropertyCouple<TranslatorLanguague, System.Windows.Data.CollectionView>("FromLanguague", "TranslateFromLanguagues",
+                (ref TranslatorLanguague x, ref System.Windows.Data.CollectionView y) =>
+                {
+                    TranslatorLanguague result = null;
+
+                    foreach (TranslatorLanguague elem in y.SourceCollection)
+                        if (elem.SystemName == x.SystemName)
+                        {
+                            result = elem;
+                            break;
+                        }
+
+                    if (result != null)
+                        if (!y.CurrentItem.Equals(result))
+                            y.MoveCurrentTo(result);
+
+
+                },
+                (ref System.Windows.Data.CollectionView y, ref TranslatorLanguague x) =>
+                {
+                    var lang = new TranslatorLanguague((TranslatorLanguague)y.CurrentItem);
+                    x = lang;
+                }));
+
+            binder.AddPropertyCouple(new PropertyCouple<TranslatorLanguague, System.Windows.Data.CollectionView>("ToLanguague", "TranslateToLanguagues",
+                (ref TranslatorLanguague x, ref System.Windows.Data.CollectionView y) =>
+                {
+                    TranslatorLanguague result = null;
+
+                    foreach (TranslatorLanguague elem in y.SourceCollection)
+                        if (elem.SystemName == x.SystemName)
+                        {
+                            result = elem;
+                            break;
+                        }
+
+                    if (result != null)
+                        if (!y.CurrentItem.Equals(result))
+                            y.MoveCurrentTo(result);
+
+
+                },
+                (ref System.Windows.Data.CollectionView y, ref TranslatorLanguague x) =>
+                {
+                    var lang = new TranslatorLanguague((TranslatorLanguague)y.CurrentItem);
+                    x = lang;
+                }));
+
+            binder.AddPropertyCouple(new PropertyCouple<WinUtils.HotKeyCombination, WinUtils.HotKeyCombination>("ShowHideChatKeys", "ShowHideChatKeys"));
+            binder.AddPropertyCouple(new PropertyCouple<WinUtils.HotKeyCombination, WinUtils.HotKeyCombination>("ClickThoughtChatKeys", "ClickThoughtChatKeys"));
+            binder.AddPropertyCouple(new PropertyCouple<WinUtils.HotKeyCombination, WinUtils.HotKeyCombination>("ClearChatKeys", "ClearChatKeys"));
+
+            binder.AddPropertyCouple(new PropertyCouple<List<ChatCodeViewModel>, BindingList<ChatCodeViewModel>>("ChatCodes", "ChatCodes",
+                (ref List<ChatCodeViewModel> x, ref BindingList<ChatCodeViewModel> y) =>
+                {
+                    foreach (var code in x)
+                    {
+                        var fCode = y.FirstOrDefault(p => p.Equals(code));
+                        if (fCode != null)
+                        {
+                            fCode.Color = code.Color;
+                            fCode.IsChecked = code.IsChecked;
+                        }
+                    }
+
+                },
+                (ref BindingList<ChatCodeViewModel> y, ref List<ChatCodeViewModel> x) =>
+                    {
+                        foreach (var code in y)
+                        {
+                            var fCode = x.FirstOrDefault(p => p.Equals(code));
+                            if (fCode != null)
+                            {
+                                fCode.Color = code.Color;
+                                fCode.IsChecked = code.IsChecked;
+                            }
+                        }
+                    }));
+        }
+
+        private void RemoveChatWindow(List<ChatWindow> lsit, long winId)
+        {
+            var win = _ChatWindows.FirstOrDefault(x => x.WinId == winId);
+
+            if (win != null)
+            {
+                UiWindow.Window.UIThread(() =>
+                {
+                    _ChatWindows.Remove(win);
+                    win.Close();
+                });
+            }
+        }
+
         public async Task SaveSettings()
         {
             await Task.Run(() =>
@@ -186,170 +600,82 @@ namespace FFXIITataruHelper
             });
         }
 
-        private void LoadAllOldSettings(UserSettings userSettings)
+        void LoadOldSettings(UserSettings userSettings)
         {
+            if (!File.Exists(GlobalSettings.OldSettings))
+                return;
+
             try
             {
-                if (File.Exists(OldSettingFileName))
+
+                var oldSettings = Helper.LoadJsonData<UserSettingsOld>(GlobalSettings.OldSettings);
+
+                try
                 {
-                    var oldSett = LoadOldSettingsFile(userSettings);
-                    if (oldSett != null)
+                    File.Delete(GlobalSettings.OldSettings);
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteLog(ex);
+                }
+
+                if (userSettings.ChatWindows.Count == 0)
+                {
+                    ChatWindowViewModelSettings windowSettings = new ChatWindowViewModelSettings("1", 0);
+
+                    windowSettings.ChatFontSize = oldSettings.FontSize;
+                    windowSettings.LineBreakHeight = oldSettings.LineBreakHeight;
+                    windowSettings.SpacingCount = oldSettings.InsertSpaceCount;
+
+                    windowSettings.IsAlwaysOnTop = oldSettings.IsAlwaysOnTop;
+                    windowSettings.IsClickThrough = oldSettings.IsClickThrough;
+                    windowSettings.IsAutoHide = oldSettings.IsAutoHide;
+
+                    windowSettings.AutoHideTimeout = oldSettings.AutoHideTimeout;
+
+                    windowSettings.BackGroundColor = oldSettings.BackgroundColor;
+                    windowSettings.IsAutoHide = oldSettings.IsAutoHide;
+
+                    windowSettings.TranslationEngineName = (TranslationEngineName)oldSettings.CurrentTranslationEngine;
+
+                    var eng = WebTranslator.TranslationEngines.FirstOrDefault(x => x.EngineName == windowSettings.TranslationEngineName);
+                    if (eng != null)
                     {
-                        ApplyOldSettings(userSettings, oldSett);
+                        var lang1 = eng.SupportedLanguages.FirstOrDefault(x => x.ShownName == oldSettings.CurrentFFXIVLanguage);
+                        var lang2 = eng.SupportedLanguages.FirstOrDefault(x => x.ShownName == oldSettings.CurrentTranslateToLanguage);
+                        if (lang1 != null && lang2 != null)
+                        {
+                            windowSettings.FromLanguague = new TranslatorLanguague(lang1);
+                            windowSettings.ToLanguague = new TranslatorLanguague(lang2);
+                        }
                     }
-                    File.Delete(OldSettingFileName);
-                }
-            }
-            catch (Exception e)
-            {
-                userSettings = Helper.LoadJsonData<UserSettings>(GlobalSettings.Settings);
-                Logger.WriteLog(e);
-            }
 
-            try
-            {
-                if (File.Exists(OldHotKeysFileName))
-                {
-                    var oldHkStr = String.Empty;
+                    windowSettings.ChatWindowRectangle = oldSettings.ChatWindowLocation;
 
-                    using (StreamReader sr = new StreamReader(OldHotKeysFileName))
+                    foreach (var ck in windowSettings.ChatCodes)
                     {
-                        oldHkStr = sr.ReadToEnd();
+                        ChatMsgType msgType = null;
+                        if (oldSettings.ChatCodes.TryGetValue(ck.Code, out msgType))
+                        {
+                            bool isCheked = (msgType.MsgType == MsgType.Translate) ? true : false;
+
+                            ck.IsChecked = isCheked;
+                            ck.Color = msgType.Color;
+                        }
                     }
 
-                    var oldHk = JsonConvert.DeserializeObject<List<WinUtils.HotKeyCombination>>(oldHkStr);
+                    windowSettings.ShowHideChatKeys = new WinUtils.HotKeyCombination(oldSettings.ShowHideChatKeys.Name + "0", oldSettings.ShowHideChatKeys);
+                    windowSettings.ClickThoughtChatKeys = new WinUtils.HotKeyCombination(oldSettings.ClickThoughtChatKeys.Name + "0", oldSettings.ClickThoughtChatKeys);
+                    windowSettings.ClearChatKeys = new WinUtils.HotKeyCombination(oldSettings.ClearChatKeys.Name + "0", oldSettings.ClearChatKeys);
 
-                    userSettings.ShowHideChatKeys = new WinUtils.HotKeyCombination(oldHk[0]);
-                    userSettings.ClickThoughtChatKeys = new WinUtils.HotKeyCombination(oldHk[1]);
-
-                    File.Delete(OldHotKeysFileName);
+                    userSettings.ChatWindows.Add(new ChatWindowViewModelSettings(windowSettings));
                 }
             }
-            catch (Exception e)
+            catch (Exception exx)
             {
-                Logger.WriteLog(e);
+                Logger.WriteLog(exx);
             }
-        }
-
-        private UIModel.OldSettings LoadOldSettingsFile(UserSettings userSettings)
-        {
-            UIModel.OldSettings oldSettings = null;
-
-            try
-            {
-                oldSettings = new UIModel.OldSettings();
-                string oldSet = string.Empty;
-                using (StreamReader sr = new StreamReader(OldSettingFileName))
-                {
-                    oldSet = sr.ReadToEnd();
-                }
-                oldSet = oldSet.Replace("\",", "\":");
-                oldSet = oldSet.Replace("[", "{");
-                oldSet = oldSet.Replace("]", "}");
-                var ind1 = oldSet.IndexOf('{');
-                var ind2 = oldSet.LastIndexOf('}');
-                var oldSetsb = new StringBuilder(oldSet);
-                oldSetsb[ind1] = '[';
-                oldSetsb[ind2] = ']';
-
-                oldSet = oldSetsb.ToString();
-
-
-                oldSet = ReomveBadOccr(oldSet, "FFXIVLanguagles");
-
-                oldSet = ReomveBadOccr(oldSet, "RecentBackgroundColor");
-                oldSet = ReomveBadOccr(oldSet, "RecentFont1Colors");
-                oldSet = ReomveBadOccr(oldSet, "RecentFont2Colors");
-
-                var res = JsonConvert.DeserializeObject<List<Object>>(oldSet);
-
-                oldSettings.BackgroundColor = (string)((Newtonsoft.Json.Linq.JObject)res[0]).GetValue("BackgroundColor");
-                oldSettings.Font1Color = (string)((Newtonsoft.Json.Linq.JObject)res[1]).GetValue("Font1Color");
-                oldSettings.Font2Color = (string)((Newtonsoft.Json.Linq.JObject)res[2]).GetValue("Font2Color");
-
-                oldSettings.IsClickThrough = (bool)((Newtonsoft.Json.Linq.JObject)res[3]).GetValue("IsClickThrough");
-                oldSettings.IsAlwaysOnTop = (bool)((Newtonsoft.Json.Linq.JObject)res[4]).GetValue("IsAlwaysOnTop");
-                oldSettings.IsHideToTray = (bool)((Newtonsoft.Json.Linq.JObject)res[5]).GetValue("IsHideToTray");
-
-                oldSettings.FontSize = (int)((Newtonsoft.Json.Linq.JObject)res[6]).GetValue("FontSize");
-                oldSettings.LineBreakHeight = (int)((Newtonsoft.Json.Linq.JObject)res[8]).GetValue("LineBreakHeight");
-                oldSettings.InsertSpaceCount = (int)((Newtonsoft.Json.Linq.JObject)res[9]).GetValue("InsertSpaceCount");
-
-                oldSettings.CurrentTranslationEngine = (int)((Newtonsoft.Json.Linq.JObject)res[10]).GetValue("CurrentTranslationEngine");
-
-                oldSettings.CurrentFFXIVLanguage = (int)((Newtonsoft.Json.Linq.JObject)res[11]).GetValue("CurrentFFXIVLanguage");
-                oldSettings.CurrentTranslateToLanguage = (int)((Newtonsoft.Json.Linq.JObject)res[12]).GetValue("CurrentTranslateToLanguage");
-
-                oldSettings.CurentLanguague = (int)((Newtonsoft.Json.Linq.JObject)res[17]).GetValue("CurentLanguague");
-
-                oldSettings.MainWinHeight = (double)((Newtonsoft.Json.Linq.JObject)res[26]).GetValue("MainWinHeight");
-                oldSettings.MainWinWidth = (double)((Newtonsoft.Json.Linq.JObject)res[27]).GetValue("MainWinWidth");
-
-                oldSettings.ChatWinTop = (double)((Newtonsoft.Json.Linq.JObject)res[28]).GetValue("ChatWinTop");
-                oldSettings.ChatWinLeft = (double)((Newtonsoft.Json.Linq.JObject)res[29]).GetValue("ChatWinLeft");
-                oldSettings.ChatWinHeight = (double)((Newtonsoft.Json.Linq.JObject)res[30]).GetValue("ChatWinHeight");
-                oldSettings.ChatWinWidth = (double)((Newtonsoft.Json.Linq.JObject)res[31]).GetValue("ChatWinWidth");
-
-                oldSettings.IsFirstTime = (int)((Newtonsoft.Json.Linq.JObject)res[32]).GetValue("IsFirstTime");
-
-
-                //oldSettings = JsonConvert.DeserializeObject<UIModel.OldSettings>(oldSet);
-            }
-            catch (Exception e)
-            {
-                oldSettings = null;
-                Logger.WriteLog(e);
-            }
-
-            return oldSettings;
-        }
-
-        private string ReomveBadOccr(string text, string marker)
-        {
-            int ind1 = 0, ind2 = 0;
-
-            ind1 = text.IndexOf(marker);
-            ind1 = text.LastIndexOf('{', ind1);
-
-            ind2 = text.IndexOf('}', ind1) + 1;
-            ind2 = text.IndexOf('}', ind2);
-            ind2 = text.IndexOf(',', ind2) + 1;
-            text = text.Substring(0, ind1) + text.Substring(ind2, text.Length - ind2);
-
-            return text;
-        }
-
-        private void ApplyOldSettings(UserSettings userSettings, UIModel.OldSettings oldSettings)
-        {
-            var trLan = _WebTranslator.GetAllSupportedLanguages();
-
-            userSettings.BackgroundColor = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(oldSettings.BackgroundColor);
-            userSettings.Font1Color = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(oldSettings.Font1Color);
-            userSettings.Font2Color = (System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString(oldSettings.Font2Color);
-
-            userSettings.IsClickThrough = (bool)oldSettings.IsClickThrough;
-            userSettings.IsAlwaysOnTop = (bool)oldSettings.IsAlwaysOnTop;
-            userSettings.IsHideToTray = (bool)oldSettings.IsHideToTray;
-
-            userSettings.FontSize = (int)oldSettings.FontSize;
-            userSettings.LineBreakHeight = (int)oldSettings.LineBreakHeight;
-            userSettings.InsertSpaceCount = (int)oldSettings.InsertSpaceCount;
-
-            userSettings.CurrentTranslationEngine = (int)oldSettings.CurrentTranslationEngine;
-
-            //userSettings.CurrentFFXIVLanguage = oldSettings.CurrentFFXIVLanguage;
-
-            userSettings.CurrentTranslateToLanguage = trLan[userSettings.CurrentTranslationEngine][(int)oldSettings.CurrentTranslateToLanguage].ShownName;
-
-            userSettings.CurentUILanguague = (int)oldSettings.CurentLanguague;
-
-            userSettings.SettingsWindowSize = new System.Drawing.PointD((double)oldSettings.MainWinWidth, (double)oldSettings.MainWinHeight);
-
-            userSettings.ChatWindowLocation = new System.Drawing.RectangleD((double)oldSettings.ChatWinLeft, (double)oldSettings.ChatWinTop,
-                (double)oldSettings.ChatWinWidth, (double)oldSettings.ChatWinHeight);
-
-            userSettings.IsFirstTime = (int)oldSettings.IsFirstTime;
-
         }
     }
 }
+

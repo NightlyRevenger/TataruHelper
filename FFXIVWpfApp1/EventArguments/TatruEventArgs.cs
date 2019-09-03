@@ -3,13 +3,13 @@
 
 using System;
 
-namespace FFXIITataruHelper.EventArguments
+namespace FFXIVTataruHelper.EventArguments
 {
     public class TatruEventArgs : System.EventArgs
     {
         public Object Sender { get; internal set; }
 
-        protected TatruEventArgs(Object sender)
+        public TatruEventArgs(Object sender)
         {
             Sender = sender;
         }

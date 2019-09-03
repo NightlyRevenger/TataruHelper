@@ -1,107 +1,107 @@
 [
   {
     "ShownName": "Arabic",
-    "NativeName": "Arabic",
+    "SystemName": "Arabic",
     "LanguageCode": "ar"
   },
   {
     "ShownName": "Chinese (Simplified)",
-    "NativeName": "Chinese (Simplified)",
+    "SystemName": "Chinese Simplified",
     "LanguageCode": "zh"
   },
   {
     "ShownName": "Chinese (Traditional)",
-    "NativeName": "Chinese (Traditional)",
+    "SystemName": "Chinese",
     "LanguageCode": "zh-TW"
   },
   {
     "ShownName": "Czech",
-    "NativeName": "Czech",
+    "SystemName": "Czech",
     "LanguageCode": "cs"
   },
   {
     "ShownName": "Danish",
-    "NativeName": "Danish",
+    "SystemName": "Danish",
     "LanguageCode": "da"
   },
   {
     "ShownName": "Dutch",
-    "NativeName": "Dutch",
+    "SystemName": "Dutch",
     "LanguageCode": "nl"
   },
   {
     "ShownName": "English",
-    "NativeName": "English",
+    "SystemName": "English",
     "LanguageCode": "en"
   },
   {
     "ShownName": "Finnish",
-    "NativeName": "Finnish",
+    "SystemName": "Finnish",
     "LanguageCode": "fi"
   },
   {
     "ShownName": "French",
-    "NativeName": "French",
+    "SystemName": "French",
     "LanguageCode": "fr"
   },
   {
     "ShownName": "German",
-    "NativeName": "German",
+    "SystemName": "German",
     "LanguageCode": "de"
   },
   {
     "ShownName": "Hebrew",
-    "NativeName": "Hebrew",
+    "SystemName": "Hebrew",
     "LanguageCode": "he"
   },
   {
     "ShownName": "Indonesian",
-    "NativeName": "Indonesian",
+    "SystemName": "Indonesian",
     "LanguageCode": "id"
   },
   {
     "ShownName": "Italian",
-    "NativeName": "Italian",
+    "SystemName": "Italian",
     "LanguageCode": "it"
   },
   {
     "ShownName": "Japanese",
-    "NativeName": "Japanese",
+    "SystemName": "Japanese",
     "LanguageCode": "ja"
   },
   {
     "ShownName": "Korean",
-    "NativeName": "Korean",
+    "SystemName": "Korean",
     "LanguageCode": "ko"
   },
   {
     "ShownName": "Polish",
-    "NativeName": "Polish",
+    "SystemName": "Polish",
     "LanguageCode": "pl"
   },
   {
     "ShownName": "Portuguese",
-    "NativeName": "Portuguese",
+    "SystemName": "Portuguese",
     "LanguageCode": "pt"
   },
   {
     "ShownName": "Russian",
-    "NativeName": "Russian",
+    "SystemName": "Russian",
     "LanguageCode": "ru"
   },
   {
     "ShownName": "Spanish",
-    "NativeName": "Spanish",
+    "SystemName": "Spanish",
     "LanguageCode": "es"
   },
   {
     "ShownName": "Swedish",
-    "NativeName": "Swedish",
+    "SystemName": "Swedish",
     "LanguageCode": "sv"
   },
   {
     "ShownName": "Turkish",
-    "NativeName": "Turkish",
+    "SystemName": "Turkish",
     "LanguageCode": "tr"
   }
 ]

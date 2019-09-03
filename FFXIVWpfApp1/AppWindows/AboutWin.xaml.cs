@@ -6,7 +6,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Navigation;
 
-namespace FFXIITataruHelper
+namespace FFXIVTataruHelper
 {
     /// <summary>
     /// Interaction logic for AboutWin.xaml

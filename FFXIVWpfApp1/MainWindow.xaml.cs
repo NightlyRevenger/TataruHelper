@@ -1,51 +1,45 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
+using BondTech.HotKeyManagement.WPF._4;
+using FFXIVTataruHelper.EventArguments;
+using FFXIVTataruHelper.Translation;
+using FFXIVTataruHelper.ViewModel;
+using FFXIVTataruHelper.WinUtils;
 using System;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 using Xceed.Wpf.Toolkit;
-using System.Windows.Interop;
-using BondTech.HotKeyManagement.WPF._4;
-using FFXIITataruHelper.WinUtils;
-using FFXIITataruHelper.Translation;
-using FFXIITataruHelper.EventArguments;
-using System.Collections.ObjectModel;
-using FFXIITataruHelper.ViewModel;
 
-namespace FFXIITataruHelper
+namespace FFXIVTataruHelper
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml//
     /// </summary>
     public partial class MainWindow : Window //-V3072
     {
-        HotKeyManager _HotKeyManager;
+        TataruModel TataruModel
+        {
+            get { return _TataruModel; }
+            set { _TataruModel = value; }
+        }
 
-        ChatWindow _ChatWindow;
         LogWriter _LogWriter;
 
-        ChatStreamWindow _ChatStreamWindow;
+        TataruModel _TataruModel;
+        TataruUIModel _TataruUIModel;
 
-        string _GitPath = @"https://github.com/NightlyRevenger/TataruHelper";
-
-        string _EmptyHKString = "Empty";
-
-        GlobalHotKey _ShowHideChat;
-        GlobalHotKey _ClickThoughtChat;
-        GlobalHotKey _ClearChat;
+        ///////////////////////////////////////////////////
 
         LanguagueWrapper _LanguagueWrapper;
 
         Updater _Updater;
-
-        TataruModel _TataruModel;
-
-        TataruUIModel _TataruUIModel;
 
         bool _IsShutDown;
 
@@ -61,32 +55,24 @@ namespace FFXIITataruHelper
             {
                 ShutDown();
                 return;
-            }//*/
+            }
 
-            InitializeComponent();
             try
             {
                 _LogWriter = new LogWriter();
                 _LogWriter.StartWriting();
-
-                _TataruModel = new TataruModel();
-                _TataruUIModel = _TataruModel.TataruUIModel;
-
-                InitTataruModel();
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Logger.WriteLog(e);
+                Logger.WriteLog(ex);
             }
 
-            _ChatWindow = new ChatWindow(this, _TataruModel);
-            _ChatWindow.Show();
+            InitializeComponent();
+
+            UiWindow.Window = this;
 
             try
             {
-
-                _ChatWindow.IsVisibleChanged += ChatVisibleChanged;
-
                 _LanguagueWrapper = new LanguagueWrapper(this);
 
                 _Updater = new Updater();
@@ -99,28 +85,6 @@ namespace FFXIITataruHelper
         }
 
         #region **UserActions.
-
-        private void Button1_Click(object sender, RoutedEventArgs e)
-        {
-            _ChatWindow.Top = this.Top;
-            _ChatWindow.Left = this.Left;
-        }
-
-        private void Button2_Click(object sender, RoutedEventArgs e)
-        {
-            Button b = (Button)sender;
-
-            if (_ChatWindow.Visibility == Visibility.Visible)
-            {
-                b.Content = (string)this.Resources["ShowChatBox"];
-                _ChatWindow.UserHide();
-            }
-            else
-            {
-                b.Content = (string)this.Resources["HideChatBox"];
-                _ChatWindow.UserShow();
-            }
-        }
 
         private void About_Click(object sender, RoutedEventArgs e)
         {
@@ -138,89 +102,10 @@ namespace FFXIITataruHelper
             patreonWin.Resources["PatronsThankYou"] = this.Resources["PatronsThankYou"];
         }
 
-        private void ChatFontSize_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            _TataruUIModel.ChatFontSize = (int)e.NewValue;
-        }
-
-        private void IntervalWidth_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            _TataruUIModel.ParagraphSpaceCount = (int)e.NewValue;
-        }
-
-        private void LineBreakeHeight_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            _TataruUIModel.LineBreakeHeight = (int)e.NewValue;
-        }
-
-        private void BackgroundColor_SelectedColorChanged(object sender, RoutedPropertyChangedEventArgs<Color?> e)
-        {
-            _TataruUIModel.BackgroundColor = (Color)e.NewValue.Value;
-        }
-
-        private void BackgroundColor_Closed(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                var colors = ((ColorPicker)sender).RecentColors;
-
-                var tatruColors = _TataruUIModel.RecentBackgroundColors;
-                foreach (var color in colors)
-                {
-                    var cl = (Color)color.Color;
-
-                    if (!tatruColors.Contains(cl))
-                    {
-                        tatruColors.Add(cl);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
-            }
-        }
-
-        private void TransaltorComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox cb = (ComboBox)sender;
-            _TataruUIModel.TranslationEngine = (WebTranslator.TranslationEngine)cb.SelectedIndex;
-        }
-
-        private void FFXIVLanguague_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox cb = (ComboBox)sender;
-            _TataruUIModel.FFLanguage = Convert.ToString(cb.SelectedValue);
-        }
-
-        private void TranslateTo_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            ComboBox cb = (ComboBox)sender;
-            _TataruUIModel.TranslateToLanguage = Convert.ToString(cb.SelectedValue);
-        }
-
-        private void ClickThroughBox_Changed(object sender, RoutedEventArgs e)
-        {
-            var isClickThrough = (bool)((CheckBox)sender).IsChecked;
-            _TataruUIModel.IsChatClickThrough = isClickThrough;
-        }
-
-        private void AlwayOnTopBox_Changed(object sender, RoutedEventArgs e)
-        {
-            var isAlwaysOnTop = (bool)((CheckBox)sender).IsChecked;
-            _TataruUIModel.IsChatAlwaysOnTop = isAlwaysOnTop;
-        }
-
         private void HideToTray_Changed(object sender, RoutedEventArgs e)
         {
             var isHideToTray = (bool)((CheckBox)sender).IsChecked;
             _TataruUIModel.IsHideSettingsToTray = isHideToTray;
-        }
-
-        private void AutoHide_Changed(object sender, RoutedEventArgs e)
-        {
-            var isAutoHide = (bool)((CheckBox)sender).IsChecked;
-            _TataruUIModel.IsAutoHide = isAutoHide;
         }
 
         private void DirectMemoryReading_Changed(object sender, RoutedEventArgs e)
@@ -230,123 +115,31 @@ namespace FFXIITataruHelper
 
         }
 
-        private void StreamerWindow_Changed(object sender, RoutedEventArgs e)
-        {
-            var checled = (bool)((CheckBox)sender).IsChecked;
-
-            if (checled)
-            {
-                if (_ChatStreamWindow == null)
-                {
-                    _ChatStreamWindow = new ChatStreamWindow(this, _TataruModel);
-                    _ChatStreamWindow.Show();
-                }
-            }
-            else
-            {
-                if (_ChatStreamWindow != null)
-                {
-                    _ChatStreamWindow.Close();
-                    _ChatStreamWindow = null;
-                }
-            }
-            //*/
-        }
-
-        private void AutoHideTimeOut_ValueChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
-        {
-            _TataruUIModel.AutoHideTimeout = new TimeSpan(0, 0, (int)e.NewValue);
-        }
-
         #endregion
 
         #region **WindowEvents
 
-        void LoadComboBoxes(ReadOnlyCollection<TranslatorLanguague> supportedLanguages)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             try
             {
-                bool LanguagueSelected = false;
-                string selectedLanguageTo = string.Empty;
-                string selectedLanguageFrom = string.Empty;
-
-                if (TranslateToCombo.SelectedIndex != -1 && TransalteFromCombo.SelectedIndex != -1)
+                try
                 {
-                    LanguagueSelected = true;
-                    selectedLanguageTo = TranslateToCombo.Text;
-                    selectedLanguageFrom = TransalteFromCombo.Text;
+                    _TataruModel = new TataruModel();
+                    await _TataruModel.InitializeComponent();
+
+                    _TataruUIModel = _TataruModel.TataruUIModel;
+
+                    InitTataruModel();
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteLog(ex);
                 }
 
-                TranslateToCombo.Items.Clear();
-                TransalteFromCombo.Items.Clear();
-
-                var lang = supportedLanguages;
-
-                for (int i = 0; i < lang.Count; i++)
-                {
-                    TranslateToCombo.Items.Add(lang[i].ShownName);
-                }
-
-                for (int i = 0; i < GlobalSettings.FFXIVLanguages.Count; i++)
-                {
-                    var lng = lang.Where(x => x.ShownName.ToLower().Contains(GlobalSettings.FFXIVLanguages[i].ToLower())).ToList();
-
-                    if (lng.Count > 0)
-                    {
-                        TransalteFromCombo.Items.Add(GlobalSettings.FFXIVLanguages[i]);
-                    }
-                }
-
-                if (LanguagueSelected)
-                {
-                    for (int i = 0; i < TranslateToCombo.Items.Count; i++)
-                    {
-                        if (((string)TranslateToCombo.Items[i]).ToLower() == selectedLanguageTo.ToLower())
-                        {
-                            TranslateToCombo.SelectedIndex = i;
-                            break;
-                        }
-                    }
-
-
-                    for (int i = 0; i < TransalteFromCombo.Items.Count; i++)
-                    {
-                        if (((string)TransalteFromCombo.Items[i]).ToLower() == selectedLanguageFrom.ToLower())
-                        {
-                            TransalteFromCombo.SelectedIndex = i;
-                            break;
-                        }
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.WriteLog(e);
-            }
-        }
-
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Init();
-
-                _TataruModel.LoadSettings().Forget();
+                _TataruModel.AsyncLoadSettings().Forget();
 
                 _TataruModel.FFMemoryReader.AddExclusionWindowHandler((new WindowInteropHelper(this).Handle));
-
-                _HotKeyManager = new HotKeyManager(this);
-
-                _HotKeyManager.GlobalHotKeyPressed += GlobalHotKeyHandler;
-
-                ShowHideChatWinHotKeyTb.KeyDown += ShowHideKeyDownBindHandler;
-                ShowHideChatWinHotKeyTb.KeyUp += ShowHideKeyUpBindHandler;
-
-                ClickThroughHotKeyTb.KeyDown += ClickThoughKeyDownBindHandler;
-                ClickThroughHotKeyTb.KeyUp += ClickThoughKeyUpBindHandler;
-
-                ClearChatHotKeyTb.KeyDown += ClearChatKeyDownBindHandler;
-                ClearChatHotKeyTb.KeyUp += ClearChathKeyUpBindHandler;
 
                 try
                 {
@@ -356,7 +149,10 @@ namespace FFXIITataruHelper
 
                 _Updater.StartUpdate();
 
-                this.DataContext = new TataruViewModel(_TataruModel.TataruUIModel);
+
+                this.DataContext = _TataruModel.TataruViewModel;
+
+                _TataruModel.TataruViewModel.ShutdownRequested += OnShutDownRequsted;
 
                 _OptimizeFootprint = new OptimizeFootprint();
                 _OptimizeFootprint.Start();
@@ -374,8 +170,9 @@ namespace FFXIITataruHelper
         {
             System.Drawing.PointD winSize = new System.Drawing.PointD(this.Width, this.Height);
 
-            if (_TataruUIModel.SettingsWindowSize != winSize)
-                _TataruUIModel.SettingsWindowSize = winSize;
+            if (_TataruUIModel != null)
+                if (_TataruUIModel.SettingsWindowSize != winSize)
+                    _TataruUIModel.SettingsWindowSize = winSize;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -398,8 +195,8 @@ namespace FFXIITataruHelper
 
                     Utils.TataruSingleInstance.Stop();
 
-                    if (_ChatWindow != null)
-                        _ChatWindow.Close();
+                    //if (_ChatWindow != null)
+                    //    _ChatWindow.Close();
 
                     if (_TataruModel != null)
                         _TataruModel.Stop();
@@ -424,18 +221,6 @@ namespace FFXIITataruHelper
 
         #region **UiEvents.
 
-        private void ChatVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if (_ChatWindow.Visibility == Visibility.Visible)
-            {
-                Button2.Content = (string)this.Resources["HideChatBox"];
-            }
-            else
-            {
-                Button2.Content = (string)this.Resources["ShowChatBox"];
-            }
-        }
-
         private async Task OnUiLanguageChange(IntegerValueChangeEventArgs ea)
         {
             await this.UIThreadAsync(() =>
@@ -447,124 +232,6 @@ namespace FFXIITataruHelper
              });
         }
 
-        private async Task OnChatFontSizeChange(IntegerValueChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                if (ea.NewValue != ChatFontSize.Value)
-                {
-                    ChatFontSize.Value = ea.NewValue;
-                }
-            });
-        }
-
-        private async Task OnIntervalWidthChange(IntegerValueChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                if (ea.NewValue != IntervalWidth.Value)
-                {
-                    IntervalWidth.Value = ea.NewValue;
-                }
-            });
-        }
-
-        private async Task OnLineBreakHeightChange(IntegerValueChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                if (ea.NewValue != LineBreakeHeight.Value)
-                {
-                    LineBreakeHeight.Value = ea.NewValue;
-                }
-            });
-        }
-
-        private async Task OnBackgroundColorChange(ColorChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                if (ea.NewColor != BackgroundColor.SelectedColor)
-                {
-                    BackgroundColor.SelectedColor = ea.NewColor;
-                }
-            });
-        }
-
-        private async Task OnTranslationEngineChange(TranslationEngineChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                if (ea.NewEngine != TransaltorComboBox.SelectedIndex)
-                {
-                    TransaltorComboBox.SelectedIndex = ea.NewEngine;
-                }
-                LoadComboBoxes(ea.SupportedLanguages);
-            });
-        }
-
-        private async Task OnFFLanguageChange(StringValueChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                if (ea.NewString != Convert.ToString(TransalteFromCombo.SelectedValue))
-                {
-                    var items = TransalteFromCombo.Items;
-
-                    for (int i = 0; i < items.Count; i++)
-                    {
-                        if (Convert.ToString(items[i]) == ea.NewString)
-                        {
-                            TransalteFromCombo.SelectedIndex = i;
-                            break;
-                        }
-                    }
-                }
-            });
-        }
-
-        private async Task OnTranslateToLanguageChange(StringValueChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                if (ea.NewString != Convert.ToString(TranslateToCombo.SelectedValue))
-                {
-                    var items = TranslateToCombo.Items;
-
-                    for (int i = 0; i < items.Count; i++)
-                    {
-                        if (Convert.ToString(items[i]) == ea.NewString)
-                        {
-                            TranslateToCombo.SelectedIndex = i;
-                            break;
-                        }
-                    }
-                }
-            });
-        }
-
-        private async Task OnChatClickThroughChange(BooleanChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                if (ea.NewValue != ClickThroughBox.IsChecked)
-                {
-                    ClickThroughBox.IsChecked = ea.NewValue;
-                }
-            });
-        }
-
-        private async Task OnChatAlwayOnTopChange(BooleanChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                if (ea.NewValue != AlwayOnTopBox.IsChecked)
-                {
-                    AlwayOnTopBox.IsChecked = ea.NewValue;
-                }
-            });
-        }
-
         private async Task OnHideSettingsToTrayChange(BooleanChangeEventArgs ea)
         {
             await this.UIThreadAsync(() =>
@@ -572,17 +239,6 @@ namespace FFXIITataruHelper
                 if (ea.NewValue != HideToTray.IsChecked)
                 {
                     HideToTray.IsChecked = ea.NewValue;
-                }
-            });
-        }
-
-        private async Task OnAutoHideChange(BooleanChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                if (ea.NewValue != AutoHideBox.IsChecked)
-                {
-                    AutoHideBox.IsChecked = ea.NewValue;
                 }
             });
         }
@@ -600,19 +256,6 @@ namespace FFXIITataruHelper
             });
         }
 
-        private async Task OnAutoHideTimeOutChange(TimeSpanChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                int totalSeconds = (int)Math.Round(ea.NewValue.TotalSeconds);
-
-                if (totalSeconds != AutoHideTimeOut.Value)
-                {
-                    AutoHideTimeOut.Value = totalSeconds;
-                }
-            });
-        }
-
         private async Task OnSettingsWindowSizeChange(PointDValueChangeEventArgs ea)
         {
             await this.UIThreadAsync(() =>
@@ -625,9 +268,9 @@ namespace FFXIITataruHelper
                 {
                     UIModel.IsFirstTime = -1;
 
-                    double left = _ChatWindow.Left + _ChatWindow.ActualWidth;
-                    this.Left = left;
-                    this.Top = _ChatWindow.Top;
+                    //double left = _ChatWindow.Left + _ChatWindow.ActualWidth;
+                    //this.Left = left;
+                    //this.Top = _ChatWindow.Top;
                 }
 
                 if (ea.NewValue != winSize)
@@ -663,30 +306,11 @@ namespace FFXIITataruHelper
             });
         }
 
-        private async Task OnColorListChange(ColorListChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                if (ea.ColorsId == 0)
-                {
-                    var rc = BackgroundColor.RecentColors;
-                    rc.Clear();
-
-                    foreach (var color in ea.Colors)
-                    {
-                        rc.Add(new ColorItem(color, color.ToString()));
-                    }
-                }
-            });
-        }
-
         private async Task OnShowFirstInstance(BooleanChangeEventArgs ea)
         {
             await this.UIThreadAsync(() =>
             {
                 ShowSettingsWindow();
-
-                _ChatWindow.UserShow();
             });
         }
 
@@ -700,325 +324,70 @@ namespace FFXIITataruHelper
 
             UIModel.UiLanguageChanged += OnUiLanguageChange;
 
-            UIModel.ChatFontSizeChanged += OnChatFontSizeChange;
-            UIModel.ParagraphSpaceCountChanged += OnIntervalWidthChange;
-            UIModel.LineBreakeHeightChanged += OnLineBreakHeightChange;
 
-            UIModel.BackgroundColorChanged += OnBackgroundColorChange;
-
-            UIModel.TranslationEngineChanged += OnTranslationEngineChange;
-            UIModel.FFLanguageChanged += OnFFLanguageChange;
-            UIModel.TranslateToLanguageChanged += OnTranslateToLanguageChange;
-
-            UIModel.IsChatClickThroughChanged += OnChatClickThroughChange;
-            UIModel.IsChatAlwaysOnTopChanged += OnChatAlwayOnTopChange;
             UIModel.IsHideSettingsToTrayChanged += OnHideSettingsToTrayChange;
-            UIModel.IsAutoHideChanged += OnAutoHideChange;
             UIModel.IsDirecMemoryReadingChanged += OnDirecMemoryReadingChange;
-            UIModel.AutoHideTimeoutChanged += OnAutoHideTimeOutChange;
 
             UIModel.SettingsWindowSizeChanged += OnSettingsWindowSizeChange;
 
-            UIModel.ShowHideChatCombinationChanged += OnShowHideChatCombinationChange;
-            UIModel.ClickThoughtChatCombinationChanged += OnClickThoughtChatCombinationChange;
-            UIModel.ClearChatCombinationChanged += OnClearChatCombinationChange;
-
-            UIModel.ColorListChanged += OnColorListChange;
-
             _TataruModel.FFMemoryReader.FFWindowStateChanged += OnFFWindowStateChange;
-        }
-
-        private void Init()
-        {
-            try
-            {
-                BackgroundColor.ShowAvailableColors = false;
-                BackgroundColor.ShowStandardColors = true;
-                BackgroundColor.ShowRecentColors = true;
-            }
-            catch (Exception e)
-            {
-                Logger.WriteLog(e);
-            }
         }
 
         #endregion
 
         #region **HotKeys.
 
-        private async Task OnShowHideChatCombinationChange(HotKeyCombinationChangeEventArgs ea)
+        private void ShowHideChatWinHotKey_KeyDown(object sender, KeyEventArgs e)
         {
-            await this.UIThreadAsync(() =>
+            var mdl = _TataruModel.TataruViewModel.CurrentChatWindow;
+            if (mdl != null)
             {
-                try
-                {
-                    if (ea.NewHotKeyCombination.IsInitialized)
-                        ShowHideChatWinHotKeyTb.Text = ea.NewHotKeyCombination.CombinationKeysName();
-
-                    RegisterHotkey(ea.NewHotKeyCombination, ref _ShowHideChat);
-                }
-                catch (Exception e)
-                {
-                    Logger.WriteLog(e);
-                }
-            });
-        }
-
-        private async Task OnClickThoughtChatCombinationChange(HotKeyCombinationChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                try
-                {
-                    if (ea.NewHotKeyCombination.IsInitialized)
-                        ClickThroughHotKeyTb.Text = ea.NewHotKeyCombination.CombinationKeysName();
-
-                    RegisterHotkey(ea.NewHotKeyCombination, ref _ClickThoughtChat);
-                }
-                catch (Exception e)
-                {
-                    Logger.WriteLog(e);
-                }
-            });
-        }
-
-        private async Task OnClearChatCombinationChange(HotKeyCombinationChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                try
-                {
-                    if (ea.NewHotKeyCombination.IsInitialized)
-                        ClearChatHotKeyTb.Text = ea.NewHotKeyCombination.CombinationKeysName();
-
-                    RegisterHotkey(ea.NewHotKeyCombination, ref _ClearChat);
-                }
-                catch (Exception e)
-                {
-                    Logger.WriteLog(e);
-                }
-            });
-        }
-
-        private void RegisterHotkey(HotKeyCombination combination, ref GlobalHotKey globalHotKey)
-        {
-            try
-            {
-                if (combination.IsInitialized)
-                {
-                    if (globalHotKey != null)
-                    {
-                        _HotKeyManager.RemoveGlobalHotKey(globalHotKey);
-                    }
-
-                    var k = Keys.ConvertFromWpfKey(combination.NormalKey);
-                    globalHotKey = new GlobalHotKey(combination.Name, combination.ModifierKey, k);
-
-                    _HotKeyManager.AddGlobalHotKey(globalHotKey);
-
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.WriteLog(e);
+                mdl.RegisterHotKeyDown(TatruHotkeyType.ShowHideChatWindow, e);
             }
         }
 
-        private void RemoveHotKey(HotKeyCombination combination, ref GlobalHotKey globalHotKey)
+        private void ShowHideChatWinHotKeyBox_KeyUp(object sender, KeyEventArgs e)
         {
-            try
+            var mdl = _TataruModel.TataruViewModel.CurrentChatWindow;
+            if (mdl != null)
             {
-                combination.ClearKeys();
-
-                if (globalHotKey != null)
-                {
-                    _HotKeyManager.RemoveGlobalHotKey(globalHotKey);
-                }
-            }
-            catch (Exception e)
-            {
-                Logger.WriteLog(e);
+                mdl.RegisterHotKeyUp(TatruHotkeyType.ShowHideChatWindow, e);
             }
         }
 
-        private void ShowHideKeyDownBindHandler(object sender, KeyEventArgs e)
+        private void ClickThroughHotKey_KeyDown(object sender, KeyEventArgs e)
         {
-            RegisterHotKeyDown(ref _ShowHideChat, _TataruUIModel.ShowHideChatKeys, ShowHideChatWinHotKeyTb, e);
-        }
-
-        private void ShowHideKeyUpBindHandler(object sender, KeyEventArgs e)
-        {
-            RegisterHotKeyUp(ref _ShowHideChat, _TataruUIModel.ShowHideChatKeys, ShowHideChatWinHotKeyTb, e);
-        }
-
-        private void ClickThoughKeyDownBindHandler(object sender, KeyEventArgs e)
-        {
-            RegisterHotKeyDown(ref _ClickThoughtChat, _TataruUIModel.ClickThoughtChatKeys, ClickThroughHotKeyTb, e);
-        }
-
-        private void ClickThoughKeyUpBindHandler(object sender, KeyEventArgs e)
-        {
-            RegisterHotKeyUp(ref _ClickThoughtChat, _TataruUIModel.ClickThoughtChatKeys, ClickThroughHotKeyTb, e);
-        }
-
-        private void ClearChatKeyDownBindHandler(object sender, KeyEventArgs e)
-        {
-            RegisterHotKeyDown(ref _ClearChat, _TataruUIModel.ClearChatKeys, ClearChatHotKeyTb, e);
-        }
-
-        private void ClearChathKeyUpBindHandler(object sender, KeyEventArgs e)
-        {
-            RegisterHotKeyUp(ref _ClearChat, _TataruUIModel.ClearChatKeys, ClearChatHotKeyTb, e);
-        }
-
-        private void ShowHideChatWinHotKeyTb_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            ShowHideChatWinHotKeyTb.Text = _EmptyHKString;
-
-            RemoveHotKey(_TataruUIModel.ShowHideChatKeys, ref _ShowHideChat);
-        }
-
-        private void ClickThroughHotKeyTb_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            ClickThroughHotKeyTb.Text = _EmptyHKString;
-
-            RemoveHotKey(_TataruUIModel.ClickThoughtChatKeys, ref _ClickThoughtChat);
-        }
-
-        private void ClearChatHotKeyTb_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            ClearChatHotKeyTb.Text = _EmptyHKString;
-
-            RemoveHotKey(_TataruUIModel.ClearChatKeys, ref _ClearChat);
-        }
-
-        private void RegisterHotKeyDown(ref GlobalHotKey globalHotKey, HotKeyCombination hotKeyCombination, TextBox textBox, KeyEventArgs e)
-        {
-            try
+            var mdl = _TataruModel.TataruViewModel.CurrentChatWindow;
+            if (mdl != null)
             {
-                var _key = Helper.RealKey(e);
-
-                var pressedKeys = Keys.GetPressdKeys();
-
-                pressedKeys = Keys.ClearRepeatedKeys(pressedKeys);
-
-                pressedKeys = Keys.ClearMousKeys(pressedKeys);
-
-                if (pressedKeys.Length <= 1)
-                {
-                    hotKeyCombination.ClearKeys();
-                }
-
-                hotKeyCombination.AddKey(_key);
-
-                string str = _EmptyHKString;
-                if (hotKeyCombination.IsInitialized)
-                {
-                    str = hotKeyCombination.CombinationKeysName();
-
-                    textBox.Text = str;
-                }
-                else
-                {
-                    if (globalHotKey != null)
-                    {
-                        _HotKeyManager.RemoveGlobalHotKey(globalHotKey);
-                    }
-                }
-                textBox.Text = str;
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
+                mdl.RegisterHotKeyDown(TatruHotkeyType.ClickThrought, e);
             }
         }
 
-        private void RegisterHotKeyUp(ref GlobalHotKey globalHotKey, HotKeyCombination hotKeyCombination, TextBox textBox, KeyEventArgs e)
+        private void ClickThroughHotKey_KeyUp(object sender, KeyEventArgs e)
         {
-            try
+            var mdl = _TataruModel.TataruViewModel.CurrentChatWindow;
+            if (mdl != null)
             {
-                var pressedKeys = Keys.GetPressdKeys();
-
-                pressedKeys = Keys.ClearRepeatedKeys(pressedKeys);
-
-                pressedKeys = Keys.ClearMousKeys(pressedKeys);
-
-                string str = _EmptyHKString;
-                if (pressedKeys.Length == 0)
-                {
-                    Keyboard.ClearFocus();
-
-                    if (hotKeyCombination.IsInitialized)
-                    {
-                        str = hotKeyCombination.CombinationKeysName();
-
-                        if (globalHotKey != null)
-                        {
-                            _HotKeyManager.RemoveGlobalHotKey(globalHotKey);
-                        }
-                        else
-                        {
-                            int t = 0;
-                            t++;
-                        }
-
-                        var k = Keys.ConvertFromWpfKey(hotKeyCombination.NormalKey);
-                        globalHotKey = new GlobalHotKey(hotKeyCombination.Name, hotKeyCombination.ModifierKey, k);
-
-                        _HotKeyManager.AddGlobalHotKey(globalHotKey);
-
-                        textBox.Text = str;
-                    }
-                    else
-                    {
-                        if (globalHotKey != null)
-                        {
-                            _HotKeyManager.RemoveGlobalHotKey(globalHotKey);
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteLog(ex);
+                mdl.RegisterHotKeyUp(TatruHotkeyType.ClickThrought, e);
             }
         }
 
-        private void GlobalHotKeyHandler(object sender, GlobalHotKeyEventArgs e)
+        private void ClearChatHotKey_KeyDown(object sender, KeyEventArgs e)
         {
-
-            if (_ShowHideChat != null)
+            var mdl = _TataruModel.TataruViewModel.CurrentChatWindow;
+            if (mdl != null)
             {
-                if (e.HotKey.Name == _ShowHideChat.Name)
-                {
-                    if (_ChatWindow.Visibility == Visibility.Visible)
-                    {
-                        _ChatWindow.UserHide();
-                    }
-                    else
-                    {
-                        _ChatWindow.UserShow();
-                    }
-                }
+                mdl.RegisterHotKeyDown(TatruHotkeyType.ClearChat, e);
             }
+        }
 
-            if (_ClickThoughtChat != null)
+        private void ClearChatHotKey_KeyUp(object sender, KeyEventArgs e)
+        {
+            var mdl = _TataruModel.TataruViewModel.CurrentChatWindow;
+            if (mdl != null)
             {
-                if (e.HotKey.Name == _ClickThoughtChat.Name)
-                {
-                    _TataruUIModel.IsChatClickThrough = !_TataruUIModel.IsChatClickThrough;
-                }
-            }
-
-            if (_ClearChat != null)
-            {
-                if (e.HotKey.Name == _ClearChat.Name)
-                {
-                    _ChatWindow.ClearChat();
-
-                    if (_ChatStreamWindow != null)
-                        _ChatWindow.ClearChat();
-                }
+                mdl.RegisterHotKeyUp(TatruHotkeyType.ClearChat, e);
             }
         }
 
@@ -1026,23 +395,11 @@ namespace FFXIITataruHelper
 
         #region **Tray.
 
-        private void TBMenuChatWin_Click(object sender, RoutedEventArgs e)
-        {
-            /*
-            Helper.Unminimize(_ChatWindow);
-
-            _ChatWindow.Visibility = Visibility.Visible;
-            _ChatWindow.Activate();
-            _ChatWindow.Focus();//*/
-
-            _ChatWindow.UserShow();
-            _ChatWindow.Focus();
-        }
-
         private void TBMenuSettingsWin_Click(object sender, RoutedEventArgs e)
         {
             ShowSettingsWindow();
         }
+
         private void TBDoubleClick(object sender, RoutedEventArgs e)
         {
 
@@ -1058,7 +415,7 @@ namespace FFXIITataruHelper
             this.Focus();
         }
 
-        private void TBMenuExit_Click(object sender, RoutedEventArgs e)
+        private void OnShutDownRequsted(object sender, EventArgs e)
         {
             this.ShutDown();
         }
@@ -1109,6 +466,5 @@ namespace FFXIITataruHelper
         }
 
         #endregion
-
     }
 }

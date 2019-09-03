@@ -4,7 +4,7 @@
 using System;
 using System.Drawing;
 
-namespace FFXIITataruHelper.EventArguments
+namespace FFXIVTataruHelper.EventArguments
 {
     public class PointDValueChangeEventArgs : TatruEventArgs
     {

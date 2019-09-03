@@ -1,13 +1,14 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-using FFXIITataruHelper.WinUtils;
+using FFXIVTataruHelper.WinUtils;
 using System;
 using System.Collections.Generic;
 using System.Windows.Media;
 using System.Linq;
+using FFXIVTataruHelper.UIModel;
 
-namespace FFXIITataruHelper
+namespace FFXIVTataruHelper
 {
     public class UserSettings
     {
@@ -62,6 +63,8 @@ namespace FFXIITataruHelper
             { "0044",  new ChatMsgType("0044", MsgType.Translate,"NPCA",(Color)ColorConverter.ConvertFromString("#FFABD647")) },
         };
 
+        public List<ChatWindowViewModelSettings> ChatWindows { get; set; }
+
         public int IsFirstTime { get; set; } = 0;
 
         public UserSettings()
@@ -114,6 +117,10 @@ namespace FFXIITataruHelper
                 { "0044",  new ChatMsgType("0044", MsgType.Translate,"NPCA",(Color)ColorConverter.ConvertFromString("#FFABD647")) },
             };
 
+            //ChatWindows = new List<ChatWindowViewModelSettings>(new ChatWindowViewModelSettings[] { new ChatWindowViewModelSettings() });
+
+            ChatWindows = new List<ChatWindowViewModelSettings>();
+
             IsFirstTime = 0;
         }
 
@@ -161,6 +168,8 @@ namespace FFXIITataruHelper
             ChatWindowLocation = userSettings.ChatWindowLocation;
 
             ChatCodes = userSettings.ChatCodes.ToDictionary(entry => entry.Key, entry => new ChatMsgType(entry.Value));
+
+            ChatWindows = userSettings.ChatWindows.Select(element => new ChatWindowViewModelSettings(element)).ToList();
 
             IsFirstTime = userSettings.IsFirstTime;
         }

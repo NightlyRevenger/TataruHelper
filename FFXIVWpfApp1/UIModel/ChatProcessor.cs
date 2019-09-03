@@ -1,28 +1,45 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-using FFXIITataruHelper.EventArguments;
-using FFXIITataruHelper.FFHandlers;
-using FFXIITataruHelper.Translation;
+using FFXIVTataruHelper.EventArguments;
+using FFXIVTataruHelper.FFHandlers;
+using FFXIVTataruHelper.Translation;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media;
-using static FFXIITataruHelper.Translation.WebTranslator;
 
-namespace FFXIITataruHelper
+namespace FFXIVTataruHelper
 {
     public class ChatProcessor
     {
         #region **Events.
 
-        public event AsyncEventHandler<TranslationArrivedEventArgs> TranslationArrived
+        public event AsyncEventHandler<ChatMessageArrivedEventArgs> TextArrived
         {
-            add { this._TranslationArrived.Register(value); }
-            remove { this._TranslationArrived.Unregister(value); }
+            add { this._TextArrivedArrived.Register(value); }
+            remove { this._TextArrivedArrived.Unregister(value); }
         }
-        private AsyncEvent<TranslationArrivedEventArgs> _TranslationArrived;
+        private AsyncEvent<ChatMessageArrivedEventArgs> _TextArrivedArrived;
+
+        #endregion
+
+        #region **Properties.
+
+        public ReadOnlyCollection<TranslationEngine> TranslationEngines
+        {
+            get { return _WebTranslator.TranslationEngines; }
+        }
+
+        public ReadOnlyCollection<ChatMsgType> AllChatCodes
+        {
+            get
+            {
+                return new ReadOnlyCollection<ChatMsgType>(_AllChatCodes);
+            }
+        }
 
         #endregion
 
@@ -30,45 +47,33 @@ namespace FFXIITataruHelper
 
         WebTranslator _WebTranslator;
 
-        TataruUIModel _TataruUIModel;
-
         DateTime _LastTranslationTime;
 
-        Dictionary<string, ChatMsgType> _ChatCodesTypes;
-
-        List<EngineDescription> _TranslationEngines;
+        List<ChatMsgType> _AllChatCodes;
 
         List<string> MsgBlackList;
 
-        int _EnginIndex = 0;
+        List<string> ChatCodesWithNickNames;
 
         #endregion
 
-        public ChatProcessor(FFMemoryReader fFMemoryReader, WebTranslator webTranslator, TataruUIModel tataruUIModel)
+        public ChatProcessor(WebTranslator webTranslator)
         {
-            this._TranslationArrived = new AsyncEvent<TranslationArrivedEventArgs>(this.EventErrorHandler, "TranslationArrived");
+            this._TextArrivedArrived = new AsyncEvent<ChatMessageArrivedEventArgs>(this.EventErrorHandler, "TranslationArrived");
 
-            _ChatCodesTypes = tataruUIModel.ChatCodes;
-            _TranslationEngines = new List<EngineDescription>();
-            MsgBlackList = new List<string>();
+            _AllChatCodes = Helper.LoadJsonData<List<ChatMsgType>>(GlobalSettings.ChatCodesFilePath);
 
             _WebTranslator = webTranslator;
-            _TataruUIModel = tataruUIModel;
+
+            MsgBlackList = new List<string>();
 
             Init();
-
-            SubscribeToEvents(fFMemoryReader);
 
             _LastTranslationTime = DateTime.UtcNow;
         }
 
         private void Init()
         {
-            _TranslationEngines.Add(new EngineDescription(TranslationEngine.DeepL, 10));
-            _TranslationEngines.Add(new EngineDescription(TranslationEngine.GoogleTranslate, 9));
-            _TranslationEngines.Add(new EngineDescription(TranslationEngine.Amazon, 6));
-            _TranslationEngines.Add(new EngineDescription(TranslationEngine.Yandex, 5));
-            _TranslationEngines.Add(new EngineDescription(TranslationEngine.Multillect, 1));
 
             var tmpMsgBlackList = new List<string>();
             tmpMsgBlackList.Add("Triple Triad matches not allowed in current area.");
@@ -95,159 +100,109 @@ namespace FFXIITataruHelper
             {
                 MsgBlackList[i] = Helper.ClearBlackListString(MsgBlackList[i]);
             }
+
+            var tmpChatCodesWithNickNames = new List<string>(27);
+            tmpChatCodesWithNickNames.Add("0048");
+            tmpChatCodesWithNickNames.Add("000A");
+            tmpChatCodesWithNickNames.Add("000B");
+            tmpChatCodesWithNickNames.Add("000E");
+            tmpChatCodesWithNickNames.Add("000D");
+            tmpChatCodesWithNickNames.Add("001D");
+            tmpChatCodesWithNickNames.Add("001C");
+            tmpChatCodesWithNickNames.Add("0018");
+            tmpChatCodesWithNickNames.Add("001E");
+            tmpChatCodesWithNickNames.Add("000F");
+            tmpChatCodesWithNickNames.Add("0010");
+            tmpChatCodesWithNickNames.Add("0011");
+            tmpChatCodesWithNickNames.Add("0012");
+            tmpChatCodesWithNickNames.Add("0013");
+            tmpChatCodesWithNickNames.Add("0014");
+            tmpChatCodesWithNickNames.Add("0015");
+            tmpChatCodesWithNickNames.Add("0016");
+            tmpChatCodesWithNickNames.Add("0017");
+            tmpChatCodesWithNickNames.Add("001B");
+            tmpChatCodesWithNickNames.Add("0025");
+            tmpChatCodesWithNickNames.Add("0065");
+            tmpChatCodesWithNickNames.Add("0066");
+            tmpChatCodesWithNickNames.Add("0067");
+            tmpChatCodesWithNickNames.Add("0068");
+            tmpChatCodesWithNickNames.Add("0069");
+            tmpChatCodesWithNickNames.Add("006A");
+            tmpChatCodesWithNickNames.Add("006B");
+
+            ChatCodesWithNickNames = Helper.LoadJsonData<List<string>>(GlobalSettings.IgnoreNickNameChatCodes);
+            if (ChatCodesWithNickNames == null)
+                ChatCodesWithNickNames = new List<string>();
+
+            foreach (var st in tmpChatCodesWithNickNames)
+            {
+                if (!ChatCodesWithNickNames.Contains(st))
+                    ChatCodesWithNickNames.Add(st);
+            }
+            ChatCodesWithNickNames = ChatCodesWithNickNames.Distinct().ToList();
+
+            Helper.SaveJson(ChatCodesWithNickNames, GlobalSettings.IgnoreNickNameChatCodes);
         }
 
-        private void SubscribeToEvents(FFMemoryReader fFMemoryReader)
+        public async Task OnFFChatMessageArrived(ChatMessageArrivedEventArgs ea)
         {
-            fFMemoryReader.FFChatMessageArrived += OnFFChatMessageArrived;
-
-            _TataruUIModel.TranslationEngineChanged += OnTranslationEngineChange;
-            _TataruUIModel.ChatCodesChanged += OnChatCodesChange;
-
-            _TataruUIModel.FFLanguageChanged += OnFFLanguageChange;
-            _TataruUIModel.TranslateToLanguageChanged += OnTranslateToLanguageChange;
-        }
-
-        private async Task OnChatCodesChange(ChatMsgTypeChangeEventArgs ea)
-        {
-            _ChatCodesTypes = ((TataruUIModel)ea.Sender).ChatCodes;
-        }
-
-        private async Task OnFFChatMessageArrived(ChatMessageArrivedEventArgs ea)
-        {
-            bool logged = false;
             ChatMsgType msgType = new ChatMsgType();
 
-            if (_ChatCodesTypes != null)
+            if (!MsgBlackList.Contains(ea.ChatMessage.Text))
+                await ProcessChatMsg(ea, msgType);
+
+            if (CmdArgsStatus.LogAllChat || CmdArgsStatus.LogPlotChat)
+                Logger.WriteChatLog(String.Format("{0} {1}: {2}", ea.ChatMessage.TimeStamp, ea.ChatMessage.Code, ea.ChatMessage.Text));
+        }
+
+        public async Task<string> Translate(string inSentence, TranslationEngine translationEngine, TranslatorLanguague fromLang, TranslatorLanguague toLang, string chatCode)
+        {
+            string text = string.Empty;
+            string NickName = string.Empty;
+
+            if (ChatCodesWithNickNames.Contains(chatCode))
             {
-                if (_ChatCodesTypes.TryGetValue(ea.ChatMessage.Code, out msgType))
+                var ind1 = inSentence.IndexOf(":");
+                if(ind1>0)
                 {
-                    if (!MsgBlackList.Contains(ea.ChatMessage.Text))
-                        await ProcessChatMsg(ea.ChatMessage, msgType);
+                    ind1++;
 
-                    if (CmdArgsStatus.LogPlotChat)
-                    {
-                        Logger.WriteChatLog(String.Format("{0} {1}: {2}", ea.ChatMessage.TimeStamp, ea.ChatMessage.Code, ea.ChatMessage.Text));
-                        logged = true;
-                    }
+                    NickName = inSentence.Substring(0, ind1);
+                    inSentence=inSentence.Remove(0, ind1);
                 }
-
-                if (CmdArgsStatus.LogAllChat && !logged)
-                    Logger.WriteChatLog(String.Format("{0} {1}: {2}", ea.ChatMessage.TimeStamp, ea.ChatMessage.Code, ea.ChatMessage.Text));
             }
 
+            text = await _WebTranslator.TranslateAsync(inSentence, translationEngine, fromLang, toLang);
+
+            if (NickName.Length > 0)
+                text = NickName +" "+ text;
+
+            return text;
         }
 
-        private async Task OnTranslationEngineChange(TranslationEngineChangeEventArgs ea)
-        {
-            var trEng = (TranslationEngine)ea.NewEngine;
-
-            _TranslationEngines = _TranslationEngines.OrderBy(x => x.Value * -1).ToList();
-
-            var ind = _TranslationEngines.FindIndex(x => x.TranslationEngine == trEng);
-            _TranslationEngines.Swap(ind, 0);
-
-            _WebTranslator.CurrentTranslationEngine = (WebTranslator.TranslationEngine)ea.NewEngine;
-        }
-
-        private async Task OnFFLanguageChange(StringValueChangeEventArgs ea)
-        {
-            _WebTranslator.SourceLanguage = ea.NewString;
-        }
-
-        private async Task OnTranslateToLanguageChange(StringValueChangeEventArgs ea)
-        {
-            _WebTranslator.TargetLanguage = ea.NewString;
-        }
-
-        private async Task ProcessChatMsg(FFChatMsg msg, ChatMsgType msgType)
+        private async Task ProcessChatMsg(ChatMessageArrivedEventArgs ea, ChatMsgType msgType)
         {
             switch (msgType.MsgType)
             {
                 case MsgType.Translate:
                     {
-                        var translation = await TranslateMessage(msg.Text, msgType.Color);
+                        /*
+                        var translation = new ChatMessageArrivedEventArgs(ea);
 
-                        await _TranslationArrived.InvokeAsync(translation);
+                        await _TextArrivedArrived.InvokeAsync(translation);//*/
 
                         break;
                     }
                 default:
                     {
-                        return;
+                        var translation = new ChatMessageArrivedEventArgs(ea);
+
+                        await _TextArrivedArrived.InvokeAsync(translation);
+
+                        break;
+
                     }
             }
-        }
-
-        private async Task<TranslationArrivedEventArgs> TranslateMessage(string text, Color color)
-        {
-            var translationEA = new TranslationArrivedEventArgs(this)
-            {
-                Text = "",
-                ErrorCode = -1,
-                Color = color,
-            };
-
-
-            int translateTryCount = 0;
-
-            bool notTransalted = true;
-            int errorCode = 0;
-
-            while (translateTryCount < GlobalSettings.MaxTranslateTryCount && notTransalted)
-            {
-                var diffTime = (int)Math.Round((DateTime.UtcNow - _LastTranslationTime).TotalMilliseconds);
-
-                if (diffTime < GlobalSettings.TranslationDelay)
-                    await Task.Delay(GlobalSettings.TranslationDelay - diffTime);
-
-
-                string translation = string.Empty;
-                Task.Run(async () =>
-                {
-                    translation = await _WebTranslator.TranslateAsync(text);
-                }).Wait(GlobalSettings.TranslatorWaitTime);
-                //}).Wait();
-
-                _LastTranslationTime = DateTime.UtcNow;
-
-                if (translation.Length < 1)
-                {
-                    notTransalted = true;
-                    errorCode = 1;
-
-                    if (_EnginIndex < _TranslationEngines.Count)
-                        _EnginIndex++;
-                    else
-                        _EnginIndex = 1;
-
-                    _TataruUIModel.TranslationEngine = _TranslationEngines[_EnginIndex].TranslationEngine;
-
-                    var ea = new TranslationArrivedEventArgs(this)
-                    {
-                        Text = "",
-                        ErrorCode = errorCode,
-                        Color = color,
-                    };
-                    _TranslationArrived.InvokeAsync(ea).Forget();
-                }
-                else
-                {
-                    notTransalted = false;
-                    errorCode = 0;
-                }
-
-                translateTryCount++;
-
-                translationEA = new TranslationArrivedEventArgs(this)
-                {
-                    Text = translation,
-                    ErrorCode = errorCode,
-                    Color = color,
-                };
-            }
-
-            return translationEA;
         }
 
         private void EventErrorHandler(string evname, Exception ex)

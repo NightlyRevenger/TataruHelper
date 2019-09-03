@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
 
-namespace FFXIITataruHelper.WinUtils
+namespace FFXIVTataruHelper.WinUtils
 {
     public class HotKeyCombination : IEquatable<HotKeyCombination>
     {
@@ -74,6 +74,16 @@ namespace FFXIITataruHelper.WinUtils
             _NormalKey = hotKeyCombination._NormalKey;
 
             _Name = hotKeyCombination._Name;
+
+            _Keys = hotKeyCombination._Keys.ToList();
+        }
+
+        public HotKeyCombination(string name, HotKeyCombination hotKeyCombination)
+        {
+            _ModifierKey = hotKeyCombination._ModifierKey;
+            _NormalKey = hotKeyCombination._NormalKey;
+
+            _Name = name;
 
             _Keys = hotKeyCombination._Keys.ToList();
         }

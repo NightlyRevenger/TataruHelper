@@ -6,6 +6,12 @@
     "Color": "#FFCCCCCC"
   },
   {
+    "ChatCode": "0003",
+    "MsgType": 3,
+    "Name": "ServerInfo",
+    "Color": "#FFCCCCCC"
+  },
+  {
     "ChatCode": "0038",
     "MsgType": 3,
     "Name": "Echo",
@@ -126,9 +132,69 @@
     "Color": "#FFD4FF7D"
   },
   {
+    "ChatCode": "0025",
+    "MsgType": 3,
+    "Name": "CWLS1",
+    "Color": "#FFD4FF7D"
+  },
+  {
+    "ChatCode": "0065",
+    "MsgType": 3,
+    "Name": "CWLS2",
+    "Color": "#FFD4FF7D"
+  },
+  {
+    "ChatCode": "0066",
+    "MsgType": 3,
+    "Name": "CWLS3",
+    "Color": "#FFD4FF7D"
+  },
+  {
+    "ChatCode": "0067",
+    "MsgType": 3,
+    "Name": "CWLS4",
+    "Color": "#FFD4FF7D"
+  },
+  {
+    "ChatCode": "0068",
+    "MsgType": 3,
+    "Name": "CWLS5",
+    "Color": "#FFD4FF7D"
+  },
+  {
+    "ChatCode": "0069",
+    "MsgType": 3,
+    "Name": "CWLS6",
+    "Color": "#FFD4FF7D"
+  },
+  {
+    "ChatCode": "006A",
+    "MsgType": 3,
+    "Name": "CWLS7",
+    "Color": "#FFD4FF7D"
+  },
+  {
+    "ChatCode": "006B",
+    "MsgType": 3,
+    "Name": "CWLS8",
+    "Color": "#FFD4FF7D"
+  },
+  {
     "ChatCode": "001B",
     "MsgType": 3,
     "Name": "NoviceNetwork",
     "Color": "#FFD4FF7D"
-  }
+  },
+  {
+    "ChatCode": "001D",
+    "MsgType": 3,
+    "Name": "Emotes",
+    "Color": "#FFCCCCCC"
+  },
+  {
+    "ChatCode": "001C",
+    "MsgType": 3,
+    "Name": "CustomEmotes",
+    "Color": "#FFCCCCCC"
+  },
 ]

@@ -29,7 +29,7 @@ namespace WpfXamlExtensions
                 {
                     Trace.TraceWarning("Attempted to convert {0} instead of Icon object in IconToImageSourceConverter", value);
                 }
-                catch (Exception ex) {  }
+                catch (Exception) {  }
 
                 return null;
             }

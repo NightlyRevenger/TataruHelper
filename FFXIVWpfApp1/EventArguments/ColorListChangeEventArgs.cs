@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows.Media;
 
-namespace FFXIITataruHelper.EventArguments
+namespace FFXIVTataruHelper.EventArguments
 {
     public class ColorListChangeEventArgs : TatruEventArgs
     {

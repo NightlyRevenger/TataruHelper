@@ -11,7 +11,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace FFXIITataruHelper.Properties {
+namespace FFXIVTataruHelper.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

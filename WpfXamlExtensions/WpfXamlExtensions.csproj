@@ -60,6 +60,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BooleanToVisibilityConverter.cs" />
+    <Compile Include="ChatWindowTabHeaderTemplateSelector.cs" />
+    <Compile Include="ColorToSolidColorBrush.cs" />
     <Compile Include="DatabindingDebugConverter.cs" />
     <Compile Include="IconToImageSourceConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

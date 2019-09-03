@@ -6,7 +6,7 @@
 using Newtonsoft.Json;
 using System;
 
-namespace FFXIITataruHelper.Translation
+namespace FFXIVTataruHelper.Translation
 {
     class DeepLTranslator
     {

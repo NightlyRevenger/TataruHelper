@@ -3,7 +3,7 @@
 
 using System;
 
-namespace FFXIITataruHelper.FFHandlers
+namespace FFXIVTataruHelper.FFHandlers
 {
     public struct FFChatMsg
     {
@@ -16,6 +16,13 @@ namespace FFXIITataruHelper.FFHandlers
             Text = text;
             Code = code;
             TimeStamp = timeStamp;
+        }
+
+        public FFChatMsg(FFChatMsg msg)
+        {
+            Text = msg.Text;
+            Code = msg.Code;
+            TimeStamp = msg.TimeStamp;
         }
     }
 }

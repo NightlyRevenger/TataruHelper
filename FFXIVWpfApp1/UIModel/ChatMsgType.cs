@@ -4,7 +4,7 @@
 using Newtonsoft.Json;
 using System.Windows.Media;
 
-namespace FFXIITataruHelper
+namespace FFXIVTataruHelper
 {
     public enum MsgType : int { Translate = 1, Check = 2, Skip = 3 };
 

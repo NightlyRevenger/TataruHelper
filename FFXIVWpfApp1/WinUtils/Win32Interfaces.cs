@@ -6,7 +6,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace FFXIITataruHelper.WinUtils
+namespace FFXIVTataruHelper.WinUtils
 {
     static class Win32Interfaces
     {
@@ -75,7 +75,7 @@ namespace FFXIITataruHelper.WinUtils
             return RegisterWindowMessage(message);
         }
 
-        [DllImport("user32")]
+        [DllImport("user32", SetLastError = true, CharSet = CharSet.Auto)]
         public static extern int RegisterWindowMessage(string message);
 
         public enum ShowWindowCommands : int

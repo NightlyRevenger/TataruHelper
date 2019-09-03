@@ -6,20 +6,28 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
-using FFXIITataruHelper.EventArguments;
-using FFXIITataruHelper.WinUtils;
+using FFXIVTataruHelper.EventArguments;
+using FFXIVTataruHelper.WinUtils;
 using Sharlayan;
 using Sharlayan.Core;
 using Sharlayan.Models;
 using Sharlayan.Models.ReadResults;
 
-namespace FFXIITataruHelper.FFHandlers
+namespace FFXIVTataruHelper.FFHandlers
 {
-    public class FFMemoryReader : IDisposable
+    public class FFMemoryReader : IDisposable, FFXIVTataruHelper.TataruComponentModel.INotifyPropertyChangedAsync
     {
         #region **Events.
+
+        public event AsyncEventHandler<AsyncPropertyChangedEventArgs> AsyncPropertyChanged
+        {
+            add { this._AsyncPropertyChanged.Register(value); }
+            remove { this._AsyncPropertyChanged.Unregister(value); }
+        }
+        private AsyncEvent<AsyncPropertyChangedEventArgs> _AsyncPropertyChanged;
 
         public event AsyncEventHandler<WindowStateChangeEventArgs> FFWindowStateChanged
         {
@@ -39,7 +47,15 @@ namespace FFXIITataruHelper.FFHandlers
 
         #region **Properties.
 
-        public System.Windows.WindowState FFWindowState { get; private set; }
+        public System.Windows.WindowState FFWindowState
+        {
+            get { return _FFWindowState; }
+            private set
+            {
+                _FFWindowState = value;
+                OnPropertyChanged();
+            }
+        }
 
         public bool UseDirectReading
         {
@@ -50,6 +66,8 @@ namespace FFXIITataruHelper.FFHandlers
         #endregion
 
         #region **LocalVariables.
+
+        System.Windows.WindowState _FFWindowState;
 
         bool _KeepWorking;
         bool _KeepReading;
@@ -76,6 +94,7 @@ namespace FFXIITataruHelper.FFHandlers
 
             _FFWindowStateChanged = new AsyncEvent<WindowStateChangeEventArgs>(EventErrorHandler, "FFWindowStateChanged");
             _FFChatMessageArrived = new AsyncEvent<ChatMessageArrivedEventArgs>(EventErrorHandler, "FFChatMessageArrived");
+            _AsyncPropertyChanged = new AsyncEvent<AsyncPropertyChangedEventArgs>(EventErrorHandler, "FFMemoryReader \n FFChatMessageArrived");
 
             _UseDirectReadingInternal = true;
             DirectTextsMissedCount = 0;
@@ -322,9 +341,6 @@ namespace FFXIITataruHelper.FFHandlers
                         ClearMessagesList(readResult, previousPanelResults, directDialog);
                     }
 
-                    //if (DirectTextsMissedCount > GlobalSettings.MaxСonsecutiveNotFromLogSentences)
-                    //    _UseDirectReadingInternal = false;
-
                     var chatLogEntries = readResult.ChatLogItems;
 
                     if (readResult.ChatLogItems.Count > 0)
@@ -429,6 +445,12 @@ namespace FFXIITataruHelper.FFHandlers
             text = text.Replace(":", ": ");
 
             return text;
+        }
+
+        private void OnPropertyChanged([CallerMemberName]string prop = "")
+        {
+            var ea = new AsyncPropertyChangedEventArgs(this, prop);
+            _AsyncPropertyChanged.InvokeAsync(ea).Forget();
         }
 
         private void EventErrorHandler(string evname, Exception ex)

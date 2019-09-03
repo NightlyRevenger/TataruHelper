@@ -6,7 +6,7 @@ using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace FFXIITataruHelper.Utils
+namespace FFXIVTataruHelper.Utils
 {
     /// <summary>
     /// This class generates a Geometry from a block of text in a specific font, weight, etc.

@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace FFXIITataruHelper.EventArguments
+namespace FFXIVTataruHelper.EventArguments
 {
     public class ChatMsgTypeChangeEventArgs : TatruEventArgs
     {

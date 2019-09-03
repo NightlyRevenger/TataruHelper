@@ -1,17 +1,23 @@
-﻿<Window x:Class="FFXIITataruHelper.ChatWindow"
+﻿<Window x:Class="FFXIVTataruHelper.ChatWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:FFXIITataruHelper"
+        xmlns:utils="clr-namespace:WpfXamlExtensions;assembly=WpfXamlExtensions"
+        xmlns:local="clr-namespace:FFXIVTataruHelper"
         mc:Ignorable="d"
         AllowsTransparency="True"
         WindowStyle="None"
         MinHeight="30"
         MinWidth="30"
-        Title="{DynamicResource ChatWindowName}" Height="320" Width="480" Loaded="Window_Loaded" Closing="Window_Closing" LocationChanged="Window_LocationChanged" SizeChanged="Window_SizeChanged" Deactivated="Window_Deactivated">
+        Title="{DynamicResource ChatWindowName}" Loaded="Window_Loaded" Closing="Window_Closing" Deactivated="Window_Deactivated"
+        Top="{Binding ChatWindowTop, Mode=TwoWay}" Left="{Binding ChatWindowLeft, Mode=TwoWay}" Width="{Binding ChatWindowWidth, Mode=TwoWay}" Height="{Binding ChatWindowHeight, Mode=TwoWay}"
+        Background="{Binding BackGroundColor , Converter={utils:ColorToSolidColorBrush}, Mode=OneWay}" 
+        Visibility="{Binding IsWindowVisible, Converter={utils:BooleanToVisibilityConverter}, Mode=TwoWay}"
+        Topmost="{Binding IsAlwaysOnTop, Mode=OneWay}">
     <Grid>
-        <RichTextBox x:Name="ChatRtb" Margin="15,15,15,15" Background="#00000000" IsReadOnly="True" IsUndoEnabled="False">
+        <RichTextBox x:Name="ChatRtb" Margin="15,15,15,15" Background="#00000000" IsReadOnly="True" IsUndoEnabled="False"
+                     FontSize="{Binding Path=DataContext.ChatFontSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">
             <FlowDocument>
                 <Paragraph>
                     <Run Text="RichTextBox"/>
@@ -33,8 +39,9 @@
         <Rectangle x:Name="bottomLeft" Opacity="0.0" Fill="#00000000" HorizontalAlignment="Left" Height="15" Margin="0" Stroke="Black" VerticalAlignment="Bottom" Width="15" MouseEnter="DisplayResizeCursor" MouseLeave="ResetCursor" PreviewMouseDown="Resize" />
         <Grid.ContextMenu>
             <ContextMenu>
+                <MenuItem Header="{DynamicResource SettingsHide}" Click="HideThisWindow_Click" />
                 <MenuItem Header="Settings" Click="Settings_Click" />
-                <MenuItem Header="Exit" Click="Exit_Click"/>
+                <MenuItem Header="{DynamicResource SettingsExit}" Click="Exit_Click"/>
             </ContextMenu>
         </Grid.ContextMenu>
 

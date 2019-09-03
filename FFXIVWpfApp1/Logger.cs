@@ -5,9 +5,10 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
-namespace FFXIITataruHelper
+namespace FFXIVTataruHelper
 {
     public static class Logger
     {
@@ -15,74 +16,92 @@ namespace FFXIITataruHelper
         public static ConcurrentQueue<string> ConsoleLogQueue = new ConcurrentQueue<string>();
         public static ConcurrentQueue<string> ChatLogQueue = new ConcurrentQueue<string>();
 
-        static Mutex mut1 = new Mutex();
-        static Mutex mut2 = new Mutex();
-        static Mutex mut3 = new Mutex();
 
-        public static void WriteLog(string InputString)
+
+        static private Object lockObj0 = new object();
+        static private Object lockObj1 = new object();
+        static private Object lockObj2 = new object();
+        static private Object lockObj3 = new object();
+
+        public static void WriteLog(string InputString,
+        //[CallerFilePath] string sourceFilePath = "",
+        [CallerMemberName] string memberName = "",
+        [CallerLineNumber] int sourceLineNumber = 0)
         {
-            mut1.WaitOne();
 
-            string res = "";
+            lock (lockObj0)
+            {
+                string res = "";
 
-            string time = DateTime.Now.ToString();
+                string time = DateTime.Now.ToString();
 
-            res = time + Environment.NewLine;
-            res += InputString + Environment.NewLine;
+                res = time + Environment.NewLine;
 
-            LogQueue.Enqueue(res);
+                //res += sourceFilePath + Environment.NewLine;
+                res += "Member name:" + memberName + Environment.NewLine;
+                res += "Source Line Number: " + Convert.ToString(sourceLineNumber) + Environment.NewLine;
 
-            mut1.ReleaseMutex();
+                res += InputString + Environment.NewLine;
+
+                LogQueue.Enqueue(res);
+            }
         }
 
-        public static void WriteLog(object Input)
+        public static void WriteLog(object Input,
+        //[CallerFilePath] string sourceFilePath = "",
+        [CallerMemberName] string memberName = "",
+        [CallerLineNumber] int sourceLineNumber = 0)
         {
-            mut1.WaitOne();
 
-            string InputString = Convert.ToString(Input);
+            lock (lockObj1)
+            {
 
-            string res = "";
+                string InputString = Convert.ToString(Input);
 
-            string time = DateTime.Now.ToString();
+                string res = String.Empty;
 
-            res = time + Environment.NewLine;
-            res += InputString + Environment.NewLine;
+                string time = DateTime.Now.ToString();
 
-            LogQueue.Enqueue(res);
+                res = time + Environment.NewLine;
 
-            mut1.ReleaseMutex();
+                //res += sourceFilePath + Environment.NewLine;
+                res += "Member name:" + memberName + Environment.NewLine;
+                res += "Source Line Number: " + Convert.ToString(sourceLineNumber) + Environment.NewLine;
+
+                res += InputString + Environment.NewLine;
+
+                LogQueue.Enqueue(res);
+            }
         }
 
         public static void WriteConsoleLog(string InputString)
         {
-            mut2.WaitOne();
+            lock (lockObj2)
+            {
+                string res = "";
 
-            string res = "";
+                string time = DateTime.Now.ToString();
 
-            string time = DateTime.Now.ToString();
+                res = time + Environment.NewLine;
+                res += InputString + Environment.NewLine;
 
-            res = time + Environment.NewLine;
-            res += InputString + Environment.NewLine;
-
-            ConsoleLogQueue.Enqueue(res);
-
-            mut2.ReleaseMutex();
+                ConsoleLogQueue.Enqueue(res);
+            }
         }
 
         public static void WriteChatLog(string InputString)
         {
-            mut3.WaitOne();
+            lock (lockObj3)
+            {
+                string res = "";
 
-            string res = "";
+                //string time = DateTime.Now.ToString();
 
-            //string time = DateTime.Now.ToString();
+                //res = time + Environment.NewLine;
+                res += InputString;// + Environment.NewLine;
 
-            //res = time + Environment.NewLine;
-            res += InputString;// + Environment.NewLine;
-
-            ChatLogQueue.Enqueue(res);
-
-            mut3.ReleaseMutex();
+                ChatLogQueue.Enqueue(res);
+            }
         }
     }
 }

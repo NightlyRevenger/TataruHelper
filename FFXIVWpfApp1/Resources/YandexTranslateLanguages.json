@@ -1,467 +1,467 @@
 [
   {
     "ShownName": "Afrikaans",
-    "NativeName": "Afrikaans ",
+    "SystemName": "Afrikaans ",
     "LanguageCode": "af"
   }, 
   {
     "ShownName": "Armenian",
-    "NativeName": "Armenian ",
+    "SystemName": "Armenian ",
     "LanguageCode": "hy"
   }, 
   {
     "ShownName": "Albanian",
-    "NativeName": "Albanian",
+    "SystemName": "Albanian",
     "LanguageCode": "sq"
   },
   {
     "ShownName": "Amharic",
-    "NativeName": "Amharic ",
+    "SystemName": "Amharic ",
     "LanguageCode": "am"
   },
   {
     "ShownName": "Arabic",
-    "NativeName": "Arabic",
+    "SystemName": "Arabic",
     "LanguageCode": "ar"
   },
   {
     "ShownName": "Azerbaijani",
-    "NativeName": "Azerbaijani",
+    "SystemName": "Azerbaijani",
     "LanguageCode": "az"
   },
   {
     "ShownName": "Bashkir",
-    "NativeName": "Bashkir",
+    "SystemName": "Bashkir",
     "LanguageCode": "ba"
   },
   {
     "ShownName": "Basque",
-    "NativeName": "Basque",
+    "SystemName": "Basque",
     "LanguageCode": "eu"
   },
   {
     "ShownName": "Bengali",
-    "NativeName": "Bengali",
+    "SystemName": "Bengali",
     "LanguageCode": "bn"
   },
   {
     "ShownName": "Belarusian",
-    "NativeName": "Belarusian",
+    "SystemName": "Belarusian",
     "LanguageCode": "be"
   },
   {
     "ShownName": "Bosnian",
-    "NativeName": "Bosnian",
+    "SystemName": "Bosnian",
     "LanguageCode": "bs"
   },
   {
     "ShownName": "Bulgarian",
-    "NativeName": "Bulgarian",
+    "SystemName": "Bulgarian",
     "LanguageCode": "bg"
   },
   {
     "ShownName": "Burmese",
-    "NativeName": "Burmese",
+    "SystemName": "Burmese",
     "LanguageCode": "my"
   },
   {
     "ShownName": "Catalan",
-    "NativeName": "Catalan",
+    "SystemName": "Catalan",
     "LanguageCode": "ca"
   },
   {
     "ShownName": "Cebuano",
-    "NativeName": "Cebuano",
+    "SystemName": "Cebuano",
     "LanguageCode": "ceb"
   },
   {
     "ShownName": "Chinese",
-    "NativeName": "Chinese",
+    "SystemName": "Chinese",
     "LanguageCode": "zh"
   },
   {
     "ShownName": "Croatian",
-    "NativeName": "Croatian",
+    "SystemName": "Croatian",
     "LanguageCode": "hr"
   },
   {
     "ShownName": "Czech",
-    "NativeName": "Czech",
+    "SystemName": "Czech",
     "LanguageCode": "cs"
   },
   {
     "ShownName": "Danish",
-    "NativeName": "Danish",
+    "SystemName": "Danish",
     "LanguageCode": "da"
   },
   {
     "ShownName": "Dutch",
-    "NativeName": "Dutch",
+    "SystemName": "Dutch",
     "LanguageCode": "nl"
   },
   {
     "ShownName": "English",
-    "NativeName": "English",
+    "SystemName": "English",
     "LanguageCode": "en"
   },
   {
     "ShownName": "Esperanto",
-    "NativeName": "Esperanto",
+    "SystemName": "Esperanto",
     "LanguageCode": "eo"
   },
   {
     "ShownName": "Estonian",
-    "NativeName": "Estonian",
+    "SystemName": "Estonian",
     "LanguageCode": "et"
   },
   {
     "ShownName": "Finnish",
-    "NativeName": "Finnish",
+    "SystemName": "Finnish",
     "LanguageCode": "fi"
   },
   {
     "ShownName": "French",
-    "NativeName": "French",
+    "SystemName": "French",
     "LanguageCode": "fr"
   },
   {
     "ShownName": "Galician",
-    "NativeName": "Galician",
+    "SystemName": "Galician",
     "LanguageCode": "gl"
   },
   {
     "ShownName": "Georgian",
-    "NativeName": "Georgian",
+    "SystemName": "Georgian",
     "LanguageCode": "ka"
   },
   {
     "ShownName": "German",
-    "NativeName": "German",
+    "SystemName": "German",
     "LanguageCode": "de"
   },
   {
     "ShownName": "Greek",
-    "NativeName": "Greek",
+    "SystemName": "Greek",
     "LanguageCode": "el"
   },
   {
     "ShownName": "Gujarati",
-    "NativeName": "Gujarati",
+    "SystemName": "Gujarati",
     "LanguageCode": "gu"
   },
   {
     "ShownName": "Haitian Creole",
-    "NativeName": "Haitian Creole",
+    "SystemName": "Haitian Creole",
     "LanguageCode": "ht"
   },
   {
     "ShownName": "Hebrew",
-    "NativeName": "Hebrew",
+    "SystemName": "Hebrew",
     "LanguageCode": "he"
   },
   {
     "ShownName": "Hill Mari",
-    "NativeName": "Hill Mari",
+    "SystemName": "Hill Mari",
     "LanguageCode": "mrj"
   },
   {
     "ShownName": "Hindi",
-    "NativeName": "Hindi",
+    "SystemName": "Hindi",
     "LanguageCode": "hi"
   },
   {
     "ShownName": "Hungarian",
-    "NativeName": "Hungarian",
+    "SystemName": "Hungarian",
     "LanguageCode": "hu"
   },
   {
     "ShownName": "Icelandic",
-    "NativeName": "Icelandic",
+    "SystemName": "Icelandic",
     "LanguageCode": "is"
   },
   {
     "ShownName": "Indonesian",
-    "NativeName": "Indonesian",
+    "SystemName": "Indonesian",
     "LanguageCode": "id"
   },
   {
     "ShownName": "Irish",
-    "NativeName": "Irish",
+    "SystemName": "Irish",
     "LanguageCode": "ga"
   },
   {
     "ShownName": "Italian",
-    "NativeName": "Italian",
+    "SystemName": "Italian",
     "LanguageCode": "it"
   },
   {
     "ShownName": "Japanese",
-    "NativeName": "Japanese",
+    "SystemName": "Japanese",
     "LanguageCode": "ja"
   },
   {
     "ShownName": "Javanese",
-    "NativeName": "Javanese",
+    "SystemName": "Javanese",
     "LanguageCode": "jv"
   },
   {
     "ShownName": "Kannada",
-    "NativeName": "Kannada",
+    "SystemName": "Kannada",
     "LanguageCode": "kn"
   },
   {
     "ShownName": "Kazakh",
-    "NativeName": "Kazakh",
+    "SystemName": "Kazakh",
     "LanguageCode": "kk"
   },
   {
     "ShownName": "Khmer",
-    "NativeName": "Khmer",
+    "SystemName": "Khmer",
     "LanguageCode": "km"
   },
   {
     "ShownName": "Korean",
-    "NativeName": "Korean",
+    "SystemName": "Korean",
     "LanguageCode": "ko"
   },
   {
     "ShownName": "Kyrgyz",
-    "NativeName": "Kyrgyz",
+    "SystemName": "Kyrgyz",
     "LanguageCode": "ky"
   },
   {
     "ShownName": "Lao",
-    "NativeName": "Lao",
+    "SystemName": "Lao",
     "LanguageCode": "lo"
   },
   {
     "ShownName": "Latin",
-    "NativeName": "Latin",
+    "SystemName": "Latin",
     "LanguageCode": "la"
   },
   {
     "ShownName": "Latvian",
-    "NativeName": "Latvian",
+    "SystemName": "Latvian",
     "LanguageCode": "lv"
   },
   {
     "ShownName": "Lithuanian",
-    "NativeName": "Lithuanian",
+    "SystemName": "Lithuanian",
     "LanguageCode": "lt"
   },
   {
     "ShownName": "Luxembourgish",
-    "NativeName": "Luxembourgish",
+    "SystemName": "Luxembourgish",
     "LanguageCode": "lb"
   },
   {
     "ShownName": "Macedonian",
-    "NativeName": "Macedonian",
+    "SystemName": "Macedonian",
     "LanguageCode": "mk"
   },
   {
     "ShownName": "Malagasy",
-    "NativeName": "Malagasy",
+    "SystemName": "Malagasy",
     "LanguageCode": "mg"
   },
   {
     "ShownName": "Malay",
-    "NativeName": "Malay",
+    "SystemName": "Malay",
     "LanguageCode": "ms"
   },
   {
     "ShownName": "Malayalam",
-    "NativeName": "Malayalam",
+    "SystemName": "Malayalam",
     "LanguageCode": "ml"
   },
   {
     "ShownName": "Maltese",
-    "NativeName": "Maltese",
+    "SystemName": "Maltese",
     "LanguageCode": "mt"
   },
   {
     "ShownName": "Maori",
-    "NativeName": "Maori",
+    "SystemName": "Maori",
     "LanguageCode": "mi"
   },
   {
     "ShownName": "Marathi",
-    "NativeName": "Marathi",
+    "SystemName": "Marathi",
     "LanguageCode": "mr"
   },
   {
     "ShownName": "Mari",
-    "NativeName": "Mari",
+    "SystemName": "Mari",
     "LanguageCode": "mhr"
   },
   {
     "ShownName": "Mongolian",
-    "NativeName": "Mongolian",
+    "SystemName": "Mongolian",
     "LanguageCode": "mn"
   },
   {
     "ShownName": "Nepali",
-    "NativeName": "Nepali",
+    "SystemName": "Nepali",
     "LanguageCode": "ne"
   },
   {
     "ShownName": "Norwegian",
-    "NativeName": "Norwegian",
+    "SystemName": "Norwegian",
     "LanguageCode": "no"
   },
   {
     "ShownName": "Papiamento",
-    "NativeName": "Papiamento",
+    "SystemName": "Papiamento",
     "LanguageCode": "pap"
   },
   {
     "ShownName": "Punjabi",
-    "NativeName": "Punjabi",
+    "SystemName": "Punjabi",
     "LanguageCode": "pa"
   },
   {
     "ShownName": "Persian",
-    "NativeName": "Persian",
+    "SystemName": "Persian",
     "LanguageCode": "fa"
   },
   {
     "ShownName": "Polish",
-    "NativeName": "Polish",
+    "SystemName": "Polish",
     "LanguageCode": "pl"
   },
   {
     "ShownName": "Portuguese",
-    "NativeName": "Portuguese",
+    "SystemName": "Portuguese",
     "LanguageCode": "pt"
   },
   {
     "ShownName": "Romanian",
-    "NativeName": "Romanian",
+    "SystemName": "Romanian",
     "LanguageCode": "ro"
   },
   {
     "ShownName": "Russian",
-    "NativeName": "Russian",
+    "SystemName": "Russian",
     "LanguageCode": "ru"
   },
   {
     "ShownName": "Scottish",
-    "NativeName": "Scottish",
+    "SystemName": "Scottish",
     "LanguageCode": "gd"
   },
   {
     "ShownName": "Serbian",
-    "NativeName": "Serbian",
+    "SystemName": "Serbian",
     "LanguageCode": "sr"
   },
   {
     "ShownName": "Sinhalese",
-    "NativeName": "Sinhalese",
+    "SystemName": "Sinhalese",
     "LanguageCode": "si"
   },
   {
     "ShownName": "Slovak",
-    "NativeName": "Slovak",
+    "SystemName": "Slovak",
     "LanguageCode": "sk"
   },
   {
     "ShownName": "Slovenian",
-    "NativeName": "Slovenian",
+    "SystemName": "Slovenian",
     "LanguageCode": "sl"
   },
   {
     "ShownName": "Spanish",
-    "NativeName": "Spanish",
+    "SystemName": "Spanish",
     "LanguageCode": "es"
   },
   {
     "ShownName": "Sundanese",
-    "NativeName": "Sundanese",
+    "SystemName": "Sundanese",
     "LanguageCode": "su"
   },
   {
     "ShownName": "Swahili",
-    "NativeName": "Swahili",
+    "SystemName": "Swahili",
     "LanguageCode": "sw"
   },
   {
     "ShownName": "Swedish",
-    "NativeName": "Swedish",
+    "SystemName": "Swedish",
     "LanguageCode": "sv"
   },
   {
     "ShownName": "Tagalog",
-    "NativeName": "Tagalog",
+    "SystemName": "Tagalog",
     "LanguageCode": "tl"
   },
   {
     "ShownName": "Tajik",
-    "NativeName": "Tajik",
+    "SystemName": "Tajik",
     "LanguageCode": "tg"
   },
   {
     "ShownName": "Tamil",
-    "NativeName": "Tamil",
+    "SystemName": "Tamil",
     "LanguageCode": "ta"
   },
   {
     "ShownName": "Tatar",
-    "NativeName": "Tatar",
+    "SystemName": "Tatar",
     "LanguageCode": "tt"
   },
   {
     "ShownName": "Telugu",
-    "NativeName": "Telugu",
+    "SystemName": "Telugu",
     "LanguageCode": "te"
   },
   {
     "ShownName": "Thai",
-    "NativeName": "Thai",
+    "SystemName": "Thai",
     "LanguageCode": "th"
   },
   {
     "ShownName": "Turkish",
-    "NativeName": "Turkish",
+    "SystemName": "Turkish",
     "LanguageCode": "tr"
   },
   {
     "ShownName": "Udmurt",
-    "NativeName": "Udmurt",
+    "SystemName": "Udmurt",
     "LanguageCode": "udm"
   },
   {
     "ShownName": "Ukrainian",
-    "NativeName": "Ukrainian",
+    "SystemName": "Ukrainian",
     "LanguageCode": "uk"
   },
   {
     "ShownName": "Urdu",
-    "NativeName": "Urdu",
+    "SystemName": "Urdu",
     "LanguageCode": "ur"
   },
   {
     "ShownName": "Uzbek",
-    "NativeName": "Uzbek",
+    "SystemName": "Uzbek",
     "LanguageCode": "uz"
   },
   {
     "ShownName": "Vietnamese",
-    "NativeName": "Vietnamese",
+    "SystemName": "Vietnamese",
     "LanguageCode": "vi"
   },
   {
     "ShownName": "Welsh",
-    "NativeName": "Welsh",
+    "SystemName": "Welsh",
     "LanguageCode": "cy"
   },
   {
     "ShownName": "Xhosa",
-    "NativeName": "Xhosa",
+    "SystemName": "Xhosa",
     "LanguageCode": "xh"
   },
   {
     "ShownName": "Yiddish",
-    "NativeName": "Yiddish",
+    "SystemName": "Yiddish",
     "LanguageCode": "yi"
   }
 ]

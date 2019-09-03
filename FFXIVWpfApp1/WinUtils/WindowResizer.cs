@@ -10,7 +10,7 @@ using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace FFXIITataruHelper.WinUtils
+namespace FFXIVTataruHelper.WinUtils
 {
     class WindowResizer
     {

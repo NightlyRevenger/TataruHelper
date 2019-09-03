@@ -6,9 +6,9 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using FFXIITataruHelper.EventArguments;
+using FFXIVTataruHelper.EventArguments;
 
-namespace FFXIITataruHelper.WinUtils
+namespace FFXIVTataruHelper.WinUtils
 {
     public class MouseHooker : IDisposable
     {

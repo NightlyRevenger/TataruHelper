@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace FFXIITataruHelper
+namespace FFXIVTataruHelper
 {
     public static class CmdArgsStatus
     {

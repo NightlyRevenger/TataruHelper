@@ -1,11 +1,11 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-using FFXIITataruHelper.Translation;
+using FFXIVTataruHelper.Translation;
 using System;
 using System.Collections.ObjectModel;
 
-namespace FFXIITataruHelper.EventArguments
+namespace FFXIVTataruHelper.EventArguments
 {
     public class TranslationEngineChangeEventArgs : TatruEventArgs
     {

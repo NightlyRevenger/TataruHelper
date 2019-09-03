@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 // This is somewhat inspired by Discord.NET 
 // asynchronous event code
-namespace FFXIITataruHelper
+namespace FFXIVTataruHelper
 {
 
     /// <summary>

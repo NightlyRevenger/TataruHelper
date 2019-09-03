@@ -8,7 +8,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 
-namespace FFXIITataruHelper.Translation
+namespace FFXIVTataruHelper.Translation
 {
     public class WebApi
     {

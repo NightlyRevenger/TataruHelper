@@ -1,13 +1,13 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-using FFXIITataruHelper.EventArguments;
-using FFXIITataruHelper.Utils;
+using FFXIVTataruHelper.EventArguments;
+using FFXIVTataruHelper.Utils;
 using System;
 using System.Windows;
 using System.Windows.Interop;
 
-namespace FFXIITataruHelper.WinUtils
+namespace FFXIVTataruHelper.WinUtils
 {
     class WinMessagesHandler
     {

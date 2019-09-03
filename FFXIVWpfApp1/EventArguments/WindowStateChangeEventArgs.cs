@@ -3,7 +3,7 @@
 
 using System;
 
-namespace FFXIITataruHelper.EventArguments
+namespace FFXIVTataruHelper.EventArguments
 {
     public class WindowStateChangeEventArgs : TatruEventArgs
     {

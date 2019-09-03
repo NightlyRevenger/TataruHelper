@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{B08AC93D-827E-46E8-B541-C66010865FFD}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>FFXIITataruHelper</RootNamespace>
+    <RootNamespace>FFXIVTataruHelper</RootNamespace>
     <AssemblyName>TataruHelper</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -88,6 +88,9 @@
     <Reference Include="DeltaCompressionDotNet.PatchApi, Version=1.1.0.0, Culture=neutral, PublicKeyToken=3e8888ee913ed789, processorArchitecture=MSIL">
       <HintPath>..\packages\DeltaCompressionDotNet.1.1.0\lib\net20\DeltaCompressionDotNet.PatchApi.dll</HintPath>
     </Reference>
+    <Reference Include="Jurassic, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Jurassic.3.0.0\lib\net45\Jurassic.dll</HintPath>
+    </Reference>
     <Reference Include="Mono.Cecil, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
       <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.dll</HintPath>
     </Reference>
@@ -151,7 +154,9 @@
       <DependentUpon>PatreonWin.xaml</DependentUpon>
     </Compile>
     <Compile Include="AsyncEvent.cs" />
-    <Compile Include="ChatStreamWindow.cs" />
+    <Compile Include="TataruComponentModel\AsyncBindingList.cs" />
+    <Compile Include="TataruComponentModel\AsyncListChangedEventHandler.cs" />
+    <Compile Include="TataruComponentModel\AsyncPropertyChangedEventArgs.cs" />
     <Compile Include="EventArguments\BooleanChangeEventArgs.cs" />
     <Compile Include="EventArguments\ChatMessageArrivedEventArgs.cs" />
     <Compile Include="EventArguments\ChatMsgTypeChangeEventArgs.cs" />
@@ -168,15 +173,28 @@
     <Compile Include="EventArguments\TranslationArrivedEventArgs.cs" />
     <Compile Include="EventArguments\TranslationEngineChangeEventArgs.cs" />
     <Compile Include="EventArguments\WindowStateChangeEventArgs.cs" />
+    <Compile Include="TataruComponentModel\INotifyListChanged.cs" />
+    <Compile Include="TataruComponentModel\INotifyPropertyChangedAsync.cs" />
+    <Compile Include="TataruComponentModel\PropertyBinder.cs" />
+    <Compile Include="TataruComponentModel\PropertyCouple.cs" />
+    <Compile Include="Translation\Papago\PapagoEncoder.cs" />
+    <Compile Include="Translation\Papago\PapagoRequest.cs" />
+    <Compile Include="Translation\Papago\PapagoResponse.cs" />
+    <Compile Include="Translation\Papago\PapagoTranslator.cs" />
+    <Compile Include="Translation\TranslationEngine.cs" />
+    <Compile Include="Translation\TranslationRequset.cs" />
     <Compile Include="UIModel\ChatMsgType.cs" />
     <Compile Include="FFHandlers\FFChatMsg.cs" />
     <Compile Include="FFHandlers\FFMemoryReader.cs" />
-    <Compile Include="Translation\EngineDescription.cs" />
     <Compile Include="Translation\YandexResponse.cs" />
     <Compile Include="UIModel\ChatProcessor.cs" />
+    <Compile Include="UIModel\ChatWindowViewModelSettings.cs" />
     <Compile Include="UIModel\CmdArgsStatus.cs" />
+    <Compile Include="UIModel\UserSettingsOld.cs" />
+    <Compile Include="Utils\StringCipher.cs" />
+    <Compile Include="Utils\UiWindowHandler.cs" />
+    <Compile Include="ViewModel\ChatWindowViewModel.cs" />
     <Compile Include="ViewModel\TataruUICommand.cs" />
-    <Compile Include="UIModel\OldSettings.cs" />
     <Compile Include="UIModel\TataruModel.cs" />
     <Compile Include="UIModel\TataruUIModel.cs" />
     <Compile Include="UIModel\UserSettings.cs" />
@@ -329,6 +347,12 @@
     <None Include="Resources\MultillectTranslateLanguages.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\PapagoEncoder">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\PapagoLanguages.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\YandexTranslateLanguages.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -391,6 +415,9 @@
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\AWSSDK.Translate.3.3.100.56\analyzers\dotnet\cs\AWSSDK.Translate.CodeAnalysis.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\PapagoEncoder.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

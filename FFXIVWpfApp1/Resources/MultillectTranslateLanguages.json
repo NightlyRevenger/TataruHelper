@@ -1,82 +1,82 @@
 [
   {
     "ShownName": "Arabic",
-    "NativeName": "Arabic",
+    "SystemName": "Arabic",
     "LanguageCode": "ar"
   },
   {
     "ShownName": "Chinese",
-    "NativeName": "Chinese",
+    "SystemName": "Chinese",
     "LanguageCode": "zh"
   },
     {
     "ShownName": "English",
-    "NativeName": "English",
+    "SystemName": "English",
     "LanguageCode": "en"
   },
     {
     "ShownName": "Farsi (Persian)",
-    "NativeName": "Persian",
+    "SystemName": "Persian",
     "LanguageCode": "fa"
   },
     {
     "ShownName": "French",
-    "NativeName": "French",
+    "SystemName": "French",
     "LanguageCode": "fr"
   },
     {
     "ShownName": "German",
-    "NativeName": "German",
+    "SystemName": "German",
     "LanguageCode": "de"
   },
     {
     "ShownName": "Hindi",
-    "NativeName": "Hindi",
+    "SystemName": "Hindi",
     "LanguageCode": "hi"
   },
     {
     "ShownName": "Japanese",
-    "NativeName": "Japanese",
+    "SystemName": "Japanese",
     "LanguageCode": "ja"
   },
     {
     "ShownName": "Kazakh",
-    "NativeName": "Kazakh",
+    "SystemName": "Kazakh",
     "LanguageCode": "kk"
   },
     {
     "ShownName": "Korean",
-    "NativeName": "Korean",
+    "SystemName": "Korean",
     "LanguageCode": "ko"
   },
     {
     "ShownName": "Polish",
-    "NativeName": "Polish",
+    "SystemName": "Polish",
     "LanguageCode": "pl"
   },
       {
     "ShownName": "Portuguese",
-    "NativeName": "Portuguese",
+    "SystemName": "Portuguese",
     "LanguageCode": "pt"
   },
       {
     "ShownName": "Russian",
-    "NativeName": "Russian",
+    "SystemName": "Russian",
     "LanguageCode": "ru"
   },
       {
     "ShownName": "Spanish",
-    "NativeName": "Spanish",
+    "SystemName": "Spanish",
     "LanguageCode": "es"
   },
   {
     "ShownName": "Turkish",
-    "NativeName": "Turkish",
+    "SystemName": "Turkish",
     "LanguageCode": "tr"
   },
   {
     "ShownName": "Ukrainian",
-    "NativeName": "Ukrainian",
+    "SystemName": "Ukrainian",
     "LanguageCode": "uk"
   }
 ]

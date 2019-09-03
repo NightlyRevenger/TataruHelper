@@ -14,103 +14,16 @@ using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
 
-namespace FFXIITataruHelper.Translation
+namespace FFXIVTataruHelper.Translation
 {
     public class WebTranslator
     {
-        public enum TranslationEngine : int
+        public ReadOnlyCollection<TranslationEngine> TranslationEngines
         {
-            GoogleTranslate = 0,
-            Multillect = 1,
-            DeepL = 2,
-            Yandex = 3,
-            Amazon = 4
+            get { return _TranslationEngines; }
         }
 
-        public string SourceLanguage
-        {
-            get { return _SourceLanguage.ShownName; }
-
-            set
-            {
-                try
-                {
-                    if (value.Length > 1)
-                    {
-                        var languagues = _TranslatorsLanguages[(int)_CurrentTranslationEngine];
-
-                        var lang = languagues.First(x => x.ShownName == value);
-
-                        _SourceLanguage = lang;
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.WriteLog(Convert.ToString(e));
-                }
-            }
-
-        }
-
-        public string TargetLanguage
-        {
-            get { return _TargetLanguage.ShownName; }
-
-            set
-            {
-                try
-                {
-                    if (value.Length > 1)
-                    {
-                        var languagues = _TranslatorsLanguages[(int)_CurrentTranslationEngine];
-
-                        var lang = languagues.First(x => x.ShownName == value);
-
-                        _TargetLanguage = lang;
-                    }
-                }
-                catch (Exception e)
-                {
-                    Logger.WriteLog(Convert.ToString(e));
-                }
-            }
-        }
-
-        public TranslationEngine CurrentTranslationEngine
-        {
-            get { return _CurrentTranslationEngine; }
-
-            set
-            {
-                _CurrentTranslationEngine = value;
-            }
-        }
-
-        public ReadOnlyCollection<TranslatorLanguague> CurrentLanguages
-        {
-            get
-            {
-                return _TranslatorsLanguages[(int)_CurrentTranslationEngine];
-            }
-        }
-
-        TranslatorLanguague _SourceLanguage;
-
-        TranslatorLanguague _TargetLanguage;
-
-        TranslationEngine _CurrentTranslationEngine;
-
-        private ReadOnlyCollection<TranslatorLanguague> GoogleLanguages;
-
-        private ReadOnlyCollection<TranslatorLanguague> MultillectLanguages;
-
-        private ReadOnlyCollection<TranslatorLanguague> DeeplLanguages;
-
-        private ReadOnlyCollection<TranslatorLanguague> YandexLanguages;
-
-        private ReadOnlyCollection<TranslatorLanguague> AmazonLanguages;
-
-        private List<ReadOnlyCollection<TranslatorLanguague>> _TranslatorsLanguages;
+        private ReadOnlyCollection<TranslationEngine> _TranslationEngines;
 
         WebApi.WebReader GoogleWebRead;
 
@@ -120,17 +33,24 @@ namespace FFXIITataruHelper.Translation
 
         DeepLTranslator _DeepLTranslator;
 
+        PapagoTranslator _PapagoTranslator;
+
         Amazon.Translate.AmazonTranslateClient amazonTranslateClient;
 
         private bool amazonLoaded = false;
 
         private Regex GoogleRx;
 
+        List<KeyValuePair<TranslationRequest, string>> transaltionCache;
+        KeyValuePair<TranslationRequest, string> defaultCachedResult = default(KeyValuePair<TranslationRequest, string>);
+
         public WebTranslator()
         {
             GoogleWebRead = new WebApi.WebReader(@"translate.google.com");
             MultillectWebRead = new WebApi.WebReader(@"translate.multillect.com");
             YandexWebRead = new WebApi.WebReader(@"translate.yandex.net");
+
+            transaltionCache = new List<KeyValuePair<TranslationRequest, string>>(200);
 
             Task.Run(() =>
             {
@@ -145,44 +65,41 @@ namespace FFXIITataruHelper.Translation
 
             _DeepLTranslator = new DeepLTranslator();
 
-            _TranslatorsLanguages = new List<ReadOnlyCollection<TranslatorLanguague>>();
+            _PapagoTranslator = new PapagoTranslator();
 
             string pattern = "(?<=(<div dir=\"ltr\" class=\"t0\">)).*?(?=(<\\/div>))";
 
             GoogleRx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
-        public void LoadLanguages(string glTrPath, string MultTrPath, string deepPath, string YaTrPath, string AmazonTrPath)
+        public void LoadLanguages(string glTrPath, string MultTrPath, string deepPath, string YaTrPath, string AmazonTrPath, string PapagoTrPath)
         {
             try
             {
+                List<TranslationEngine> tmptranslationEngines = new List<TranslationEngine>();
                 var tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(glTrPath);
-                GoogleLanguages = new ReadOnlyCollection<TranslatorLanguague>(tmpList);
+                tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.GoogleTranslate, tmpList, 9));
 
-                _TranslatorsLanguages.Add(GoogleLanguages);
 
                 tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(MultTrPath);
-                MultillectLanguages = new ReadOnlyCollection<TranslatorLanguague>(tmpList);
-
-                _TranslatorsLanguages.Add(MultillectLanguages);
+                tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Multillect, tmpList, 1));
 
                 tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(deepPath);
-                DeeplLanguages = new ReadOnlyCollection<TranslatorLanguague>(tmpList);
-
-                _TranslatorsLanguages.Add(DeeplLanguages);
+                tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.DeepL, tmpList, 10));
 
                 tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(YaTrPath);
-                YandexLanguages = new ReadOnlyCollection<TranslatorLanguague>(tmpList);
-
-                _TranslatorsLanguages.Add(YandexLanguages);
+                tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Yandex, tmpList, 4));
 
                 tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(AmazonTrPath);
-                AmazonLanguages = new ReadOnlyCollection<TranslatorLanguague>(tmpList);
+                tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Amazon, tmpList, 6));
 
-                _TranslatorsLanguages.Add(AmazonLanguages);
+                tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(PapagoTrPath);
+                tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Papago, tmpList, 7));
 
-                _SourceLanguage = CurrentLanguages[0];
-                _TargetLanguage = CurrentLanguages[1];
+                tmptranslationEngines = tmptranslationEngines.OrderBy(x => x.Quality * (-1)).ToList();
+
+
+                _TranslationEngines = new ReadOnlyCollection<TranslationEngine>(tmptranslationEngines);
             }
             catch (Exception e)
             {
@@ -190,38 +107,57 @@ namespace FFXIITataruHelper.Translation
             }
         }
 
-        public string Translate(string inSentence)
+        public string Translate(string inSentence, TranslationEngine translationEngine, TranslatorLanguague fromLang, TranslatorLanguague toLang)
         {
+            if (fromLang.SystemName == toLang.SystemName)
+                return inSentence;
+
+            TranslationRequest translationRequest = new TranslationRequest(inSentence, translationEngine.EngineName, fromLang.LanguageCode, toLang.LanguageCode);
+            var cachedResult = transaltionCache.FirstOrDefault(x => x.Key == translationRequest);
+
+            if (!cachedResult.Equals(defaultCachedResult))
+            {
+                return cachedResult.Value;
+            }
+
             string result = String.Empty;
 
             inSentence = PreprocessSentence(inSentence);
 
-            switch (_CurrentTranslationEngine)
+            var fromLangCode = fromLang.LanguageCode;
+            var toLangCode = toLang.LanguageCode;
+
+            switch (translationEngine.EngineName)
             {
-                case TranslationEngine.GoogleTranslate:
+                case TranslationEngineName.GoogleTranslate:
                     {
-                        result = GoogleTranslate(inSentence, _SourceLanguage.LanguageCode, _TargetLanguage.LanguageCode);
+                        result = GoogleTranslate(inSentence, fromLangCode, toLangCode);
                         break;
                     }
 
-                case TranslationEngine.Multillect:
+                case TranslationEngineName.Multillect:
                     {
-                        result = MultillectTranslate(inSentence, _SourceLanguage.LanguageCode, _TargetLanguage.LanguageCode);
+                        result = MultillectTranslate(inSentence, fromLangCode, toLangCode);
                         break;
                     }
-                case TranslationEngine.DeepL:
+                case TranslationEngineName.DeepL:
                     {
-                        result = DeeplTranslate(inSentence, _SourceLanguage.LanguageCode, _TargetLanguage.LanguageCode);
+                        result = DeeplTranslate(inSentence, fromLangCode, toLangCode);
                         break;
                     }
-                case TranslationEngine.Yandex:
+                case TranslationEngineName.Yandex:
                     {
-                        result = YandexTranslate(inSentence, _SourceLanguage.LanguageCode, _TargetLanguage.LanguageCode);
+                        result = YandexTranslate(inSentence, fromLangCode, toLangCode);
                         break;
                     }
-                case TranslationEngine.Amazon:
+                case TranslationEngineName.Amazon:
                     {
-                        result = AmazonTranslate(inSentence, _SourceLanguage.LanguageCode, _TargetLanguage.LanguageCode);
+                        result = AmazonTranslate(inSentence, fromLangCode, toLangCode);
+                        break;
+                    }
+                case TranslationEngineName.Papago:
+                    {
+                        result = PapagoTranslate(inSentence, fromLangCode, toLangCode);
                         break;
                     }
                 default:
@@ -230,25 +166,32 @@ namespace FFXIITataruHelper.Translation
                         break;
                     }
             }
+
+            if (result.Length > 1)
+            {
+                cachedResult = transaltionCache.FirstOrDefault(x => x.Key == translationRequest);
+
+                if (cachedResult.Equals(defaultCachedResult))
+                    transaltionCache.Add(new KeyValuePair<TranslationRequest, string>(translationRequest, result));
+
+                if (transaltionCache.Count > 180)
+                    transaltionCache.RemoveRange(0, 50);
+
+            }
+
             return result;
         }
 
-        public async Task<string> TranslateAsync(string inSentence)
+        public async Task<string> TranslateAsync(string inSentence, TranslationEngine translationEngine, TranslatorLanguague fromLang, TranslatorLanguague toLang)
         {
             string result = String.Empty;
 
             await Task.Run(() =>
             {
-                result = Translate(inSentence);
+                result = Translate(inSentence, translationEngine, fromLang, toLang);
             });
 
             return result;
-        }
-
-        public ReadOnlyCollection<ReadOnlyCollection<TranslatorLanguague>> GetAllSupportedLanguages()
-        {
-            var translatorLanguagues = new ReadOnlyCollection<ReadOnlyCollection<TranslatorLanguague>>(_TranslatorsLanguages);
-            return translatorLanguagues;
         }
 
         private string GoogleTranslate(string sentence, string inLang, string outLang)
@@ -315,12 +258,11 @@ namespace FFXIITataruHelper.Translation
             string result = String.Empty;
             try
             {
-                string yaApiKey = @"";
                 string _outLang = outLang;
                 string _inLang = inLang;
 
                 string _baseUrl = @"https://translate.yandex.net/api/v1.5/tr.json/translate?lang={0}-{1}&key={2}";
-                string url = string.Format(_baseUrl, _inLang, _outLang, yaApiKey);
+                string url = string.Format(_baseUrl, _inLang, _outLang, @"");
 
                 var tmpResult = YandexWebRead.GetWebData(url, WebApi.WebReader.WebMethods.POST, "text=" + sentence);
 
@@ -382,6 +324,22 @@ namespace FFXIITataruHelper.Translation
             }
             catch (Exception e)
             { Logger.WriteLog(Convert.ToString(e)); }
+
+            return result;
+        }
+
+        private string PapagoTranslate(string sentence, string inLang, string outLang)
+        {
+            string result = string.Empty;
+
+            try
+            {
+                result = _PapagoTranslator.Translate(sentence, inLang, outLang);
+            }
+            catch (Exception e)
+            {
+                Logger.WriteLog(e);
+            }
 
             return result;
         }

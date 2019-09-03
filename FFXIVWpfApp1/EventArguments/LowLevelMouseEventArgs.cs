@@ -2,9 +2,9 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using System;
-using static FFXIITataruHelper.WinUtils.MouseHooker;
+using static FFXIVTataruHelper.WinUtils.MouseHooker;
 
-namespace FFXIITataruHelper.EventArguments
+namespace FFXIVTataruHelper.EventArguments
 {
     public class LowLevelMouseEventArgs : TatruEventArgs
     {

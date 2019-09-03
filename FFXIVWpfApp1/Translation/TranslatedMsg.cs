@@ -4,7 +4,7 @@
 
 using System;
 
-namespace FFXIITataruHelper.Translation
+namespace FFXIVTataruHelper.Translation
 {
     public class TranslatedMsg
     {

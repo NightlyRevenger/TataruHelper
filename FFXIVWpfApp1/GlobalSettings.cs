@@ -1,11 +1,9 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-
-
 using System.Collections.Generic;
 
-namespace FFXIITataruHelper
+namespace FFXIVTataruHelper
 {
     static class GlobalSettings
     {
@@ -24,6 +22,10 @@ namespace FFXIITataruHelper
         public static string YandexLanguages = "Resources/YandexTranslateLanguages.json";
 
         public static string AmazonLanguages = "Resources/AmazonLanguages.json";
+
+        public static string PapagoLanguages = "Resources/PapagoLanguages.json";
+
+        public static string PapagoEncoderPath = "Resources/PapagoEncoder";
 
         public static string LocalisationDirPath = @"Locale_cloud\";
 
@@ -53,16 +55,18 @@ namespace FFXIITataruHelper
 
         public static int TranslationDelay = 33;
 
-        public static int TranslatorWaitTime = 2500;
+        public static int TranslatorWaitTime = 5000;
 
         public static int SettingsSaveDelay = 2500;
 
-        public static int MaxTranslateTryCount = 3;
+        public static int MaxTranslateTryCount = 4;
 
-        public static string OldSettings = "../AppSettings.json";
+        public static string OldSettings = "../UserSettings.json";
 
-        public static string Settings = "../UserSettings.json";
+        public static string Settings = "../UserSettingsNew.json";
 
         public static string BlackList = @"Resources\MsgBlackList.json";
+
+        public static string IgnoreNickNameChatCodes = @"Resources\IgnoreNickNameChatCodes.json";
     }
 }

@@ -5,7 +5,7 @@
 
 using System.Collections.Generic;
 
-namespace FFXIITataruHelper.Translation
+namespace FFXIVTataruHelper.Translation
 {
     public class DeepLResponse
     {

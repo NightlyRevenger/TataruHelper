@@ -6,7 +6,7 @@ using System;
 using System.IO;
 using System.Windows;
 
-namespace FFXIITataruHelper
+namespace FFXIVTataruHelper
 {
     public class LanguagueWrapper
     {
@@ -96,10 +96,10 @@ namespace FFXIITataruHelper
             ICatalog catalog = new Catalog();
             try
             {
-                var fs = File.Open(path, System.IO.FileMode.Open);
-                catalog = new Catalog(fs);
-                fs.Close();
-                fs.Dispose();
+                using (var fs = File.Open(path, System.IO.FileMode.Open))
+                {
+                    catalog = new Catalog(fs);
+                }
             }
             catch (Exception e)
             {
@@ -119,6 +119,9 @@ namespace FFXIITataruHelper
             _SettingsWindow.Resources["ChatAppearance"] = catalog.GetString("Chat Appearance");
             _SettingsWindow.Resources["TranslationSettings"] = catalog.GetString("Translation Settings");
             _SettingsWindow.Resources["GeneralBehavior"] = catalog.GetString("General Behavior");
+
+            _SettingsWindow.Resources["ChatWindowBehavior"] = catalog.GetString("Behavior");
+            _SettingsWindow.Resources["ChatWindowHotkeys"] = catalog.GetString("Hotkeys");
 
             _SettingsWindow.Resources["FontSettings"] = catalog.GetString("Font Settings");
             _SettingsWindow.Resources["FontSize"] = catalog.GetString("Font Size");
@@ -144,8 +147,6 @@ namespace FFXIITataruHelper
             _SettingsWindow.Resources["TranslationEngine"] = catalog.GetString("Translation Engine");
             _SettingsWindow.Resources["FFLanguage"] = catalog.GetString("FF Language");
             _SettingsWindow.Resources["TraslateTo"] = catalog.GetString("Translate to");
-
-            _SettingsWindow.Resources["Hotkeys"] = catalog.GetString("Hotkeys");
 
             _SettingsWindow.Resources["ShowHideChatWindowHK"] = catalog.GetString("Show/hide Chat Window");
             _SettingsWindow.Resources["ShowHideChatWindowHKToolTip"] = catalog.GetString("Hotkey to hide a Chat Box when it is not needed and call it up when it is needed. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc.");
@@ -211,7 +212,24 @@ namespace FFXIITataruHelper
             _SettingsWindow.Resources["CkLinkShell6"] = catalog.GetString("LinkShell6");
             _SettingsWindow.Resources["CkLinkShell7"] = catalog.GetString("LinkShell7");
             _SettingsWindow.Resources["CkLinkShell8"] = catalog.GetString("LinkShell8");
-            //_SettingsWindow.Resources["CkNoviceNetwork"] = catalog.GetString("NoviceNetwork");
+
+            _SettingsWindow.Resources["CkNoviceNetwork"] = catalog.GetString("Novice Network");
+
+            _SettingsWindow.Resources["CkServerInfo"] = catalog.GetString("Server Info");
+
+            _SettingsWindow.Resources["CkCWLS1"] = catalog.GetString("CWLS1");
+            _SettingsWindow.Resources["CkCWLS2"] = catalog.GetString("CWLS2");
+            _SettingsWindow.Resources["CkCWLS3"] = catalog.GetString("CWLS3");
+            _SettingsWindow.Resources["CkCWLS4"] = catalog.GetString("CWLS4");
+            _SettingsWindow.Resources["CkCWLS5"] = catalog.GetString("CWLS5");
+            _SettingsWindow.Resources["CkCWLS6"] = catalog.GetString("CWLS6");
+            _SettingsWindow.Resources["CkCWLS7"] = catalog.GetString("CWLS7");
+            _SettingsWindow.Resources["CkCWLS8"] = catalog.GetString("CWLS8");
+
+            _SettingsWindow.Resources["CkEmotes"] = catalog.GetString("Emotes");
+            _SettingsWindow.Resources["CkCustomEmotes"] = catalog.GetString("Custom Emotes");
+
+
 
         }
     }

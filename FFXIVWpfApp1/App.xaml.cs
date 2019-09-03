@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 
-namespace FFXIITataruHelper
+namespace FFXIVTataruHelper
 {
     /// <summary>
     /// Interaction logic for App.xaml

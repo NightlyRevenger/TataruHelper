@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
-namespace FFXIITataruHelper.ViewModel
+namespace FFXIVTataruHelper.ViewModel
 {
     public class TataruUICommand : ICommand
     {

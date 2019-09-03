@@ -1,9 +1,11 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
-using FFXIITataruHelper.EventArguments;
-using FFXIITataruHelper.WinUtils;
+using FFXIVTataruHelper.EventArguments;
+using FFXIVTataruHelper.ViewModel;
+using FFXIVTataruHelper.WinUtils;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Documents;
@@ -11,41 +13,48 @@ using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 
-namespace FFXIITataruHelper
+namespace FFXIVTataruHelper
 {
     /// <summary>
     /// Interaction logic for ChatWindow.xaml
     /// </summary>
     public partial class ChatWindow : Window
     {
-        protected Window _SettigsWindow;
+        public IntPtr WindowHandle
+        {
+            get { return new WindowInteropHelper(this).Handle; }
+        }
+
+        public long WinId
+        {
+            get { return _ChatWindowViewModel.WinId; }
+        }
 
         private WindowResizer _WindowResizer;
 
         private MouseHooker _MouseHooker;
 
-        private bool _IsClickThrought;
+        private bool _IsClickThrought = false;
 
         private DateTime _TextArrivedTime;
         protected bool _KeepWorking;
         private bool _AutoHidden;
 
-        protected TataruModel _TataruModel;
-        protected TataruUIModel _TataruUIModel;
+        TataruModel _TataruModel;
+        ChatWindowViewModel _ChatWindowViewModel;
 
-        public ChatWindow(Window settigsWindow, TataruModel tataruModel)
+        public ChatWindow(TataruModel tataruModel, ChatWindowViewModel chatWindowViewModel)
         {
             InitializeComponent();
 
             try
             {
                 _TataruModel = tataruModel;
-                _TataruUIModel = _TataruModel.TataruUIModel;
-                InitTataruModel();
+                _ChatWindowViewModel = chatWindowViewModel;
+
+                this.DataContext = _ChatWindowViewModel;
 
                 _WindowResizer = new WindowResizer(this);
-
-                _SettigsWindow = settigsWindow;
 
                 this.ShowInTaskbar = false;
 
@@ -68,6 +77,220 @@ namespace FFXIITataruHelper
             }
         }
 
+        #region **UserActions.
+
+        public async Task ClearChat()
+        {
+            await this.UIThreadAsync(() =>
+            {
+                ChatRtb.Document.Blocks.Clear();
+            });
+        }
+
+        #endregion
+
+        #region **WindowEvents.
+
+        protected virtual void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            _MouseHooker = null;
+
+            AutoHideStatusCheck();
+
+            _TataruModel.FFMemoryReader.AddExclusionWindowHandler((new WindowInteropHelper(this).Handle));
+
+
+            if (_ChatWindowViewModel.IsClickThrough)
+                MakeWindowClickThrought();
+            else
+                MakeWindowClickbale();
+
+            _ChatWindowViewModel.AsyncPropertyChanged += OnSettingsWindowPropertyChange;
+            _ChatWindowViewModel.RequestChatClear += OnChatClearRequest;
+
+            _TataruModel.ChatProcessor.TextArrived += OnTextArrived;
+            _TataruModel.FFMemoryReader.FFWindowStateChanged += OnFFWindowStateChange;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            _KeepWorking = false;
+
+            if (_MouseHooker != null)
+                _MouseHooker.UnHook();
+        }
+
+        protected virtual void Window_Deactivated(object sender, EventArgs e)
+        {
+            int t = 0;
+            t++;
+        }
+
+        #endregion
+
+        #region **UiEvents.
+
+        protected async Task OnTextArrived(ChatMessageArrivedEventArgs ea)
+        {
+
+            string text = "";
+            Color textColor = Color.FromArgb(255, 255, 255, 255);
+            ChatCodeViewModel chatCode;
+
+            chatCode = _ChatWindowViewModel.ChatCodes.FirstOrDefault(x => x.Code == ea.ChatMessage.Code);
+
+            if (chatCode == null)
+                return;
+            if (!chatCode.IsChecked)
+                return;
+
+            textColor = chatCode.Color;
+
+            int translateTryCount = 0;
+            bool notTransalted = true;
+
+            while (translateTryCount < GlobalSettings.MaxTranslateTryCount && notTransalted)
+            {
+                var translationEngines = _TataruModel.ChatProcessor.TranslationEngines;
+                string translation = string.Empty;
+                Task.Run(async () =>
+                {
+                    translation = await _TataruModel.ChatProcessor.Translate(ea.ChatMessage.Text, _ChatWindowViewModel.CurrentTransaltionEngine,
+                _ChatWindowViewModel.CurrentTranslateFromLanguague, _ChatWindowViewModel.CurrentTranslateToLanguague, chatCode.Code);
+
+                }).Wait(GlobalSettings.TranslatorWaitTime);
+                translateTryCount++;
+
+                if (translation.Length < 1)
+                {
+                    var engineIndex = translationEngines.IndexOf(_ChatWindowViewModel.CurrentTransaltionEngine);
+                    if (engineIndex < 0)
+                        engineIndex = translationEngines.Count - 1;
+
+                    bool supported = false;
+
+                    int iterCount = 0;
+                    do
+                    {
+                        engineIndex++;
+                        iterCount++;
+                        if (engineIndex >= translationEngines.Count)
+                            engineIndex = 0;
+
+                        var tmpEngine = translationEngines[engineIndex];
+                        if (tmpEngine.SupportedLanguages.Contains(_ChatWindowViewModel.CurrentTranslateFromLanguague)
+                            && tmpEngine.SupportedLanguages.Contains(_ChatWindowViewModel.CurrentTranslateToLanguague))
+                        {
+                            supported = true;
+
+                            UiWindow.Window.UIThread(() =>
+                            {
+                                _ChatWindowViewModel.TranslationEngines.MoveCurrentToPosition(engineIndex);
+                            });
+
+                        }
+
+                    } while (!supported && iterCount <= translationEngines.Count);
+
+                    UiWindow.Window.UIThread(() =>
+                    {
+                        ShowErorrText(1, _ChatWindowViewModel.CurrentTransaltionEngine.Name, textColor);
+                    });
+
+                }
+                else
+                {
+                    text = translation;
+                    notTransalted = false;
+                }
+            }
+
+            text = await _TataruModel.ChatProcessor.Translate(ea.ChatMessage.Text, _ChatWindowViewModel.CurrentTransaltionEngine,
+            _ChatWindowViewModel.CurrentTranslateFromLanguague, _ChatWindowViewModel.CurrentTranslateToLanguague, chatCode.Code);
+
+            await this.UIThreadAsync(() =>
+            {
+                ShowWindow();
+
+                if (_ChatWindowViewModel.IsHiddenByUser == false)
+                    _TextArrivedTime = DateTime.UtcNow;
+
+                ShowTransaltedText(text, textColor);
+
+                if (_ChatWindowViewModel.IsHiddenByUser == false)
+                    _TextArrivedTime = DateTime.UtcNow;
+            });
+
+        }
+
+        protected virtual async Task OnSettingsWindowPropertyChange(AsyncPropertyChangedEventArgs ea)
+        {
+            switch (ea.PropertyName)
+            {
+                case "IsClickThrough":
+
+                    if (_ChatWindowViewModel.IsClickThrough)
+                        MakeWindowClickThrought();
+                    else
+                        MakeWindowClickbale();
+
+                    break;
+                case "IsAutoHide":
+                    {
+                        _TextArrivedTime = DateTime.UtcNow;
+                        if (!_ChatWindowViewModel.IsAutoHide)
+                            ShowWindow();
+                    }
+                    break;
+                case "IsWindowVisible":
+                    {
+                        if (_ChatWindowViewModel.IsWindowVisible == true)
+                            _TextArrivedTime = DateTime.UtcNow;
+
+                    }
+                    break;
+            }
+        }
+
+        protected virtual async Task OnChatClearRequest(TatruEventArgs ea)
+        {
+            await ClearChat();
+        }
+
+        protected virtual async Task OnFFWindowStateChange(WindowStateChangeEventArgs ea)
+        {
+            await this.UIThreadAsync(() =>
+            {
+                if (ea.IsRunningNew != ea.IsRunningOld)
+                {
+                    //_TataruUIModel.IsHiddenByUser = false;
+
+                    _ChatWindowViewModel.IsHiddenByUser = false;
+
+                    //_TextArrivedTime = DateTime.UtcNow;
+
+                    //_AutoHidden = false;
+                }
+
+                if (ea.NewWindowState != ea.OldWindowState)
+                {
+                    if (ea.NewWindowState == WindowState.Minimized)
+                    {
+                        _ChatWindowViewModel.IsWindowVisible = false;
+                    }
+                    else if (_ChatWindowViewModel.IsHiddenByUser == false)
+                    {
+                        if (_AutoHidden == false)
+                            _ChatWindowViewModel.IsWindowVisible = true;
+                    }
+                }
+            });
+        }
+
+        #endregion
+
+        #region **Transaltion.
+
         void ShowTransaltedText(string translatedMsg, Color color)
         {
             try
@@ -77,10 +300,10 @@ namespace FFXIITataruHelper
                 ChatRtb.AppendText(Environment.NewLine);
                 ChatRtb.CaretPosition = ChatRtb.CaretPosition.DocumentEnd;
 
-                if (_TataruUIModel.ParagraphSpaceCount > 0)
+                if (_ChatWindowViewModel.SpacingCount > 0)
                 {
                     string whiteSpaces = String.Empty;
-                    for (int i = 0; i < _TataruUIModel.ParagraphSpaceCount; i++)
+                    for (int i = 0; i < _ChatWindowViewModel.SpacingCount; i++)
                     {
                         whiteSpaces += " ";
                     }
@@ -88,7 +311,7 @@ namespace FFXIITataruHelper
                 }
 
                 Paragraph p = (ChatRtb.Document.Blocks.LastBlock) as Paragraph;
-                p.Margin = new Thickness(0, _TataruUIModel.LineBreakeHeight, 0, 0);
+                p.Margin = new Thickness(0, _ChatWindowViewModel.LineBreakHeight, 0, 0);
 
                 SolidColorBrush tmpColor = new SolidColorBrush(color);
 
@@ -111,17 +334,6 @@ namespace FFXIITataruHelper
                     tr2.Text = text;
                     tr2.ApplyPropertyValue(TextElement.ForegroundProperty, tmpColor);
                     tr2.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Normal);//*/
-                    /*
-                    Utils.TextPath textPath = new Utils.TextPath();
-                    textPath.Text = translatedMsg;
-                    textPath.Stroke = new SolidColorBrush(Color.FromArgb(255, 0, 0, 0));
-                    textPath.Fill = tmpColor;
-                    textPath.StrokeThickness = 0.1;
-
-                    var para = new Paragraph();
-                    para.Inlines.Add(textPath);
-
-                    ChatRtb.Document.Blocks.Add(para);//*/
                 }
                 else
                 {
@@ -139,302 +351,24 @@ namespace FFXIITataruHelper
             }
         }
 
-        void ShowErorrText(TranslationArrivedEventArgs ea)
+        void ShowErorrText(int errorCode, string EngineName, Color textColor)
         {
-            if (ea.ErrorCode == 1)
+            if (errorCode == 1)
             {
-                string text = ((string)_SettigsWindow.Resources["TranslationEngineSwitchMsg"]) + " " + Convert.ToString(_TataruUIModel.TranslationEngine);
-
-                ShowTransaltedText(text, ea.Color);
-            }
-        }
-
-        #region **UserActions.
-
-        public void ClearChat()
-        {
-            this.UIThread(() =>
-            {
-                ChatRtb.Document.Blocks.Clear();
-            });
-        }
-
-        public void UserHide()
-        {
-            _TataruUIModel.IsHiddenByUser = true;
-            this.Hide();
-        }
-
-        public void UserShow()
-        {
-            this.Show();
-            _TataruUIModel.IsHiddenByUser = false;
-            _TextArrivedTime = DateTime.UtcNow;
-        }
-
-        #endregion
-
-        #region **WindowEvents.
-
-        protected virtual void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            _TataruModel.FFMemoryReader.AddExclusionWindowHandler((new WindowInteropHelper(this).Handle));
-            _MouseHooker = null;
-
-            AutoHideStatusCheck();
-            //_MouseHooker = new MouseHooker();
-            //_MouseHooker.LowLevelMouseEvent += OnLowLevelMousEvent;
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            _KeepWorking = false;
-
-            if (_MouseHooker != null)
-                _MouseHooker.UnHook();
-        }
-
-        protected virtual void Window_LocationChanged(object sender, EventArgs e)
-        {
-            if (this.WindowState == WindowState.Normal)
-            {
-                var loc = _TataruUIModel.ChatWindowRectangle;
-
-                loc.Y = (float)this.Top;
-                loc.X = (float)this.Left;
-
-                if (_TataruUIModel.ChatWindowRectangle != loc)
-                    _TataruUIModel.ChatWindowRectangle = loc;
-            }
-        }
-
-        protected virtual void Window_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (this.WindowState == WindowState.Normal)
-            {
-                var loc = _TataruUIModel.ChatWindowRectangle;
-
-                loc.Width = (float)this.Width;
-                loc.Height = (float)this.Height;
-
-                if (_TataruUIModel.ChatWindowRectangle != loc)
-                    _TataruUIModel.ChatWindowRectangle = loc;
-            }
-        }
-
-        protected virtual void Window_Deactivated(object sender, EventArgs e)
-        {
-            int t = 0;
-            t++;
-        }
-
-        #endregion
-
-        #region **UiEvents.
-
-        private async Task OnChatFontSizeChange(IntegerValueChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                if (ea.NewValue != (int)Math.Round(ChatRtb.FontSize))
-                {
-                    ChatRtb.FontSize = ea.NewValue;
-                }
-            });
-        }
-
-        protected virtual async Task OnBackgroundColorChange(ColorChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                if (((SolidColorBrush)this.Background).Color != ea.NewColor)
-                {
-                    this.Background = new SolidColorBrush(ea.NewColor);
-
-                    if (_TataruUIModel.IsChatClickThrough)
-                        MakeWindowClickThrought();
+                //string text = ((string)_SettigsWindow.Resources["TranslationEngineSwitchMsg"]) + " " + Convert.ToString(_TataruUIModel.TranslationEngine);
+                string text = ((string)Application.Current.Resources["TranslationEngineSwitchMsg"])+EngineName;
 
 
-                    if (((SolidColorBrush)this.Background).Color.A == 0)
-                    {
-                        try
-                        {
-                            if (_MouseHooker != null)
-                            {
-                                _MouseHooker.LowLevelMouseEvent -= OnLowLevelMousEvent;
-                                _MouseHooker.Dispose();
-                                _MouseHooker = null;
-                            }
-
-                            _MouseHooker = new MouseHooker();
-                            _MouseHooker.LowLevelMouseEvent += OnLowLevelMousEvent;
-                        }
-                        catch (Exception e)
-                        {
-                            Logger.WriteLog(e);
-                        }
-                    }
-                    else
-                    {
-
-                        if (_MouseHooker != null)
-                        {
-                            try
-                            {
-                                _MouseHooker.LowLevelMouseEvent -= OnLowLevelMousEvent;
-                                _MouseHooker.Dispose();
-                                _MouseHooker = null;
-                            }
-                            catch (Exception e)
-                            {
-                                Logger.WriteLog(e);
-                            }
-                        }
-                    }//*/
-                }
-            });
-        }
-
-        protected virtual async Task OnChatWindowRectangleChanged(RectangleDValueChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                System.Drawing.RectangleD winRect = new System.Drawing.RectangleD(this.Left, this.Top, this.Width, this.Height);
-
-                if (ea.NewValue.Width < 30 || ea.NewValue.Height < 30)
-                {
-                    if (((TataruUIModel)ea.Sender).ChatWindowRectangle != winRect)
-                        ((TataruUIModel)ea.Sender).ChatWindowRectangle = winRect;
-                    return;
-                }
-
-                if (ea.NewValue != winRect)
-                {
-                    var newRect = ea.NewValue;
-
-                    if (newRect.X != winRect.X && newRect.Y != winRect.Y)
-                    {
-                        this.Left = newRect.X;
-                        this.Top = newRect.Y;
-                    }
-
-                    if (newRect.Width != winRect.Width && newRect.Height != winRect.Height)
-                    {
-                        this.Width = newRect.Width;
-                        this.Height = newRect.Height;
-                    }
-                }
-                //*/
-            });
-        }
-
-        protected virtual async Task OnChatClickThroughChange(BooleanChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                if (ea.NewValue != _IsClickThrought)
-                {
-                    _IsClickThrought = ea.NewValue;
-                    if (_IsClickThrought)
-                        MakeWindowClickThrought();
-                    else
-                        MakeWindowClickbale();
-                }
-            });
-        }
-
-        protected virtual async Task OnChatAlwaysOnTopChange(BooleanChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                if (ea.NewValue != this.Topmost)
-                {
-                    this.Topmost = ea.NewValue;
-                }
-            });
-        }
-
-        protected virtual async Task OnFFWindowStateChange(WindowStateChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                if (ea.IsRunningNew != ea.IsRunningOld)
-                {
-                    _TataruUIModel.IsHiddenByUser = false;
-                    _TextArrivedTime = DateTime.UtcNow;
-                    _AutoHidden = false;
-                }
-
-                if (ea.NewWindowState != ea.OldWindowState)
-                {
-                    if (ea.NewWindowState == WindowState.Minimized)
-                        this.Hide();
-
-                    else if (_TataruUIModel.IsHiddenByUser == false)
-                    {
-                        if (_AutoHidden == false)
-                            this.Show();
-                    }
-                }
-            });
-        }
-
-        protected async Task OnTranslationArrived(TranslationArrivedEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-
-                _TextArrivedTime = DateTime.UtcNow;
                 ShowWindow();
 
-                if (ea.ErrorCode == 0)
-                {
-                    ShowTransaltedText(ea.Text, ea.Color);
-                }
-                else
-                {
-                    ShowErorrText(ea);
-                }
-                _TextArrivedTime = DateTime.UtcNow;
-            });
-        }
+                if (_ChatWindowViewModel.IsHiddenByUser == false)
+                    _TextArrivedTime = DateTime.UtcNow;
 
-        protected virtual async Task OnAutoHideChange(BooleanChangeEventArgs ea)
-        {
-            await this.UIThreadAsync(() =>
-            {
-                _TextArrivedTime = DateTime.UtcNow;
+                ShowTransaltedText(text, textColor);
 
-                if (ea.NewValue == false)
-                    ShowWindow();
-            });
-        }
-
-        #endregion
-
-        #region **Initialization.
-
-        void InitTataruModel()
-        {
-            var UIModel = _TataruModel.TataruUIModel;
-
-            UIModel.ChatFontSizeChanged += OnChatFontSizeChange;
-
-            UIModel.BackgroundColorChanged += OnBackgroundColorChange;
-
-            //UIModel.ParagraphSpaceCountChanged += OnIntervalWidthChange;
-            //UIModel.LineBreakeHeightChanged += OnLineBreakHeightChange;
-
-            UIModel.ChatWindowRectangleChanged += OnChatWindowRectangleChanged;
-
-            UIModel.IsChatClickThroughChanged += OnChatClickThroughChange;
-            UIModel.IsChatAlwaysOnTopChanged += OnChatAlwaysOnTopChange;
-
-            _TataruModel.FFMemoryReader.FFWindowStateChanged += OnFFWindowStateChange;
-
-            UIModel.IsAutoHideChanged += OnAutoHideChange;
-
-            _TataruModel.ChatProcessor.TranslationArrived += OnTranslationArrived;
+                if (_ChatWindowViewModel.IsHiddenByUser == false)
+                    _TextArrivedTime = DateTime.UtcNow;
+            }
         }
 
         #endregion
@@ -478,9 +412,16 @@ namespace FFXIITataruHelper
         {
             try
             {
-                var hwnd = new WindowInteropHelper(this).Handle;
-                var style = Win32Interfaces.GetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE);
-                Win32Interfaces.SetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE, style | Win32Interfaces.WS_EX_LAYERED | Win32Interfaces.WS_EX_TRANSPARENT);
+                if (!_IsClickThrought)
+                {
+                    this.UIThread(() =>
+                    {
+                        var hwnd = new WindowInteropHelper(this).Handle;
+                        var style = Win32Interfaces.GetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE);
+                        Win32Interfaces.SetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE, style | Win32Interfaces.WS_EX_LAYERED | Win32Interfaces.WS_EX_TRANSPARENT);
+                        _IsClickThrought = true;
+                    });
+                }
             }
             catch (Exception e)
             {
@@ -492,9 +433,16 @@ namespace FFXIITataruHelper
         {
             try
             {
-                var hwnd = new WindowInteropHelper(this).Handle;
-                var style = Win32Interfaces.GetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE);
-                Win32Interfaces.SetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE, style ^ Win32Interfaces.WS_EX_LAYERED ^ Win32Interfaces.WS_EX_TRANSPARENT);
+                if (_IsClickThrought)
+                {
+                    this.UIThread(() =>
+                    {
+                        var hwnd = new WindowInteropHelper(this).Handle;
+                        var style = Win32Interfaces.GetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE);
+                        Win32Interfaces.SetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE, style ^ Win32Interfaces.WS_EX_LAYERED ^ Win32Interfaces.WS_EX_TRANSPARENT);
+                        _IsClickThrought = false;
+                    });
+                }
             }
             catch (Exception e)
             {
@@ -508,6 +456,7 @@ namespace FFXIITataruHelper
             {
                 await this.UIThreadAsync(() =>
                 {
+                    /*
                     if (!_TataruUIModel.IsChatClickThrough)
                     {
                         var bc = ((SolidColorBrush)this.Background).Color;
@@ -541,7 +490,7 @@ namespace FFXIITataruHelper
                                 }
                             }
                         }
-                    }
+                    }//*/
                 });
             }
         }
@@ -562,37 +511,34 @@ namespace FFXIITataruHelper
             return false;
         }
 
-        void OnFFXIVWindowEvent(object sender, WindowState e)
+        void HideThisWindow_Click(object sender, RoutedEventArgs e)
         {
-            this.UIThread(() =>
-            {
-                if (e == WindowState.Minimized)
-                    this.Hide();
-                else
-                    this.Show();
-            });
+            _ChatWindowViewModel.IsHiddenByUser = true;
+
+            _ChatWindowViewModel.IsWindowVisible = false;
         }
 
         void Settings_Click(object sender, RoutedEventArgs e)
         {
 
+            /*
             Helper.Unminimize(_SettigsWindow);
 
             _SettigsWindow.Visibility = Visibility.Visible;
             _SettigsWindow.Activate();
-            _SettigsWindow.Focus();
+            _SettigsWindow.Focus();//*/
         }
 
         void Exit_Click(object sender, RoutedEventArgs e)
         {
-            ((MainWindow)_SettigsWindow).ShutDown();
+            Application.Current.Shutdown();
         }
 
-        void ShowWindow()
+        private void ShowWindow()
         {
             if (this.Visibility != Visibility.Visible)
             {
-                if (_TataruUIModel.IsHiddenByUser == false)
+                if (_ChatWindowViewModel.IsHiddenByUser == false)
                 {
                     if (_TataruModel.FFMemoryReader.FFWindowState != WindowState.Minimized)
                         this.Show();
@@ -606,18 +552,16 @@ namespace FFXIITataruHelper
             {
                 while (_KeepWorking)
                 {
-                    if (_TataruUIModel.IsAutoHide)
+                    if (_ChatWindowViewModel.IsAutoHide)
                     {
                         var ts = DateTime.UtcNow - _TextArrivedTime;
-                        if (ts > _TataruUIModel.AutoHideTimeout)
+                        if (ts > _ChatWindowViewModel.AutoHideTimeout)
                         {
                             this.UIThread(() =>
                             {
-                                if (this.Visibility == Visibility.Visible)
-                                {
-                                    _AutoHidden = true;
-                                    this.Hide();
-                                }
+                                _AutoHidden = true;
+                                //this.Hide();
+                                _ChatWindowViewModel.IsWindowVisible = false;
                             });
                         }
                         else
@@ -633,14 +577,11 @@ namespace FFXIITataruHelper
 
         protected override void OnClosed(EventArgs e)
         {
-            _TataruUIModel.ChatFontSizeChanged -= OnChatFontSizeChange;
-            _TataruUIModel.BackgroundColorChanged -= OnBackgroundColorChange;
-            _TataruUIModel.ChatWindowRectangleChanged -= OnChatWindowRectangleChanged;
-            _TataruUIModel.IsChatClickThroughChanged -= OnChatClickThroughChange;
-            _TataruUIModel.IsChatAlwaysOnTopChanged -= OnChatAlwaysOnTopChange;
+            _ChatWindowViewModel.AsyncPropertyChanged -= OnSettingsWindowPropertyChange;
+            _ChatWindowViewModel.RequestChatClear -= OnChatClearRequest;
+
+            _TataruModel.ChatProcessor.TextArrived -= OnTextArrived;
             _TataruModel.FFMemoryReader.FFWindowStateChanged -= OnFFWindowStateChange;
-            _TataruUIModel.IsAutoHideChanged -= OnAutoHideChange;
-            _TataruModel.ChatProcessor.TranslationArrived -= OnTranslationArrived;
 
             base.OnClosed(e);
         }

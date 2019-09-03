@@ -3,7 +3,7 @@
 
 using System.Windows;
 
-namespace FFXIITataruHelper
+namespace FFXIVTataruHelper
 {
     /// <summary>
     /// Interaction logic for PatreonWin.xaml

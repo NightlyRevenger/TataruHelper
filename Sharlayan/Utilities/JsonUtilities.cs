@@ -57,7 +57,7 @@ namespace Sharlayan.Utilities {
                 }
                 return true;
             }
-            catch (System.Exception e)
+            catch (System.Exception)
             {
                 return false;
             }
@@ -107,7 +107,7 @@ namespace Sharlayan.Utilities {
                                     voidMethodInfo.Invoke(filedVal, new object[] { obj });
                                 }
                             }
-                            catch (Exception e)
+                            catch (Exception)
                             {
                                 filedVal = backUpList;
                             }
@@ -125,7 +125,7 @@ namespace Sharlayan.Utilities {
 
                 return true;
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return false;
             }

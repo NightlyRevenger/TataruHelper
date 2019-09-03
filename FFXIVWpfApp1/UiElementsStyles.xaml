@@ -1,8 +1,9 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:FFXIITataruHelper"
+                    xmlns:local="clr-namespace:FFXIVTataruHelper"
+                    xmlns:utils="clr-namespace:WpfXamlExtensions;assembly=WpfXamlExtensions"
                     xmlns:system="clr-namespace:System;assembly=mscorlib">
-    
+
     <Style TargetType="ToolTip" >
         <Style.Resources>
             <Style TargetType="ContentPresenter">
@@ -15,5 +16,63 @@
         </Style.Resources>
         <Setter Property="MaxWidth" Value="400"  />
     </Style>
+
+    <DataTemplate x:Key="newTabButtonContentTemplate">
+        <Grid/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="itemContentTemplate">
+        <Grid/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="newTabButtonHeaderTemplate">
+        <Button Content="+"
+                Command="{Binding ElementName=TataruSettingsWindow, Path=DataContext.AddNewChatWindowCommand}"
+                Width="20" Height="20"/>
+    </DataTemplate>
+
+    <DataTemplate x:Key="itemHeaderTemplate">
+        <StackPanel Orientation="Horizontal">
+            <Label Content="{Binding Name}" />
+            <Button Visibility="{Binding IsSelected, Converter={utils:BooleanToVisibilityConverter}, Mode=TwoWay}" FontSize="8" Width="15" Height="15"
+                    Command="{Binding ElementName=TataruSettingsWindow, Path=DataContext.DeleteChatWindowCommand}">
+                <Button.Content>
+                    <TextBlock Text="✖"/>
+                </Button.Content>
+            </Button>
+        </StackPanel>
+    </DataTemplate>
+
+    <utils:ChatWindowTabHeaderTemplateSelector x:Key="headerTemplateSelector"
+                           NewButtonTemplate="{StaticResource newTabButtonHeaderTemplate}"
+                           ItemTemplate="{StaticResource itemHeaderTemplate}"/>
+
+    <utils:ChatWindowTabHeaderTemplateSelector x:Key="contentTemplateSelector"
+                            NewButtonTemplate="{StaticResource newTabButtonContentTemplate}"
+                            ItemTemplate="{StaticResource itemContentTemplate}"/>
+
+    <DataTemplate x:Key="itemHeaderTemplateTB">
+        <MenuItem  Command="{Binding ShowChatWindowCommand}" InputGestureText=" ">
+            <MenuItem.Template>
+                <ControlTemplate>
+                    <TextBlock Text="{Binding Name}" MinWidth="50"/>
+                </ControlTemplate>
+            </MenuItem.Template>
+        </MenuItem>
+    </DataTemplate>
+
+    <DataTemplate x:Key="exitButtonTempalateTB">
+        <MenuItem Command="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContextMenu}}, Path=DataContext.ShutDownRequestedCommand }">
+            <MenuItem.Template>
+                <ControlTemplate>
+                    <TextBlock Text="{DynamicResource SettingsExit}" MinWidth="50" />
+                </ControlTemplate>
+            </MenuItem.Template>
+        </MenuItem>
+    </DataTemplate>
+
+    <utils:ChatWindowTabHeaderTemplateSelector x:Key="headerTemplateSelectorTB"
+                           NewButtonTemplate="{StaticResource exitButtonTempalateTB}"
+                           ItemTemplate="{StaticResource itemHeaderTemplateTB}"/>
 
 </ResourceDictionary>
