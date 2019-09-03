@@ -15,7 +15,7 @@
 
 * * *
 
-![TataruHead](Documents/Tataru_img%20(1).png) ![LiveAction](Documents/LiveAction.gif)
+![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)
 
 ## [Demonstration](https://youtu.be/7HiQXzmkQuw)
 
