@@ -1,4 +1,4 @@
-﻿using FFXIVTataruHelper.Utils;
+﻿﻿using FFXIVTataruHelper.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;

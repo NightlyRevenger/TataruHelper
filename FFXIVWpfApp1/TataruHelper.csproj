@@ -124,6 +124,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
@@ -177,6 +178,10 @@
     <Compile Include="TataruComponentModel\INotifyPropertyChangedAsync.cs" />
     <Compile Include="TataruComponentModel\PropertyBinder.cs" />
     <Compile Include="TataruComponentModel\PropertyCouple.cs" />
+    <Compile Include="Translation\Baidu\BaiduReqEncoder.cs" />
+    <Compile Include="Translation\Baidu\BaiduRequest.cs" />
+    <Compile Include="Translation\Baidu\BaiduResponse.cs" />
+    <Compile Include="Translation\Baidu\BaiduTranslator.cs" />
     <Compile Include="Translation\Papago\PapagoEncoder.cs" />
     <Compile Include="Translation\Papago\PapagoRequest.cs" />
     <Compile Include="Translation\Papago\PapagoResponse.cs" />
@@ -193,6 +198,7 @@
     <Compile Include="UIModel\UserSettingsOld.cs" />
     <Compile Include="Utils\StringCipher.cs" />
     <Compile Include="Utils\UiWindowHandler.cs" />
+    <Compile Include="Utils\URLEncoding.cs" />
     <Compile Include="ViewModel\ChatWindowViewModel.cs" />
     <Compile Include="ViewModel\TataruUICommand.cs" />
     <Compile Include="UIModel\TataruModel.cs" />
