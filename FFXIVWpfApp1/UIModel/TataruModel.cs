@@ -129,7 +129,7 @@ namespace FFXIVTataruHelper
             {
 
                 _WebTranslator.LoadLanguages(GlobalSettings.GoogleTranslateLanguages, GlobalSettings.MultillectTranslateLanguages,
-                    GlobalSettings.DeeplLanguages, GlobalSettings.YandexLanguages, GlobalSettings.AmazonLanguages, GlobalSettings.PapagoLanguages);
+                    GlobalSettings.DeeplLanguages, GlobalSettings.YandexLanguages, GlobalSettings.AmazonLanguages, GlobalSettings.PapagoLanguages, GlobalSettings.BaiduLanguages);
 
                 _FFMemoryReader.Start();
 

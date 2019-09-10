@@ -21,6 +21,10 @@ namespace FFXIVTataruHelper
 
         public static string YandexLanguages = "Resources/YandexTranslateLanguages.json";
 
+        public static string BaiduLanguages = "Resources/BaiduLanguages.json";
+
+        public static string BaiduEncoder = "Resources/BaiduEncoder.js";
+
         public static string AmazonLanguages = "Resources/AmazonLanguages.json";
 
         public static string PapagoLanguages = "Resources/PapagoLanguages.json";

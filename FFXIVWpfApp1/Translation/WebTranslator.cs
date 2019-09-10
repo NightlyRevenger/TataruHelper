@@ -13,6 +13,7 @@ using System.IO;
 using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
+using FFXIVTataruHelper.Translation.Baidu;
 
 namespace FFXIVTataruHelper.Translation
 {
@@ -30,6 +31,8 @@ namespace FFXIVTataruHelper.Translation
         WebApi.WebReader MultillectWebRead;
 
         WebApi.WebReader YandexWebRead;
+
+        BaiduTranslater _baiduTranslater;
 
         DeepLTranslator _DeepLTranslator;
 
@@ -67,12 +70,14 @@ namespace FFXIVTataruHelper.Translation
 
             _PapagoTranslator = new PapagoTranslator();
 
+            _baiduTranslater = new BaiduTranslater();
+
             string pattern = "(?<=(<div dir=\"ltr\" class=\"t0\">)).*?(?=(<\\/div>))";
 
             GoogleRx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
-        public void LoadLanguages(string glTrPath, string MultTrPath, string deepPath, string YaTrPath, string AmazonTrPath, string PapagoTrPath)
+        public void LoadLanguages(string glTrPath, string MultTrPath, string deepPath, string YaTrPath, string AmazonTrPath, string PapagoTrPath, string baiduTrPath)
         {
             try
             {
@@ -95,6 +100,9 @@ namespace FFXIVTataruHelper.Translation
 
                 tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(PapagoTrPath);
                 tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Papago, tmpList, 7));
+
+                tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(baiduTrPath);
+                tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Baidu, tmpList, 3));
 
                 tmptranslationEngines = tmptranslationEngines.OrderBy(x => x.Quality * (-1)).ToList();
 
@@ -160,6 +168,11 @@ namespace FFXIVTataruHelper.Translation
                         result = PapagoTranslate(inSentence, fromLangCode, toLangCode);
                         break;
                     }
+                case TranslationEngineName.Baidu:
+                    {
+                        result = BaiduTranslate(inSentence, fromLangCode, toLangCode);
+                        break;
+                    }
                 default:
                     {
                         result = String.Empty;
@@ -221,6 +234,11 @@ namespace FFXIVTataruHelper.Translation
             }
 
             return result;
+        }
+
+        private string BaiduTranslate(string sentence, string inLang, string outLang)
+        {
+            return _baiduTranslater.Translate(sentence, inLang, outLang);
         }
 
         private string MultillectTranslate(string sentence, string inLang, string outLang)
