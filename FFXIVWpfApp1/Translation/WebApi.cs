@@ -111,6 +111,51 @@ namespace FFXIVTataruHelper.Translation
 
                     content = readStream.ReadToEnd();
 
+                    readStream.Close();
+                    readStream.Dispose();
+
+                    ReceiveStream.Close();
+                    ReceiveStream.Dispose();
+
+                    localResponse.Close();
+                    localResponse.Dispose();
+
+                }
+                catch (Exception e)
+                {
+                    Logger.WriteLog(Convert.ToString(e));
+                }
+
+                return content;
+            }
+            public string GetWebDataAndSetCookie(string url, string method)
+            {
+                string content = string.Empty;
+                HttpWebResponse WebResp;
+                try
+                {
+                    WebRequest localRequest = WebRequest.Create(new Uri(url));
+                    localRequest.Method = method;
+
+                    ((HttpWebRequest)localRequest).UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko";
+                    ((HttpWebRequest)localRequest).Accept = "text/html, application/xhtml+xml, */*";
+                    ((HttpWebRequest)localRequest).Host = globalHost;
+
+                    ((HttpWebRequest)localRequest).CookieContainer = globalCookie;
+                    localRequest.ContentType = "application/x-www-form-urlencoded";
+
+                    WebResponse localResponse = localRequest.GetResponse();
+
+                    Stream ReceiveStream = localResponse.GetResponseStream();
+                    Encoding encode = System.Text.Encoding.GetEncoding("utf-8");
+                    StreamReader readStream = new StreamReader(ReceiveStream, encode);
+
+                    content = readStream.ReadToEnd();
+
+                    WebResp = (HttpWebResponse)localResponse;
+
+                    foreach (Cookie cookie in WebResp.Cookies)
+                        globalCookie.Add(cookie);
 
                     readStream.Close();
                     readStream.Dispose();
