@@ -12,7 +12,7 @@ namespace FFXIVTataruHelper.Translation.Baidu
         public string encoding(string sentence, string from, string to, string gtk, string token)
         {
             var engine = new Jurassic.ScriptEngine();
-            engine.ExecuteFile("../../Resources/BaiduEncoder.js");
+            engine.ExecuteFile(GlobalSettings.BaiduEncoder);
             string sign = engine.CallGlobalFunction<string>("token", sentence, gtk);
 
             BaiduRequest request = new BaiduRequest

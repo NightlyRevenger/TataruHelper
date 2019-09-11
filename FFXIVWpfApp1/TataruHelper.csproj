@@ -340,6 +340,12 @@
     <None Include="Resources\AmazonLanguages.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Resources\BaiduEncoder.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Resources\BaiduLanguages.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Resources\ChatCodes.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -421,9 +427,6 @@
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\AWSSDK.Translate.3.3.100.56\analyzers\dotnet\cs\AWSSDK.Translate.CodeAnalysis.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\PapagoEncoder.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
