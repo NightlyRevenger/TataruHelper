@@ -13,6 +13,8 @@
 
 ## [한국어 설명](Documents/README_ko_KR.md) 
 
+## [Descripción en español](Documents/README_es_ES.md) 
+
 * * *
 
 ![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)
