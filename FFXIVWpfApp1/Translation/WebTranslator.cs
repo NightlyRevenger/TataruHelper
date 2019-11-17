@@ -281,7 +281,7 @@ namespace FFXIVTataruHelper.Translation
             string result = String.Empty;
             try
             {
-                string yaApiKey = @"trnsl.1.1.20190204T134422Z.621647c1cffc2039.c2005599368f64d39003df38affa93a62699bcfe";
+                string yaApiKey = @"";
                 string _outLang = outLang;
                 string _inLang = inLang;
 
