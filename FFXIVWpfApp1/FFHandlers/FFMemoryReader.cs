@@ -364,39 +364,49 @@ namespace FFXIVTataruHelper.FFHandlers
         {
             bool messgaesDeleted = false;
             bool previousCount = previousPanelResults.ChatLogItems.Count > 0 && chatLogResult.ChatLogItems.Count > 0;
-            for (int i = 0; i < previousPanelResults.ChatLogItems.Count; i++)
+
+            try
             {
-                var pvPanel = previousPanelResults.ChatLogItems[i];
-                var panel = chatLogResult.ChatLogItems.FirstOrDefault(x => Helper.IsStringLettersEqual(x.Line, pvPanel.Line));
-                if (panel != null)
+                for (int i = 0; i < previousPanelResults.ChatLogItems.Count; i++)
                 {
-                    if (panelResult.ChatLogItems.FirstOrDefault(x => Helper.IsStringLettersEqual(x.Line, panel.Line)) == null)
-                        chatLogResult.ChatLogItems.Remove(panel);
+                    var pvPanel = previousPanelResults.ChatLogItems[i];
 
-                    var rmCount = previousPanelResults.ChatLogItems.RemoveAll(x => Helper.IsStringLettersEqual(x.Line, panel.Line));
-                    messgaesDeleted = true;
+                    var panel = chatLogResult.ChatLogItems.FirstOrDefault(x => Reader.CheckChatEquality(x, pvPanel));
 
-                    if (i - rmCount > -2)
-                        i = i - rmCount;
+                    if (panel != null)
+                    {
+                        if (panelResult.ChatLogItems.FirstOrDefault(x => Reader.CheckChatEquality(x, panel)) == null)
+                            chatLogResult.ChatLogItems.Remove(panel);
+
+                        int rmCount = previousPanelResults.ChatLogItems.RemoveAll(x => Reader.CheckChatEquality(x, panel));
+                        messgaesDeleted = true;
+
+                        if (rmCount > 0)
+                            i = 0;
+                    }
                 }
-            }
 
-            if (previousCount)
+                if (previousCount)
+                {
+                    if (messgaesDeleted == false)
+                        DirectTextsMissedCount++;
+                    else
+                        DirectTextsMissedCount = 0;
+                }
+
+                if (previousPanelResults.ChatLogItems.Count > 200)
+                {
+                    int startPos = 0;
+                    int count = previousPanelResults.ChatLogItems.Count / 2;
+                    previousPanelResults.ChatLogItems.RemoveRange(startPos, count);
+                }
+
+                previousPanelResults.ChatLogItems.AddRange(panelResult.ChatLogItems);
+            }
+            catch (Exception e)
             {
-                if (messgaesDeleted == false)
-                    DirectTextsMissedCount++;
-                else
-                    DirectTextsMissedCount = 0;
+                Logger.WriteLog(e);
             }
-
-            if (previousPanelResults.ChatLogItems.Count > 200)
-            {
-                int startPos = 0;
-                int count = previousPanelResults.ChatLogItems.Count / 2;
-                previousPanelResults.ChatLogItems.RemoveRange(startPos, count);
-            }
-
-            previousPanelResults.ChatLogItems.AddRange(panelResult.ChatLogItems);
         }
 
         private void ChatMessageEvetRiser()

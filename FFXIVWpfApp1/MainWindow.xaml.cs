@@ -61,15 +61,26 @@ namespace FFXIVTataruHelper
             {
                 _LogWriter = new LogWriter();
                 _LogWriter.StartWriting();
+
+                Logger.WriteLog("TataruHelper v" + Convert.ToString(System.Reflection.Assembly.GetEntryAssembly().GetName().Version));
             }
             catch (Exception ex)
             {
                 Logger.WriteLog(ex);
             }
 
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
 
-            UiWindow.Window = this;
+                UiWindow.Window = this;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+
+                return;
+            }
 
             try
             {
@@ -123,6 +134,13 @@ namespace FFXIVTataruHelper
         {
             try
             {
+                Logger.WriteLog("TataruHelper v" + Convert.ToString(System.Reflection.Assembly.GetEntryAssembly().GetName().Version));
+            }
+            catch (Exception) { }
+
+            try
+            {
+
                 try
                 {
                     _TataruModel = new TataruModel();
@@ -141,13 +159,10 @@ namespace FFXIVTataruHelper
 
                 _TataruModel.FFMemoryReader.AddExclusionWindowHandler((new WindowInteropHelper(this).Handle));
 
-                try
-                {
-                    Logger.WriteLog("TataruHelper v" + Convert.ToString(System.Reflection.Assembly.GetEntryAssembly().GetName().Version));
-                }
-                catch (Exception) { }
-
-                _Updater.StartUpdate();
+#if DEBUG
+#else
+                 _Updater.StartUpdate();
+#endif
 
 
                 this.DataContext = _TataruModel.TataruViewModel;

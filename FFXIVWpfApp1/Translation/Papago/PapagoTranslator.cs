@@ -23,18 +23,23 @@ namespace FFXIVTataruHelper.Translation
 
         public string Translate(string sentence, string inLang, string outLang)
         {
-            sentence=sentence.Replace(":"," : ");
+            sentence = sentence.Replace(":", " : ");
             string result = string.Empty;
             string url = @"https://papago.naver.com/apis/n2mt/translate";
 
             if (_PapagoEncoder == null)
                 _PapagoEncoder = new PapagoEncoder(GlobalSettings.PapagoEncoderPath);
 
+            if (inLang == "auto")
+                inLang = DetectLanguage(sentence);
+            if (inLang.Length == 0)
+                return result;
+
             if (_PapagoEncoder.IsAvaliable)
             {
                 try
                 {
-                    PapagoRequest papagoRequest = new PapagoRequest()
+                    PapagoTranslationRequest papagoRequest = new PapagoTranslationRequest()
                     {
                         deviceId = "",
                         dict = false,
@@ -47,13 +52,49 @@ namespace FFXIVTataruHelper.Translation
                         text = sentence
                     };
 
-                    var reqv = _PapagoEncoder.EncodePapagoString(JsonConvert.SerializeObject(papagoRequest));
+                    var reqv = _PapagoEncoder.EncodePapagoTranslationRequest(JsonConvert.SerializeObject(papagoRequest));
 
                     var tmpResponse = PapagoReader.GetWebData(url, WebApi.WebReader.WebMethods.POST, reqv);
 
                     PapagoResponse papagoResponse = JsonConvert.DeserializeObject<PapagoResponse>(tmpResponse);
 
                     result = papagoResponse.translatedText;
+                }
+                catch (Exception e)
+                {
+                    Logger.WriteLog(e);
+                }
+            }
+
+            return result;
+        }
+
+        public string DetectLanguage(string sentence)
+        {
+
+            string result = string.Empty;
+            string url = @"https://papago.naver.com/apis/langs/dect";
+
+            if (_PapagoEncoder == null)
+                _PapagoEncoder = new PapagoEncoder(GlobalSettings.PapagoEncoderPath);
+
+            if (_PapagoEncoder.IsAvaliable)
+            {
+                try
+                {
+                    PapagoDetectLanguageRequest papagoRequest = new PapagoDetectLanguageRequest()
+                    {
+                        query = sentence
+                    };
+
+                    var reqv = _PapagoEncoder.EncodePapagoTranslationRequest(JsonConvert.SerializeObject(papagoRequest));
+
+                    var tmpResponse = PapagoReader.GetWebData(url, WebApi.WebReader.WebMethods.POST, reqv);
+
+                    PapagoDetectLanguageResponse papagoResponse = JsonConvert.DeserializeObject<PapagoDetectLanguageResponse>(tmpResponse);
+
+                    result = papagoResponse.langCode;
+
                 }
                 catch (Exception e)
                 {

@@ -1,5 +1,10 @@
 [
   {
+    "ShownName": "Auto",
+    "SystemName": "Auto",
+    "LanguageCode": "auto"
+  },
+  {
     "ShownName": "Dutch",
     "SystemName": "Dutch",
     "LanguageCode": "NL"

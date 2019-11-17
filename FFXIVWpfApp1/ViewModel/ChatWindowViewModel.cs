@@ -102,6 +102,18 @@ namespace FFXIVTataruHelper.ViewModel
             }
         }
 
+        public FontFamily ChatFont
+        {
+            get { return _ChatFont; }
+            set
+            {
+                if (_ChatFont == value) return;
+
+                _ChatFont = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsAlwaysOnTop
         {
             get { return _IsAlwaysOnTop; }
@@ -441,6 +453,8 @@ namespace FFXIVTataruHelper.ViewModel
         double _LineBreakHeight;
         int _SpacingCount;
 
+        FontFamily _ChatFont;
+
         bool _IsAlwaysOnTop;
         bool _IsClickThrough;
         bool _IsAutoHide;
@@ -516,6 +530,8 @@ namespace FFXIVTataruHelper.ViewModel
             ChatFontSize = settings.ChatFontSize;
             LineBreakHeight = settings.LineBreakHeight;
             SpacingCount = settings.SpacingCount;
+
+            ChatFont = settings.ChatFont;
 
             IsAlwaysOnTop = settings.IsAlwaysOnTop;
             IsClickThrough = settings.IsClickThrough;
@@ -763,7 +779,12 @@ namespace FFXIVTataruHelper.ViewModel
             _TranslateFromLanguagues.CurrentChanged += OnTranslateFromLanguageChange;
             OnPropertyChanged("TranslateFromLanguagues");
 
-            _TranslateToLanguagues = new CollectionView(((TranslationEngine)_TranslationEngines.CurrentItem).SupportedLanguages.ToList());
+            List<TranslatorLanguague> supportedToLanguages = ((TranslationEngine)_TranslationEngines.CurrentItem).SupportedLanguages.ToList();
+            var lang = supportedToLanguages.FirstOrDefault(x => x.SystemName == "Auto");
+            if (lang != null)
+                supportedToLanguages.Remove(lang);
+
+            _TranslateToLanguagues = new CollectionView(supportedToLanguages.ToList());
             _TranslateToLanguagues.CurrentChanged += OnTranslateToLanguageChange;
             OnPropertyChanged("TranslateToLanguagues");
 

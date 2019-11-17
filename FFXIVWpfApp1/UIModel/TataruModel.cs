@@ -129,7 +129,7 @@ namespace FFXIVTataruHelper
             {
 
                 _WebTranslator.LoadLanguages(GlobalSettings.GoogleTranslateLanguages, GlobalSettings.MultillectTranslateLanguages,
-                    GlobalSettings.DeeplLanguages, GlobalSettings.YandexLanguages, GlobalSettings.AmazonLanguages, GlobalSettings.PapagoLanguages, GlobalSettings.BaiduLanguages);
+                    GlobalSettings.DeeplLanguages, GlobalSettings.YandexLanguages, GlobalSettings.PapagoLanguages, GlobalSettings.BaiduLanguages);
 
                 _FFMemoryReader.Start();
 
@@ -456,6 +456,8 @@ namespace FFXIVTataruHelper
             binder.AddPropertyCouple(new PropertyCouple<double, double>("LineBreakHeight", "LineBreakHeight"));
             binder.AddPropertyCouple(new PropertyCouple<int, int>("SpacingCount", "SpacingCount"));
 
+            binder.AddPropertyCouple(new PropertyCouple<System.Windows.Media.FontFamily, System.Windows.Media.FontFamily>("ChatFont", "ChatFont"));
+
             binder.AddPropertyCouple(new PropertyCouple<bool, bool>("IsAlwaysOnTop", "IsAlwaysOnTop"));
             binder.AddPropertyCouple(new PropertyCouple<bool, bool>("IsClickThrough", "IsClickThrough"));
             binder.AddPropertyCouple(new PropertyCouple<bool, bool>("IsAutoHide", "IsAutoHide"));
@@ -471,71 +473,108 @@ namespace FFXIVTataruHelper
             binder.AddPropertyCouple(new PropertyCouple<TranslationEngineName, System.Windows.Data.CollectionView>("TranslationEngineName", "TranslationEngines",
                 (ref TranslationEngineName x, ref System.Windows.Data.CollectionView y) =>
                 {
-                    TranslationEngine result = null;
-                    foreach (TranslationEngine elem in y.SourceCollection)
-                        if (elem.EngineName == x)
-                        {
-                            result = elem;
-                            break;
-                        }
+                    var engine = x;
+                    var collection = y;
 
-                    if (result != null)
-                        if (!y.CurrentItem.Equals(result))
-                            y.MoveCurrentTo(result);
+                    UiWindow.Window.UIThread(() =>
+                    {
+                        TranslationEngine result = null;
+
+                        foreach (TranslationEngine elem in collection.SourceCollection)
+                            if (elem.EngineName == engine)
+                            {
+                                result = elem;
+                                break;
+                            }
+
+                        if (result != null)
+                            if (!collection.CurrentItem.Equals(result))
+                                collection.MoveCurrentTo(result);
+                    });
 
                 },
                 (ref System.Windows.Data.CollectionView y, ref TranslationEngineName x) =>
                 {
-                    x = ((TranslationEngine)y.CurrentItem).EngineName;
+                    var collection = y;
+                    TranslationEngineName selectedEngine = TranslationEngineName.GoogleTranslate;
+
+                    UiWindow.Window.UIThread(() =>
+                    {
+                        selectedEngine = ((TranslationEngine)collection.CurrentItem).EngineName;
+                    });
+                    x = selectedEngine;
                 }));
 
 
             binder.AddPropertyCouple(new PropertyCouple<TranslatorLanguague, System.Windows.Data.CollectionView>("FromLanguague", "TranslateFromLanguagues",
                 (ref TranslatorLanguague x, ref System.Windows.Data.CollectionView y) =>
                 {
-                    TranslatorLanguague result = null;
+                    var languague = x;
+                    var collection = y;
 
-                    foreach (TranslatorLanguague elem in y.SourceCollection)
-                        if (elem.SystemName == x.SystemName)
-                        {
-                            result = elem;
-                            break;
-                        }
+                    UiWindow.Window.UIThread(() =>
+                    {
+                        TranslatorLanguague result = null;
 
-                    if (result != null)
-                        if (!y.CurrentItem.Equals(result))
-                            y.MoveCurrentTo(result);
+                        foreach (TranslatorLanguague elem in collection.SourceCollection)
+                            if (elem.SystemName == languague.SystemName)
+                            {
+                                result = elem;
+                                break;
+                            }
 
-
+                        if (result != null)
+                            if (!collection.CurrentItem.Equals(result))
+                                collection.MoveCurrentTo(result);
+                    });
                 },
                 (ref System.Windows.Data.CollectionView y, ref TranslatorLanguague x) =>
                 {
-                    var lang = new TranslatorLanguague((TranslatorLanguague)y.CurrentItem);
+                    var collection = y;
+                    TranslatorLanguague lang = new TranslatorLanguague();
+
+                    UiWindow.Window.UIThread(() =>
+                    {
+                        lang = new TranslatorLanguague((TranslatorLanguague)collection.CurrentItem);
+                    });
+
                     x = lang;
                 }));
 
             binder.AddPropertyCouple(new PropertyCouple<TranslatorLanguague, System.Windows.Data.CollectionView>("ToLanguague", "TranslateToLanguagues",
                 (ref TranslatorLanguague x, ref System.Windows.Data.CollectionView y) =>
                 {
-                    TranslatorLanguague result = null;
+                    var languague = x;
+                    var collection = y;
 
-                    foreach (TranslatorLanguague elem in y.SourceCollection)
-                        if (elem.SystemName == x.SystemName)
-                        {
-                            result = elem;
-                            break;
-                        }
+                    UiWindow.Window.UIThread(() =>
+                    {
+                        TranslatorLanguague result = null;
 
-                    if (result != null)
-                        if (!y.CurrentItem.Equals(result))
-                            y.MoveCurrentTo(result);
+                        foreach (TranslatorLanguague elem in collection.SourceCollection)
+                            if (elem.SystemName == languague.SystemName)
+                            {
+                                result = elem;
+                                break;
+                            }
 
-
+                        if (result != null)
+                            if (!collection.CurrentItem.Equals(result))
+                                collection.MoveCurrentTo(result);
+                    });
                 },
                 (ref System.Windows.Data.CollectionView y, ref TranslatorLanguague x) =>
                 {
-                    var lang = new TranslatorLanguague((TranslatorLanguague)y.CurrentItem);
+                    var collection = y;
+                    TranslatorLanguague lang = new TranslatorLanguague();
+
+
+                    UiWindow.Window.UIThread(() =>
+                    {
+                        lang = new TranslatorLanguague((TranslatorLanguague)collection.CurrentItem);
+                    });
                     x = lang;
+
                 }));
 
             binder.AddPropertyCouple(new PropertyCouple<WinUtils.HotKeyCombination, WinUtils.HotKeyCombination>("ShowHideChatKeys", "ShowHideChatKeys"));
@@ -545,29 +584,41 @@ namespace FFXIVTataruHelper
             binder.AddPropertyCouple(new PropertyCouple<List<ChatCodeViewModel>, BindingList<ChatCodeViewModel>>("ChatCodes", "ChatCodes",
                 (ref List<ChatCodeViewModel> x, ref BindingList<ChatCodeViewModel> y) =>
                 {
-                    foreach (var code in x)
-                    {
-                        var fCode = y.FirstOrDefault(p => p.Equals(code));
-                        if (fCode != null)
-                        {
-                            fCode.Color = code.Color;
-                            fCode.IsChecked = code.IsChecked;
-                        }
-                    }
+                    var list = x;
+                    var bindinglist = y;
 
-                },
-                (ref BindingList<ChatCodeViewModel> y, ref List<ChatCodeViewModel> x) =>
+                    UiWindow.Window.UIThread(() =>
                     {
-                        foreach (var code in y)
+                        foreach (var code in list)
                         {
-                            var fCode = x.FirstOrDefault(p => p.Equals(code));
+                            var fCode = bindinglist.FirstOrDefault(p => p.Equals(code));
                             if (fCode != null)
                             {
                                 fCode.Color = code.Color;
                                 fCode.IsChecked = code.IsChecked;
                             }
                         }
-                    }));
+                    });
+                },
+                (ref BindingList<ChatCodeViewModel> y, ref List<ChatCodeViewModel> x) =>
+                {
+                    var list = x;
+                    var bindinglist = y;
+
+                    UiWindow.Window.UIThread(() =>
+                    {
+                        foreach (var code in bindinglist)
+                        {
+                            var fCode = list.FirstOrDefault(p => p.Equals(code));
+                            if (fCode != null)
+                            {
+                                fCode.Color = code.Color;
+                                fCode.IsChecked = code.IsChecked;
+                            }
+                        }
+                    });
+
+                }));
         }
 
         private void RemoveChatWindow(List<ChatWindow> lsit, long winId)

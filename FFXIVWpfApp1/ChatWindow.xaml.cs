@@ -32,7 +32,7 @@ namespace FFXIVTataruHelper
 
         private WindowResizer _WindowResizer;
 
-        private MouseHooker _MouseHooker;
+        //private MouseHooker _MouseHooker;
 
         private bool _IsClickThrought = false;
 
@@ -49,6 +49,7 @@ namespace FFXIVTataruHelper
 
             try
             {
+
                 _TataruModel = tataruModel;
                 _ChatWindowViewModel = chatWindowViewModel;
 
@@ -93,7 +94,7 @@ namespace FFXIVTataruHelper
 
         protected virtual void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _MouseHooker = null;
+            //_MouseHooker = null;
 
             AutoHideStatusCheck();
 
@@ -116,8 +117,9 @@ namespace FFXIVTataruHelper
         {
             _KeepWorking = false;
 
+            /*
             if (_MouseHooker != null)
-                _MouseHooker.UnHook();
+                _MouseHooker.UnHook();//*/
         }
 
         protected virtual void Window_Deactivated(object sender, EventArgs e)
@@ -249,6 +251,20 @@ namespace FFXIVTataruHelper
 
                     }
                     break;
+                case "BackGroundColor":
+                    {
+                        if (_ChatWindowViewModel.BackGroundColor.A == 255)
+                            this.AllowsTransparency = false;
+                        else
+                            this.AllowsTransparency = true;
+
+                        if (_ChatWindowViewModel.IsClickThrough)
+                        {
+                            MakeWindowClickbale();
+                            MakeWindowClickThrought();
+                        }
+                    }
+                    break;
             }
         }
 
@@ -356,7 +372,7 @@ namespace FFXIVTataruHelper
             if (errorCode == 1)
             {
                 //string text = ((string)_SettigsWindow.Resources["TranslationEngineSwitchMsg"]) + " " + Convert.ToString(_TataruUIModel.TranslationEngine);
-                string text = ((string)Application.Current.Resources["TranslationEngineSwitchMsg"])+EngineName;
+                string text = ((string)Application.Current.Resources["TranslationEngineSwitchMsg"]) + EngineName;
 
 
                 ShowWindow();

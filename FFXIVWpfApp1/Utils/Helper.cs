@@ -230,7 +230,7 @@ namespace FFXIVTataruHelper
             String onlyLetters1 = new String(str1.Where(Char.IsLetter).ToArray());
             String onlyLetters2 = new String(str2.Where(Char.IsLetter).ToArray());
 
-            return onlyLetters1== onlyLetters2;
+            return onlyLetters1 == onlyLetters2;
         }
 
         public static string Base64Encode(string plainText)
@@ -276,6 +276,58 @@ namespace FFXIVTataruHelper
             StringComparer comparer = StringComparer.OrdinalIgnoreCase;
 
             return comparer.Compare(hashOfInput, hash) == 0;
+        }
+
+        public static string ConvertISOLangugueNameToSystemName(string lang)
+        {
+            string result = string.Empty;
+            switch(lang)
+            {
+                case "eng":
+                    result = "English";
+                    break;
+                case "dan":
+                    result = "Danish";
+                    break;
+                case "nor":
+                    result = "Norwegian";
+                    break;
+                case "fra":
+                    result = "French";
+                    break;
+                case "spa":
+                    result = "Spanish";
+                    break;
+                case "swe":
+                    result = "Swedish";
+                    break;
+                case "nld":
+                    result = "Dutch";
+                    break;
+                case "ita":
+                    result = "Italian";
+                    break;
+                case "por":
+                    result = "Portuguese";
+                    break;
+                case "deu":
+                    result = "German";
+                    break;
+                case "rus":
+                    result = "Russian";
+                    break;
+                case "kor":
+                    result = "Korean";
+                    break;
+                case "zho":
+                    result = "Chinese";
+                    break;
+                case "jpn":
+                    result = "Japanese";
+                    break;
+            }
+
+            return result;
         }
     }
 }

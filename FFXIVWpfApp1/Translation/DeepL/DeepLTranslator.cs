@@ -37,6 +37,9 @@ namespace FFXIVTataruHelper.Translation
         {
             string result = String.Empty;
 
+            if (inLang == outLang)
+                return sentence;
+
             try
             {
                 string _outLang = outLang;
@@ -71,7 +74,7 @@ namespace FFXIVTataruHelper.Translation
 
                 string url = @"https://www2.deepl.com/jsonrpc";
 
-                if (_ServerSplit)
+                if (_ServerSplit || inLang == "auto")
                 {
                     DeepLRequest.DeepLCookieRequest deepLSentenceRequest = new DeepLRequest.DeepLCookieRequest(_DeepLId, sentence);
                     string strDeepLsentenceRequest = deepLSentenceRequest.ToJsonString();
@@ -80,6 +83,10 @@ namespace FFXIVTataruHelper.Translation
                     var deepLSentenceResp = JsonConvert.DeserializeObject<DeepLResponse.DeepLSentencePreprocessResponse>(strDeepLSentencetResp);
 
                     _DeepLId++;
+
+                    inLang = deepLSentenceResp.result.lang;
+                    if (inLang.Length == 0)
+                        return result;
                 }
 
                 DeepLRequest.DeepLTranslatorRequest deepLTranslationRequest = new DeepLRequest.DeepLTranslatorRequest(_DeepLId, sentence, inLang, outLang);

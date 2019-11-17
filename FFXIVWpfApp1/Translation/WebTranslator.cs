@@ -14,6 +14,7 @@ using Newtonsoft.Json;
 using System.Text.RegularExpressions;
 using System.Collections.ObjectModel;
 using FFXIVTataruHelper.Translation.Baidu;
+using IvanAkcheurov.NTextCat.Lib;
 
 namespace FFXIVTataruHelper.Translation
 {
@@ -32,13 +33,11 @@ namespace FFXIVTataruHelper.Translation
 
         WebApi.WebReader YandexWebRead;
 
-        BaiduTranslater _baiduTranslater;
+        BaiduTranslater _BaiduЕranslator;
 
         DeepLTranslator _DeepLTranslator;
 
         PapagoTranslator _PapagoTranslator;
-
-        Amazon.Translate.AmazonTranslateClient amazonTranslateClient;
 
         private bool amazonLoaded = false;
 
@@ -46,6 +45,10 @@ namespace FFXIVTataruHelper.Translation
 
         List<KeyValuePair<TranslationRequest, string>> transaltionCache;
         KeyValuePair<TranslationRequest, string> defaultCachedResult = default(KeyValuePair<TranslationRequest, string>);
+
+        RankedLanguageIdentifierFactory _NTextCatFactory = null;
+        RankedLanguageIdentifier _NTextCatIdentifier = null;
+        bool _LanguageIdentificationFailed = false;
 
         public WebTranslator()
         {
@@ -55,36 +58,24 @@ namespace FFXIVTataruHelper.Translation
 
             transaltionCache = new List<KeyValuePair<TranslationRequest, string>>(200);
 
-            Task.Run(() =>
-            {
-                try
-                {
-                    amazonTranslateClient = new Amazon.Translate.AmazonTranslateClient(@"", @"", Amazon.RegionEndpoint.EUCentral1);
-                    amazonLoaded = true;
-                }
-                catch (Exception ex)
-                { Logger.WriteLog(Convert.ToString(ex)); }
-            });
-
             _DeepLTranslator = new DeepLTranslator();
 
             _PapagoTranslator = new PapagoTranslator();
 
-            _baiduTranslater = new BaiduTranslater();
+            _BaiduЕranslator = new BaiduTranslater();
 
             string pattern = "(?<=(<div dir=\"ltr\" class=\"t0\">)).*?(?=(<\\/div>))";
 
             GoogleRx = new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
-        public void LoadLanguages(string glTrPath, string MultTrPath, string deepPath, string YaTrPath, string AmazonTrPath, string PapagoTrPath, string baiduTrPath)
+        public void LoadLanguages(string glTrPath, string MultTrPath, string deepPath, string YaTrPath, string PapagoTrPath, string baiduTrPath)
         {
             try
             {
                 List<TranslationEngine> tmptranslationEngines = new List<TranslationEngine>();
                 var tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(glTrPath);
                 tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.GoogleTranslate, tmpList, 9));
-
 
                 tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(MultTrPath);
                 tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Multillect, tmpList, 1));
@@ -94,9 +85,6 @@ namespace FFXIVTataruHelper.Translation
 
                 tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(YaTrPath);
                 tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Yandex, tmpList, 4));
-
-                tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(AmazonTrPath);
-                tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Amazon, tmpList, 6));
 
                 tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(PapagoTrPath);
                 tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Papago, tmpList, 7));
@@ -117,8 +105,35 @@ namespace FFXIVTataruHelper.Translation
 
         public string Translate(string inSentence, TranslationEngine translationEngine, TranslatorLanguague fromLang, TranslatorLanguague toLang)
         {
+
+            if (fromLang.SystemName == "Auto")
+            {
+                if (translationEngine.EngineName != TranslationEngineName.GoogleTranslate)
+                {
+                    var dLang = TryDetectLanguague(inSentence);
+                    if (dLang.Length > 1)
+                    {
+                        var nLang = translationEngine.SupportedLanguages.FirstOrDefault(x => x.SystemName == dLang);
+                        if (nLang != null)
+                            fromLang = nLang;
+                    }
+                }
+            }
+
             if (fromLang.SystemName == toLang.SystemName)
                 return inSentence;
+
+            switch (toLang.SystemName)
+            {
+                case "Korean":
+                    if (HasKorean(inSentence) >= GlobalSettings.MaxSameLanguagePercent)
+                        return inSentence;
+                    break;
+                case "Japanese":
+                    if (HasJapanese(inSentence) >= GlobalSettings.MaxSameLanguagePercent)
+                        return inSentence;
+                    break;
+            }
 
             TranslationRequest translationRequest = new TranslationRequest(inSentence, translationEngine.EngineName, fromLang.LanguageCode, toLang.LanguageCode);
             var cachedResult = transaltionCache.FirstOrDefault(x => x.Key == translationRequest);
@@ -156,11 +171,6 @@ namespace FFXIVTataruHelper.Translation
                 case TranslationEngineName.Yandex:
                     {
                         result = YandexTranslate(inSentence, fromLangCode, toLangCode);
-                        break;
-                    }
-                case TranslationEngineName.Amazon:
-                    {
-                        result = AmazonTranslate(inSentence, fromLangCode, toLangCode);
                         break;
                     }
                 case TranslationEngineName.Papago:
@@ -236,11 +246,6 @@ namespace FFXIVTataruHelper.Translation
             return result;
         }
 
-        private string BaiduTranslate(string sentence, string inLang, string outLang)
-        {
-            return _baiduTranslater.Translate(sentence, inLang, outLang);
-        }
-
         private string MultillectTranslate(string sentence, string inLang, string outLang)
         {
             string result = String.Empty;
@@ -276,11 +281,12 @@ namespace FFXIVTataruHelper.Translation
             string result = String.Empty;
             try
             {
+                string yaApiKey = @"trnsl.1.1.20190204T134422Z.621647c1cffc2039.c2005599368f64d39003df38affa93a62699bcfe";
                 string _outLang = outLang;
                 string _inLang = inLang;
 
                 string _baseUrl = @"https://translate.yandex.net/api/v1.5/tr.json/translate?lang={0}-{1}&key={2}";
-                string url = string.Format(_baseUrl, _inLang, _outLang, @"");
+                string url = string.Format(_baseUrl, _inLang, _outLang, yaApiKey);
 
                 var tmpResult = YandexWebRead.GetWebData(url, WebApi.WebReader.WebMethods.POST, "text=" + sentence);
 
@@ -303,49 +309,6 @@ namespace FFXIVTataruHelper.Translation
             return result;
         }
 
-        private string AmazonTranslate(string sentence, string inLang, string outLang)
-        {
-            string result = string.Empty;
-
-            try
-            {
-                if (!amazonLoaded)
-                    Task.Run(async () =>
-                    {
-                        var startTime = DateTime.Now;
-                        while (!amazonLoaded && (DateTime.Now - startTime).TotalMilliseconds < GlobalSettings.TranslatorWaitTime)
-                        {
-                            await Task.Delay(100);
-                        }
-                    }).Wait();
-
-                if (amazonLoaded)
-                {
-
-                    Amazon.Translate.Model.TranslateTextRequest translateTextRequest = new Amazon.Translate.Model.TranslateTextRequest();
-                    translateTextRequest.SourceLanguageCode = inLang;
-                    translateTextRequest.TargetLanguageCode = outLang;
-                    translateTextRequest.Text = sentence;
-
-                    Task.Run(async () =>
-                    {
-                        try
-                        {
-                            var res = await amazonTranslateClient.TranslateTextAsync(translateTextRequest);
-                            result = res.TranslatedText;
-                        }
-                        catch (Exception ex)
-                        { Logger.WriteLog(Convert.ToString(ex)); }
-
-                    }).Wait(GlobalSettings.TranslatorWaitTime);
-                }
-            }
-            catch (Exception e)
-            { Logger.WriteLog(Convert.ToString(e)); }
-
-            return result;
-        }
-
         private string PapagoTranslate(string sentence, string inLang, string outLang)
         {
             string result = string.Empty;
@@ -362,9 +325,106 @@ namespace FFXIVTataruHelper.Translation
             return result;
         }
 
+        private string BaiduTranslate(string sentence, string inLang, string outLang)
+        {
+            string result = string.Empty;
+
+            try
+            {
+                result = _BaiduЕranslator.Translate(sentence, inLang, outLang);
+            }
+            catch (Exception e)
+            {
+                Logger.WriteLog(e);
+            }
+
+            return result;
+        }
+
         private string PreprocessSentence(string sentence)
         {
             return sentence.Replace("&", " and ");
+        }
+
+        private double HasKorean(string sentence)
+        {
+            if (sentence.Length == 0)
+                return 0;
+
+            int koreanCount = 0;
+
+            for (int i = 0; i < sentence.Length; i++)
+            {
+                if (IsKoreanLetter(sentence[i]))
+                    koreanCount++;
+            }
+
+            return (double)koreanCount / (double)sentence.Length;
+        }
+
+        private double HasJapanese(string sentence)
+        {
+            if (sentence.Length == 0)
+                return 0;
+
+            int japaneseCount = 0;
+
+            for (int i = 0; i < sentence.Length; i++)
+            {
+                if (IsJapaneseLetter(sentence[i]))
+                    japaneseCount++;
+            }
+
+            return (double)japaneseCount / (double)sentence.Length;
+        }
+
+        private bool IsKoreanLetter(char ch)
+        {
+            if ((0xAC00 <= ch && ch <= 0xD7A3) || (0x3131 <= ch && ch <= 0x318E))
+                return true;
+
+            return false;
+        }
+
+        private bool IsJapaneseLetter(char ch)
+        {
+            // 0x3040 -> 0x309F === Hirigana, 0x30A0 -> 0x30FF === Katakana, 0x4E00 -> 0x9FBF === Kanji
+
+            if ((ch >= 0x3040 && ch <= 0x309F) || (ch >= 0x30A0 && ch <= 0x30FF) || (ch >= 0x4E00 && ch <= 0x9FBF))
+                return true;
+
+            return false;
+        }
+
+        private string TryDetectLanguague(string text)
+        {
+            string result = string.Empty;
+
+            if (_LanguageIdentificationFailed)
+                return result;
+
+            try
+            {
+                if (_NTextCatFactory == null || _NTextCatIdentifier == null)
+                {
+                    _NTextCatFactory = new RankedLanguageIdentifierFactory();
+                    _NTextCatIdentifier = _NTextCatFactory.Load(GlobalSettings.NTextCatLanguageModelsPath);
+
+                }
+
+                var languages = _NTextCatIdentifier.Identify(text);
+                var mostCertainLanguage = languages.FirstOrDefault();
+
+                if (mostCertainLanguage != null)
+                    result = Helper.ConvertISOLangugueNameToSystemName(mostCertainLanguage.Item1.Iso639_3);
+            }
+            catch (Exception e)
+            {
+                _LanguageIdentificationFailed = true;
+                Logger.WriteLog(e);
+            }
+
+            return result;
         }
     }
 }

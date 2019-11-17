@@ -59,7 +59,7 @@
                         <TabControl Visibility="{Binding Path=DataContext.InnerVisibility, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type TabControl}}, Converter={utils:BooleanToVisibilityConverter}, Mode=TwoWay}" MinHeight="200">
                             <TabItem Header="{DynamicResource ChatAppearance}">
                                 <WrapPanel Orientation="Horizontal">
-                                    <GroupBox Header="{DynamicResource FontSettings}" Margin="5,5,5,5" Height="159" VerticalAlignment="Top" Width="180">
+                                    <GroupBox Header="{DynamicResource FontSettings}" Margin="5,5,5,5" Height="210" VerticalAlignment="Top" Width="180">
                                         <StackPanel Margin="0">
                                             <Label Content="{DynamicResource FontSize}" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="158" />
                                             <xctk:IntegerUpDown Value="{Binding ChatFontSize, Mode=TwoWay}"  HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="140" Minimum="1" Maximum="100" />
@@ -68,9 +68,14 @@
                                             <xctk:ColorPicker SelectedColor="{Binding BackGroundColor,Mode=TwoWay}" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="140" 
                                                           StandardButtonHeader="{DynamicResource ColorPickerStandardButtonHeader}" AdvancedButtonHeader="{DynamicResource ColorPickerAdvancedButtonHeader}" StandardColorsHeader="{DynamicResource ColorPickerStandardColorsHeader}"
                                                           RecentColorsHeader="{DynamicResource ColorPickerRecentColorsHeader}" ShowAvailableColors="False" ShowStandardColors="True" ShowRecentColors="True" />
+                                            
+                                            <Label Content="{DynamicResource FontFamily}" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="152"/>
+                                            <ComboBox ItemsSource="{Binding Source={x:Static Fonts.SystemFontFamilies}}"
+                                                      SelectedItem="{Binding ChatFont, Mode=TwoWay}"/>
+                                            
                                         </StackPanel>
                                     </GroupBox>
-                                    <GroupBox Header="{DynamicResource ParagraphSettings}" Margin="5,5,5,5" HorizontalAlignment="Left" Height="159" VerticalAlignment="Top" Width="180">
+                                    <GroupBox Header="{DynamicResource ParagraphSettings}" Margin="5,5,5,5" HorizontalAlignment="Left" Height="210" VerticalAlignment="Top" Width="180">
                                         <StackPanel Margin="0">
                                             <Label Content="{DynamicResource IntervalWidth}" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="158"/>
                                             <xctk:IntegerUpDown Value="{Binding SpacingCount, Mode=TwoWay}" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="140" Minimum="0" Maximum="100" />

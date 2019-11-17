@@ -41,6 +41,7 @@
     <system:String x:Key="FontColor">Font Color</system:String>
     <system:String x:Key="FontColor1">Color 1</system:String>
     <system:String x:Key="FontColor2">Color 2</system:String>
+    <system:String x:Key="FontFamily">Font</system:String>
 
     <system:String x:Key="BackgroundColor">Background Color</system:String>
 

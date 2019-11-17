@@ -11,6 +11,8 @@ namespace FFXIVTataruHelper
 
         public static List<string> FFXIVLanguages = new List<string>(new string[] { "English", "Chinese", "Japanese", "French", "German", "Korean" });
 
+        public static string NTextCatLanguageModelsPath = "Resources/Core14.profile.xml";
+
         public static string ChatCodesFilePath = @"Resources\ChatCodes.json";
 
         public static string GoogleTranslateLanguages = "Resources/GoogleTranslateLanguages.json";
@@ -23,9 +25,7 @@ namespace FFXIVTataruHelper
 
         public static string BaiduLanguages = "Resources/BaiduLanguages.json";
 
-        public static string BaiduEncoder = "Resources/BaiduEncoder.js";
-
-        public static string AmazonLanguages = "Resources/AmazonLanguages.json";
+        public static string BaiduEncoder = "Resources/BaiduEncoder";
 
         public static string PapagoLanguages = "Resources/PapagoLanguages.json";
 
@@ -64,6 +64,8 @@ namespace FFXIVTataruHelper
         public static int SettingsSaveDelay = 2500;
 
         public static int MaxTranslateTryCount = 4;
+
+        public static double MaxSameLanguagePercent = 0.40;
 
         public static string OldSettings = "../UserSettings.json";
 

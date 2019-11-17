@@ -1,5 +1,11 @@
 [
   {
+    "ShownName": "Auto",
+    "SystemName": "Auto",
+    "LanguageCode": "auto"
+  },
+  
+  {
     "ShownName": "Korean",
     "SystemName": "Korean",
     "LanguageCode": "ko"

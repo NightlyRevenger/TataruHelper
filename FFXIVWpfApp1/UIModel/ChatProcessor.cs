@@ -184,15 +184,6 @@ namespace FFXIVTataruHelper
         {
             switch (msgType.MsgType)
             {
-                case MsgType.Translate:
-                    {
-                        /*
-                        var translation = new ChatMessageArrivedEventArgs(ea);
-
-                        await _TextArrivedArrived.InvokeAsync(translation);//*/
-
-                        break;
-                    }
                 default:
                     {
                         var translation = new ChatMessageArrivedEventArgs(ea);

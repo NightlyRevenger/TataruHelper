@@ -130,6 +130,8 @@ namespace FFXIVTataruHelper
             _SettingsWindow.Resources["FontColor1"] = catalog.GetString("Color 1");
             _SettingsWindow.Resources["FontColor2"] = catalog.GetString("Color 2");
 
+            _SettingsWindow.Resources["FontFamily"] = catalog.GetString("Font");
+
             _SettingsWindow.Resources["BackgroundColor"] = catalog.GetString("Background Color");
 
             _SettingsWindow.Resources["ColorPickerStandardButtonHeader"] = catalog.GetString("Standard");

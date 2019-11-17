@@ -29,7 +29,7 @@ namespace Sharlayan
         public static bool CanGetCutScene()
         {
             var canRead = Scanner.Instance.Locations.ContainsKey(Signatures.CutsceneText1);
-            canRead = canRead && Scanner.Instance.Locations.ContainsKey(Signatures.CutsceneText2);
+            //canRead = canRead && Scanner.Instance.Locations.ContainsKey(Signatures.CutsceneText2);
             canRead = canRead && Scanner.Instance.Locations.ContainsKey(Signatures.CutsceneTextLength);
             canRead = canRead && Scanner.Instance.Locations.ContainsKey(Signatures.CutsceneDetector);
 
@@ -52,7 +52,6 @@ namespace Sharlayan
             var dialogPanel = GetDialogPanel();
 
             var cutsceneText = GetCutsceneText();
-            //var cutsceneText = new ChatLogItem();
 
             var dialogRepeat = CheckRepetition(DialogPanelsLog, dialogPanel);
             var cutsceneRepeat = CheckRepetition(CutScenesLog, cutsceneText);
@@ -61,7 +60,7 @@ namespace Sharlayan
             {
                 if (dialogPanel.Bytes != null && dialogRepeat == false)
                 {
-                    if (!CheckRepetition(DirectDialogLog, dialogPanel))
+                    if (!CheckRepetition(DirectDialogLog, dialogPanel) && !dialogPanel.IsTextEmpty())
                         result.ChatLogItems.Add(dialogPanel);
                 }
             }
@@ -69,13 +68,13 @@ namespace Sharlayan
             {
                 if (dialogPanel != null && dialogPanel.Bytes != null && dialogRepeat == false)
                 {
-                    if (!CheckRepetition(DirectDialogLog, dialogPanel))
+                    if (!CheckRepetition(DirectDialogLog, dialogPanel) && !dialogPanel.IsTextEmpty())
                         result.ChatLogItems.Add(dialogPanel);
                 }
 
                 if (cutsceneText != null && cutsceneText.Bytes != null && cutsceneRepeat == false)
                 {
-                    if (!CheckRepetition(DirectDialogLog, cutsceneText))
+                    if (!CheckRepetition(DirectDialogLog, cutsceneText) && !cutsceneText.IsTextEmpty())
                         result.ChatLogItems.Add(cutsceneText);
                 }
             }
@@ -163,10 +162,8 @@ namespace Sharlayan
 
             try
             {
-                var tmp = Scanner.Instance.Locations.ToList();
-                var tmp2 = (IntPtr)tmp[0].Value;
                 var cutsceneTextPointer1 = (IntPtr)Scanner.Instance.Locations[Signatures.CutsceneText1];
-                var cutsceneTextPointer2 = (IntPtr)Scanner.Instance.Locations[Signatures.CutsceneText2];
+                //var cutsceneTextPointer2 = (IntPtr)Scanner.Instance.Locations[Signatures.CutsceneText2];
                 var cutsceneTextLengthPointer = (IntPtr)Scanner.Instance.Locations[Signatures.CutsceneTextLength];
                 var cutsceneDetector = (IntPtr)Scanner.Instance.Locations[Signatures.CutsceneDetector];
 
@@ -179,56 +176,55 @@ namespace Sharlayan
 
 
                 byte[] cutsceneBytesRaw1 = MemoryHandler.Instance.GetByteArray(cutsceneTextPointer1, 256);
-                byte[] cutsceneBytesRaw2 = MemoryHandler.Instance.GetByteArray(cutsceneTextPointer2, 256);
+                //byte[] cutsceneBytesRaw2 = MemoryHandler.Instance.GetByteArray(cutsceneTextPointer2, 256);
 
                 int textEnd1 = GetRealTextLength(ref cutsceneBytesRaw1);
-                int textEnd2 = GetRealTextLength(ref cutsceneBytesRaw2);
+                //int textEnd2 = GetRealTextLength(ref cutsceneBytesRaw2);
 
-                if (textEnd1 == textEnd2 && textEnd1 > 2)
+                if (textEnd1 > 2)
                 {
                     byte[] cutsceneBytes1 = cutsceneBytesRaw1;
-                    byte[] cutsceneBytes2 = cutsceneBytesRaw2;
+                    //byte[] cutsceneBytes2 = cutsceneBytesRaw2;
 
                     //Array.Copy(cutsceneBytesRaw1, cutsceneBytes1, textEnd1);
                     //Array.Copy(cutsceneBytesRaw2, cutsceneBytes2, textEnd2);
 
-                    string cutText1 = MemoryHandler.Instance.GetStringFromBytes(cutsceneBytes1);
-                    string cutText2 = MemoryHandler.Instance.GetStringFromBytes(cutsceneBytes2);
+                    //string cutText1 = MemoryHandler.Instance.GetStringFromBytes(cutsceneBytes1);
+                    //string cutText2 = MemoryHandler.Instance.GetStringFromBytes(cutsceneBytes2);
 
-                    if (cutText1 == cutText2)
+
+                    Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
+                    byte[] unixTimestampBytes = BitConverter.GetBytes(unixTimestamp).ToArray();
+
+
+                    byte[] npcNameBytes = new byte[3];
+                    npcNameBytes[0] = dotBytes;
+                    npcNameBytes[1] = dotBytes;
+                    npcNameBytes[2] = dotBytes;
+                    //npcNameBytes[3] = spaceBytes;
+
+
+                    List<byte> rawBytesList = new List<byte>(unixTimestampBytes.Length + chatCodeBytes.Length + 1 +
+                        npcNameBytes.Length + 1 + cutsceneBytes1.Length);
+
+                    rawBytesList.AddRange(unixTimestampBytes);
+                    rawBytesList.AddRange(chatCodeBytes);
+                    rawBytesList.AddRange(new Byte[] { 0x00, 0x00 });
+                    rawBytesList.Add(colonBytes);
+                    rawBytesList.AddRange(npcNameBytes);
+                    rawBytesList.Add(colonBytes);
+                    rawBytesList.AddRange(cutsceneBytes1);
+
+                    ChatLogItem chatLogItem = ChatEntry.Process(rawBytesList.ToArray());
+
+                    if (textEnd1 > 2)
                     {
-                        Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-                        byte[] unixTimestampBytes = BitConverter.GetBytes(unixTimestamp).ToArray();
+                        String onlyLettersLine = new String(chatLogItem.Line.Where(Char.IsLetter).ToArray());
 
-
-                        byte[] npcNameBytes = new byte[3];
-                        npcNameBytes[0] = dotBytes;
-                        npcNameBytes[1] = dotBytes;
-                        npcNameBytes[2] = dotBytes;
-                        //npcNameBytes[3] = spaceBytes;
-
-
-                        List<byte> rawBytesList = new List<byte>(unixTimestampBytes.Length + chatCodeBytes.Length + 1 +
-                            npcNameBytes.Length + 1 + cutsceneBytes1.Length);
-
-                        rawBytesList.AddRange(unixTimestampBytes);
-                        rawBytesList.AddRange(chatCodeBytes);
-                        rawBytesList.AddRange(new Byte[] { 0x00, 0x00 });
-                        rawBytesList.Add(colonBytes);
-                        rawBytesList.AddRange(npcNameBytes);
-                        rawBytesList.Add(colonBytes);
-                        rawBytesList.AddRange(cutsceneBytes1);
-
-                        ChatLogItem chatLogItem = ChatEntry.Process(rawBytesList.ToArray());
-
-                        if (textEnd1 > 2)
-                        {
-                            String onlyLettersLine = new String(chatLogItem.Line.Where(Char.IsLetter).ToArray());
-
-                            if (onlyLettersLine.Length > chatLogItem.Line.Length / GlobalSettings.LineLettersCoefficient)
-                                result = chatLogItem;
-                        }
+                        if (onlyLettersLine.Length > chatLogItem.Line.Length / GlobalSettings.LineLettersCoefficient)
+                            result = chatLogItem;
                     }
+
                 }
             }
             catch (Exception) { }
@@ -236,7 +232,7 @@ namespace Sharlayan
             return result;
         }
 
-        private static bool CheckChatEquality(ChatLogItem item1, ChatLogItem item2)
+        public static bool CheckChatEquality(ChatLogItem item1, ChatLogItem item2)
         {
             if (item1 == null && item2 == null)
                 return true;
@@ -247,14 +243,19 @@ namespace Sharlayan
             if (item1.Bytes == null || item2.Bytes == null)
                 return false;
 
-            string str1 = item1.Line.Substring(item1.Line.IndexOf(':'));
-            string str2 = item2.Line.Substring(item2.Line.IndexOf(':'));
+            string str1 = item1.Line.ToString();
+            string str2 = item2.Line.ToString();
+
+            if(item1.Line.Contains(":"))
+                str1 = item1.Line.Substring(item1.Line.IndexOf(':'));
+
+            if(item2.Line.Contains(":"))
+                str2 = item2.Line.Substring(item2.Line.IndexOf(':'));
 
             String onlyLetters1 = new String(str1.Where(Char.IsLetter).ToArray());
             String onlyLetters2 = new String(str2.Where(Char.IsLetter).ToArray());
 
             return onlyLetters1 == onlyLetters2;
-            //return str1 == str2;
         }
 
         private static bool CheckRepetition(System.Collections.Concurrent.ConcurrentQueue<ChatLogItem> Log, ChatLogItem item)
@@ -269,9 +270,10 @@ namespace Sharlayan
             if (item.Line.Length > 1)
             {
                 ChatLogItem previusChatLogItem = null;
+
                 if (Log.TryPeek(out previusChatLogItem))
                 {
-                    if (previusChatLogItem.Line != item.Line)
+                    if (!CheckChatEquality(previusChatLogItem, item))
                     {
                         while (Log.TryDequeue(out previusChatLogItem)) ;
 
@@ -322,6 +324,27 @@ namespace Sharlayan
             return textEnd;
         }
 
+        private static bool IsTextEmpty(this ChatLogItem chatLogItem)
+        {
+            bool result = true;
 
+            if (chatLogItem == null)
+                return result;
+
+            if (chatLogItem.Bytes == null || chatLogItem.Line == null)
+                return result;
+
+            int indexOf = chatLogItem.Line.IndexOf(':');
+
+            if (indexOf < 0)
+                return result;
+            else
+            {
+                if (chatLogItem.Line.Length-1 != indexOf)
+                    result = false;
+            }
+
+            return result;
+        }
     }
 }

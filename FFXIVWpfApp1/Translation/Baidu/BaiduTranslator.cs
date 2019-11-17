@@ -1,61 +1,110 @@
-﻿﻿using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FFXIVTataruHelper.Translation.Baidu
 {
     class BaiduTranslater
     {
-        private string token;
-        private string gtk;
-        private BaiduReqEncoder encoder = new BaiduReqEncoder();
+        string _Token;
+        string _Gtk;
 
-        WebApi.WebReader BaiduWebRead;
+        BaiduReqEncoder _BaiduEncoder;
+        WebApi.WebReader _BaiduWebRead;
+
+        bool _IsInitialised = false;
+        bool _InitializationFailed = false;
+
         public BaiduTranslater()
         {
-            try
+            _BaiduWebRead = new WebApi.WebReader(@"fanyi.baidu.com");
+
+            InitTranslator();
+        }
+
+        private void InitTranslator()
+        {
+            _IsInitialised = false;
+            _InitializationFailed = false;
+
+            Task.Run(() =>
             {
-                string url = "https://fanyi.baidu.com/";
-
-                BaiduWebRead = new WebApi.WebReader(@"fanyi.baidu.com");
-                var tmpResult = BaiduWebRead.GetWebData(url, WebApi.WebReader.WebMethods.GET);
-
-                tmpResult = BaiduWebRead.GetWebDataAndSetCookie(url, WebApi.WebReader.WebMethods.GET);
-                Regex tokenRegex = new Regex("token: '(.*)'");
-                Regex gtkRegex = new Regex("gtk = '(.*)'");
-
-                var tokenMatch = tokenRegex.Match(tmpResult);
-                var gtkMatch = gtkRegex.Match(tmpResult);
-
-                if (tokenMatch.Success && gtkMatch.Success)
+                try
                 {
-                    token = tokenMatch.Value;
-                    gtk = gtkMatch.Value;
-                    token = token.Substring(8, token.Length - 8).TrimEnd(new char[] { (char)39 });
-                    gtk = gtk.Substring(7, gtk.Length - 7).TrimEnd(new char[] { (char)39 });
+                    _BaiduEncoder = new BaiduReqEncoder(GlobalSettings.BaiduEncoder);
+
+                    string url = "https://fanyi.baidu.com/";
+
+                    var tmpResult = _BaiduWebRead.GetWebData(url, WebApi.WebReader.WebMethods.GET);
+
+                    tmpResult = _BaiduWebRead.GetWebDataAndSetCookie(url, WebApi.WebReader.WebMethods.GET);
+                    Regex tokenRegex = new Regex("token: '(.*)'");
+                    Regex gtkRegex = new Regex("gtk = '(.*)'");
+
+                    Match tokenMatch = tokenRegex.Match(tmpResult);
+                    Match gtkMatch = gtkRegex.Match(tmpResult);
+
+                    if (tokenMatch.Success && gtkMatch.Success)
+                    {
+                        _Token = tokenMatch.Value;
+                        _Gtk = gtkMatch.Value;
+                        _Token = _Token.Substring(8, _Token.Length - 8).TrimEnd(new char[] { (char)39 });
+                        _Gtk = _Gtk.Substring(7, _Gtk.Length - 7).TrimEnd(new char[] { (char)39 });
+
+                        _IsInitialised = true;
+                    }
+                    else
+                    {
+                        _IsInitialised = false;
+                        _InitializationFailed = true;
+                    }
                 }
-                string s = "In order to resolve this, Kindly go to the below path";
-                Translate(s, "en", "zh");
-            }
-            catch (Exception e)
-            {
-                Logger.WriteLog(Convert.ToString(e));
-            }
+                catch (Exception e)
+                {
+                    _InitializationFailed = true;
+                    _IsInitialised = false;
+                    Logger.WriteLog(e);
+                }
+            });
         }
 
         public string Translate(string sentence, string inLang, string outLang)
         {
-            string reqv = encoder.encoding(sentence, inLang, outLang, gtk, token);
+            string translationResult = String.Empty;
 
-            var tmpResponse = BaiduWebRead.GetWebData("https://fanyi.baidu.com/v2transapi", WebApi.WebReader.WebMethods.POST, reqv);
+            string serviceUrl = @"https://fanyi.baidu.com/v2transapi";
 
-            var unescaped = Regex.Unescape(tmpResponse);
+            if (!_InitializationFailed)
+            {
+                if (!_IsInitialised)
+                    SpinWait.SpinUntil(() => _IsInitialised || _InitializationFailed);
 
-            var result = JsonConvert.DeserializeObject<BaiduResponse>(unescaped);
+                if (!_InitializationFailed)
+                {
+                    try
+                    {
+                        string reqv = _BaiduEncoder.Encode(sentence, inLang, outLang, _Gtk, _Token);
 
-            return result.trans_result.data[0].dst;
+                        var tmpResponse = _BaiduWebRead.GetWebData(serviceUrl, WebApi.WebReader.WebMethods.POST, reqv);
+
+                        var unescaped = Regex.Unescape(tmpResponse);
+
+                        var result = JsonConvert.DeserializeObject<BaiduResponse>(unescaped);
+
+                        translationResult = result.trans_result.data[0].dst;
+                    }
+                    catch (Exception e)
+                    {
+                        Logger.WriteLog(e);
+                    }
+                }
+            }
+
+            return translationResult;
         }
     }
 

@@ -60,8 +60,6 @@ namespace Sharlayan {
 
         public const string CutsceneText1 = "CUTSCENE_TEXT1";
 
-        public const string CutsceneText2 = "CUTSCENE_TEXT2";
-
         public const string CutsceneTextLength = "CUTSCENE_TEXT_LENGTH";
 
         public const string CutsceneDetector = "CUTSCENE_DETECTOR";

@@ -43,6 +43,8 @@ namespace Sharlayan {
             ChatLogReader.PreviousArrayIndex = previousArrayIndex;
             ChatLogReader.PreviousOffset = previousOffset;
 
+            Signature ChatLogKey = Scanner.Instance.Locations[Signatures.ChatLogKey];
+
             var chatPointerMap = (IntPtr) Scanner.Instance.Locations[Signatures.ChatLogKey];
 
             if (chatPointerMap.ToInt64() <= 20) {

@@ -15,8 +15,8 @@ namespace FFXIVTataruHelper.Translation
 {
     class PapagoEncoder
     {
-        static string password = @"";
-        static string savedHash = @"a3731ad87f252745313d91f2a70e5a2cc1d9f48e316421d9913f0cbff68a3f72";
+		static string password = @"";
+        static string savedHash = @"b9e027e828de9879bed1190646f925493e7e8455c5b8587fa872f5a88eb39937";
 
         public bool IsAvaliable { get { return _IsAvaliable; } }
 
@@ -67,6 +67,29 @@ namespace FFXIVTataruHelper.Translation
             _IsAvaliable = true;
         }
 
+        public string EncodePapagoTranslationRequest(string str)
+        {
+            string reqv = string.Empty;
+
+            if (_IsAvaliable && PapgoEncoderEngine != null)
+            {
+                try
+                {
+                    reqv = PapgoEncoderEngine.CallGlobalFunction<string>("EncodeTransaltionRequest", str);
+
+                    reqv = "data=" + System.Net.WebUtility.UrlEncode(reqv);
+
+                }
+                catch (Exception e)
+                {
+                    Logger.WriteLog(e);
+                    _IsAvaliable = false;
+                }
+            }
+
+            return reqv;
+        }
+
         public string EncodePapagoString(string str)
         {
             string reqv = string.Empty;
@@ -75,7 +98,7 @@ namespace FFXIVTataruHelper.Translation
             {
                 try
                 {
-                    reqv = PapgoEncoderEngine.CallGlobalFunction<string>("EncodeString", str);
+                    reqv = PapgoEncoderEngine.CallGlobalFunction<string>("EncodeRequest", str);
 
                     reqv = "data=" + System.Net.WebUtility.UrlEncode(reqv);
 
