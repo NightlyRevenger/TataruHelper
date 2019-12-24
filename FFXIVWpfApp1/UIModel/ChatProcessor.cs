@@ -3,13 +3,13 @@
 
 using FFXIVTataruHelper.EventArguments;
 using FFXIVTataruHelper.FFHandlers;
-using FFXIVTataruHelper.Translation;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using Translation;
 
 namespace FFXIVTataruHelper
 {

@@ -96,7 +96,7 @@ namespace FFXIVTataruHelper.FFHandlers
             _FFChatMessageArrived = new AsyncEvent<ChatMessageArrivedEventArgs>(EventErrorHandler, "FFChatMessageArrived");
             _AsyncPropertyChanged = new AsyncEvent<AsyncPropertyChangedEventArgs>(EventErrorHandler, "FFMemoryReader \n FFChatMessageArrived");
 
-            _UseDirectReadingInternal = true;
+            _UseDirectReadingInternal = false;
             DirectTextsMissedCount = 0;
         }
 
@@ -432,7 +432,7 @@ namespace FFXIVTataruHelper.FFHandlers
                         }
                         else
                         {
-                            SpinWait.SpinUntil(() => _FFxivChat.IsEmpty == false && _KeepWorking == true);
+                            SpinWait.SpinUntil(() => _FFxivChat.IsEmpty == false || _KeepWorking == false);
                         }
                     }
                     catch (Exception e)

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tataru-helper\n"
-"POT-Creation-Date: 2019-09-13 19:08+0300\n"
-"PO-Revision-Date: 2019-09-13 16:13\n"
+"POT-Creation-Date: 2019-11-19 19:15+0300\n"
+"PO-Revision-Date: 2019-12-08 18:27\n"
 "Last-Translator: NightlyRevenger\n"
 "Language-Team: Korean\n"
 "Language: ko\n"
@@ -80,7 +80,7 @@ msgstr "색상 2"
 
 #: Utils/LanguagueWrapper.cs:133
 msgid "Font"
-msgstr ""
+msgstr "글꼴"
 
 #: Utils/LanguagueWrapper.cs:135
 msgid "Background Color"
@@ -361,6 +361,34 @@ msgstr "감정표현"
 #: Utils/LanguagueWrapper.cs:232
 msgid "Custom Emotes"
 msgstr "사용자 감정표현"
+
+#: Utils/LanguagueWrapper.cs:234
+msgid "Downloading new version:"
+msgstr "새로운 버전을 다운로드합니다"
+
+#: Utils/LanguagueWrapper.cs:235
+msgid "Click here to update to new version."
+msgstr "새 버전으로 업데이트하려면 여기를 클릭하십시오."
+
+#: Utils/LanguagueWrapper.cs:237
+msgid "Tataru Update"
+msgstr "타타루 업데이트"
+
+#: Utils/LanguagueWrapper.cs:238
+msgid "New Tataru helper version is available. Restart Application to update."
+msgstr "새 타타루 헬퍼 버전을 사용할 수 있습니다. 업데이트하려면 응용 프로그램을 다시 시작하십시오."
+
+#: Utils/LanguagueWrapper.cs:240
+msgid "Check updates"
+msgstr "업데이트 확인"
+
+#: Utils/LanguagueWrapper.cs:241
+msgid "Looking for updates..."
+msgstr "업데이트를 찾고 있습니다..."
+
+#: Utils/LanguagueWrapper.cs:242
+msgid "No updates found."
+msgstr "업데이트를 찾을 수 없습니다."
 
 #~ msgid "Interval Width"
 #~ msgstr "Spacing"

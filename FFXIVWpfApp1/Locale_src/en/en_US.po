@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2019-09-13 19:08+0300\n"
-"PO-Revision-Date: 2019-09-13 19:08+0300\n"
+"POT-Creation-Date: 2019-11-19 19:15+0300\n"
+"PO-Revision-Date: 2019-11-19 19:15+0300\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: en\n"
@@ -400,6 +400,34 @@ msgstr "Emotes"
 #: Utils/LanguagueWrapper.cs:232
 msgid "Custom Emotes"
 msgstr "Custom Emotes"
+
+#: Utils/LanguagueWrapper.cs:234
+msgid "Downloading new version:"
+msgstr "Downloading new version:"
+
+#: Utils/LanguagueWrapper.cs:235
+msgid "Click here to update to new version."
+msgstr "Click here to update to new version."
+
+#: Utils/LanguagueWrapper.cs:237
+msgid "Tataru Update"
+msgstr "Tataru Update"
+
+#: Utils/LanguagueWrapper.cs:238
+msgid "New Tataru helper version is available. Restart Application to update."
+msgstr "New Tataru helper version is available. Restart Application to update."
+
+#: Utils/LanguagueWrapper.cs:240
+msgid "Check updates"
+msgstr "Check updates"
+
+#: Utils/LanguagueWrapper.cs:241
+msgid "Looking for updates..."
+msgstr "Looking for updates..."
+
+#: Utils/LanguagueWrapper.cs:242
+msgid "No updates found."
+msgstr "No updates found."
 
 #~ msgid "Interval Width"
 #~ msgstr "Spacing"

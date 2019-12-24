@@ -3,9 +3,7 @@
 
 using FFXIVTataruHelper.FFHandlers;
 using FFXIVTataruHelper.TataruComponentModel;
-using FFXIVTataruHelper.Translation;
 using FFXIVTataruHelper.ViewModel;
-using Newtonsoft.Json;
 using System.Linq;
 using System;
 using System.Collections.Generic;
@@ -17,6 +15,8 @@ using System.Threading.Tasks;
 using FFXIVTataruHelper.UIModel;
 using BondTech.HotKeyManagement.WPF._4;
 using FFXIVTataruHelper.EventArguments;
+using Translation;
+using FFXIVTataruHelper.Utils;
 
 namespace FFXIVTataruHelper
 {
@@ -111,7 +111,7 @@ namespace FFXIVTataruHelper
 
             _SaveSettingsCancellationTokenSource = new CancellationTokenSource();
 
-            _WebTranslator = new WebTranslator();
+            _WebTranslator = new WebTranslator(new LoggerWrapper());
 
             _TataruUIModel = new TataruUIModel();
 
@@ -127,9 +127,7 @@ namespace FFXIVTataruHelper
         {
             await Task.Run(() =>
             {
-
-                _WebTranslator.LoadLanguages(GlobalSettings.GoogleTranslateLanguages, GlobalSettings.MultillectTranslateLanguages,
-                    GlobalSettings.DeeplLanguages, GlobalSettings.YandexLanguages, GlobalSettings.PapagoLanguages, GlobalSettings.BaiduLanguages);
+                _WebTranslator.LoadLanguages();
 
                 _FFMemoryReader.Start();
 
@@ -142,11 +140,10 @@ namespace FFXIVTataruHelper
             _FFMemoryReader.FFChatMessageArrived += _ChatProcessor.OnFFChatMessageArrived;
 
             _TataruUIModel.ChatWindowsListChangedAsync += AsyncOnSettingsWindowsListChanged;
-            ////////////////
 
             _TataruViewModel.ChatWindowsListChangedAsync += AsyncOnViewModelWindowsListChanged;
 
-            _TataruViewModel.ChatWindowsListChangedAsync += OnViewModelChatWindowsListChanged;
+            _TataruViewModel.ChatWindowsListChangedAsync += AsyncOnViewModelChatWindowsListChanged;
         }
 
         public void Stop()
@@ -284,6 +281,7 @@ namespace FFXIVTataruHelper
                         });
                     }
                     break;
+
                 case ListChangedType.ItemDeleted:
                     {
                         await Task.Run(() =>
@@ -305,11 +303,9 @@ namespace FFXIVTataruHelper
 
                                 if (elementToDelete != null)
                                 {
-
                                     _TataruViewModel.DeleteChatWindow(_TataruViewModel.ChatWindows.IndexOf(elementToDelete));
 
                                     RemoveChatWindow(_ChatWindows, elementToDelete.WinId);
-
 
                                     var binder = _PropertyBinders.FirstOrDefault(x => x.Object1 == elementToDelete && x.Object2 == deletedElem);
                                     if (binder == null)
@@ -416,7 +412,7 @@ namespace FFXIVTataruHelper
             }
         }
 
-        private async Task OnViewModelChatWindowsListChanged(AsyncListChangedEventHandler<ChatWindowViewModel> ea)
+        private async Task AsyncOnViewModelChatWindowsListChanged(AsyncListChangedEventHandler<ChatWindowViewModel> ea)
         {
             await Task.Run(() =>
             {

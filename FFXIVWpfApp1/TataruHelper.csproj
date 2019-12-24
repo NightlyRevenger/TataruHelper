@@ -1,6 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="..\packages\squirrel.windows.1.9.1\build\squirrel.windows.props" Condition="Exists('..\packages\squirrel.windows.1.9.1\build\squirrel.windows.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -67,57 +66,15 @@
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="DeltaCompressionDotNet, Version=1.1.0.0, Culture=neutral, PublicKeyToken=1d14d6e5194e7f4a, processorArchitecture=MSIL">
-      <HintPath>..\packages\DeltaCompressionDotNet.1.1.0\lib\net20\DeltaCompressionDotNet.dll</HintPath>
-    </Reference>
-    <Reference Include="DeltaCompressionDotNet.MsDelta, Version=1.1.0.0, Culture=neutral, PublicKeyToken=46b2138a390abf55, processorArchitecture=MSIL">
-      <HintPath>..\packages\DeltaCompressionDotNet.1.1.0\lib\net20\DeltaCompressionDotNet.MsDelta.dll</HintPath>
-    </Reference>
-    <Reference Include="DeltaCompressionDotNet.PatchApi, Version=1.1.0.0, Culture=neutral, PublicKeyToken=3e8888ee913ed789, processorArchitecture=MSIL">
-      <HintPath>..\packages\DeltaCompressionDotNet.1.1.0\lib\net20\DeltaCompressionDotNet.PatchApi.dll</HintPath>
-    </Reference>
-    <Reference Include="IvanAkcheurov.Commons, Version=0.2.1.1, Culture=neutral, PublicKeyToken=a61413de1d13f8fc, processorArchitecture=MSIL">
-      <HintPath>..\packages\IvanAkcheurov.NTextCat.Lib.0.2.1.1\lib\net40\IvanAkcheurov.Commons.dll</HintPath>
-    </Reference>
-    <Reference Include="IvanAkcheurov.NClassify, Version=0.2.1.1, Culture=neutral, PublicKeyToken=a61413de1d13f8fc, processorArchitecture=MSIL">
-      <HintPath>..\packages\IvanAkcheurov.NTextCat.Lib.0.2.1.1\lib\net40\IvanAkcheurov.NClassify.dll</HintPath>
-    </Reference>
-    <Reference Include="IvanAkcheurov.NTextCat.Lib, Version=0.2.1.1, Culture=neutral, PublicKeyToken=a61413de1d13f8fc, processorArchitecture=MSIL">
-      <HintPath>..\packages\IvanAkcheurov.NTextCat.Lib.0.2.1.1\lib\net40\IvanAkcheurov.NTextCat.Lib.dll</HintPath>
-    </Reference>
-    <Reference Include="Jurassic, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Jurassic.3.0.0\lib\net45\Jurassic.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Mdb, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Mdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Pdb, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Pdb.dll</HintPath>
-    </Reference>
-    <Reference Include="Mono.Cecil.Rocks, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\packages\Mono.Cecil.0.9.6.4\lib\net45\Mono.Cecil.Rocks.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="NGettext, Version=0.6.1.0, Culture=neutral, PublicKeyToken=08d3d1c89dfd2985, processorArchitecture=MSIL">
-      <HintPath>..\packages\NGettext.0.6.3\lib\net46\NGettext.dll</HintPath>
-    </Reference>
-    <Reference Include="NuGet.Squirrel, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\squirrel.windows.1.9.1\lib\Net45\NuGet.Squirrel.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpCompress, Version=0.17.1.0, Culture=neutral, PublicKeyToken=afb0a02973931d96, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpCompress.0.17.1\lib\net45\SharpCompress.dll</HintPath>
-    </Reference>
-    <Reference Include="Splat, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Splat.1.6.2\lib\Net45\Splat.dll</HintPath>
-    </Reference>
-    <Reference Include="Squirrel, Version=1.9.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\squirrel.windows.1.9.1\lib\Net45\Squirrel.dll</HintPath>
+    <Reference Include="NGettext, Version=0.6.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NGettext.0.6.4\lib\net46\NGettext.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -176,27 +133,14 @@
     <Compile Include="TataruComponentModel\INotifyPropertyChangedAsync.cs" />
     <Compile Include="TataruComponentModel\PropertyBinder.cs" />
     <Compile Include="TataruComponentModel\PropertyCouple.cs" />
-    <Compile Include="Translation\Baidu\BaiduReqEncoder.cs" />
-    <Compile Include="Translation\Baidu\BaiduRequest.cs" />
-    <Compile Include="Translation\Baidu\BaiduResponse.cs" />
-    <Compile Include="Translation\Baidu\BaiduTranslator.cs" />
-    <Compile Include="Translation\Papago\PapagoDetectLanguageRequest.cs" />
-    <Compile Include="Translation\Papago\PapagoDetectLanguageResponse.cs" />
-    <Compile Include="Translation\Papago\PapagoEncoder.cs" />
-    <Compile Include="Translation\Papago\PapagoTranslationRequest.cs" />
-    <Compile Include="Translation\Papago\PapagoResponse.cs" />
-    <Compile Include="Translation\Papago\PapagoTranslator.cs" />
-    <Compile Include="Translation\TranslationEngine.cs" />
-    <Compile Include="Translation\TranslationRequset.cs" />
     <Compile Include="UIModel\ChatMsgType.cs" />
     <Compile Include="FFHandlers\FFChatMsg.cs" />
     <Compile Include="FFHandlers\FFMemoryReader.cs" />
-    <Compile Include="Translation\YandexResponse.cs" />
     <Compile Include="UIModel\ChatProcessor.cs" />
     <Compile Include="UIModel\ChatWindowViewModelSettings.cs" />
     <Compile Include="UIModel\CmdArgsStatus.cs" />
     <Compile Include="UIModel\UserSettingsOld.cs" />
-    <Compile Include="Utils\StringCipher.cs" />
+    <Compile Include="Utils\LoggerWrapper.cs" />
     <Compile Include="Utils\UiWindowHandler.cs" />
     <Compile Include="ViewModel\ChatWindowViewModel.cs" />
     <Compile Include="ViewModel\TataruUICommand.cs" />
@@ -206,9 +150,6 @@
     <Compile Include="Utils\ControlExtensions.cs" />
     <Compile Include="GlobalSettings.cs" />
     <Compile Include="Utils\Helper.cs" />
-    <Compile Include="Translation\DeepL\DeepLRequest.cs" />
-    <Compile Include="Translation\DeepL\DeepLResponse.cs" />
-    <Compile Include="Translation\DeepL\DeepLTranslator.cs" />
     <Compile Include="Utils\OptimizeFootprint.cs" />
     <Compile Include="Utils\PointD.cs" />
     <Compile Include="Utils\RectangleD.cs" />
@@ -216,7 +157,6 @@
     <Compile Include="Utils\TataruSingleInstance.cs" />
     <Compile Include="Utils\SizeD.cs" />
     <Compile Include="Utils\TextPath.cs" />
-    <Compile Include="Utils\Updater.cs" />
     <Compile Include="ViewModel\ChatCodeViewModel.cs" />
     <Compile Include="ViewModel\TataruViewModel.cs" />
     <Compile Include="WinUtils\HotKeyCombination.cs" />
@@ -224,11 +164,6 @@
     <Compile Include="Logger.cs" />
     <Compile Include="Utils\LogWriter.cs" />
     <Compile Include="WinUtils\MouseHooker.cs" />
-    <Compile Include="Translation\MultillectResponse.cs" />
-    <Compile Include="Translation\TranslatedMsg.cs" />
-    <Compile Include="Translation\TranslatorLanguague.cs" />
-    <Compile Include="Translation\WebApi.cs" />
-    <Compile Include="Translation\WebTranslator.cs" />
     <Compile Include="WinUtils\Win32Interfaces.cs" />
     <Compile Include="WinUtils\WindowResizer.cs" />
     <Compile Include="WinUtils\WinMessagesHandler.cs" />
@@ -336,34 +271,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <None Include="Resources\BaiduEncoder">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\BaiduLanguages.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Resources\ChatCodes.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Resources\DeeplLanguages.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\GoogleTranslateLanguages.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Resources\MsgBlackList.json" />
-    <None Include="Resources\MultillectTranslateLanguages.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\PapagoEncoder">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\PapagoLanguages.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Resources\YandexTranslateLanguages.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -385,6 +296,14 @@
     <ProjectReference Include="..\Sharlayan\Sharlayan.csproj">
       <Project>{9510d5ef-208a-4897-a582-8eae5c6e9406}</Project>
       <Name>Sharlayan</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Translation\Translation.csproj">
+      <Project>{37de7a36-75aa-475f-bc99-4d1b852a3ff2}</Project>
+      <Name>Translation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Updater\Updater.csproj">
+      <Project>{6d24e824-953e-4112-952e-dceef54b8b0f}</Project>
+      <Name>Updater</Name>
     </ProjectReference>
     <ProjectReference Include="..\WpfXamlExtensions\WpfXamlExtensions.csproj">
       <Project>{e3e58614-50b3-4028-affa-da1369de4cb9}</Project>
@@ -421,27 +340,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Resource>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\BaiduEncoder.js" />
-    <None Include="Resources\Core14.profile.xml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <Content Include="Resources\PapagoEncoder.js" />
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if $(ConfigurationName) == ReleaseDeploy powershell -NoProfile -ExecutionPolicy RemoteSigned -file "$(SolutionDir)\scripts\SmartAssemblyScript\SmartAssemblyPack.ps1"
+    <PostBuildEvent>REM  if $(ConfigurationName) == ReleaseDeploy powershell -NoProfile -ExecutionPolicy RemoteSigned -file "$(SolutionDir)\scripts\SmartAssemblyScript\SmartAssemblyPack.ps1"
 if $(ConfigurationName) == ReleaseDeploy powershell -NoProfile -ExecutionPolicy RemoteSigned -file "$(SolutionDir)\scripts\Squirrel_release.ps1"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>if $(ConfigurationName) == ReleaseDeploy powershell -NoProfile -ExecutionPolicy RemoteSigned -file "$(SolutionDir)\scripts\CrowdinScript\Crowdin_download.ps1"</PreBuildEvent>
   </PropertyGroup>
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\squirrel.windows.1.9.1\build\squirrel.windows.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\squirrel.windows.1.9.1\build\squirrel.windows.props'))" />
-    <Error Condition="!Exists('..\packages\squirrel.windows.1.9.1\build\squirrel.windows.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\squirrel.windows.1.9.1\build\squirrel.windows.targets'))" />
-  </Target>
-  <Import Project="..\packages\squirrel.windows.1.9.1\build\squirrel.windows.targets" Condition="Exists('..\packages\squirrel.windows.1.9.1\build\squirrel.windows.targets')" />
 </Project>

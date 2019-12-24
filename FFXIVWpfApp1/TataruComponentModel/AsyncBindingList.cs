@@ -72,7 +72,6 @@ namespace FFXIVTataruHelper.TataruComponentModel
 
         protected override void SetItem(int index, T item)
         {
-
             base.SetItem(index, item);
         }
 

@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tataru-helper\n"
-"POT-Creation-Date: 2019-09-13 19:08+0300\n"
-"PO-Revision-Date: 2019-09-13 16:13\n"
+"POT-Creation-Date: 2019-11-19 19:15+0300\n"
+"PO-Revision-Date: 2019-11-20 18:46\n"
 "Last-Translator: NightlyRevenger\n"
 "Language-Team: Russian\n"
 "Language: ru\n"
@@ -361,6 +361,34 @@ msgstr "Emotes"
 #: Utils/LanguagueWrapper.cs:232
 msgid "Custom Emotes"
 msgstr "Custom Emotes"
+
+#: Utils/LanguagueWrapper.cs:234
+msgid "Downloading new version:"
+msgstr "Загрузка новой версии:"
+
+#: Utils/LanguagueWrapper.cs:235
+msgid "Click here to update to new version."
+msgstr "Нажмите здесь, чтобы обновиться до более новой версии."
+
+#: Utils/LanguagueWrapper.cs:237
+msgid "Tataru Update"
+msgstr "Tataru Update"
+
+#: Utils/LanguagueWrapper.cs:238
+msgid "New Tataru helper version is available. Restart Application to update."
+msgstr "Доступно обновление, перезапустите Tataru Helper, чтобы изменения вступили в силу."
+
+#: Utils/LanguagueWrapper.cs:240
+msgid "Check updates"
+msgstr "Проверить наличие обновлений"
+
+#: Utils/LanguagueWrapper.cs:241
+msgid "Looking for updates..."
+msgstr "Проверка наличия обновлений. Пожалуйста, подождите..."
+
+#: Utils/LanguagueWrapper.cs:242
+msgid "No updates found."
+msgstr "У вас установлена последняя версия."
 
 #~ msgid "Interval Width"
 #~ msgstr "Spacing"

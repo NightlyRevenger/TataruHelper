@@ -2,7 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using FFXIVTataruHelper.EventArguments;
-using FFXIVTataruHelper.Translation;
 using FFXIVTataruHelper.WinUtils;
 using System;
 using System.Collections.Generic;
@@ -16,6 +15,7 @@ using System.Windows.Data;
 using FFXIVTataruHelper.UIModel;
 using BondTech.HotKeyManagement.WPF._4;
 using System.Windows.Input;
+using Translation;
 
 namespace FFXIVTataruHelper.ViewModel
 {
