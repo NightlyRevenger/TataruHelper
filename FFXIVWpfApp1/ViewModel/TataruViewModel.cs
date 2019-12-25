@@ -91,6 +91,59 @@ namespace FFXIVTataruHelper.ViewModel
             }
         }
 
+        public TextToSpeech TextToSpeech { get; }
+
+        public bool IsTextToSpeech
+        {
+            get => _isTextToSpeech;
+            set
+            {
+                if (_isTextToSpeech == value) return;
+
+                _isTextToSpeech = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public float Speed
+        {
+            get => _speed;
+            set
+            {
+                if (_speed == value) return;
+
+                _speed = value;
+                TextToSpeech.Speed = 0.5f + _speed * 0.1f;
+                OnPropertyChanged();
+            }
+        }
+
+        public float Pitch
+        {
+            get => _pitch;
+            set
+            {
+                if (_pitch == value) return;
+
+                _pitch = value;
+                TextToSpeech.Pitch = _pitch / 8;
+                OnPropertyChanged();
+            }
+        }
+
+        public float Volume
+        {
+            get => _volume;
+            set
+            {
+                if (_volume == value) return;
+
+                _volume = value;
+                TextToSpeech.Volume = _volume / 100;
+                OnPropertyChanged();
+            }
+        }
+
         public bool DownloadingUpdateVisibility
         {
             get => _DownloadingUpdateVisibility;
@@ -191,6 +244,11 @@ namespace FFXIVTataruHelper.ViewModel
         bool _RestartReadyVisibility = false;
         bool _UserStartedUpdateTextVisibility = false;
 
+        bool _isTextToSpeech;
+        float _pitch;
+        float _speed;
+        float _volume;
+
         TataruUIModel _TataruUIModel;
         TataruModel _TataruModel;
 
@@ -214,6 +272,11 @@ namespace FFXIVTataruHelper.ViewModel
             AddNewChatWindowCommand = new TataruUICommand(AddNewChatWindow);
             DeleteChatWindowCommand = new TataruUICommand(DeleteChatWindow);
             ShowChatWindowCommand = new TataruUICommand(ShowChatWindow);
+
+            TextToSpeech = new TextToSpeech();
+            Speed = 5f;
+            Pitch = 0f;
+            Volume = 100f;
 
             ShutDownRequestedCommand = new TataruUICommand(ShutDownRequsted);
         }

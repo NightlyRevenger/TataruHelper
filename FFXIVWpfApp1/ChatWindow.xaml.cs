@@ -295,10 +295,13 @@ namespace FFXIVTataruHelper
 
         #region **Transaltion.
 
-        void ShowTransaltedText(string translatedMsg, Color color)
+        async void ShowTransaltedText(string translatedMsg, Color color)
         {
             try
             {
+                var langCode = _ChatWindowViewModel.CurrentTranslateToLanguague.LanguageCode;
+                var tts = _TataruModel.TataruViewModel.TextToSpeech;
+
                 translatedMsg = translatedMsg.Trim(new char[] { ' ' });
 
                 ChatRtb.AppendText(Environment.NewLine);
@@ -338,6 +341,9 @@ namespace FFXIVTataruHelper
                     tr2.Text = text;
                     tr2.ApplyPropertyValue(TextElement.ForegroundProperty, tmpColor);
                     tr2.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Normal);//*/
+
+                    if (_TataruModel.TataruViewModel.IsTextToSpeech)
+                        await tts.PlayAsync(text, langCode);
                 }
                 else
                 {
@@ -345,6 +351,9 @@ namespace FFXIVTataruHelper
                     tr.Text = translatedMsg;
 
                     tr.ApplyPropertyValue(TextElement.ForegroundProperty, tmpColor);
+
+                    if (_TataruModel.TataruViewModel.IsTextToSpeech)
+                        await tts.PlayAsync(translatedMsg, langCode);
                 }
 
                 ChatRtb.ScrollToEnd();

@@ -87,7 +87,9 @@ A lot of thanks to many who contribute to open-source projects. The following we
 [NotifyIcon WPF](https://bitbucket.org/hardcodet/notifyicon-wpf/)  
 [Sharlayan](https://github.com/FFXIVAPP/sharlayan)  
 [Tataru Art by Nezusagi](https://www.deviantart.com/nezusagi)  
-[Squirrel.Windows](https://github.com/Squirrel/Squirrel.Windows)
+[Squirrel.Windows](https://github.com/Squirrel/Squirrel.Windows)  
+[NAudio](https://github.com/naudio/NAudio)  
+[SoundTouch](https://www.surina.net/soundtouch/)
 
 ## Contacts
 
