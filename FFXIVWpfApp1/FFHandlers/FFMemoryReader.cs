@@ -96,7 +96,7 @@ namespace FFXIVTataruHelper.FFHandlers
             _FFChatMessageArrived = new AsyncEvent<ChatMessageArrivedEventArgs>(EventErrorHandler, "FFChatMessageArrived");
             _AsyncPropertyChanged = new AsyncEvent<AsyncPropertyChangedEventArgs>(EventErrorHandler, "FFMemoryReader \n FFChatMessageArrived");
 
-            _UseDirectReadingInternal = false;
+            _UseDirectReadingInternal = true;
             DirectTextsMissedCount = 0;
         }
 
