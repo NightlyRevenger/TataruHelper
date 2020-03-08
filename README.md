@@ -15,6 +15,10 @@
 
 ## [Descripción en español](Documents/README_es_ES.md) 
 
+## [Descripció en català](Documents/README_ca_ES.md) 
+
+## [Інструкція на українській](Documents/README_uk_UA.md) 
+
 * * *
 
 ![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)
