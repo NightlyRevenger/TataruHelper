@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tataru-helper\n"
 "POT-Creation-Date: 2019-11-19 19:15+0300\n"
-"PO-Revision-Date: 2019-11-20 18:46\n"
-"Last-Translator: NightlyRevenger\n"
+"PO-Revision-Date: 2020-03-08 04:57\n"
+"Last-Translator: \n"
 "Language-Team: Spanish\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: crowdin.com\n"
+"X-Generator: Poedit 2.2.3\n"
 "X-Poedit-Basepath: ../..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: GetString;GetPluralString:1,2;GetParticularString:1c,2;GetParticularPluralString:1c,2,3;_;_n:1,2;_p:1c,2;_pn:1c,2,3\\n"
@@ -364,31 +364,31 @@ msgstr "Gestos personalizados"
 
 #: Utils/LanguagueWrapper.cs:234
 msgid "Downloading new version:"
-msgstr ""
+msgstr "Descargando nueva versión:"
 
 #: Utils/LanguagueWrapper.cs:235
 msgid "Click here to update to new version."
-msgstr ""
+msgstr "Click aquí para descargar la nueva versión."
 
 #: Utils/LanguagueWrapper.cs:237
 msgid "Tataru Update"
-msgstr ""
+msgstr "Actualización de Tarutaru"
 
 #: Utils/LanguagueWrapper.cs:238
 msgid "New Tataru helper version is available. Restart Application to update."
-msgstr ""
+msgstr "Hay una nueva versión de Ayuda Tarutaru disponible. Reinicia la aplicación para actualizarla."
 
 #: Utils/LanguagueWrapper.cs:240
 msgid "Check updates"
-msgstr ""
+msgstr "Comprobar actualizaciones"
 
 #: Utils/LanguagueWrapper.cs:241
 msgid "Looking for updates..."
-msgstr ""
+msgstr "Buscando actualizaciones..."
 
 #: Utils/LanguagueWrapper.cs:242
 msgid "No updates found."
-msgstr ""
+msgstr "Sin actualizaciones."
 
 #~ msgid "Interval Width"
 #~ msgstr "Spacing"

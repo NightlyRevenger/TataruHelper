@@ -4,8 +4,8 @@ msgstr ""
 "POT-Creation-Date: 2019-11-19 19:15+0300\n"
 "PO-Revision-Date: 2020-03-08 04:57\n"
 "Last-Translator: \n"
-"Language-Team: English\n"
-"Language: en\n"
+"Language-Team: Catalan\n"
+"Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15,60 +15,60 @@ msgstr ""
 "X-Poedit-KeywordsList: GetString;GetPluralString:1,2;GetParticularString:1c,2;GetParticularPluralString:1c,2,3;_;_n:1,2;_p:1c,2;_pn:1c,2,3\\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Crowdin-Project: tataru-helper\n"
-"X-Crowdin-Language: en\n"
+"X-Crowdin-Language: ca\n"
 "X-Crowdin-File: en_US.po\n"
 
 #: Utils/LanguagueWrapper.cs:109
 msgid "Settings"
-msgstr "Settings"
+msgstr "Configuració"
 
 #: Utils/LanguagueWrapper.cs:110
 msgid "Chat Window"
-msgstr "Chat Window"
+msgstr "Finestra de Windows"
 
 #: Utils/LanguagueWrapper.cs:111
 msgid "Stream Chat Window"
-msgstr "Stream Chat Window"
+msgstr "Finestra de Xat Stream"
 
 #: Utils/LanguagueWrapper.cs:113
 msgid "Language"
-msgstr "Language"
+msgstr "Idioma"
 
 #: Utils/LanguagueWrapper.cs:117
 msgid "Help"
-msgstr "Help"
+msgstr "Ajuda"
 
 #: Utils/LanguagueWrapper.cs:119
 msgid "Chat Appearance"
-msgstr "Chat Appearance"
+msgstr "Aparença de xat"
 
 #: Utils/LanguagueWrapper.cs:120
 msgid "Translation Settings"
-msgstr "Translation Settings"
+msgstr "Configuració de Traducció"
 
 #: Utils/LanguagueWrapper.cs:121
 msgid "General Behavior"
-msgstr "General"
+msgstr "Comportament general"
 
 #: Utils/LanguagueWrapper.cs:123
 msgid "Behavior"
-msgstr "Behavior"
+msgstr "Comportament"
 
 #: Utils/LanguagueWrapper.cs:124
 msgid "Hotkeys"
-msgstr "Hotkeys"
+msgstr "Tecles directes"
 
 #: Utils/LanguagueWrapper.cs:126
 msgid "Font Settings"
-msgstr "Font Settings"
+msgstr "Configuració de font"
 
 #: Utils/LanguagueWrapper.cs:127
 msgid "Font Size"
-msgstr "Font Size"
+msgstr "Mida de lletra"
 
 #: Utils/LanguagueWrapper.cs:129
 msgid "Font Color"
-msgstr "Font Color"
+msgstr "Color de font"
 
 #: Utils/LanguagueWrapper.cs:130
 msgid "Color 1"
@@ -84,151 +84,151 @@ msgstr "Font"
 
 #: Utils/LanguagueWrapper.cs:135
 msgid "Background Color"
-msgstr "Background Color"
+msgstr "Color de fons"
 
 #: Utils/LanguagueWrapper.cs:137
 msgid "Standard"
-msgstr "Standard"
+msgstr "Estàndard"
 
 #: Utils/LanguagueWrapper.cs:138
 msgid "Advanced"
-msgstr "Advanced"
+msgstr "Avançat"
 
 #: Utils/LanguagueWrapper.cs:139
 msgid "Available Colors"
-msgstr "Available Colors"
+msgstr "Colors disponibles"
 
 #: Utils/LanguagueWrapper.cs:140
 msgid "Standard Colors"
-msgstr "Standard Colors"
+msgstr "Colors estàndard"
 
 #: Utils/LanguagueWrapper.cs:141
 msgid "Recent Colors"
-msgstr "Recent Colors"
+msgstr "Colors Recents"
 
 #: Utils/LanguagueWrapper.cs:143
 msgid "Paragraph Settings"
-msgstr "Paragraph Settings"
+msgstr "Configuració de Paragraf"
 
 #: Utils/LanguagueWrapper.cs:144
 msgid "Spacing"
-msgstr "Spacing"
+msgstr "Espaiat"
 
 #: Utils/LanguagueWrapper.cs:145
 msgid "Line Break Height"
-msgstr "Line Break Height"
+msgstr "Alçada de Salt de línia"
 
 #: Utils/LanguagueWrapper.cs:147
 msgid "Chat Codes"
-msgstr "Chat Codes"
+msgstr "Codis de Xat"
 
 #: Utils/LanguagueWrapper.cs:149
 msgid "Translation Engine"
-msgstr "Translation Engine"
+msgstr "Motor de Traducció"
 
 #: Utils/LanguagueWrapper.cs:150
 msgid "FF Language"
-msgstr "FF Language"
+msgstr "Llengua"
 
 #: Utils/LanguagueWrapper.cs:151
 msgid "Translate to"
-msgstr "Translate to"
+msgstr "Traduir a"
 
 #: Utils/LanguagueWrapper.cs:153
 msgid "Show/hide Chat Window"
-msgstr "Show/Hide Chat Window"
+msgstr "Mostrar/ocultar finestra de xat"
 
 #: Utils/LanguagueWrapper.cs:154
 msgid "Hotkey to hide a Chat Box when it is not needed and call it up when it is needed. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
-msgstr "Hotkey to hide a Chat Box when it is not needed and call it up when it is needed. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
+msgstr "La tecla directa per a amagar la Caixa de Xat quan no sigui necessari i cridar-la quan sigui necessari. Hauries d´utilitzar Ctrl/Shift/Alt + qualsevol tecla o combinació de tecles de Ctrl+Shift+Alt + qualsevol tecla, etc. La combinació de tecles no s'ha de repetir. Si no pots asignar una tecla, es que està per l'aplicació o sistema. Exemple: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
 
 #: Utils/LanguagueWrapper.cs:156 Utils/LanguagueWrapper.cs:163
 msgid "Click Through"
-msgstr "Click Through"
+msgstr "Clicar a través"
 
 #: Utils/LanguagueWrapper.cs:157
 msgid "Hotkey to turn on/off clicks through the windows. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
-msgstr "Hotkey to turn on/off clicks through the windows. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
+msgstr "La tecla directa per a amagar la Caixa de Xat quan no sigui necessari i cridar-la quan sigui necessari. Hauries d´utilitzar Ctrl/Shift/Alt + qualsevol tecla o combinació de tecles de Ctrl+Shift+Alt + qualsevol tecla, etc. La combinació de tecles no s'ha de repetir. Si no pots asignar una tecla, es que està per l'aplicació o sistema. Exemple: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
 
 #: Utils/LanguagueWrapper.cs:159
 msgid "Clear Chat"
-msgstr "Clear Chat"
+msgstr "Neteja el Chat"
 
 #: Utils/LanguagueWrapper.cs:160
 msgid "Hotkey to clear any text in the chatbox. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
-msgstr "Hotkey to clear any text in the chatbox. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
+msgstr "La Tecla directa per netejar qualsevol caixa de xat. Hauries d'utilitzar Ctrl/Shift/Alt + qualsevol tecla o combinació de Ctrl+Shift+Alt + qualsevol tecla. La combinació de tecles no s'ha dwe repetir. Si no pots assignar una tecla, aquesta es ocupada per l'aplicació o sistema. Exemple: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
 
 #: Utils/LanguagueWrapper.cs:162
 msgid "Other"
-msgstr "Other"
+msgstr "Altres"
 
 #: Utils/LanguagueWrapper.cs:164 Utils/LanguagueWrapper.cs:172
 msgid "Always On Top"
-msgstr "Always On Top"
+msgstr "Sempre al davant"
 
 #: Utils/LanguagueWrapper.cs:165
 msgid "Auto Hide"
-msgstr "Auto Hide"
+msgstr "Amaga automàticament"
 
 #: Utils/LanguagueWrapper.cs:167
 msgid "Cutscenes/No delay"
-msgstr "Cutscenes/No delay"
+msgstr "Escenes retallades/Sense retard"
 
 #: Utils/LanguagueWrapper.cs:168
 msgid "EXPERIMENTAL FUNCTION. If this option is active, the application will catch text from quest clouds and cutscene subtitles directly, not from the chatlog. Errors can occur."
-msgstr "EXPERIMENTAL FUNCTION. If this option is active, the application will catch text from quest clouds and cutscene subtitles directly, not from the chatlog. Errors can occur."
+msgstr "FUNCIÓ EXPERIMENTAL. Si l'opció està activada, l'aplicació agafara el text del núvol de recerca i escenes retallades subtitolades directament, no del registre de xat. Es poden produir errors."
 
 #: Utils/LanguagueWrapper.cs:170 Utils/LanguagueWrapper.cs:173
 msgid "Hide to Tray"
-msgstr "Hide To Tray"
+msgstr "Amagar-se per provar"
 
 #: Utils/LanguagueWrapper.cs:175
 msgid "Streamer Window"
-msgstr "Stream Window"
+msgstr "Finestra de Stream"
 
 #: Utils/LanguagueWrapper.cs:177
 msgid "Show Chat Window"
-msgstr "Show Chat Window"
+msgstr "Mostra Finestra de Xat"
 
 #: Utils/LanguagueWrapper.cs:178
 msgid "Hide Chat Window"
-msgstr "Hide Chat Window"
+msgstr "Amaga Finestra de Xat"
 
 #: Utils/LanguagueWrapper.cs:180
 msgid "Reset Chat Position"
-msgstr "Reset Chat Position"
+msgstr "Restablir Posició Xat"
 
 #: Utils/LanguagueWrapper.cs:182
 msgid "Translation engine error. Consider switching to other engine."
-msgstr "Translation engine error. Consider switching to other engine."
+msgstr "Error del motor de traducció. Consideri cambiar a un altre motor."
 
 #: Utils/LanguagueWrapper.cs:184
 msgid "FF Status:"
-msgstr "FF Status:"
+msgstr "Estat:"
 
 #: Utils/LanguagueWrapper.cs:186
 msgid "Couldn't find FFXIV process."
-msgstr "Couldn't find FFXIV process."
+msgstr "No s'ha trobat el procès FFXIV."
 
 #: Utils/LanguagueWrapper.cs:188
 msgid "Process found:"
-msgstr "Process found:"
+msgstr "Procés trobat:"
 
 #: Utils/LanguagueWrapper.cs:190
 msgid "Dear Patrons!"
-msgstr "Dear Patrons!"
+msgstr "Estimats mecenes!"
 
 #: Utils/LanguagueWrapper.cs:191
 msgid "We express our great appreciation to the people who support our project and motivate us for new achievements."
-msgstr "We express our great appreciation to the people who support our project and motivate us for new achievements."
+msgstr "Expressem la nostra gran apreciació a les persones que han suportat el nostre projecte i ens han motivat a aconseguir nous assoliments."
 
 #: Utils/LanguagueWrapper.cs:192
 msgid "Thank you"
-msgstr "Thank you"
+msgstr "Gràcies"
 
 #: Utils/LanguagueWrapper.cs:194
 msgid "Translation engine error. Switching to:"
-msgstr "Translation engine error. Switching to:"
+msgstr "Error de motor de traducció. Canviant a:"
 
 #: Utils/LanguagueWrapper.cs:196
 msgid "System"
@@ -316,43 +316,43 @@ msgstr "LinkShell 8"
 
 #: Utils/LanguagueWrapper.cs:218
 msgid "Novice Network"
-msgstr "Novice Network"
+msgstr "Xarxa principants"
 
 #: Utils/LanguagueWrapper.cs:220
 msgid "Server Info"
-msgstr "Server Info"
+msgstr "Informació servidor"
 
 #: Utils/LanguagueWrapper.cs:222
 msgid "CWLS1"
-msgstr "CWLS[1]"
+msgstr "CWLS1"
 
 #: Utils/LanguagueWrapper.cs:223
 msgid "CWLS2"
-msgstr "CWLS[2]"
+msgstr "CWLS2"
 
 #: Utils/LanguagueWrapper.cs:224
 msgid "CWLS3"
-msgstr "CWLS[3]"
+msgstr "CWLS3"
 
 #: Utils/LanguagueWrapper.cs:225
 msgid "CWLS4"
-msgstr "CWLS[4]"
+msgstr "CWLS4"
 
 #: Utils/LanguagueWrapper.cs:226
 msgid "CWLS5"
-msgstr "CWLS[5]"
+msgstr "CWLS5"
 
 #: Utils/LanguagueWrapper.cs:227
 msgid "CWLS6"
-msgstr "CWLS[6]"
+msgstr "CWLS6"
 
 #: Utils/LanguagueWrapper.cs:228
 msgid "CWLS7"
-msgstr "CWLS[7]"
+msgstr "CWLS7"
 
 #: Utils/LanguagueWrapper.cs:229
 msgid "CWLS8"
-msgstr "CWLS[8]"
+msgstr "CWLS8"
 
 #: Utils/LanguagueWrapper.cs:231
 msgid "Emotes"
@@ -364,31 +364,31 @@ msgstr "Custom Emotes"
 
 #: Utils/LanguagueWrapper.cs:234
 msgid "Downloading new version:"
-msgstr "Downloading a newer version:"
+msgstr "Descarregant nova versió:"
 
 #: Utils/LanguagueWrapper.cs:235
 msgid "Click here to update to new version."
-msgstr "Click here to upgrade to a newer version."
+msgstr "Clica aquí per acctualitzar a una nova versió."
 
 #: Utils/LanguagueWrapper.cs:237
 msgid "Tataru Update"
-msgstr "Tataru Update"
+msgstr "Actualització Tataru"
 
 #: Utils/LanguagueWrapper.cs:238
 msgid "New Tataru helper version is available. Restart Application to update."
-msgstr "Update available, restart Tataru Helper for changes to take effect."
+msgstr "Una nova versió de Tataru està disponible. Reinicia l'aplicació per a actualitzar."
 
 #: Utils/LanguagueWrapper.cs:240
 msgid "Check updates"
-msgstr "Check for updates"
+msgstr "Comprova actualitzacions"
 
 #: Utils/LanguagueWrapper.cs:241
 msgid "Looking for updates..."
-msgstr "Checking for updates. Please wait..."
+msgstr "Buscant actualizacions..."
 
 #: Utils/LanguagueWrapper.cs:242
 msgid "No updates found."
-msgstr "Tataru Helper is up to date."
+msgstr "No s'han trobat actualitzacions."
 
 #~ msgid "Interval Width"
 #~ msgstr "Spacing"

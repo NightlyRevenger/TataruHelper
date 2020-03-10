@@ -2,14 +2,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tataru-helper\n"
 "POT-Creation-Date: 2019-11-19 19:15+0300\n"
-"PO-Revision-Date: 2019-11-20 18:46\n"
-"Last-Translator: NightlyRevenger\n"
+"PO-Revision-Date: 2020-03-08 04:57\n"
+"Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: crowdin.com\n"
+"X-Generator: Poedit 2.2.3\n"
 "X-Poedit-Basepath: ../..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: GetString;GetPluralString:1,2;GetParticularString:1c,2;GetParticularPluralString:1c,2,3;_;_n:1,2;_p:1c,2;_pn:1c,2,3\\n"
@@ -52,7 +52,7 @@ msgstr "Geral"
 
 #: Utils/LanguagueWrapper.cs:123
 msgid "Behavior"
-msgstr ""
+msgstr "Conduta"
 
 #: Utils/LanguagueWrapper.cs:124
 msgid "Hotkeys"
@@ -80,7 +80,7 @@ msgstr "Cor 2"
 
 #: Utils/LanguagueWrapper.cs:133
 msgid "Font"
-msgstr ""
+msgstr "Fonte"
 
 #: Utils/LanguagueWrapper.cs:135
 msgid "Background Color"
@@ -316,11 +316,11 @@ msgstr "LinkShell 8"
 
 #: Utils/LanguagueWrapper.cs:218
 msgid "Novice Network"
-msgstr ""
+msgstr "Nova Rede"
 
 #: Utils/LanguagueWrapper.cs:220
 msgid "Server Info"
-msgstr ""
+msgstr "Informação do Servidor"
 
 #: Utils/LanguagueWrapper.cs:222
 msgid "CWLS1"
@@ -380,7 +380,7 @@ msgstr ""
 
 #: Utils/LanguagueWrapper.cs:240
 msgid "Check updates"
-msgstr ""
+msgstr "Buscando Atts"
 
 #: Utils/LanguagueWrapper.cs:241
 msgid "Looking for updates..."
@@ -388,7 +388,7 @@ msgstr ""
 
 #: Utils/LanguagueWrapper.cs:242
 msgid "No updates found."
-msgstr ""
+msgstr "Att indisponivel"
 
 #~ msgid "Interval Width"
 #~ msgstr "Spacing"
