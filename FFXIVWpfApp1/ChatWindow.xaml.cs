@@ -32,8 +32,6 @@ namespace FFXIVTataruHelper
 
         private WindowResizer _WindowResizer;
 
-        private MouseHooker _MouseHooker;
-
         private bool _IsClickThrought = false;
 
         private DateTime _TextArrivedTime;
@@ -93,12 +91,9 @@ namespace FFXIVTataruHelper
 
         protected virtual void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            _MouseHooker = null;
-
             AutoHideStatusCheck();
 
             _TataruModel.FFMemoryReader.AddExclusionWindowHandler((new WindowInteropHelper(this).Handle));
-
 
             if (_ChatWindowViewModel.IsClickThrough)
                 MakeWindowClickThrought();
@@ -115,9 +110,6 @@ namespace FFXIVTataruHelper
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             _KeepWorking = false;
-
-            if (_MouseHooker != null)
-                _MouseHooker.UnHook();
         }
 
         protected virtual void Window_Deactivated(object sender, EventArgs e)
@@ -132,7 +124,6 @@ namespace FFXIVTataruHelper
 
         protected async Task OnTextArrived(ChatMessageArrivedEventArgs ea)
         {
-
             string text = "";
             Color textColor = Color.FromArgb(255, 255, 255, 255);
             ChatCodeViewModel chatCode;
@@ -196,7 +187,6 @@ namespace FFXIVTataruHelper
                     {
                         ShowErorrText(1, _ChatWindowViewModel.CurrentTransaltionEngine.Name, textColor);
                     });
-
                 }
                 else
                 {
@@ -247,6 +237,20 @@ namespace FFXIVTataruHelper
                         if (_ChatWindowViewModel.IsWindowVisible == true)
                             _TextArrivedTime = DateTime.UtcNow;
 
+                    }
+                    break;
+                case "BackGroundColor":
+                    {
+                        if (_ChatWindowViewModel.BackGroundColor.A == 255)
+                            this.AllowsTransparency = false;
+                        else
+                            this.AllowsTransparency = true;
+
+                        if (_ChatWindowViewModel.IsClickThrough)
+                        {
+                            MakeWindowClickbale();
+                            MakeWindowClickThrought();
+                        }
                     }
                     break;
             }
@@ -356,8 +360,7 @@ namespace FFXIVTataruHelper
             if (errorCode == 1)
             {
                 //string text = ((string)_SettigsWindow.Resources["TranslationEngineSwitchMsg"]) + " " + Convert.ToString(_TataruUIModel.TranslationEngine);
-                string text = ((string)Application.Current.Resources["TranslationEngineSwitchMsg"])+EngineName;
-
+                string text = ((string)Application.Current.Resources["TranslationEngineSwitchMsg"]) + EngineName;
 
                 ShowWindow();
 
@@ -450,67 +453,6 @@ namespace FFXIVTataruHelper
             }
         }
 
-        async Task OnLowLevelMousEvent(LowLevelMouseEventArgs ea)
-        {
-            if (ea.MouseMessages == MouseHooker.MouseMessages.WM_MOUSEWHEEL)
-            {
-                await this.UIThreadAsync(() =>
-                {
-                    /*
-                    if (!_TataruUIModel.IsChatClickThrough)
-                    {
-                        var bc = ((SolidColorBrush)this.Background).Color;
-                        if (bc.A == 0)
-                        {
-                            var data = ea.MouseEventFlags.mouseData;
-                            uint fxdData = ((data & 0xFFFF0000) >> 16);
-                            uint realData = 0;
-
-                            double MouseWheelScrollDelta = System.Windows.Forms.SystemInformation.MouseWheelScrollDelta;
-
-                            string msg = String.Empty;
-
-                            if (IsLowLevelMousOver(ea.MouseEventFlags.pt))
-                            {
-                                if (fxdData < 32000)
-                                {
-                                    realData = fxdData;
-
-                                    int res = (int)Math.Round(realData / MouseWheelScrollDelta) * 2;
-                                    for (int i = 0; i < res; i++)
-                                        ChatRtb.LineUp();
-                                }
-                                else
-                                {
-                                    realData = 65536 - fxdData;
-
-                                    int res = (int)Math.Round(realData / MouseWheelScrollDelta) * 2;
-                                    for (int i = 0; i < res; i++)
-                                        ChatRtb.LineDown();
-                                }
-                            }
-                        }
-                    }//*/
-                });
-            }
-        }
-
-        bool IsLowLevelMousOver(MouseHooker.POINT pt)
-        {
-            var point0 = PointToScreen(new System.Windows.Point(0, 0));
-
-            double right = point0.X + this.Width;
-            double bottom = point0.Y + this.Height;
-
-            if (pt.x > point0.X && pt.x < right)
-            {
-                if (pt.y > point0.Y && pt.y < bottom)
-                    return true;
-            }
-
-            return false;
-        }
-
         void HideThisWindow_Click(object sender, RoutedEventArgs e)
         {
             _ChatWindowViewModel.IsHiddenByUser = true;
@@ -520,7 +462,6 @@ namespace FFXIVTataruHelper
 
         void Settings_Click(object sender, RoutedEventArgs e)
         {
-
             /*
             Helper.Unminimize(_SettigsWindow);
 
@@ -560,7 +501,6 @@ namespace FFXIVTataruHelper
                             this.UIThread(() =>
                             {
                                 _AutoHidden = true;
-                                //this.Hide();
                                 _ChatWindowViewModel.IsWindowVisible = false;
                             });
                         }

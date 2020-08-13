@@ -16,7 +16,8 @@
         Visibility="{Binding IsWindowVisible, Converter={utils:BooleanToVisibilityConverter}, Mode=TwoWay}"
         Topmost="{Binding IsAlwaysOnTop, Mode=OneWay}">
     <Grid>
-        <RichTextBox x:Name="ChatRtb" Margin="15,15,15,15" Background="#00000000" IsReadOnly="True" IsUndoEnabled="False"
+        <RichTextBox x:Name="ChatRtb" Margin="15,15,15,15" Background="#00000000" IsReadOnly="True" IsUndoEnabled="False" 
+                     FontFamily="{Binding Path=DataContext.ChatFont, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}"
                      FontSize="{Binding Path=DataContext.ChatFontSize, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type Window}}}">
             <FlowDocument>
                 <Paragraph>

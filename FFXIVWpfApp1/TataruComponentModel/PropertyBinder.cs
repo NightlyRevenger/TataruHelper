@@ -2,9 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using FFXIVTataruHelper.EventArguments;
-using FFXIVTataruHelper.Translation;
-using FFXIVTataruHelper.ViewModel;
-using FFXIVTataruHelper.WinUtils;
 using System;
 using System.Collections.Generic;
 using System.Linq;

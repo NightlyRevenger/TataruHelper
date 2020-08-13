@@ -1,6 +1,6 @@
 # Tataru Helper
 
-[![Current Version](https://img.shields.io/github/release/NightlyRevenger/TataruHelper)](https://github.com/NightlyRevenger/TataruHelper/releases) ![GitHub Releases (by Asset)](https://img.shields.io/github/downloads/NightlyRevenger/TataruHelper/latest/TataruHelper-0.9.40-full.nupkg?label=Downloads)  [![Crowdin](https://badges.crowdin.net/tataru-helper/localized.svg)](https://crowdin.com/project/tataru-helper) <a href="https://discord.gg/bSrpbd9">
+[![Current Version](https://img.shields.io/github/release/NightlyRevenger/TataruHelper)](https://github.com/NightlyRevenger/TataruHelper/releases) ![GitHub Releases (by Asset)](https://img.shields.io/github/downloads/NightlyRevenger/TataruHelper/latest/TataruHelper-0.9.80-delta.nupkg?label=Downloads)  [![Crowdin](https://badges.crowdin.net/tataru-helper/localized.svg)](https://crowdin.com/project/tataru-helper) <a href="https://discord.gg/bSrpbd9">
         <img src="https://img.shields.io/discord/592039000538349569?logo=discord"
             alt="chat on Discord"></a>
 
@@ -12,6 +12,12 @@
 ## [ИНСТРУКЦИЯ НА РУССКОМ](Documents/README_ru_RU.md)  
 
 ## [한국어 설명](Documents/README_ko_KR.md) 
+
+## [Descripción en español](Documents/README_es_ES.md) 
+
+## [Descripció en català](Documents/README_ca_ES.md) 
+
+## [Інструкція на українській](Documents/README_uk_UA.md) 
 
 * * *
 
@@ -105,6 +111,7 @@ NightlyRevenger(developer):
 If you want to support this project, use the links below:  
 MasterCard(Sberbank): 5469 3800 2554 9048  
 Yandex.Money: [4100172621059](https://money.yandex.ru/to/4100172621059)  
+Bitcoin: 18vSbJnqL63emRfjTZwjAggv8DL4bAuTiE  
 PayPal: [paypal.me/xdarkone](https://www.paypal.me/xdarkone)  
 Patreon: [TataruHelper](https://www.patreon.com/TataruHelper)
 

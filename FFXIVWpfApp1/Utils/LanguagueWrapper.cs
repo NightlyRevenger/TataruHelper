@@ -130,6 +130,8 @@ namespace FFXIVTataruHelper
             _SettingsWindow.Resources["FontColor1"] = catalog.GetString("Color 1");
             _SettingsWindow.Resources["FontColor2"] = catalog.GetString("Color 2");
 
+            _SettingsWindow.Resources["FontFamily"] = catalog.GetString("Font");
+
             _SettingsWindow.Resources["BackgroundColor"] = catalog.GetString("Background Color");
 
             _SettingsWindow.Resources["ColorPickerStandardButtonHeader"] = catalog.GetString("Standard");
@@ -229,8 +231,15 @@ namespace FFXIVTataruHelper
             _SettingsWindow.Resources["CkEmotes"] = catalog.GetString("Emotes");
             _SettingsWindow.Resources["CkCustomEmotes"] = catalog.GetString("Custom Emotes");
 
+            _SettingsWindow.Resources["DownloadingUpdate"] = catalog.GetString("Downloading new version:");
+            _SettingsWindow.Resources["UpdateInstalled"] = catalog.GetString("Click here to update to new version.");
 
+            _SettingsWindow.Resources["NotifyUpdateTitle"] = catalog.GetString("Tataru Update");
+            _SettingsWindow.Resources["NotifyUpdateText"] = catalog.GetString("New Tataru helper version is available. Restart Application to update.");
 
+            _SettingsWindow.Resources["CheckUpdatesText"] = catalog.GetString("Check updates");
+            _SettingsWindow.Resources["LookingForUpdates"] = catalog.GetString("Looking for updates...");
+            _SettingsWindow.Resources["NoUpdatesFound"] = catalog.GetString("No updates found.");
         }
     }
 }

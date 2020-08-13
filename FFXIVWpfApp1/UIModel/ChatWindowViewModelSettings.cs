@@ -2,7 +2,6 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 using FFXIVTataruHelper.EventArguments;
-using FFXIVTataruHelper.Translation;
 using FFXIVTataruHelper.ViewModel;
 using FFXIVTataruHelper.WinUtils;
 using System;
@@ -13,6 +12,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
+using Translation;
 
 namespace FFXIVTataruHelper.UIModel
 {
@@ -33,6 +33,8 @@ namespace FFXIVTataruHelper.UIModel
         private double _chatFontSize;
         private double _lineBreakHeight;
         private int _spacingCount;
+
+        System.Windows.Media.FontFamily _ChatFont;
 
         private bool _isAlwaysOnTop;
         private bool _isClickThrough;
@@ -122,6 +124,18 @@ namespace FFXIVTataruHelper.UIModel
                 if (_spacingCount == value) return;
 
                 _spacingCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public FontFamily ChatFont
+        {
+            get => _ChatFont;
+            set
+            {
+                if (_ChatFont == value) return;
+
+                _ChatFont = value;
                 OnPropertyChanged();
             }
         }
@@ -287,6 +301,9 @@ namespace FFXIVTataruHelper.UIModel
             LineBreakHeight = 0;
             SpacingCount = 0;
 
+            ChatFont = new FontFamily("Segoe UI");
+            //ChatFont = new FontFamily("hfghdfg");
+
             IsAlwaysOnTop = true;
             IsClickThrough = false;
             IsAutoHide = false;
@@ -319,6 +336,8 @@ namespace FFXIVTataruHelper.UIModel
             LineBreakHeight = 0;
             SpacingCount = 0;
 
+            ChatFont = new FontFamily("Segoe UI");
+
             IsAlwaysOnTop = true;
             IsClickThrough = false;
             IsAutoHide = false;
@@ -350,6 +369,8 @@ namespace FFXIVTataruHelper.UIModel
             ChatFontSize = settings.ChatFontSize;
             LineBreakHeight = settings.LineBreakHeight;
             SpacingCount = settings.SpacingCount;
+
+            ChatFont = settings.ChatFont;
 
             IsAlwaysOnTop = settings.IsAlwaysOnTop;
             IsClickThrough = settings.IsClickThrough;

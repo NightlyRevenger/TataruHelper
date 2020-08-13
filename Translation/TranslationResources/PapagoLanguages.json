@@ -1,0 +1,73 @@
+[
+  {
+    "ShownName": "Auto",
+    "SystemName": "Auto",
+    "LanguageCode": "auto"
+  },
+  
+  {
+    "ShownName": "Korean",
+    "SystemName": "Korean",
+    "LanguageCode": "ko"
+  },
+  {
+    "ShownName": "English",
+    "SystemName": "English",
+    "LanguageCode": "en"
+  },
+  {
+    "ShownName": "Japanese",
+    "SystemName": "Japanese",
+    "LanguageCode": "ja"
+  },
+  {
+    "ShownName": "Chinese Simplified",
+    "SystemName": "Chinese Simplified",
+    "LanguageCode": "zh-CN"
+  },
+  {
+    "ShownName": "Chinese Traditional",
+    "SystemName": "Chinese",
+    "LanguageCode": "zh-TW"
+  },
+  {
+    "ShownName": "Vietnamese",
+    "SystemName": "Vietnamese",
+    "LanguageCode": "vi"
+  },
+  {
+    "ShownName": "Indonesian",
+    "SystemName": "Indonesian",
+    "LanguageCode": "id"
+  },
+  {
+    "ShownName": "Thai",
+    "SystemName": "Thai",
+    "LanguageCode": "th"
+  },
+  {
+    "ShownName": "German",
+    "SystemName": "German",
+    "LanguageCode": "de"
+  },
+  {
+    "ShownName": "Russian",
+    "SystemName": "Russian",
+    "LanguageCode": "ru"
+  },
+  {
+    "ShownName": "Spanish",
+    "SystemName": "Spanish",
+    "LanguageCode": "es"
+  },
+  {
+    "ShownName": "Italian",
+    "SystemName": "Italian",
+    "LanguageCode": "it"
+  },
+  {
+    "ShownName": "French",
+    "SystemName": "French",
+    "LanguageCode": "fr"
+  }
+]

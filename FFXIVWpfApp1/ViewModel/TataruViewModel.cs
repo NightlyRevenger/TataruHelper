@@ -3,7 +3,6 @@
 
 using FFXIVTataruHelper.EventArguments;
 using FFXIVTataruHelper.TataruComponentModel;
-using FFXIVTataruHelper.Translation;
 using FFXIVTataruHelper.UIModel;
 using FFXIVTataruHelper.Utils;
 using System;
@@ -13,11 +12,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Data;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Threading;
+using Translation;
 
 namespace FFXIVTataruHelper.ViewModel
 {
@@ -68,7 +64,6 @@ namespace FFXIVTataruHelper.ViewModel
                 else
                     _InnerVisibility = true;
 
-
                 return _InnerVisibility;
             }
             set
@@ -78,18 +73,60 @@ namespace FFXIVTataruHelper.ViewModel
             }
         }
 
+        /////////////////////////////////////
+
+        public bool UpdateCheckByUser { get; set; }
+
+        public bool UserStartedUpdateTextVisibility
+        {
+            get => _UserStartedUpdateTextVisibility;
+            set
+            {
+                if (_UserStartedUpdateTextVisibility != value)
+                {
+                    _UserStartedUpdateTextVisibility = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged("UpdatingBlockVisiblity");
+                }
+            }
+        }
+
+        public bool DownloadingUpdateVisibility
+        {
+            get => _DownloadingUpdateVisibility;
+            set
+            {
+                if (_DownloadingUpdateVisibility != value)
+                {
+                    _DownloadingUpdateVisibility = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged("UpdatingBlockVisiblity");
+                }
+            }
+        }
+
+        public bool RestartReadyVisibility
+        {
+            get => _RestartReadyVisibility;
+            set
+            {
+                if (_RestartReadyVisibility != value)
+                {
+                    _RestartReadyVisibility = value;
+                    OnPropertyChanged();
+                    OnPropertyChanged("UpdatingBlockVisiblity");
+                }
+            }
+        }
+
+        public bool UpdatingBlockVisiblity { get => DownloadingUpdateVisibility || RestartReadyVisibility || UserStartedUpdateTextVisibility; }
+
         public AsyncBindingList<ChatWindowViewModel> ChatWindows
         {
             get
             {
                 var itemsView = (IEditableCollectionView)CollectionViewSource.GetDefaultView(_ChatWindows);
                 itemsView.NewItemPlaceholderPosition = NewItemPlaceholderPosition.AtEnd;
-
-                /*
-                if (_ChatWindows.Count < 10)
-                    itemsView.NewItemPlaceholderPosition = NewItemPlaceholderPosition.AtEnd;
-                else
-                    itemsView.NewItemPlaceholderPosition = NewItemPlaceholderPosition.None;//*/
 
                 return _ChatWindows;
             }
@@ -147,9 +184,12 @@ namespace FFXIVTataruHelper.ViewModel
             }
         }
 
-
         int _SelectedTabIndex;
         bool _InnerVisibility;
+
+        bool _DownloadingUpdateVisibility = false;
+        bool _RestartReadyVisibility = false;
+        bool _UserStartedUpdateTextVisibility = false;
 
         TataruUIModel _TataruUIModel;
         TataruModel _TataruModel;
@@ -160,7 +200,6 @@ namespace FFXIVTataruHelper.ViewModel
 
         public TataruViewModel(TataruModel tatruModel)
         {
-
             this._ChatWindowsListChangedAsync = new AsyncEvent<AsyncListChangedEventHandler<ChatWindowViewModel>>(this.EventErrorHandler, "TataruViewModel \n ChatWindowsListChangedAsync");
 
             ChatWindows = new AsyncBindingList<ChatWindowViewModel>();
@@ -177,8 +216,6 @@ namespace FFXIVTataruHelper.ViewModel
             ShowChatWindowCommand = new TataruUICommand(ShowChatWindow);
 
             ShutDownRequestedCommand = new TataruUICommand(ShutDownRequsted);
-
-            this.PropertyChanged += OnSelectedTabChanged;
         }
 
         private void ChangeUILanguageCommand(object parameter)
@@ -210,19 +247,14 @@ namespace FFXIVTataruHelper.ViewModel
                 ChatWindowViewModelSettings cws = null;
                 ChatWindowViewModel cwm = null;
 
-
                 var trEng = TranslationEngines;
                 cws = new ChatWindowViewModelSettings((winId + 1).ToString(), winId);
                 cwm = new ChatWindowViewModel(cws, trEng.ToList(), _AllChatCodes.ToList(), _TataruModel.HotKeyManager);
 
-
                 ChatWindows.Add(cwm);
-
 
                 SelectedTabIndex = ChatWindows.Count - 1;
             });
-
-
         }
 
         public void AddNewChatWindow(ChatWindowViewModelSettings settings)
@@ -237,7 +269,6 @@ namespace FFXIVTataruHelper.ViewModel
             UiWindow.Window.UIThread(() =>
             {
                 cwm = new ChatWindowViewModel(settings, trEng.ToList(), _AllChatCodes.ToList(), _TataruModel.HotKeyManager);
-
 
                 try
                 {
@@ -258,23 +289,11 @@ namespace FFXIVTataruHelper.ViewModel
             {
                 AddNewChatWindow(settings);
             });
-
         }
 
         private void DeleteChatWindow()
         {
-            UiWindow.Window.UIThread(() =>
-            {
-                int ind = SelectedTabIndex;
-                if (ind < ChatWindows.Count && ind >= 0)
-                {
-                    var wnd = ChatWindows[ind];
-
-                    ChatWindows.RemoveAt(ind);
-
-                    wnd.Dispose();
-                }
-            });
+            DeleteChatWindow(SelectedTabIndex);
         }
 
         public void DeleteChatWindow(int index)
@@ -314,22 +333,6 @@ namespace FFXIVTataruHelper.ViewModel
         private async Task OnChatWindowsListChangeAsync(AsyncListChangedEventHandler<ChatWindowViewModel> e)
         {
             await _ChatWindowsListChangedAsync.InvokeAsync(e);
-        }
-
-        private void OnSelectedTabChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == "SelectedTabIndex")
-            {
-                /*
-                if (_ChatWindows.Count > 0)
-                {
-                    if (SelectedTabIndex >= _ChatWindows.Count)
-                        SelectedTabIndex = _ChatWindows.Count - 1;
-
-                    if (SelectedTabIndex <= 0)
-                        SelectedTabIndex = 0;
-                }//*/
-            }
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

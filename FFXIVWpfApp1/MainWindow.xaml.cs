@@ -3,7 +3,6 @@
 
 using BondTech.HotKeyManagement.WPF._4;
 using FFXIVTataruHelper.EventArguments;
-using FFXIVTataruHelper.Translation;
 using FFXIVTataruHelper.ViewModel;
 using FFXIVTataruHelper.WinUtils;
 using System;
@@ -15,7 +14,10 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
+using System.Timers;
 using Xceed.Wpf.Toolkit;
+using Updater;
+using Updater.EventArguments;
 
 namespace FFXIVTataruHelper
 {
@@ -35,11 +37,13 @@ namespace FFXIVTataruHelper
         TataruModel _TataruModel;
         TataruUIModel _TataruUIModel;
 
+        Timer _UpdaterTimer = null;
+
         ///////////////////////////////////////////////////
 
         LanguagueWrapper _LanguagueWrapper;
 
-        Updater _Updater;
+        SquirrelUpdater _Updater;
 
         bool _IsShutDown;
 
@@ -61,22 +65,31 @@ namespace FFXIVTataruHelper
             {
                 _LogWriter = new LogWriter();
                 _LogWriter.StartWriting();
+
+                Logger.WriteLog("TataruHelper v" + Convert.ToString(System.Reflection.Assembly.GetEntryAssembly().GetName().Version));
             }
             catch (Exception ex)
             {
                 Logger.WriteLog(ex);
             }
 
-            InitializeComponent();
+            try
+            {
+                InitializeComponent();
 
-            UiWindow.Window = this;
+                UiWindow.Window = this;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteLog(ex);
+
+                return;
+            }
 
             try
             {
                 _LanguagueWrapper = new LanguagueWrapper(this);
-
-                _Updater = new Updater();
-
+                _Updater = new SquirrelUpdater(new Utils.LoggerWrapper());
             }
             catch (Exception e)
             {
@@ -115,12 +128,33 @@ namespace FFXIVTataruHelper
 
         }
 
+        private void RestartApp_Click(object sender, RoutedEventArgs e)
+        {
+            _Updater.RestartApp();
+        }
+
+        private void CheckUpdates_Click(object sender, RoutedEventArgs e)
+        {
+            UserStartedUpdateText.Text = (string)this.Resources["LookingForUpdates"];
+
+            _TataruModel.TataruViewModel.UpdateCheckByUser = true;
+            _TataruModel.TataruViewModel.UserStartedUpdateTextVisibility = true;
+
+            _Updater.CheckAndInstallUpdates(CmdArgsStatus.PreRelease);
+        }
+
         #endregion
 
         #region **WindowEvents
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                Logger.WriteLog("TataruHelper v" + Convert.ToString(System.Reflection.Assembly.GetEntryAssembly().GetName().Version));
+            }
+            catch (Exception) { }
+
             try
             {
                 try
@@ -141,15 +175,6 @@ namespace FFXIVTataruHelper
 
                 _TataruModel.FFMemoryReader.AddExclusionWindowHandler((new WindowInteropHelper(this).Handle));
 
-                try
-                {
-                    Logger.WriteLog("TataruHelper v" + Convert.ToString(System.Reflection.Assembly.GetEntryAssembly().GetName().Version));
-                }
-                catch (Exception) { }
-
-                _Updater.StartUpdate();
-
-
                 this.DataContext = _TataruModel.TataruViewModel;
 
                 _TataruModel.TataruViewModel.ShutdownRequested += OnShutDownRequsted;
@@ -159,6 +184,24 @@ namespace FFXIVTataruHelper
 
                 _WinMessagesHandler = new WinMessagesHandler(this);
                 _WinMessagesHandler.ShowFirstInstance += OnShowFirstInstance;
+
+                _Updater.UpdatingStateChanged += OnUpdaterEvent;
+
+#if DEBUG
+#else
+                
+                Task.Run(() =>
+                {
+
+                    _Updater.CheckAndInstallUpdates(CmdArgsStatus.PreRelease);
+
+                    _UpdaterTimer = new Timer(TimeSpan.FromMinutes(30).TotalMilliseconds);
+                    _UpdaterTimer.Elapsed += async (senderr, ee) => await UpdateTimerHandler();
+                    _UpdaterTimer.AutoReset = true;
+                    _UpdaterTimer.Start();
+
+                }).Forget();
+#endif
             }
             catch (Exception ex)
             {
@@ -177,7 +220,6 @@ namespace FFXIVTataruHelper
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-
             try
             {
                 if (_IsShutDown == false)
@@ -190,13 +232,11 @@ namespace FFXIVTataruHelper
 
                 if (e.Cancel == false)
                 {
+                    _UpdaterTimer?.Stop();
+                    _Updater?.StopUpdate();
+
                     if (_OptimizeFootprint != null)
                         _OptimizeFootprint.Stop();
-
-                    Utils.TataruSingleInstance.Stop();
-
-                    //if (_ChatWindow != null)
-                    //    _ChatWindow.Close();
 
                     if (_TataruModel != null)
                         _TataruModel.Stop();
@@ -207,8 +247,12 @@ namespace FFXIVTataruHelper
                             await _TataruModel.SaveSettings();
                     }).Wait();
 
+                    Utils.TataruSingleInstance.Stop();
+
                     if (_LogWriter != null)
                         _LogWriter.Stop();
+
+                    _Updater?.KillAll();
                 }
             }
             catch (Exception ex)
@@ -267,10 +311,6 @@ namespace FFXIVTataruHelper
                 if (UIModel.IsFirstTime == 0)
                 {
                     UIModel.IsFirstTime = -1;
-
-                    //double left = _ChatWindow.Left + _ChatWindow.ActualWidth;
-                    //this.Left = left;
-                    //this.Top = _ChatWindow.Top;
                 }
 
                 if (ea.NewValue != winSize)
@@ -311,6 +351,70 @@ namespace FFXIVTataruHelper
             await this.UIThreadAsync(() =>
             {
                 ShowSettingsWindow();
+            });
+        }
+
+        private async Task OnUpdaterEvent(UpdatingState ea)
+        {
+            switch (ea.UpdateSate)
+            {
+                case UpdateSate.InitializingUpdater:
+                    await this.UIThreadAsync(() =>
+                    {
+                        CheckUpdatesButton.IsEnabled = false;
+                    });
+                    break;
+                case UpdateSate.DownloadingUpdate:
+                    await this.UIThreadAsync(() =>
+                    {
+                        _TataruModel.TataruViewModel.UserStartedUpdateTextVisibility = false;
+
+                        _TataruModel.TataruViewModel.DownloadingUpdateVisibility = true;
+                    });
+                    break;
+                case UpdateSate.ReadyToRestart:
+                    await this.UIThreadAsync(() =>
+                    {
+                        _TataruModel.TataruViewModel.UserStartedUpdateTextVisibility = false;
+
+                        _TataruModel.TataruViewModel.RestartReadyVisibility = true;
+                        _TataruModel.TataruViewModel.DownloadingUpdateVisibility = false;
+
+                        TaskBarIcon.ShowBalloonTip((string)this.Resources["NotifyUpdateTitle"], (string)this.Resources["NotifyUpdateText"],
+                            Hardcodet.Wpf.TaskbarNotification.BalloonIcon.Info);
+                    });
+                    break;
+                case UpdateSate.UpdatingFinished:
+                    await this.UIThreadAsync(() =>
+                    {
+                        _TataruModel.TataruViewModel.UserStartedUpdateTextVisibility = false;
+
+                        if (!_TataruModel.TataruViewModel.RestartReadyVisibility
+                        && !_TataruModel.TataruViewModel.DownloadingUpdateVisibility
+                        && _TataruModel.TataruViewModel.UpdateCheckByUser
+                        )
+                        {
+                            UserStartedUpdateText.Text = (string)this.Resources["NoUpdatesFound"];
+                            _TataruModel.TataruViewModel.UserStartedUpdateTextVisibility = true;
+                        }
+                        _TataruModel.TataruViewModel.UpdateCheckByUser = false;
+                        OnUserStartedUpdateEnd();
+                    });
+                    break;
+            }
+
+        }
+
+        void OnUserStartedUpdateEnd()
+        {
+            Task.Run(async () =>
+            {
+                await Task.Delay((int)TimeSpan.FromSeconds(10).TotalMilliseconds);
+                await this.UIThreadAsync(() =>
+                {
+                    _TataruModel.TataruViewModel.UserStartedUpdateTextVisibility = false;
+                    CheckUpdatesButton.IsEnabled = true;
+                });
             });
         }
 
@@ -424,6 +528,14 @@ namespace FFXIVTataruHelper
 
         #region **System.
 
+        private async Task UpdateTimerHandler()
+        {
+            await Task.Run(() =>
+            {
+                _Updater?.CheckAndInstallUpdates(CmdArgsStatus.PreRelease);
+            });
+        }
+
         protected override void OnStateChanged(EventArgs e)
         {
             if (WindowState == System.Windows.WindowState.Minimized)
@@ -453,9 +565,6 @@ namespace FFXIVTataruHelper
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            if (_Updater != null)
-                _Updater.Dispose();
-
             _LogWriter.Stop();
         }
 

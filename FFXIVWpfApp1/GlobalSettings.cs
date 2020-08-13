@@ -13,24 +13,6 @@ namespace FFXIVTataruHelper
 
         public static string ChatCodesFilePath = @"Resources\ChatCodes.json";
 
-        public static string GoogleTranslateLanguages = "Resources/GoogleTranslateLanguages.json";
-
-        public static string MultillectTranslateLanguages = "Resources/MultillectTranslateLanguages.json";
-
-        public static string DeeplLanguages = "Resources/DeeplLanguages.json";
-
-        public static string YandexLanguages = "Resources/YandexTranslateLanguages.json";
-
-        public static string BaiduLanguages = "Resources/BaiduLanguages.json";
-
-        public static string BaiduEncoder = "Resources/BaiduEncoder.js";
-
-        public static string AmazonLanguages = "Resources/AmazonLanguages.json";
-
-        public static string PapagoLanguages = "Resources/PapagoLanguages.json";
-
-        public static string PapagoEncoderPath = "Resources/PapagoEncoder";
-
         public static string LocalisationDirPath = @"Locale_cloud\";
 
         public static string ru_RU_LanguaguePath = @"ru\ru_RU.mo";

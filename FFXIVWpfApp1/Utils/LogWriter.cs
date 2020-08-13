@@ -91,8 +91,6 @@ namespace FFXIVTataruHelper
 
                 if (!dequeueFalg)
                 {
-                    //Thread.Sleep(33);
-                    //_KeepWorking = false;
                     SpinWait.SpinUntil(() => (Logger.LogQueue.IsEmpty == false || Logger.ConsoleLogQueue.IsEmpty == false || Logger.ChatLogQueue.IsEmpty == false) || !_KeepWorking);
                     if (_KeepWorking)
                     {
