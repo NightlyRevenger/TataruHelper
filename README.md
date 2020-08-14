@@ -19,6 +19,8 @@
 
 ## [Інструкція на українській](Documents/README_uk_UA.md) 
 
+## [中文](Documents/README_zh_ZH.md) 
+
 * * *
 
 ![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)
