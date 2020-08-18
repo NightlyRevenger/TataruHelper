@@ -10,6 +10,7 @@
 -
 ---
 ![TataruHead](./Tataru_img.png) ![LiveAction](./LiveAction.gif)  
+![LiveChat](./2020-08-18_21-21-05.gif)
  
 ## [使用演示](https://youtu.be/7HiQXzmkQuw)  
 
