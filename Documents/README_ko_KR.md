@@ -10,7 +10,8 @@
 
 * * *
 
-![TataruHead](./Tataru_img.png) ![LiveAction](./LiveAction.gif)
+![TataruHead](./Tataru_img.png) ![LiveAction](./LiveAction.gif)  
+![LiveChat](./2020-08-18_21-24-41.gif)
 
 ## [데모영상 (YouTube)](https://youtu.be/SY5voIl0c8g)
 
