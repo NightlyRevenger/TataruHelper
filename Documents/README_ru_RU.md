@@ -10,8 +10,8 @@
 
 * * *
 
-![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)  
-![LiveTranslation](Documents/2020-08-18_21-12-52.gif)
+![TataruHead](Tataru_img.png) ![LiveAction](LiveAction.gif)  
+![LiveTranslation](2020-08-18_21-12-52.gif)
 
 ## [Демонстрация](https://youtu.be/7HiQXzmkQuw)
 
