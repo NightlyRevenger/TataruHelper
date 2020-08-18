@@ -8,7 +8,8 @@
 
 * * *
 
-![TataruHead](./Tataru_img.png) ![LiveAction](./LiveAction.gif)
+![TataruHead](./Tataru_img.png) ![LiveAction](./LiveAction.gif)  
+![LiveChat](./2020-08-18_21-32-00.gif)
 
 ## [Demonstración](https://youtu.be/7HiQXzmkQuw)
 
