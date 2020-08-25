@@ -214,22 +214,38 @@
             <TabItem Header="{DynamicResource GeneralBehavior}">
                 <Grid Background="#FFFFFFFF">
                     <WrapPanel>
-                        <GroupBox Header="{DynamicResource OtherSett}" Margin="5,5,5,5" VerticalAlignment="Top" Height="210"   Width="207" HorizontalAlignment="Left" >
-                            <StackPanel>
-                                <CheckBox x:Name="DirectMemoryBox" Visibility="Visible" HorizontalAlignment="Left" Height="21" VerticalAlignment="Bottom" Checked="DirectMemoryReading_Changed" Unchecked="DirectMemoryReading_Changed" >
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Text="{DynamicResource DirectMemoryCB}"/>
-                                        <Image Height="20" Width="20" Source="{Binding Source={x:Static draw:SystemIcons.Question}, Converter={utils:IconToImageSourceConverter}, Mode=OneWay}" Margin="4,0,0,0">
-                                            <Image.ToolTip>
-                                                <DynamicResource ResourceKey="DirectMemoryToolTip" />
-                                            </Image.ToolTip>
-                                        </Image>
-                                    </StackPanel>
-                                </CheckBox>
-                                <CheckBox x:Name="HideToTray" Content="{DynamicResource HideToTrayCB}" HorizontalAlignment="Left" Height="21" VerticalAlignment="Bottom" Width="158" Checked="HideToTray_Changed" Unchecked="HideToTray_Changed" Margin="0,0,0,2"/>
-                            </StackPanel>
-                        </GroupBox>
+                        <StackPanel>
+                            <GroupBox Header="{DynamicResource OtherSett}" Margin="5,5,5,5" VerticalAlignment="Top" Height="120" Width="207" HorizontalAlignment="Left">
+                                <StackPanel>
+                                    <CheckBox x:Name="DirectMemoryBox" Visibility="Visible" HorizontalAlignment="Left" Height="21" VerticalAlignment="Bottom" Checked="DirectMemoryReading_Changed" Unchecked="DirectMemoryReading_Changed" >
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{DynamicResource DirectMemoryCB}"/>
+                                            <Image Height="20" Width="20" Source="{Binding Source={x:Static draw:SystemIcons.Question}, Converter={utils:IconToImageSourceConverter}, Mode=OneWay}" Margin="4,0,0,0">
+                                                <Image.ToolTip>
+                                                    <DynamicResource ResourceKey="DirectMemoryToolTip" />
+                                                </Image.ToolTip>
+                                            </Image>
+                                        </StackPanel>
+                                    </CheckBox>
+                                    <CheckBox x:Name="HideToTray" Content="{DynamicResource HideToTrayCB}" HorizontalAlignment="Left" Height="21" VerticalAlignment="Bottom" Width="158" Checked="HideToTray_Changed" Unchecked="HideToTray_Changed" Margin="0,0,0,2"/>
+                                </StackPanel>
+                            </GroupBox>
 
+                            <GroupBox Header="{DynamicResource TextToSpeech}" Height="240"  Margin="5,0,0,5"  VerticalAlignment="Top" Width="207" HorizontalAlignment="Left">
+                                <StackPanel Margin="0">
+                                    <CheckBox Content="{DynamicResource Enable}" IsChecked="{Binding IsTextToSpeech}" Margin="5,5"/>
+
+                                    <Label Content="{DynamicResource Speed}" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="154"/>
+                                    <Slider IsEnabled="{Binding IsTextToSpeech}" Minimum="0" Maximum="20" Value="{Binding Speed}" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True"/>
+
+                                    <Label Content="{DynamicResource Volume}" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="154"/>
+                                    <Slider IsEnabled="{Binding IsTextToSpeech}" Minimum="0" Maximum="100" Value="{Binding Volume}" TickPlacement="BottomRight" TickFrequency="5"/>
+
+                                    <Label Content="{DynamicResource Pitch}" HorizontalAlignment="Left" Height="30" VerticalAlignment="Top" Width="154"/>
+                                    <Slider IsEnabled="{Binding IsTextToSpeech}" Minimum="-96" Maximum="96" Value="{Binding Pitch}" TickPlacement="BottomRight" TickFrequency="8"/>
+                                </StackPanel>
+                            </GroupBox>
+                        </StackPanel>
                     </WrapPanel>
                 </Grid>
             </TabItem>

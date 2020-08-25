@@ -78,6 +78,12 @@
     <system:String x:Key="DirectMemoryToolTip">Direct Memory Tooltip</system:String>
     <system:String x:Key="HideToTrayCB">Hide to Tray</system:String>
 
+    <system:String x:Key="TextToSpeech">Text To Speech (BETA)</system:String>
+    <system:String x:Key="Enable">Enable</system:String>
+    <system:String x:Key="Speed">Speed</system:String>
+    <system:String x:Key="Volume">Volume</system:String>
+    <system:String x:Key="Pitch">Pitch</system:String>
+
     <system:String x:Key="ShowChatBox">Show Chat Window</system:String>
     <system:String x:Key="HideChatBox">Hide Chat Window</system:String>
 

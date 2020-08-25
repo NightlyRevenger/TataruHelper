@@ -70,6 +70,9 @@
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NAudio, Version=1.9.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NAudio.1.9.0\lib\net35\NAudio.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -140,7 +143,10 @@
     <Compile Include="UIModel\ChatWindowViewModelSettings.cs" />
     <Compile Include="UIModel\CmdArgsStatus.cs" />
     <Compile Include="UIModel\UserSettingsOld.cs" />
+    <Compile Include="Utils\AudioEffectsProvider.cs" />
     <Compile Include="Utils\LoggerWrapper.cs" />
+    <Compile Include="Utils\SoundTouch.cs" />
+    <Compile Include="Utils\TextToSpeech.cs" />
     <Compile Include="Utils\UiWindowHandler.cs" />
     <Compile Include="ViewModel\ChatWindowViewModel.cs" />
     <Compile Include="ViewModel\TataruUICommand.cs" />
@@ -346,6 +352,8 @@
 if $(ConfigurationName) == ReleaseDeploy powershell -NoProfile -ExecutionPolicy RemoteSigned -file "$(SolutionDir)\scripts\Squirrel_release.ps1"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>if $(ConfigurationName) == ReleaseDeploy powershell -NoProfile -ExecutionPolicy RemoteSigned -file "$(SolutionDir)\scripts\CrowdinScript\Crowdin_download.ps1"</PreBuildEvent>
+    <PreBuildEvent>if $(ConfigurationName) == ReleaseDeploy powershell -NoProfile -ExecutionPolicy RemoteSigned -file "$(SolutionDir)\scripts\CrowdinScript\Crowdin_download.ps1"
+copy $(SolutionDir)libs\SoundTouch.dll $(ProjectDir)$(OutDir)
+copy $(SolutionDir)libs\SoundTouch_x64.dll $(ProjectDir)$(OutDir)</PreBuildEvent>
   </PropertyGroup>
 </Project>
