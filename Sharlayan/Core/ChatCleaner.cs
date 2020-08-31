@@ -1,9 +1,11 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
+
+
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ChatCleaner.cs" company="SyndicatedLife">
-//   Copyright(c) 2018 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (http://syndicated.life/)
+//   Copyright© 2007 - 2020 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (https://syndicated.life/)
 //   Licensed under the MIT license. See LICENSE.md in the solution root for full license information.
 // </copyright>
 // <summary>
@@ -11,12 +13,11 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sharlayan.Core {
+namespace Sharlayan.Core
+{
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Linq;
-    using System.Runtime.CompilerServices;
     using System.Text;
     using System.Text.RegularExpressions;
     using System.Web;
@@ -25,106 +26,101 @@ namespace Sharlayan.Core {
 
     using Sharlayan.Extensions;
 
-    internal class ChatCleaner : INotifyPropertyChanged {
+    internal class ChatCleaner
+    {
         private const RegexOptions DefaultOptions = RegexOptions.Compiled | RegexOptions.ExplicitCapture;
 
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
 
-        private static readonly Regex Checks = new Regex(@"^00(20|21|23|27|28|46|47|48|49|5C)$", DefaultOptions);
+        private static readonly Regex PlayerChatCodesRegex = new Regex(@"^00(0[A-F]|1[0-9A-F])$", DefaultOptions);
 
-        private static bool _colorFound;
+        private static readonly Regex PlayerRegEx = new Regex(@"(?<full>\[[A-Z0-9]{10}(?<first>[A-Z0-9]{3,})20(?<last>[A-Z0-9]{3,})\](?<short>[\w']+\.? [\w']+\.?)\[[A-Z0-9]{12}\])", DefaultOptions);
 
-        private readonly Regex PlayerRegEx = new Regex(@"(?<full>\[[A-Z0-9]{10}(?<first>[A-Z0-9]{3,})20(?<last>[A-Z0-9]{3,})\](?<short>[\w']+\.? [\w']+\.?)\[[A-Z0-9]{12}\])", DefaultOptions);
+        private static readonly Regex ArrowRegex = new Regex(@"", RegexOptions.Compiled);
 
-        private string _result;
+        private static readonly Regex HQRegex = new Regex(@"", RegexOptions.Compiled);
 
-        public ChatCleaner(string line) {
-            this.Result = this.ProcessName(line);
-        }
+        private static readonly Regex NewLineRegex = new Regex(@"[\r\n]+", RegexOptions.Compiled);
 
-        public ChatCleaner(byte[] bytes) {
-            this.Result = this.ProcessFullLine(bytes).Trim();
-        }
+        private static readonly Regex NoPrintingCharactersRegex = new Regex(@"[\x00-\x1F]+", RegexOptions.Compiled);
 
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        private static readonly Regex SpecialPurposeUnicodeRegex = new Regex(@"[\uE000-\uF8FF]", RegexOptions.Compiled);
 
-        public string Result {
-            get => this._result;
-            private set {
-                this._result = value;
-                this.RaisePropertyChanged();
-            }
-        }
+        private static readonly Regex SpecialReplacementRegex = new Regex(@"[�]", RegexOptions.Compiled);
 
-        private bool ColorFound {
-            get => _colorFound;
-            set {
-                _colorFound = value;
-                this.RaisePropertyChanged();
-            }
-        }
-
-        private string ProcessFullLine(byte[] bytes) {
+        public static string ProcessFullLine(string code, byte[] bytes)
+        {
             var line = HttpUtility.HtmlDecode(Encoding.UTF8.GetString(bytes.ToArray())).Replace("  ", " ");
-            try {
-                List<byte> autoTranslateList = new List<byte>();
+            try
+            {
+                List<byte> autoTranslateList = new List<byte>(bytes.Length);
                 List<byte> newList = new List<byte>();
-                for (var x = 0; x < bytes.Count(); x++) {
-                    if (bytes[x] == 238) {
-                        var byteString = $"{bytes[x]}{bytes[x + 1]}{bytes[x + 2]}";
-                        switch (byteString) {
-                            case "238129156":
-                                x += 3;
-                                break;
-                        }
-                    }
-
-                    if (bytes[x] == 2) {
-                        var byteString = $"{bytes[x]}{bytes[x + 1]}{bytes[x + 2]}{bytes[x + 3]}";
-                        switch (byteString) {
-                            case "22913":
-                            case "21613":
-                            case "22213":
-                                x += 4;
-                                break;
-                        }
-                    }
-
-                    switch (bytes[x]) {
+                for (var x = 0; x < bytes.Count(); x++)
+                {
+                    switch (bytes[x])
+                    {
                         case 2:
+                            // special in-game replacements/wrappers
                             // 2 46 5 7 242 2 210 3
                             // 2 29 1 3
+                            // remove them
                             var length = bytes[x + 2];
                             var limit = length - 1;
-                            if (length > 1) {
-                                x = x + 3;
+                            if (length > 1)
+                            {
+                                x = x + 3 ;
+
+
                                 autoTranslateList.Add(Convert.ToByte('['));
                                 byte[] translated = new byte[limit];
                                 Buffer.BlockCopy(bytes, x, translated, 0, limit);
-                                foreach (var b in translated) {
+                                foreach (var b in translated)
+                                {
                                     autoTranslateList.AddRange(Encoding.UTF8.GetBytes(b.ToString("X2")));
                                 }
 
                                 autoTranslateList.Add(Convert.ToByte(']'));
-                                var aCheckStr = string.Empty;
 
-                                // var checkedAt = autoTranslateList.GetRange(1, autoTranslateList.Count - 1).ToArray();
-                                if (string.IsNullOrWhiteSpace(aCheckStr)) {
-                                    // TODO: implement showing or using in the chatlog
-                                }
-                                else {
-                                    newList.AddRange(Encoding.UTF8.GetBytes(aCheckStr));
+                                var bCheckStr = Encoding.UTF8.GetString(autoTranslateList.ToArray());
+
+                                if (bCheckStr != null && bCheckStr.Length > 0)
+                                {
+                                    if (bCheckStr.Equals("[59]"))
+                                    {
+                                        newList.Add(0x40);
+                                    }
+
+                                    if (Utilities.AutoTranslate.EnDict.TryGetValue(bCheckStr.Replace("[0", "[").ToLower(), out var AutoTranslateVal))
+                                    {
+                                        newList.AddRange(Encoding.UTF8.GetBytes(AutoTranslateVal));
+                                    }
                                 }
 
                                 autoTranslateList.Clear();
                                 x += limit;
                             }
-                            else {
+                            else
+                            {
                                 x = x + 4;
                                 newList.Add(32);
                                 newList.Add(bytes[x]);
                             }
 
+                            break;
+                        // unit separator
+                        case 31:
+                            // TODO: this breaks in some areas like NOVICE chat
+                            // if (PlayerChatCodesRegex.IsMatch(code)) {
+                            //     newList.Add(58);
+                            // }
+                            // else {
+                            //     newList.Add(31);
+                            // }
+                            newList.Add(58);
+                            if (PlayerChatCodesRegex.IsMatch(code))
+                            {
+                                newList.Add(32);
+                            }
                             break;
                         default:
                             newList.Add(bytes[x]);
@@ -132,36 +128,42 @@ namespace Sharlayan.Core {
                     }
                 }
 
-                // var cleanedList = newList.Where(v => (v >= 0x0020 && v <= 0xD7FF) || (v >= 0xE000 && v <= 0xFFFD) || v == 0x0009 || v == 0x000A || v == 0x000D);
                 var cleaned = HttpUtility.HtmlDecode(Encoding.UTF8.GetString(newList.ToArray())).Replace("  ", " ");
 
-                autoTranslateList.Clear();
                 newList.Clear();
 
-                cleaned = Regex.Replace(cleaned, @"", "⇒");
-                cleaned = Regex.Replace(cleaned, @"", "[HQ]");
-                cleaned = Regex.Replace(cleaned, @"", string.Empty);
-                cleaned = Regex.Replace(cleaned, @"�", string.Empty);
-                cleaned = Regex.Replace(cleaned, @"\[+0([12])010101([\w]+)?\]+", string.Empty);
-                cleaned = Regex.Replace(cleaned, @"\[+CF010101([\w]+)?\]+", string.Empty);
-                cleaned = Regex.Replace(cleaned, @"\[+..FF\w{6}\]+|\[+EC\]+", string.Empty);
-                cleaned = Regex.Replace(cleaned, @"\[\]+", string.Empty);
+                // replace right arrow in chat (parsing)
+                cleaned = ArrowRegex.Replace(cleaned, "⇒");
+                // replace HQ symbol
+                cleaned = HQRegex.Replace(cleaned, "[HQ]");
+                // replace all Extended special purpose unicode with empty string
+                cleaned = SpecialPurposeUnicodeRegex.Replace(cleaned, string.Empty);
+                // cleanup special replacement character bytes: 239 191 189
+                cleaned = SpecialReplacementRegex.Replace(cleaned, string.Empty);
+                // remove new lines
+                cleaned = NewLineRegex.Replace(cleaned, string.Empty);
+                // remove characters 0-31
+                cleaned = NoPrintingCharactersRegex.Replace(cleaned, string.Empty);
 
                 line = cleaned;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MemoryHandler.Instance.RaiseException(Logger, ex, true);
             }
 
-            return line;
+            return ProcessName(line);
         }
 
-        private string ProcessName(string cleaned) {
+        private static string ProcessName(string cleaned)
+        {
             var line = cleaned;
-            try {
+            try
+            {
                 // cleanup name if using other settings
-                Match playerMatch = this.PlayerRegEx.Match(line);
-                if (playerMatch.Success) {
+                Match playerMatch = PlayerRegEx.Match(line);
+                if (playerMatch.Success)
+                {
                     var fullName = playerMatch.Groups[1].Value;
                     var firstName = playerMatch.Groups[2].Value.FromHex();
                     var lastName = playerMatch.Groups[3].Value.FromHex();
@@ -172,7 +174,8 @@ namespace Sharlayan.Core {
 
                     // remove single placement
                     cleaned = cleaned.Replace(fullName, "•name•");
-                    switch (Regex.IsMatch(cleaned, @"^([Vv]ous|[Dd]u|[Yy]ou)")) {
+                    switch (Regex.IsMatch(cleaned, @"^([Vv]ous|[Dd]u|[Yy]ou)"))
+                    {
                         case true:
                             cleaned = cleaned.Substring(1).Replace("•name•", string.Empty);
                             break;
@@ -186,15 +189,12 @@ namespace Sharlayan.Core {
                 cleaned = Regex.Replace(cleaned, @"[\x00-\x1F]+", string.Empty);
                 line = cleaned;
             }
-            catch (Exception ex) {
+            catch (Exception ex)
+            {
                 MemoryHandler.Instance.RaiseException(Logger, ex, true);
             }
 
             return line;
-        }
-
-        private void RaisePropertyChanged([CallerMemberName] string caller = "") {
-            this.PropertyChanged(this, new PropertyChangedEventArgs(caller));
         }
     }
 }

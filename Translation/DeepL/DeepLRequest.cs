@@ -6,6 +6,8 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Translation.Deepl
@@ -43,7 +45,7 @@ namespace Translation.Deepl
                     }
                 }
 
-                Regex sentenceRegex = new Regex(@"(\S.+?([.!?♪]|$))(?=\s+|$)");
+                Regex sentenceRegex = new Regex(@"(\S.+?([.!?♪。]|$))(?=\s+|$)");
                 var regexResult = sentenceRegex.Matches(sentence);
 
                 for (int i = 0; i < regexResult.Count; i++)
@@ -88,9 +90,7 @@ namespace Translation.Deepl
 
                     lang = _lang;
 
-                    long unixTimestamp = (Int64)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalMilliseconds;
-
-                    timestamp = unixTimestamp;
+                    timestamp = (Int64)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalMilliseconds;
                 }
 
                 public List<Job> jobs { get; set; }

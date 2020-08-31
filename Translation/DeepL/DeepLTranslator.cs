@@ -3,6 +3,9 @@
 
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Translation.Deepl
 {
@@ -64,7 +67,8 @@ namespace Translation.Deepl
                     string handShakeUrl = @"https://www.deepl.com/PHP/backend/clientState.php?request_type=jsonrpc&il=RU";
                     string strDeepLHandshakeRequest = JsonConvert.SerializeObject(deepLHandshakeRequest);
 
-                    var strDeepLHandshakeResp = DeeplWebReader.GetWebData(handShakeUrl, WebApi.WebReader.WebMethods.POST, strDeepLHandshakeRequest);
+                    var strDeepLHandshakeResp = DeeplWebReader.GetWebData(handShakeUrl, WebApi.DeepLWebReader.WebMethods.POST, strDeepLHandshakeRequest);
+
                     var DeepLHandshakeResp = JsonConvert.DeserializeObject<DeepLResponse.DeepLHandshakeResponse>(strDeepLHandshakeResp);
 
                     _Logger?.WriteLog(strDeepLHandshakeResp);
@@ -81,7 +85,7 @@ namespace Translation.Deepl
                     DeepLRequest.DeepLCookieRequest deepLSentenceRequest = new DeepLRequest.DeepLCookieRequest(_DeepLId, sentence);
                     string strDeepLsentenceRequest = deepLSentenceRequest.ToJsonString();
 
-                    var strDeepLSentencetResp = DeeplWebReader.GetWebData(url, WebApi.WebReader.WebMethods.POST, strDeepLsentenceRequest);
+                    var strDeepLSentencetResp = DeeplWebReader.GetWebData(url, WebApi.DeepLWebReader.WebMethods.POST, strDeepLsentenceRequest);
                     var deepLSentenceResp = JsonConvert.DeserializeObject<DeepLResponse.DeepLSentencePreprocessResponse>(strDeepLSentencetResp);
 
                     _DeepLId++;
@@ -94,23 +98,28 @@ namespace Translation.Deepl
                 DeepLRequest.DeepLTranslatorRequest deepLTranslationRequest = new DeepLRequest.DeepLTranslatorRequest(_DeepLId, sentence, inLang, outLang);
                 string strDeepLTranslationRequest = deepLTranslationRequest.ToJsonString();
 
-                var strDeepLTranslationResponse = DeeplWebReader.GetWebData(url, WebApi.WebReader.WebMethods.POST, strDeepLTranslationRequest);
+                var strDeepLTranslationResponse = DeeplWebReader.GetWebData(url, WebApi.DeepLWebReader.WebMethods.POST, strDeepLTranslationRequest);
                 _DeepLId++;
 
                 var DeepLTranslationResponse = JsonConvert.DeserializeObject<DeepLResponse.DeepLTranslationResponse>(strDeepLTranslationResponse);
 
-                string temporaryResult = String.Empty;
-                if (DeepLTranslationResponse != null)
-                {
-                    var translations = DeepLTranslationResponse.result.translations;
-                    for (int i = 0; i < translations.Count; i++)
-                    {
-                        if (translations[i].beams.Count > 0)
-                            temporaryResult += " " + translations[i].beams[0].postprocessed_sentence;
-                    }
-                }
 
-                result = temporaryResult;
+                StringBuilder temporaryResult = new StringBuilder();
+                if (DeepLTranslationResponse?.ResponseResult?.Translations != null)
+                {
+                    List<DeepLResponse.DeepLTranslationResponse.Translation> translations = DeepLTranslationResponse.ResponseResult.Translations;
+                    foreach (DeepLResponse.DeepLTranslationResponse.Translation transaltion in translations)
+                    {
+                        var beam = transaltion.Beams.FirstOrDefault();
+                        if (beam?.PostprocessedSentence != null)
+                        {
+                            temporaryResult.Append(beam.PostprocessedSentence);
+                            temporaryResult.Append(" ");
+                        }
+                    }
+                }//*/
+
+                result = temporaryResult.ToString();
 
             }
             catch (Exception e)

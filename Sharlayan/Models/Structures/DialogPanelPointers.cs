@@ -15,5 +15,10 @@ namespace Sharlayan.Models.Structures
 
         public int LengtsOffset { get; set; }
 
+
+        public int TextOffset { get; set; }
+
+        public int TextLengthOffset { get; set; }
+
     }
 }

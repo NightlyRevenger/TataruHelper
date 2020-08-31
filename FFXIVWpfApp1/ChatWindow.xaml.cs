@@ -41,12 +41,16 @@ namespace FFXIVTataruHelper
         TataruModel _TataruModel;
         ChatWindowViewModel _ChatWindowViewModel;
 
-        public ChatWindow(TataruModel tataruModel, ChatWindowViewModel chatWindowViewModel)
+        MainWindow _MainWindow;
+
+        public ChatWindow(TataruModel tataruModel, ChatWindowViewModel chatWindowViewModel, MainWindow mainWindow)
         {
             InitializeComponent();
 
             try
             {
+                _MainWindow = mainWindow;
+
                 _TataruModel = tataruModel;
                 _ChatWindowViewModel = chatWindowViewModel;
 
@@ -195,8 +199,10 @@ namespace FFXIVTataruHelper
                 }
             }
 
-            text = await _TataruModel.ChatProcessor.Translate(ea.ChatMessage.Text, _ChatWindowViewModel.CurrentTransaltionEngine,
-            _ChatWindowViewModel.CurrentTranslateFromLanguague, _ChatWindowViewModel.CurrentTranslateToLanguague, chatCode.Code);
+            DateTime timeStamp = default(DateTime);
+
+            if (_ChatWindowViewModel.ShowTimestamps)
+                timeStamp = ea.ChatMessage.TimeStamp;
 
             await this.UIThreadAsync(() =>
             {
@@ -205,7 +211,7 @@ namespace FFXIVTataruHelper
                 if (_ChatWindowViewModel.IsHiddenByUser == false)
                     _TextArrivedTime = DateTime.UtcNow;
 
-                ShowTransaltedText(text, textColor);
+                ShowTransaltedText(text, textColor, timeStamp);
 
                 if (_ChatWindowViewModel.IsHiddenByUser == false)
                     _TextArrivedTime = DateTime.UtcNow;
@@ -295,7 +301,7 @@ namespace FFXIVTataruHelper
 
         #region **Transaltion.
 
-        void ShowTransaltedText(string translatedMsg, Color color)
+        void ShowTransaltedText(string translatedMsg, Color color, DateTime timeStamp = default(DateTime))
         {
             try
             {
@@ -329,18 +335,25 @@ namespace FFXIVTataruHelper
                     name = msgText.Substring(0, nameInd);
                     text = msgText.Substring(nameInd, msgText.Length - nameInd);
 
+                    if (timeStamp != default(DateTime))
+                        name = timeStamp.ToString("HH:mm") + " " + name;
+
                     TextRange tr1 = new TextRange(ChatRtb.Document.ContentEnd, ChatRtb.Document.ContentEnd);
                     tr1.Text = name;
                     tr1.ApplyPropertyValue(TextElement.ForegroundProperty, tmpColor);
                     tr1.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Bold);
 
                     TextRange tr2 = new TextRange(ChatRtb.Document.ContentEnd, ChatRtb.Document.ContentEnd);
+
                     tr2.Text = text;
                     tr2.ApplyPropertyValue(TextElement.ForegroundProperty, tmpColor);
                     tr2.ApplyPropertyValue(TextElement.FontWeightProperty, FontWeights.Normal);//*/
                 }
                 else
                 {
+                    if (timeStamp != default(DateTime))
+                        translatedMsg = timeStamp.ToString("HH:mm") + " " + translatedMsg;
+
                     TextRange tr = new TextRange(ChatRtb.Document.ContentEnd, ChatRtb.Document.ContentEnd);
                     tr.Text = translatedMsg;
 
@@ -468,6 +481,7 @@ namespace FFXIVTataruHelper
             _SettigsWindow.Visibility = Visibility.Visible;
             _SettigsWindow.Activate();
             _SettigsWindow.Focus();//*/
+            _MainWindow.ShowSettingsWindow();
         }
 
         void Exit_Click(object sender, RoutedEventArgs e)

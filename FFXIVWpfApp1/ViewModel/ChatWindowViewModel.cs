@@ -415,6 +415,18 @@ namespace FFXIVTataruHelper.ViewModel
             get { return (TranslatorLanguague)TranslateToLanguagues.CurrentItem; }
         }
 
+        public bool ShowTimestamps
+        {
+            get => _ShowTimestamps;
+            set
+            {
+                if (_ShowTimestamps == value) return;
+
+                _ShowTimestamps = value;
+                OnPropertyChanged();
+            }
+        }
+
         public bool IsSelected
         {
             get { return _IsSelected; }
@@ -483,6 +495,8 @@ namespace FFXIVTataruHelper.ViewModel
 
         HotKeyManager _HotKeyManager;
 
+        bool _ShowTimestamps;
+
         bool _IsSelected;
 
         bool _IsWindowVisible;
@@ -540,6 +554,8 @@ namespace FFXIVTataruHelper.ViewModel
             AutoHideTimeout = settings.AutoHideTimeout;
 
             IsHiddenByUser = false;
+
+            ShowTimestamps = settings.ShowTimestamps;
 
             BackGroundColor = settings.BackGroundColor;
 

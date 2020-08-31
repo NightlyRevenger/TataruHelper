@@ -8,6 +8,7 @@ using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
 using System.Text;
+using System.Linq;
 
 namespace Translation
 {
@@ -51,7 +52,7 @@ namespace Translation
             return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
-        public static T LoadJsonData<T>(string path, ILog logger=null)
+        public static T LoadJsonData<T>(string path, ILog logger = null)
         {
             T result = (T)Activator.CreateInstance(typeof(T));
 
@@ -181,5 +182,53 @@ namespace Translation
             }
 
         }
+
+
+        private static HashSet<char> whiteListChars = new HashSet<char>(new char[] { 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+            'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't',
+            'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', '-', '.', ',', '?', '!', ':', '(', ')' });
+
+        public static string PapagoWhiteListChars(string input)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            foreach (var c in input)
+            {
+                if (whiteListChars.Contains(c))
+                    sb.Append(c);
+                else
+                    sb.Append(' ');
+            }
+
+            return sb.ToString();
+        }
+
+        public static List<T> Shuffle<T>(this IList<T> list)
+        {
+            var innerList = list.ToList();
+
+            Random rng = null;
+
+            var totalMs = Math.Round(DateTime.UtcNow.TimeOfDay.TotalMilliseconds);
+            if (totalMs >= Int32.MaxValue)
+                totalMs = Int32.MaxValue - 1;
+            if (totalMs <= Int32.MinValue)
+                totalMs = Int32.MinValue + 1;
+
+            rng = new Random((int)totalMs);
+
+            int n = innerList.Count;
+            while (n > 1)
+            {
+                n--;
+                int k = rng.Next(n + 1);
+                T value = innerList[k];
+                innerList[k] = innerList[n];
+                innerList[n] = value;
+            }
+
+            return innerList;
+        }
+
     }
 }

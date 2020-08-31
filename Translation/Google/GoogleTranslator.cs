@@ -14,7 +14,7 @@ namespace Translation.Google
     {
         ILog _Logger;
 
-        WebApi.WebReader _GoogleWebReader;
+        HttpUtilities.HttpReader _GoogleWebReader;
 
         private Regex GoogleRx;
 
@@ -22,7 +22,7 @@ namespace Translation.Google
         {
             _Logger = logger;
 
-            _GoogleWebReader = new WebApi.WebReader(@"translate.google.com", _Logger);
+            _GoogleWebReader = new HttpUtilities.HttpReader(@"translate.google.com", new HttpUtils.HttpILogWrapper(_Logger));
 
             string pattern = "(?<=(<div dir=\"ltr\" class=\"t0\">)).*?(?=(<\\/div>))";
 
@@ -39,11 +39,11 @@ namespace Translation.Google
                 string _inLang = inLang;
 
                 string _baseUrl = "https://translate.google.com/m?hl=ru&sl={0}&tl={1}&ie=UTF-8&prev=_m&q={2}";
-                string url = string.Format(_baseUrl, _inLang, _outLang, sentence);
+                string url = string.Format(_baseUrl, _inLang, _outLang, System.Web.HttpUtility.UrlEncode(sentence));
 
-                var tmpResult = _GoogleWebReader.GetWebData(url, WebApi.WebReader.WebMethods.GET);
+                var tmpResult = _GoogleWebReader.RequestWebData(url,  HttpUtilities.HttpMethods.GET);
 
-                var rxMatch = GoogleRx.Match(tmpResult);
+                var rxMatch = GoogleRx.Match(tmpResult.Body);
 
                 if (rxMatch.Success)
                 {

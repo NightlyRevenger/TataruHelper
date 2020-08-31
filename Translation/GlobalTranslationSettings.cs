@@ -7,7 +7,7 @@ namespace Translation
 {
     static class GlobalTranslationSettings
     {
-        public static int TranslationCacheSize = 200;
+        public static int TranslationCacheSize = 10000;
 
         public static double MaxSameLanguagePercent = 0.40;
 
@@ -23,10 +23,14 @@ namespace Translation
 
         public static string DeeplLanguages = "TranslationResources/DeeplLanguages.json";
 
-        public static string YandexLanguages = "TranslationResources/YandexTranslateLanguages.json";
-
         public static string BaiduLanguages = "TranslationResources/BaiduLanguages.json";
 
         public static string PapagoLanguages = "TranslationResources/PapagoLanguages.json";
+
+        public static string YandexLanguages = "TranslationResources/YandexTranslateLanguages.json";
+
+        public static string YandexAuthFile = "TranslationResources/YandexAuth";
+
+        public static string YandexEncoderPath = "TranslationResources/YandexEncoder";
     }
 }

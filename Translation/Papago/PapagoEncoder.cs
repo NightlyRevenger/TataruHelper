@@ -67,17 +67,28 @@ namespace Translation.Papago
             _IsAvaliable = true;
         }
 
-        public string EncodePapagoTranslationRequest(string str)
+        public PapagoSerializedRequest EncodePapagoTranslationRequest(PapagoTranslationRequest translationRequest)
         {
-            string reqv = string.Empty;
+            PapagoSerializedRequest reqv = null;
 
             if (_IsAvaliable && PapgoEncoderEngine != null)
             {
                 try
                 {
-                    reqv = PapgoEncoderEngine.CallGlobalFunction<string>("EncodeTransaltionRequest", str);
+                    string pageoReqv = PapgoEncoderEngine.CallGlobalFunction<string>("EncodeTransaltionRequest", JsonConvert.SerializeObject(translationRequest));
 
-                    reqv = "data=" + System.Net.WebUtility.UrlEncode(reqv);
+                    PapagoEncodedRequest encodedRequestObj = JsonConvert.DeserializeObject<PapagoEncodedRequest>(pageoReqv);
+
+                    string signString = PapagoHmacFin(encodedRequestObj.HmacInput, encodedRequestObj.HmacKey);
+
+                    string authorizationHeader = $"PPG {encodedRequestObj.Guid}:{signString}";
+
+                    return new PapagoSerializedRequest()
+                    {
+                        AuthorizationHeader = authorizationHeader,
+                        StringRequest = encodedRequestObj.EncodedTranslationRequest,
+                        Timestamp = encodedRequestObj.GuidTime
+                    };
 
                 }
                 catch (Exception e)
@@ -90,27 +101,20 @@ namespace Translation.Papago
             return reqv;
         }
 
-        public string EncodePapagoString(string str)
+        static string PapagoHmacFin(string plaintext, string transactionKey)
         {
-            string reqv = string.Empty;
+            var data = Encoding.UTF8.GetBytes(plaintext);
+            // key
+            var key = Encoding.UTF8.GetBytes(transactionKey);
 
-            if (_IsAvaliable && PapgoEncoderEngine != null)
+            // Create HMAC-MD5 Algorithm;
+            using (HMACMD5 hmac = new HMACMD5(key))
             {
-                try
-                {
-                    reqv = PapgoEncoderEngine.CallGlobalFunction<string>("EncodeRequest", str);
+                // Compute hash.
+                var hashBytes = hmac.ComputeHash(data);
 
-                    reqv = "data=" + System.Net.WebUtility.UrlEncode(reqv);
-
-                }
-                catch (Exception e)
-                {
-                    _Logger?.WriteLog(e.ToString());
-                    _IsAvaliable = false;
-                }
+                return Convert.ToBase64String(hashBytes);
             }
-
-            return reqv;
         }
 
     }

@@ -5,7 +5,7 @@
 
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ActorItem.cs" company="SyndicatedLife">
-//   Copyright(c) 2018 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (http://syndicated.life/)
+//   Copyright© 2007 - 2020 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (https://syndicated.life/)
 //   Licensed under the MIT license. See LICENSE.md in the solution root for full license information.
 // </copyright>
 // <summary>
@@ -63,7 +63,7 @@ namespace Sharlayan.Core {
         public byte GrandCompanyRank { get; set; }
 
         public float Heading { get; set; }
-        
+
         public Actor.Icon Icon { get; set; }
 
         public byte IconID { get; set; }
@@ -138,7 +138,7 @@ namespace Sharlayan.Core {
 
         public ActorItem Clone() {
             var cloned = (ActorItem) this.MemberwiseClone();
-            
+
             cloned.Coordinate = new Coordinate(this.Coordinate.X, this.Coordinate.Z, this.Coordinate.Y);
             cloned.EnmityItems = new System.Collections.Generic.List<EnmityItem>();
             cloned.StatusItems = new System.Collections.Generic.List<StatusItem>();
@@ -148,7 +148,7 @@ namespace Sharlayan.Core {
                     new EnmityItem {
                         Enmity = item.Enmity,
                         ID = item.ID,
-                        Name = item.Name
+                        Name = item.Name,
                     });
             }
 
@@ -161,12 +161,11 @@ namespace Sharlayan.Core {
                         Stacks = item.Stacks,
                         StatusID = item.StatusID,
                         StatusName = item.StatusName,
-                        TargetName = item.TargetName
+                        TargetName = item.TargetName,
                     });
             }
 
             return cloned;
         }
-        
     }
 }

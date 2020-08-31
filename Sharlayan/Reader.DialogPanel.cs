@@ -16,7 +16,6 @@ namespace Sharlayan
         {
             var canRead = Scanner.Instance.Locations.ContainsKey(Signatures.DialogPanelName);
             canRead = canRead && Scanner.Instance.Locations.ContainsKey(Signatures.DialogPanelText);
-            canRead = canRead && Scanner.Instance.Locations.ContainsKey(Signatures.DialogPanelTextLegth);
 
             if (canRead)
             {
@@ -29,7 +28,6 @@ namespace Sharlayan
         public static bool CanGetCutScene()
         {
             var canRead = Scanner.Instance.Locations.ContainsKey(Signatures.CutsceneText1);
-            //canRead = canRead && Scanner.Instance.Locations.ContainsKey(Signatures.CutsceneText2);
             canRead = canRead && Scanner.Instance.Locations.ContainsKey(Signatures.CutsceneTextLength);
             canRead = canRead && Scanner.Instance.Locations.ContainsKey(Signatures.CutsceneDetector);
 
@@ -86,7 +84,6 @@ namespace Sharlayan
         public static ChatLogItem GetDialogPanel()
         {
             var result = new ChatLogItem();
-            //var result = new ChatLogResult();
 
             if (!CanGetDialogPanel() || !MemoryHandler.Instance.IsAttached)
             {
@@ -101,7 +98,9 @@ namespace Sharlayan
             var dialogPanelNameLengthPointer = IntPtr.Subtract(dialogPanelNamePointer, MemoryHandler.Instance.Structures.DialogPanelPointers.LengtsOffset);
 
             var dialogPanelTextPointer = (IntPtr)Scanner.Instance.Locations[Signatures.DialogPanelText];
-            var dialogPanelTextLegthPointer = (IntPtr)Scanner.Instance.Locations[Signatures.DialogPanelTextLegth];
+            var dialogPanelText = new IntPtr(MemoryHandler.Instance.GetPlatformUInt(dialogPanelTextPointer));
+
+            var dialogPanelTextLegthPointer = IntPtr.Add(dialogPanelTextPointer, MemoryHandler.Instance.Structures.DialogPanelPointers.TextLengthOffset);
 
             int nameLength = (int)MemoryHandler.Instance.GetPlatformInt(dialogPanelNameLengthPointer);
             int textLength = (int)MemoryHandler.Instance.GetPlatformInt(dialogPanelTextLegthPointer);
@@ -114,7 +113,7 @@ namespace Sharlayan
                     nameLength = 128;
 
                 byte[] npcNameBytes = MemoryHandler.Instance.GetByteArray(dialogPanelNamePointer, nameLength);
-                byte[] textBytes = MemoryHandler.Instance.GetByteArray(dialogPanelTextPointer, textLength);
+                byte[] textBytes = MemoryHandler.Instance.GetByteArray(dialogPanelText, textLength);
 
                 nameLength = GetRealTextLength(ref npcNameBytes);
                 textLength = GetRealTextLength(ref textBytes);
@@ -163,35 +162,24 @@ namespace Sharlayan
             try
             {
                 var cutsceneTextPointer1 = (IntPtr)Scanner.Instance.Locations[Signatures.CutsceneText1];
-                //var cutsceneTextPointer2 = (IntPtr)Scanner.Instance.Locations[Signatures.CutsceneText2];
+
                 var cutsceneTextLengthPointer = (IntPtr)Scanner.Instance.Locations[Signatures.CutsceneTextLength];
                 var cutsceneDetector = (IntPtr)Scanner.Instance.Locations[Signatures.CutsceneDetector];
 
                 int textLength = (int)MemoryHandler.Instance.GetPlatformInt(cutsceneTextLengthPointer);
                 int isCutscene = (int)MemoryHandler.Instance.GetPlatformInt(cutsceneDetector);
 
-                //isCutscene = 1;
                 if (textLength < 2 || isCutscene == 1)
                     return result;
 
 
                 byte[] cutsceneBytesRaw1 = MemoryHandler.Instance.GetByteArray(cutsceneTextPointer1, 256);
-                //byte[] cutsceneBytesRaw2 = MemoryHandler.Instance.GetByteArray(cutsceneTextPointer2, 256);
 
                 int textEnd1 = GetRealTextLength(ref cutsceneBytesRaw1);
-                //int textEnd2 = GetRealTextLength(ref cutsceneBytesRaw2);
 
                 if (textEnd1 > 2)
                 {
                     byte[] cutsceneBytes1 = cutsceneBytesRaw1;
-                    //byte[] cutsceneBytes2 = cutsceneBytesRaw2;
-
-                    //Array.Copy(cutsceneBytesRaw1, cutsceneBytes1, textEnd1);
-                    //Array.Copy(cutsceneBytesRaw2, cutsceneBytes2, textEnd2);
-
-                    //string cutText1 = MemoryHandler.Instance.GetStringFromBytes(cutsceneBytes1);
-                    //string cutText2 = MemoryHandler.Instance.GetStringFromBytes(cutsceneBytes2);
-
 
                     Int32 unixTimestamp = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
                     byte[] unixTimestampBytes = BitConverter.GetBytes(unixTimestamp).ToArray();
@@ -201,8 +189,6 @@ namespace Sharlayan
                     npcNameBytes[0] = dotBytes;
                     npcNameBytes[1] = dotBytes;
                     npcNameBytes[2] = dotBytes;
-                    //npcNameBytes[3] = spaceBytes;
-
 
                     List<byte> rawBytesList = new List<byte>(unixTimestampBytes.Length + chatCodeBytes.Length + 1 +
                         npcNameBytes.Length + 1 + cutsceneBytes1.Length);
@@ -226,8 +212,17 @@ namespace Sharlayan
                     }
 
                 }
+
+                if (result?.Line != null)
+                {
+                    if (result.Line.Contains("]") && result.Line.Contains("["))
+                        return new ChatLogItem();
+                }
             }
-            catch (Exception) { }
+            catch (Exception)
+            {
+                result = new ChatLogItem();
+            }
 
             return result;
         }
@@ -246,10 +241,10 @@ namespace Sharlayan
             string str1 = item1.Line.ToString();
             string str2 = item2.Line.ToString();
 
-            if(item1.Line.Contains(":"))
+            if (item1.Line.Contains(":"))
                 str1 = item1.Line.Substring(item1.Line.IndexOf(':'));
 
-            if(item2.Line.Contains(":"))
+            if (item2.Line.Contains(":"))
                 str2 = item2.Line.Substring(item2.Line.IndexOf(':'));
 
             String onlyLetters1 = new String(str1.Where(Char.IsLetter).ToArray());
@@ -277,7 +272,6 @@ namespace Sharlayan
                     {
                         while (Log.TryDequeue(out previusChatLogItem)) ;
 
-                        //result.ChatLogItems.Add(chatLogItem);
                         repetitonFlag = false;
 
                         Log.Enqueue(item);
@@ -287,13 +281,10 @@ namespace Sharlayan
                 {
                     Log.Enqueue(item);
 
-                    //result.ChatLogItems.Add(chatLogItem);
                     repetitonFlag = false;
                 }
             }
 
-            /*if (repetitonFlag)
-                item = null;//*/
             return repetitonFlag;
         }
 
@@ -340,7 +331,7 @@ namespace Sharlayan
                 return result;
             else
             {
-                if (chatLogItem.Line.Length-1 != indexOf)
+                if (chatLogItem.Line.Length - 1 != indexOf)
                     result = false;
             }
 

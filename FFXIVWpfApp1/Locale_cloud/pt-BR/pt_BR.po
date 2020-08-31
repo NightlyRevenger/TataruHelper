@@ -2,10 +2,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tataru-helper\n"
 "POT-Creation-Date: 2019-11-19 19:15+0300\n"
-"PO-Revision-Date: 2020-03-08 04:57\n"
+"PO-Revision-Date: 2020-08-15 15:35\n"
 "Last-Translator: \n"
 "Language-Team: Portuguese, Brazilian\n"
-"Language: pt_BR\n"
+"Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15,8 +15,10 @@ msgstr ""
 "X-Poedit-KeywordsList: GetString;GetPluralString:1,2;GetParticularString:1c,2;GetParticularPluralString:1c,2,3;_;_n:1,2;_p:1c,2;_pn:1c,2,3\\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Crowdin-Project: tataru-helper\n"
+"X-Crowdin-Project-ID: 367037\n"
 "X-Crowdin-Language: pt-BR\n"
 "X-Crowdin-File: en_US.po\n"
+"X-Crowdin-File-ID: 6\n"
 
 #: Utils/LanguagueWrapper.cs:109
 msgid "Settings"
@@ -368,7 +370,7 @@ msgstr ""
 
 #: Utils/LanguagueWrapper.cs:235
 msgid "Click here to update to new version."
-msgstr ""
+msgstr "Clique aqui para atualizar para a nova versão."
 
 #: Utils/LanguagueWrapper.cs:237
 msgid "Tataru Update"
@@ -376,7 +378,7 @@ msgstr ""
 
 #: Utils/LanguagueWrapper.cs:238
 msgid "New Tataru helper version is available. Restart Application to update."
-msgstr ""
+msgstr "Nova versão disponível. Reinicie a aplicação para atualizar."
 
 #: Utils/LanguagueWrapper.cs:240
 msgid "Check updates"
@@ -384,7 +386,7 @@ msgstr "Buscando Atts"
 
 #: Utils/LanguagueWrapper.cs:241
 msgid "Looking for updates..."
-msgstr ""
+msgstr "Procurando por atualizações..."
 
 #: Utils/LanguagueWrapper.cs:242
 msgid "No updates found."

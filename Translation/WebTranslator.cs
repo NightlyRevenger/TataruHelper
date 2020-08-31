@@ -11,7 +11,6 @@ using Translation.Baidu;
 using Translation.Deepl;
 using Translation.Papago;
 using Translation.Google;
-using Translation.Multillect;
 using Translation.Yandex;
 using Translation.Utils;
 
@@ -28,8 +27,6 @@ namespace Translation
 
         GoogleTranslator _GoogleTranslator;
 
-        MultillectTranslator _MultillectTranslator;
-
         YandexTranslator _YandexTranslator;
 
         BaiduTranslater _BaiduTranslator;
@@ -45,7 +42,7 @@ namespace Translation
 
         ILog _Logger;
 
-        string _TransaltionSettingsPath= "TranslationSysSettings.json";
+        string _TransaltionSettingsPath = "TranslationSysSettings.json";
 
         public WebTranslator(ILog logger)
         {
@@ -59,8 +56,6 @@ namespace Translation
             }
 
             transaltionCache = new List<KeyValuePair<TranslationRequest, string>>(GlobalTranslationSettings.TranslationCacheSize);
-
-            _MultillectTranslator = new MultillectTranslator(_Logger);
 
             _GoogleTranslator = new GoogleTranslator(_Logger);
 
@@ -97,6 +92,7 @@ namespace Translation
 
         public string Translate(string inSentence, TranslationEngine translationEngine, TranslatorLanguague fromLang, TranslatorLanguague toLang)
         {
+
             if (fromLang.SystemName == "Auto")
             {
                 if (translationEngine.EngineName != TranslationEngineName.GoogleTranslate)
@@ -112,6 +108,9 @@ namespace Translation
             }
 
             if (fromLang.SystemName == toLang.SystemName)
+                return inSentence;
+
+            if (inSentence.All(x => !char.IsLetter(x)))
                 return inSentence;
 
             switch (toLang.SystemName)
@@ -149,11 +148,6 @@ namespace Translation
                         break;
                     }
 
-                case TranslationEngineName.Multillect:
-                    {
-                        result = MultillectTranslate(inSentence, fromLangCode, toLangCode);
-                        break;
-                    }
                 case TranslationEngineName.DeepL:
                     {
                         result = DeeplTranslate(inSentence, fromLangCode, toLangCode);
@@ -188,8 +182,8 @@ namespace Translation
                 if (cachedResult.Equals(defaultCachedResult))
                     transaltionCache.Add(new KeyValuePair<TranslationRequest, string>(translationRequest, result));
 
-                if (transaltionCache.Count > 180)
-                    transaltionCache.RemoveRange(0, 50);
+                if (transaltionCache.Count > GlobalTranslationSettings.TranslationCacheSize - 10)
+                    transaltionCache.RemoveRange(0, GlobalTranslationSettings.TranslationCacheSize / 2);
 
             }
 
@@ -204,22 +198,24 @@ namespace Translation
                 var tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(glTrPath, _Logger);
                 tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.GoogleTranslate, tmpList, 9));
 
+                /*
                 tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(MultTrPath, _Logger);
-                tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Multillect, tmpList, 1));
+                tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Multillect, tmpList, 1));//*/
 
                 tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(deepPath, _Logger);
                 tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.DeepL, tmpList, 10));
 
+                /*
                 tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(YaTrPath, _Logger);
-                tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Yandex, tmpList, 4));
+                tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Yandex, tmpList, 8));//*/
 
                 tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(PapagoTrPath, _Logger);
-                tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Papago, tmpList, 7));
+                tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Papago, tmpList, 6));
 
                 tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(baiduTrPath, _Logger);
                 tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Baidu, tmpList, 3));
 
-                tmptranslationEngines = tmptranslationEngines.OrderBy(x => x.Quality * (-1)).ToList();
+                tmptranslationEngines = tmptranslationEngines.OrderByDescending(x => x.Quality).ToList();
 
 
                 _TranslationEngines = new ReadOnlyCollection<TranslationEngine>(tmptranslationEngines);
@@ -237,21 +233,6 @@ namespace Translation
             try
             {
                 result = _GoogleTranslator.Translate(sentence, inLang, outLang);
-            }
-            catch (Exception e)
-            {
-                _Logger.WriteLog(Convert.ToString(e));
-            }
-
-            return result;
-        }
-
-        private string MultillectTranslate(string sentence, string inLang, string outLang)
-        {
-            string result = String.Empty;
-            try
-            {
-                result = _MultillectTranslator.Translate(sentence, inLang, outLang);
             }
             catch (Exception e)
             {

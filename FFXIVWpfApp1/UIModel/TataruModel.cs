@@ -77,6 +77,8 @@ namespace FFXIVTataruHelper
 
         List<ChatWindow> _ChatWindows;
 
+        MainWindow _MainWindow;
+
         TataruViewModel _TataruViewModel;
 
         TataruUIModel _TataruUIModel;
@@ -100,9 +102,11 @@ namespace FFXIVTataruHelper
 
         #endregion
 
-        public TataruModel()
+        public TataruModel(MainWindow mainWindow)
         {
             CmdArgsStatus.LoadArgs();
+
+            _MainWindow = mainWindow;
 
             _PropertyBinders = new List<PropertyBinder>();
             _ChatWindows = new List<ChatWindow>();
@@ -175,7 +179,6 @@ namespace FFXIVTataruHelper
                 }
 
                 var userSettings = Helper.LoadJsonData<UserSettings>(GlobalSettings.Settings);
-
                 LoadOldSettings(userSettings);
 
                 if (userSettings == null)
@@ -183,6 +186,8 @@ namespace FFXIVTataruHelper
                     userSettings = new UserSettings();
                     Logger.WriteLog("userSettings == null");
                 }
+
+                LoadMissingChatCodes(userSettings);
 
                 for (int i = 0; i < userSettings.ChatWindows.Count; i++)
                 {
@@ -426,7 +431,7 @@ namespace FFXIVTataruHelper
                                 {
                                     ChatWindowViewModel newElem = ea.ChangedElemnt;
 
-                                    _ChatWindows.Add(new ChatWindow(this, newElem));
+                                    _ChatWindows.Add(new ChatWindow(this, newElem, _MainWindow));
                                     _ChatWindows[_ChatWindows.Count - 1].Show();
                                 });
                             }
@@ -463,6 +468,8 @@ namespace FFXIVTataruHelper
             //binder.AddPropertyCouple(new PropertyCouple<bool, bool>("IsHiddenByUser", "IsHiddenByUser"));
 
             binder.AddPropertyCouple(new PropertyCouple<System.Windows.Media.Color, System.Windows.Media.Color>("BackGroundColor", "BackGroundColor"));
+
+            binder.AddPropertyCouple(new PropertyCouple<bool, bool>("ShowTimestamps", "ShowTimestamps"));
 
             binder.AddPropertyCouple(new PropertyCouple<System.Drawing.RectangleD, System.Drawing.RectangleD>("ChatWindowRectangle", "ChatWindowRectangle"));
 
@@ -647,6 +654,28 @@ namespace FFXIVTataruHelper
             });
         }
 
+        void LoadMissingChatCodes(UserSettings userSettings)
+        {
+            foreach (var win in userSettings.ChatWindows)
+            {
+                if (win.ChatCodes.Count != _ChatProcessor.AllChatCodes.Count)
+                {
+                    var newUserChatCodes = new List<ChatCodeViewModel>(_ChatProcessor.AllChatCodes.Count);
+
+                    foreach (var code in _ChatProcessor.AllChatCodes)
+                    {
+                        var userCode = win.ChatCodes.FirstOrDefault(x => x.Code == code.ChatCode);
+                        bool isChecked = false;
+                        if (userCode != null)
+                            isChecked = userCode.IsChecked;
+
+                        newUserChatCodes.Add(new ChatCodeViewModel(code.ChatCode, code.Name, code.Color, isChecked));
+                    }
+
+                    win.ChatCodes = newUserChatCodes;
+                }
+            }
+        }
         void LoadOldSettings(UserSettings userSettings)
         {
             if (!File.Exists(GlobalSettings.OldSettings))

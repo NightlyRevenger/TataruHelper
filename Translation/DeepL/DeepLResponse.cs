@@ -1,6 +1,7 @@
 ﻿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
+using Newtonsoft.Json;
 using System.Collections.Generic;
 
 namespace Translation.Deepl
@@ -9,36 +10,62 @@ namespace Translation.Deepl
     {
         public class DeepLTranslationResponse
         {
-            public int id { get; set; }
-            public string jsonrpc { get; set; }
-            public Result result { get; set; }
+            /*
+            [JsonProperty("jsonrpc")]
+            public string Jsonrpc { get; set; }
 
-            public class Beam
+            [JsonProperty("id")]
+            public long Id { get; set; }//*/
+
+            [JsonProperty("result")]
+            public Result ResponseResult { get; set; }
+
+            public partial class Result
             {
-                public int num_symbols { get; set; }
-                public string postprocessed_sentence { get; set; }
-                public double score { get; set; }
-                public double totalLogProb { get; set; }
+                [JsonProperty("translations")]
+                public List<Translation> Translations { get; set; }
+
+                /*
+                [JsonProperty("target_lang")]
+                public string TargetLang { get; set; }
+
+                [JsonProperty("source_lang")]
+                public string SourceLang { get; set; }
+
+                [JsonProperty("source_lang_is_confident")]
+                public bool SourceLangIsConfident { get; set; }
+
+                [JsonProperty("timestamp")]
+                public long Timestamp { get; set; }
+
+                [JsonProperty("date")]
+                public long Date { get; set; }//*/
             }
 
-            public class Translation
+            public partial class Translation
             {
-                public List<Beam> beams { get; set; }
-                public string quality { get; set; }
-                public long timeAfterPreprocessing { get; set; }
-                public long timeReceivedFromEndpoint { get; set; }
-                public long timeSentToEndpoint { get; set; }
-                public long total_time_endpoint { get; set; }
+                [JsonProperty("beams")]
+                public List<Beam> Beams { get; set; }
+
+                /*
+                [JsonProperty("quality")]
+                public string Quality { get; set; }//*/
             }
 
-            public class Result
+            public partial class Beam
             {
-                public string date { get; set; }
-                public string source_lang { get; set; }
-                public int source_lang_is_confident { get; set; }
-                public string target_lang { get; set; }
-                public long timestamp { get; set; }
-                public List<Translation> translations { get; set; }
+                [JsonProperty("postprocessed_sentence")]
+                public string PostprocessedSentence { get; set; }
+
+                /*
+                [JsonProperty("num_symbols")]
+                public long NumSymbols { get; set; }
+
+                [JsonProperty("score")]
+                public double Score { get; set; }
+
+                [JsonProperty("totalLogProb")]
+                public double TotalLogProb { get; set; }//*/
             }
         }
 

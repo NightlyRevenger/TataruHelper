@@ -5,7 +5,7 @@
 
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="PartyMember.cs" company="SyndicatedLife">
-//   Copyright(c) 2018 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (http://syndicated.life/)
+//   Copyright© 2007 - 2020 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (https://syndicated.life/)
 //   Licensed under the MIT license. See LICENSE.md in the solution root for full license information.
 // </copyright>
 // <summary>
@@ -31,7 +31,7 @@ namespace Sharlayan.Core {
                     new EnmityItem {
                         Enmity = item.Enmity,
                         ID = item.ID,
-                        Name = item.Name
+                        Name = item.Name,
                     });
             }
 
@@ -44,7 +44,7 @@ namespace Sharlayan.Core {
                         Stacks = item.Stacks,
                         StatusID = item.StatusID,
                         StatusName = item.StatusName,
-                        TargetName = item.TargetName
+                        TargetName = item.TargetName,
                     });
             }
 

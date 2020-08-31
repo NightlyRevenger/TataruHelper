@@ -5,7 +5,7 @@
 
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="PartyMemberResolver.cs" company="SyndicatedLife">
-//   Copyright(c) 2018 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (http://syndicated.life/)
+//   Copyright© 2007 - 2020 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (https://syndicated.life/)
 //   Licensed under the MIT license. See LICENSE.md in the solution root for full license information.
 // </copyright>
 // <summary>
@@ -17,6 +17,7 @@ namespace Sharlayan.Utilities {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using NLog;
 
     using Sharlayan.Core;
@@ -42,7 +43,7 @@ namespace Sharlayan.Utilities {
                     HPMax = actorItem.HPMax,
                     MPCurrent = actorItem.MPCurrent,
                     MPMax = actorItem.MPMax,
-                    HitBoxRadius = actorItem.HitBoxRadius
+                    HitBoxRadius = actorItem.HitBoxRadius,
                 };
                 entry.StatusItems.AddRange(actorItem.StatusItems);
                 CleanXPValue(ref entry);
@@ -76,8 +77,7 @@ namespace Sharlayan.Utilities {
                     List<StatusItem> foundStatuses = new List<StatusItem>();
 
                     Buffer.BlockCopy(source, defaultStatusEffectOffset, statusesSource, 0, limit * statusSize);
-                    for (var i = 0; i < limit; i++)
-                    {
+                    for (var i = 0; i < limit; i++) {
                         bool isNewStatus = false;
 
                         byte[] statusSource = new byte[statusSize];
@@ -86,11 +86,9 @@ namespace Sharlayan.Utilities {
                         short StatusID = BitConverter.TryToInt16(statusSource, MemoryHandler.Instance.Structures.StatusItem.StatusID);
                         uint CasterID = BitConverter.TryToUInt32(statusSource, MemoryHandler.Instance.Structures.StatusItem.CasterID);
 
-                        
                         var statusEntry = entry.StatusItems.FirstOrDefault(x => x.CasterID == CasterID && x.StatusID == StatusID);
 
-                        if (statusEntry == null)
-                        {
+                        if (statusEntry == null) {
                             statusEntry = new StatusItem();
                             isNewStatus = true;
                         }
@@ -104,9 +102,7 @@ namespace Sharlayan.Utilities {
 
                         foundStatuses.Add(statusEntry);
 
-
-                        try
-                        {
+                        try {
                             ActorItem pc = PCWorkerDelegate.GetActorItem(statusEntry.CasterID);
                             ActorItem npc = NPCWorkerDelegate.GetActorItem(statusEntry.CasterID);
                             ActorItem monster = MonsterWorkerDelegate.GetActorItem(statusEntry.CasterID);
@@ -146,18 +142,16 @@ namespace Sharlayan.Utilities {
                             statusEntry.StatusName = "UNKNOWN";
                         }
 
-                        if (statusEntry.IsValid())
-                        {
-                            if (isNewStatus)
-                            {
+                        if (statusEntry.IsValid()) {
+                            if (isNewStatus) {
                                 entry.StatusItems.Add(statusEntry);
                             }
+
                             foundStatuses.Add(statusEntry);
                         }
                     }
 
                     entry.StatusItems.RemoveAll(x => !foundStatuses.Contains(x));
-
                 }
                 catch (Exception ex) {
                     MemoryHandler.Instance.RaiseException(Logger, ex, true);

@@ -15,9 +15,9 @@ namespace Translation.Baidu
 
         bool _IsAvaliable = false;
 
-        string ResourceFilePath = string.Empty;
+        string _ResourceFilePath = string.Empty;
 
-        Jurassic.ScriptEngine BaiduEncoderEngine = null;
+        Jurassic.ScriptEngine _BaiduEncoderEngine = null;
 
         ILog _Logger;
 
@@ -26,13 +26,13 @@ namespace Translation.Baidu
             _Logger = logger;
             _IsAvaliable = false;
 
-            ResourceFilePath = resourceFilePath;
+            _ResourceFilePath = resourceFilePath;
             Init();
         }
 
         private void Init()
         {
-            var BaiduEncoderResourceBase64 = File.ReadAllText(ResourceFilePath);
+            var BaiduEncoderResourceBase64 = File.ReadAllText(_ResourceFilePath);
 
             bool IsHashCorrect = false;
 
@@ -48,8 +48,8 @@ namespace Translation.Baidu
             {
                 string BaiduEncoderJS = Helper.Base64Decode(BaiduEncoderResourceBase64);
 
-                BaiduEncoderEngine = new Jurassic.ScriptEngine();
-                BaiduEncoderEngine.Evaluate(BaiduEncoderJS);
+                _BaiduEncoderEngine = new Jurassic.ScriptEngine();
+                _BaiduEncoderEngine.Evaluate(BaiduEncoderJS);
             }
             catch (Exception e)
             {
@@ -65,11 +65,11 @@ namespace Translation.Baidu
         {
             string reqv = string.Empty;
 
-            if(_IsAvaliable && BaiduEncoderEngine!=null)
+            if(_IsAvaliable && _BaiduEncoderEngine!=null)
             {
                 try
                 {
-                    string sign = BaiduEncoderEngine.CallGlobalFunction<string>("token", sentence, gtk);
+                    string sign = _BaiduEncoderEngine.CallGlobalFunction<string>("token", sentence, gtk);
 
                     BaiduRequest request = new BaiduRequest
                     {

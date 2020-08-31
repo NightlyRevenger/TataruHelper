@@ -115,6 +115,12 @@ namespace FFXIVTataruHelper
             patreonWin.Resources["PatronsThankYou"] = this.Resources["PatronsThankYou"];
         }
 
+        private void Discord_Click(object sender, RoutedEventArgs e)
+        {
+            var uri = new Uri("https://discord.gg/bSrpbd9");
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(uri.AbsoluteUri));
+        }
+
         private void HideToTray_Changed(object sender, RoutedEventArgs e)
         {
             var isHideToTray = (bool)((CheckBox)sender).IsChecked;
@@ -143,6 +149,12 @@ namespace FFXIVTataruHelper
             _Updater.CheckAndInstallUpdates(CmdArgsStatus.PreRelease);
         }
 
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
+        }
+
         #endregion
 
         #region **WindowEvents
@@ -159,7 +171,8 @@ namespace FFXIVTataruHelper
             {
                 try
                 {
-                    _TataruModel = new TataruModel();
+                    _TataruModel = new TataruModel(this);
+
                     await _TataruModel.InitializeComponent();
 
                     _TataruUIModel = _TataruModel.TataruUIModel;
@@ -189,7 +202,6 @@ namespace FFXIVTataruHelper
 
 #if DEBUG
 #else
-                
                 Task.Run(() =>
                 {
 
@@ -510,7 +522,7 @@ namespace FFXIVTataruHelper
             ShowSettingsWindow();
         }
 
-        private void ShowSettingsWindow()
+        public void ShowSettingsWindow()
         {
             Helper.Unminimize(this);
 
@@ -565,7 +577,7 @@ namespace FFXIVTataruHelper
 
         private void Window_Closed(object sender, EventArgs e)
         {
-            _LogWriter.Stop();
+            _LogWriter?.Stop();
         }
 
         public void ShutDown()

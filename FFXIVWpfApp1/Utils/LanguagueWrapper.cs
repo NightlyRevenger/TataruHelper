@@ -21,7 +21,9 @@ namespace FFXIVTataruHelper
             Polish = 4,
             Korean = 5,
             PortugueseBR = 6,
-
+            Catalan = 7,
+            Italian = 8,
+            Ukrainian = 9,
         };
 
         public Languages CurrentLanguage
@@ -79,6 +81,15 @@ namespace FFXIVTataruHelper
 
                     case Languages.PortugueseBR:
                         path += GlobalSettings.pt_BR_LanguaguePath;
+                        break;
+                    case Languages.Catalan:
+                        path += GlobalSettings.ca_Es_LanguaguePath;
+                        break;
+                    case Languages.Italian:
+                        path += GlobalSettings.it_IT_LanguaguePath;
+                        break;
+                    case Languages.Ukrainian:
+                        path += GlobalSettings.uk_UA_LanguaguePath;
                         break;
 
                     default:

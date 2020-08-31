@@ -15,7 +15,7 @@ namespace Translation.Baidu
         string _Gtk;
 
         BaiduReqEncoder _BaiduEncoder;
-        WebApi.WebReader _BaiduWebRead;
+        HttpUtilities.HttpReader _BaiduWebRead;
 
         bool _IsInitialised = false;
         bool _InitializationFailed = false;
@@ -25,7 +25,7 @@ namespace Translation.Baidu
         public BaiduTranslater(ILog logger)
         {
             _Logger = logger;
-            _BaiduWebRead = new WebApi.WebReader(@"fanyi.baidu.com", _Logger);
+            _BaiduWebRead = new HttpUtilities.HttpReader(@"fanyi.baidu.com", new HttpUtils.HttpILogWrapper(_Logger));
 
             InitTranslator();
         }
@@ -43,14 +43,15 @@ namespace Translation.Baidu
 
                     string url = "https://fanyi.baidu.com/";
 
-                    var tmpResult = _BaiduWebRead.GetWebData(url, WebApi.WebReader.WebMethods.GET);
+                    var tmpResult = _BaiduWebRead.RequestWebData(url, HttpUtilities.HttpMethods.GET);
 
-                    tmpResult = _BaiduWebRead.GetWebDataAndSetCookie(url, WebApi.WebReader.WebMethods.GET);
+                    tmpResult = _BaiduWebRead.RequestWebData(url, HttpUtilities.HttpMethods.GET, true);
+
                     Regex tokenRegex = new Regex("token: '(.*)'");
                     Regex gtkRegex = new Regex("gtk = '(.*)'");
 
-                    Match tokenMatch = tokenRegex.Match(tmpResult);
-                    Match gtkMatch = gtkRegex.Match(tmpResult);
+                    Match tokenMatch = tokenRegex.Match(tmpResult.Body);
+                    Match gtkMatch = gtkRegex.Match(tmpResult.Body);
 
                     if (tokenMatch.Success && gtkMatch.Success)
                     {
@@ -93,13 +94,17 @@ namespace Translation.Baidu
                     {
                         string reqv = _BaiduEncoder.Encode(sentence, inLang, outLang, _Gtk, _Token);
 
-                        var tmpResponse = _BaiduWebRead.GetWebData(serviceUrl, WebApi.WebReader.WebMethods.POST, reqv);
+                        var tmpResponse = _BaiduWebRead.RequestWebData(serviceUrl, HttpUtilities.HttpMethods.POST, reqv);
 
-                        var unescaped = Regex.Unescape(tmpResponse);
+                        var escapedResult = JsonConvert.DeserializeObject<BaiduResponse>(tmpResponse.Body);
+
+                        translationResult = Regex.Unescape(escapedResult.TransResult.Data[0].Dst);//*/
+                        /*s
+                        var unescaped = Regex.Unescape(tmpResponse.Body);
 
                         var result = JsonConvert.DeserializeObject<BaiduResponse>(unescaped);
 
-                        translationResult = result.trans_result.data[0].dst;
+                        translationResult = result.TransResult.Data[0].Dst;//*/
                     }
                     catch (Exception e)
                     {

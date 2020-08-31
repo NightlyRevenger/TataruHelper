@@ -5,7 +5,7 @@
 
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="CurrentPlayer.cs" company="SyndicatedLife">
-//   Copyright(c) 2018 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (http://syndicated.life/)
+//   Copyright© 2007 - 2020 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (https://syndicated.life/)
 //   Licensed under the MIT license. See LICENSE.md in the solution root for full license information.
 // </copyright>
 // <summary>
@@ -49,7 +49,13 @@ namespace Sharlayan.Models.Structures {
 
         public int BaseStrength { get; set; }
 
+        public int BaseSubstat { get; set; }
+
         public int BaseVitality { get; set; }
+
+        public int BLU { get; set; }
+
+        public int BLU_CurrentEXP { get; set; }
 
         public int BluntResistance { get; set; }
 
@@ -89,6 +95,10 @@ namespace Sharlayan.Models.Structures {
 
         public int DirectHit { get; set; }
 
+        public int DNC { get; set; }
+
+        public int DNC_CurrentEXP { get; set; }
+
         public int DRK { get; set; }
 
         public int DRK_CurrentEXP { get; set; }
@@ -106,6 +116,10 @@ namespace Sharlayan.Models.Structures {
         public int GLD { get; set; }
 
         public int GLD_CurrentEXP { get; set; }
+
+        public int GNB { get; set; }
+
+        public int GNB_CurrentEXP { get; set; }
 
         public int GPMax { get; set; }
 

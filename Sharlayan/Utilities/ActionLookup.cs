@@ -1,11 +1,11 @@
-ï»¿// This is an open source non-commercial project. Dear PVS-Studio, please check it.
+// This is an open source non-commercial project. Dear PVS-Studio, please check it.
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 
 
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ActionLookup.cs" company="SyndicatedLife">
-//   Copyright(c) 2018 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (http://syndicated.life/)
+//   Copyright© 2007 - 2020 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (https://syndicated.life/)
 //   Licensed under the MIT license. See LICENSE.md in the solution root for full license information.
 // </copyright>
 // <summary>
@@ -31,8 +31,8 @@ namespace Sharlayan.Utilities {
                 French = "???",
                 German = "???",
                 Japanese = "???",
-                Korean = "???"
-            }
+                Korean = "???",
+            },
         };
 
         private static bool Loading;

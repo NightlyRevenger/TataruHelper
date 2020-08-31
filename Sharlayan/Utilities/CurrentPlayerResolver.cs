@@ -5,7 +5,7 @@
 
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="CurrentPlayerResolver.cs" company="SyndicatedLife">
-//   Copyright(c) 2018 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (http://syndicated.life/)
+//   Copyright© 2007 - 2020 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (https://syndicated.life/)
 //   Licensed under the MIT license. See LICENSE.md in the solution root for full license information.
 // </copyright>
 // <summary>
@@ -67,6 +67,11 @@ namespace Sharlayan.Utilities {
                         entry.SAM = source[MemoryHandler.Instance.Structures.CurrentPlayer.SAM];
                         entry.RDM = source[MemoryHandler.Instance.Structures.CurrentPlayer.RDM];
 
+                        entry.BLU = source[MemoryHandler.Instance.Structures.CurrentPlayer.BLU];
+
+                        entry.DNC = source[MemoryHandler.Instance.Structures.CurrentPlayer.DNC];
+                        entry.GNB = source[MemoryHandler.Instance.Structures.CurrentPlayer.GNB];
+
                         #endregion
 
                         #region Current Experience
@@ -102,6 +107,11 @@ namespace Sharlayan.Utilities {
                         entry.SAM_CurrentEXP = BitConverter.TryToInt32(source, MemoryHandler.Instance.Structures.CurrentPlayer.SAM_CurrentEXP);
                         entry.RDM_CurrentEXP = BitConverter.TryToInt32(source, MemoryHandler.Instance.Structures.CurrentPlayer.RDM_CurrentEXP);
 
+                        entry.BLU_CurrentEXP = BitConverter.TryToInt32(source, MemoryHandler.Instance.Structures.CurrentPlayer.BLU_CurrentEXP);
+
+                        entry.DNC_CurrentEXP = BitConverter.TryToInt32(source, MemoryHandler.Instance.Structures.CurrentPlayer.DNC_CurrentEXP);
+                        entry.GNB_CurrentEXP = BitConverter.TryToInt32(source, MemoryHandler.Instance.Structures.CurrentPlayer.GNB_CurrentEXP);
+
                         #endregion
 
                         #region Base Stats
@@ -112,6 +122,7 @@ namespace Sharlayan.Utilities {
                         entry.BaseIntelligence = BitConverter.TryToInt16(source, MemoryHandler.Instance.Structures.CurrentPlayer.BaseIntelligence);
                         entry.BaseMind = BitConverter.TryToInt16(source, MemoryHandler.Instance.Structures.CurrentPlayer.BaseMind);
                         entry.BasePiety = BitConverter.TryToInt16(source, MemoryHandler.Instance.Structures.CurrentPlayer.BasePiety);
+                        entry.BaseSubstat = BitConverter.TryToInt16(source, MemoryHandler.Instance.Structures.CurrentPlayer.BaseSubstat);
 
                         #endregion
 

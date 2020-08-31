@@ -223,8 +223,6 @@ namespace FFXIVTataruHelper
 
             var tmpChatWindows = new List<ChatWindowViewModelSettings>(userSettings.ChatWindows);
 
-            TataruComponentModel.AsyncBindingList<string> bs = new TataruComponentModel.AsyncBindingList<string>();
-
             UiWindow.Window.UIThread(() =>
             {
                 foreach (var win in tmpChatWindows)

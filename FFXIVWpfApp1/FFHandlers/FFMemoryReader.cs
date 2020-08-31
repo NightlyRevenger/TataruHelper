@@ -487,6 +487,10 @@ namespace FFXIVTataruHelper.FFHandlers
             {
                 await Task.Delay(2000);
 
+                /*
+                _FFxivChat.Enqueue(new FFChatMsg(@"_11_ Inoshishi Bugyo: Für immer mit dieser Täuschung leben zu können  Endkampf zuerst die Augen der Wahrheit an sich reißen und schließlich die beiden Furien töten. Im Sterben sagt Alekto dem Spartaner voraus, dass ihr Tod nichts ändern und ihn nicht befreien werde. ", "003D", DateTime.Now));
+                _FFxivChat.Enqueue(new FFChatMsg(@"_12_ Inoshishi Bugyo: to live forever with this deception final battle first to grab the eyes of the truth and finally kill the two Furies. In dying, Alekto predicts to the Spartan that her death will not change anything and will not free him. ", "003D", DateTime.Now));//*/
+               
                 _FFxivChat.Enqueue(new FFChatMsg(@"_1_ Dakshina:Once you have finished the task, feel free to disssmount your marid.", "003D", DateTime.Now));
                 _FFxivChat.Enqueue(new FFChatMsg(@"_2_ Dakshina:Once you have finished the task, feel free to disssmount your marid. It will make its own way back here.", "003D", DateTime.Now));
                 _FFxivChat.Enqueue(new FFChatMsg(@"_3_ Inoshishi Bugyo:But...the boar will not be next year's totem animal... <sigh>", "", DateTime.Now));
@@ -496,7 +500,9 @@ namespace FFXIVTataruHelper.FFHandlers
                 _FFxivChat.Enqueue(new FFChatMsg(@"_7_ Inoshishi Bugyo:But...the boar will not be next year's totem animal... <sigh>", "003D", DateTime.Now));
                 _FFxivChat.Enqueue(new FFChatMsg(@"_8_ Dakshina:Once you have finished the task, feel free to disssmount your marid. It will make its own way back here.", "", DateTime.Now));
                 _FFxivChat.Enqueue(new FFChatMsg(@"_9_ Lydirlona:Mayhap you have heard that Rowena's House of Splendors is expanding its operations. I am proud to say that these rumors are true.", "003D", DateTime.Now));
-                _FFxivChat.Enqueue(new FFChatMsg(@"_10_ Inoshishi Bugyo:But...the boar will not be next year's totem animal... <sigh>", "003D", DateTime.Now));//*/
+                _FFxivChat.Enqueue(new FFChatMsg(@"_10_ Inoshishi Bugyo:But...the boar will not be next year's totem animal... <sigh>", "003D", DateTime.Now));
+                _FFxivChat.Enqueue(new FFChatMsg(@"_11_ Inoshishi Bugyo: Für immer mit dieser Täuschung leben zu können  Endkampf zuerst die Augen der Wahrheit an sich reißen und schließlich die beiden Furien töten. Im Sterben sagt Alekto dem Spartaner voraus, dass ihr Tod nichts ändern und ihn nicht befreien werde. ", "003D", DateTime.Now));
+                _FFxivChat.Enqueue(new FFChatMsg(@"_12_ Inoshishi Bugyo: to live forever with this deception final battle first to grab the eyes of the truth and finally kill the two Furies. In dying, Alekto predicts to the Spartan that her death will not change anything and will not free him. ", "003D", DateTime.Now));
                 _FFxivChat.Enqueue(new FFChatMsg(@"Conrad:Ahhh, don't fret over that. You're not the first person to take up arms against the Empire under a false name. We'd do the same if we had any sense....My condolences for your loss, child.", "003D", DateTime.Now));
                 _FFxivChat.Enqueue(new FFChatMsg(@"Conrad:My comrades and I must confer on your proposal. A moment, if you please...", "003D", DateTime.Now));
                 _FFxivChat.Enqueue(new FFChatMsg(@"Conrad:Allow me to welcome you once more to Rhalgr's Reach, our humble headquarters.", "003D", DateTime.Now));

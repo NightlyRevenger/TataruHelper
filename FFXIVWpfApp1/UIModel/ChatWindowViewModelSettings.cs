@@ -52,6 +52,8 @@ namespace FFXIVTataruHelper.UIModel
 
         private List<ChatCodeViewModel> _chatCodes;
 
+        private bool _ShowTimestamps;
+
         private HotKeyCombination _showHideChatKeys;
         private HotKeyCombination _clickThoughtChatKeys;
         private HotKeyCombination _clearChatKeys;
@@ -194,6 +196,18 @@ namespace FFXIVTataruHelper.UIModel
                 if (_backGroundColor == value) return;
 
                 _backGroundColor = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public bool ShowTimestamps
+        {
+            get => _ShowTimestamps;
+            set
+            {
+                if (_ShowTimestamps == value) return;
+
+                _ShowTimestamps = value;
                 OnPropertyChanged();
             }
         }
@@ -389,6 +403,8 @@ namespace FFXIVTataruHelper.UIModel
             ChatWindowRectangle = settings.ChatWindowRectangle;
 
             ChatCodes = settings.ChatCodes.Select(code => new ChatCodeViewModel(code)).ToList();
+
+            ShowTimestamps = settings.ShowTimestamps;
 
             ShowHideChatKeys = new HotKeyCombination(settings.ShowHideChatKeys);
             ClickThoughtChatKeys = new HotKeyCombination(settings.ClickThoughtChatKeys);

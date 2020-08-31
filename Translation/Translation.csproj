@@ -40,8 +40,8 @@
     <Reference Include="IvanAkcheurov.NTextCat.Lib, Version=0.2.1.1, Culture=neutral, PublicKeyToken=a61413de1d13f8fc, processorArchitecture=MSIL">
       <HintPath>..\packages\IvanAkcheurov.NTextCat.Lib.0.2.1.1\lib\net40\IvanAkcheurov.NTextCat.Lib.dll</HintPath>
     </Reference>
-    <Reference Include="Jurassic, Version=3.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Jurassic.3.0.0\lib\net45\Jurassic.dll</HintPath>
+    <Reference Include="Jurassic, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Jurassic.3.1.0\lib\net45\Jurassic.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -66,10 +66,9 @@
     <Compile Include="DeepL\DeepLTranslator.cs" />
     <Compile Include="GlobalTranslationSettings.cs" />
     <Compile Include="Google\GoogleTranslator.cs" />
+    <Compile Include="HttpUtils\HttpILogWrapper.cs" />
     <Compile Include="Utils\Helper.cs" />
     <Compile Include="ILog.cs" />
-    <Compile Include="Multillect\MultillectResponse.cs" />
-    <Compile Include="Multillect\MultillectTranslator.cs" />
     <Compile Include="Papago\PapagoDetectLanguageRequest.cs" />
     <Compile Include="Papago\PapagoDetectLanguageResponse.cs" />
     <Compile Include="Papago\PapagoEncoder.cs" />
@@ -85,7 +84,12 @@
     <Compile Include="HttpUtils\WebApi.cs" />
     <Compile Include="Utils\LanguageDetector.cs" />
     <Compile Include="WebTranslator.cs" />
+    <Compile Include="Yandex\TranslationResponse.cs" />
+    <Compile Include="Yandex\YandexAuthContainer.cs" />
+    <Compile Include="Yandex\YandexRequest.cs" />
+    <Compile Include="Yandex\YandexRequestsEncoder.cs" />
     <Compile Include="Yandex\YandexResponse.cs" />
+    <Compile Include="Yandex\YandexSession.cs" />
     <Compile Include="Yandex\YandexTranslator.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -102,13 +106,17 @@
     <None Include="TranslationResources\GoogleTranslateLanguages.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="TranslationResources\MultillectTranslateLanguages.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="TranslationResources\PapagoEncoder">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TranslationResources\PapagoLanguages.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TranslationResources\YandexAuth">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TranslationResources\YandexAuth.json" />
+    <None Include="TranslationResources\YandexEncoder">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TranslationResources\YandexTranslateLanguages.json">
@@ -116,11 +124,18 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TranslationResources\BaiduEncoder.js" />
+    <None Include="TranslationResources\BaiduEncoder.js" />
+    <None Include="TranslationResources\YandexEncoder.js" />
     <None Include="TranslationResources\Core14.profile.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <Content Include="TranslationResources\PapagoEncoder.js" />
+    <None Include="TranslationResources\PapagoEncoder.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HttpUtilities\HttpUtilities.csproj">
+      <Project>{9ee1301d-a646-4dda-9c62-36e901e7603b}</Project>
+      <Name>HttpUtilities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

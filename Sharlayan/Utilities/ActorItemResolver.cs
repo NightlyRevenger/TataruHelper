@@ -5,7 +5,7 @@
 
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ActorItemResolver.cs" company="SyndicatedLife">
-//   Copyright(c) 2018 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (http://syndicated.life/)
+//   Copyright© 2007 - 2020 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (https://syndicated.life/)
 //   Licensed under the MIT license. See LICENSE.md in the solution root for full license information.
 // </copyright>
 // <summary>
@@ -15,20 +15,19 @@
 
 namespace Sharlayan.Utilities {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
     using NLog;
 
     using Sharlayan.Core;
     using Sharlayan.Core.Enums;
     using Sharlayan.Delegates;
-    using System.Linq;
-    using System.Collections.Generic;
 
     internal static class ActorItemResolver {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        
-        public static ActorItem ResolveActorFromBytes(byte[] source, bool isCurrentUser = false, ActorItem entry = null)
-        {
+
+        public static ActorItem ResolveActorFromBytes(byte[] source, bool isCurrentUser = false, ActorItem entry = null) {
             entry = entry ?? new ActorItem();
             var defaultBaseOffset = MemoryHandler.Instance.Structures.ActorItem.DefaultBaseOffset;
             var defaultStatOffset = MemoryHandler.Instance.Structures.ActorItem.DefaultStatOffset;
@@ -89,7 +88,7 @@ namespace Sharlayan.Utilities {
                 entry.HPCurrent = BitConverter.TryToInt32(source, MemoryHandler.Instance.Structures.ActorItem.HPCurrent + defaultStatOffset);
                 entry.HPMax = BitConverter.TryToInt32(source, MemoryHandler.Instance.Structures.ActorItem.HPMax + defaultStatOffset);
                 entry.MPCurrent = BitConverter.TryToInt32(source, MemoryHandler.Instance.Structures.ActorItem.MPCurrent + defaultStatOffset);
-                entry.MPMax = BitConverter.TryToInt32(source, MemoryHandler.Instance.Structures.ActorItem.MPMax + defaultStatOffset);
+                entry.MPMax = 10000;
                 entry.TPCurrent = BitConverter.TryToInt16(source, MemoryHandler.Instance.Structures.ActorItem.TPCurrent + defaultStatOffset);
                 entry.TPMax = 1000;
                 entry.GPCurrent = BitConverter.TryToInt16(source, MemoryHandler.Instance.Structures.ActorItem.GPCurrent + defaultStatOffset);
@@ -135,7 +134,6 @@ namespace Sharlayan.Utilities {
 
                 Buffer.BlockCopy(source, defaultStatusEffectOffset, statusesSource, 0, limit * statusSize);
                 for (var i = 0; i < limit; i++) {
-
                     bool isNewStatus = false;
 
                     byte[] statusSource = new byte[statusSize];
@@ -146,8 +144,7 @@ namespace Sharlayan.Utilities {
 
                     var statusEntry = entry.StatusItems.FirstOrDefault(x => x.CasterID == CasterID && x.StatusID == StatusID);
 
-                    if (statusEntry == null)
-                    {
+                    if (statusEntry == null) {
                         statusEntry = new StatusItem();
                         isNewStatus = true;
                     }
@@ -158,8 +155,6 @@ namespace Sharlayan.Utilities {
                     statusEntry.Stacks = statusSource[MemoryHandler.Instance.Structures.StatusItem.Stacks];
                     statusEntry.Duration = BitConverter.TryToSingle(statusSource, MemoryHandler.Instance.Structures.StatusItem.Duration);
                     statusEntry.CasterID = CasterID;
-
-
 
                     try {
                         ActorItem pc = PCWorkerDelegate.GetActorItem(statusEntry.CasterID);
@@ -202,14 +197,14 @@ namespace Sharlayan.Utilities {
                     }
 
                     if (statusEntry.IsValid()) {
-                        if (isNewStatus)
-                        {
+                        if (isNewStatus) {
                             entry.StatusItems.Add(statusEntry);
                         }
+
                         foundStatuses.Add(statusEntry);
                     }
                 }
-                
+
                 entry.StatusItems.RemoveAll(x => !foundStatuses.Contains(x));
 
                 // handle empty names

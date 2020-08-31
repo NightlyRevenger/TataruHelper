@@ -15,12 +15,16 @@
     <system:String x:Key="DocLanguagePl">Polski</system:String>
     <system:String x:Key="DocLanguageKr">한국어</system:String>
     <system:String x:Key="DocLanguagePtBr">Português brasileiro</system:String>
+    <system:String x:Key="DocLanguageCat">Català</system:String>
+    <system:String x:Key="DocLanguageIta">Italiano</system:String>
+    <system:String x:Key="DocLanguageUkr">Українська</system:String>
 
     <system:String x:Key="DockHelp">Help</system:String>
 
     <system:String x:Key="DockAbout">About</system:String>
 
     <system:String x:Key="DockPatrons">Patrons</system:String>
+    <system:String x:Key="DockDiscrod">Discord</system:String>
 
     <system:String x:Key="FFStatusLable">FF Status:</system:String>
 
@@ -77,6 +81,7 @@
     <system:String x:Key="DirectMemoryCB">Direct Memory Reading</system:String>
     <system:String x:Key="DirectMemoryToolTip">Direct Memory Tooltip</system:String>
     <system:String x:Key="HideToTrayCB">Hide to Tray</system:String>
+    <system:String x:Key="ShowTimestampsCb">Show Timestamps</system:String>
 
     <system:String x:Key="ShowChatBox">Show Chat Window</system:String>
     <system:String x:Key="HideChatBox">Hide Chat Window</system:String>

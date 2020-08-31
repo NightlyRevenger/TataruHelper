@@ -24,30 +24,49 @@
             </tb:TaskbarIcon.ContextMenu>
         </tb:TaskbarIcon>
 
-        <DockPanel>
-            <Menu DockPanel.Dock="Top" Background="White" BorderThickness="0,0,0,1">
-                <MenuItem Header="{DynamicResource DocLanguage}">
-                    <MenuItem Header="{DynamicResource DocLanguageRu}" Command="{Binding SwitchLanguageCommand}" CommandParameter="Russian" />
+        <DockPanel HorizontalAlignment="Stretch">
+            <Menu Background="White" BorderThickness="0,0,0,1" DockPanel.Dock="Top" >
+                <Menu.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                        </Grid>
+                    </ItemsPanelTemplate>
+                </Menu.ItemsPanel>
+
+                <MenuItem Header="{DynamicResource DocLanguage}"  Grid.Column="0">
                     <MenuItem Header="{DynamicResource DocLanguageEn}" Command="{Binding SwitchLanguageCommand}" CommandParameter="English"/>
+                    <MenuItem Header="{DynamicResource DocLanguageRu}" Command="{Binding SwitchLanguageCommand}" CommandParameter="Russian" />
                     <MenuItem Header="{DynamicResource DocLanguageEs}" Command="{Binding SwitchLanguageCommand}" CommandParameter="Spanish"/>
                     <MenuItem Header="{DynamicResource DocLanguagePl}" Command="{Binding SwitchLanguageCommand}" CommandParameter="Polish" />
                     <MenuItem Header="{DynamicResource DocLanguageKr}" Command="{Binding SwitchLanguageCommand}" CommandParameter="Korean" />
                     <MenuItem Header="{DynamicResource DocLanguagePtBr}" Command="{Binding SwitchLanguageCommand}" CommandParameter="PortugueseBR" />
+                    <MenuItem Header="{DynamicResource DocLanguageCat}" Command="{Binding SwitchLanguageCommand}" CommandParameter="Catalan" />
+                    <MenuItem Header="{DynamicResource DocLanguageIta}" Command="{Binding SwitchLanguageCommand}" CommandParameter="Italian" />
+                    <MenuItem Header="{DynamicResource DocLanguageUkr}" Command="{Binding SwitchLanguageCommand}" CommandParameter="Ukrainian" />
+                    <MenuItem >
+                        <MenuItem.Header>
+                            <Hyperlink NavigateUri="https://crowdin.com/project/tataru-helper" RequestNavigate="Hyperlink_RequestNavigate">
+                                <TextBlock Text="https://crowdin.com"/>
+                            </Hyperlink>
+                        </MenuItem.Header>
+                    </MenuItem>
                 </MenuItem>
-                <MenuItem Header="{DynamicResource DockHelp}">
+                <MenuItem Header="{DynamicResource DockHelp}" Grid.Column="1">
                     <MenuItem Header="{DynamicResource DockAbout}"  Click="About_Click"/>
                     <MenuItem x:Name="CheckUpdatesButton" Header="{DynamicResource CheckUpdatesText}"  Click="CheckUpdates_Click"/>
                 </MenuItem>
-                <MenuItem Header="{DynamicResource DockPatrons}" Click="Patrons_Click">
-                </MenuItem>
+                <MenuItem Header="{DynamicResource DockPatrons}" Click="Patrons_Click" Background="#FFF96854" HorizontalAlignment="Right" Grid.Column="2" Margin="0,0,55,0"/>
+                <MenuItem Header="{DynamicResource DockDiscrod}" Click="Discord_Click" Background="#FF313138" Foreground="White" HorizontalAlignment="Right" Grid.Column="2"/>
             </Menu>
-            <Border BorderThickness="0,1,0,0" BorderBrush="LightGray">
-                <StackPanel>
-                </StackPanel>
-            </Border>
+            <Border BorderThickness="0,1,0,0" BorderBrush="LightGray"/>
         </DockPanel>
 
-        <WrapPanel HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,0,0,0" Height="46" Visibility="{Binding UpdatingBlockVisiblity,Converter={utils:BooleanToVisibilityConverterCollapse}, Mode=OneWay, FallbackValue=Collapsed}">
+        <WrapPanel HorizontalAlignment="Left" VerticalAlignment="Top"  Margin="110,1,0,0" Height="46" Visibility="{Binding UpdatingBlockVisiblity,Converter={utils:BooleanToVisibilityConverterCollapse}, Mode=OneWay, FallbackValue=Collapsed}">
             <WrapPanel Margin="0,0,10,0" Visibility="{Binding UserStartedUpdateTextVisibility, Converter={utils:BooleanToVisibilityConverterCollapse}, Mode=OneWay}">
                 <TextBlock x:Name="UserStartedUpdateText" Text=""/>
             </WrapPanel>
@@ -196,6 +215,8 @@
                                                 <CheckBox IsChecked="{Binding IsAutoHide, Mode=TwoWay}" Content="{DynamicResource AutoHideCB}" HorizontalAlignment="Left" Height="21" VerticalAlignment="Top" Width="80" Margin="0,5,0,0"/>
                                                 <xctk:IntegerUpDown Value="{Binding AutoHideTimeoutSeconds,Mode=TwoWay}" HorizontalAlignment="Left" Height="31" VerticalAlignment="Top" Width="86" Minimum="1" Maximum="36000"/>
                                             </StackPanel>
+
+                                            <CheckBox IsChecked="{Binding ShowTimestamps, Mode=TwoWay}" Content="{DynamicResource ShowTimestampsCb}" HorizontalAlignment="Left" Height="21" VerticalAlignment="Top" Margin="0,5,0,0" />
                                         </StackPanel>
                                     </GroupBox>
                                 </WrapPanel>

@@ -48,5 +48,15 @@
     "ShownName": "Spanish",
     "SystemName": "Spanish",
     "LanguageCode": "ES"
+  },
+  {
+    "ShownName": "Japanese",
+    "SystemName": "Japanese",
+    "LanguageCode": "JA"
+  },
+  {
+    "ShownName": "Chinese Simplified",
+    "SystemName": "Chinese Simplified",
+    "LanguageCode": "ZH"
   }
 ]

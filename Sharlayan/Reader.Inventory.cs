@@ -5,7 +5,7 @@
 
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Reader.Inventory.cs" company="SyndicatedLife">
-//   Copyright(c) 2018 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (http://syndicated.life/)
+//   Copyright© 2007 - 2020 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (https://syndicated.life/)
 //   Licensed under the MIT license. See LICENSE.md in the solution root for full license information.
 // </copyright>
 // <summary>
@@ -87,7 +87,7 @@ namespace Sharlayan {
             var container = new InventoryContainer {
                 Amount = MemoryHandler.Instance.GetByte(InventoryPointerMap, offset + MemoryHandler.Instance.Structures.InventoryContainer.Amount),
                 TypeID = (byte) type,
-                ContainerType = type
+                ContainerType = type,
             };
 
             // The number of item is 50 in COMPANY's locker
@@ -117,7 +117,7 @@ namespace Sharlayan {
                             GlamourID = (uint) MemoryHandler.Instance.GetPlatformUInt(itemOffset, MemoryHandler.Instance.Structures.InventoryItem.GlamourID),
 
                             // get the flag that show if the item is hq or not
-                            IsHQ = MemoryHandler.Instance.GetByte(itemOffset, MemoryHandler.Instance.Structures.InventoryItem.IsHQ) == 0x01
+                            IsHQ = MemoryHandler.Instance.GetByte(itemOffset, MemoryHandler.Instance.Structures.InventoryItem.IsHQ) == 0x01,
                         });
                 }
             }

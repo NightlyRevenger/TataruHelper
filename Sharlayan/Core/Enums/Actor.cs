@@ -2,10 +2,9 @@
 // PVS-Studio Static Code Analyzer for C, C++, C#, and Java: http://www.viva64.com
 
 
-
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="Actor.cs" company="SyndicatedLife">
-//   Copyright(c) 2018 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (http://syndicated.life/)
+//   Copyright© 2007 - 2020 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (https://syndicated.life/)
 //   Licensed under the MIT license. See LICENSE.md in the solution root for full license information.
 // </copyright>
 // <summary>
@@ -32,7 +31,7 @@ namespace Sharlayan.Core.Enums {
 
             Melding = 0x07,
 
-            SMachine = 0x08
+            SMachine = 0x08,
         }
 
         public enum EventObjectType : ushort {
@@ -50,7 +49,7 @@ namespace Sharlayan.Core.Enums {
 
             Banded = 12347,
 
-            Hoard = 12353
+            Hoard = 12353,
         }
 
         public enum Icon : byte {
@@ -114,7 +113,7 @@ namespace Sharlayan.Core.Enums {
 
             Sprout = 0x1F,
 
-            Gil = 0x20
+            Gil = 0x20,
         }
 
         public enum Job : byte {
@@ -188,13 +187,19 @@ namespace Sharlayan.Core.Enums {
 
             SAM = 0x22,
 
-            RDM = 0x23
+            RDM = 0x23,
+
+            BLU = 0x24,
+
+            GNB = 0x25,
+
+            DNC = 0x26,
         }
 
         public enum Sex : byte {
             Male = 0x0,
 
-            Female = 0x1
+            Female = 0x1,
         }
 
         public enum Status : byte {
@@ -208,7 +213,7 @@ namespace Sharlayan.Core.Enums {
 
             UnknownUnSheathed = 0x06,
 
-            UnknownSheathed = 0x07
+            UnknownSheathed = 0x07,
         }
 
         public enum TargetType : byte {
@@ -218,7 +223,7 @@ namespace Sharlayan.Core.Enums {
 
             True = 0x2,
 
-            False = 0x4
+            False = 0x4,
         }
 
         public enum Type : byte {
@@ -240,7 +245,7 @@ namespace Sharlayan.Core.Enums {
 
             Mount = 0x08,
 
-            Minion = 0x09
+            Minion = 0x09,
         }
     }
 }

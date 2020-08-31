@@ -5,7 +5,7 @@
 
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="ActorItemBase.cs" company="SyndicatedLife">
-//   Copyright(c) 2018 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (http://syndicated.life/)
+//   Copyright© 2007 - 2020 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (https://syndicated.life/)
 //   Licensed under the MIT license. See LICENSE.md in the solution root for full license information.
 // </copyright>
 // <summary>
@@ -29,7 +29,7 @@ namespace Sharlayan.Core {
 
         public short CPMax { get; set; }
 
-        public double CPPercent => safeDivide(this.CPCurrent, this.CPMax);
+        public double CPPercent => this.safeDivide(this.CPCurrent, this.CPMax);
 
         public string CPString => $"{this.CPCurrent}/{this.CPMax} [{this.CPPercent:P2}]";
 
@@ -39,7 +39,7 @@ namespace Sharlayan.Core {
 
         public short GPMax { get; set; }
 
-        public double GPPercent => safeDivide(this.GPCurrent, this.GPMax);
+        public double GPPercent => this.safeDivide(this.GPCurrent, this.GPMax);
 
         public string GPString => $"{this.GPCurrent}/{this.GPMax} [{this.GPPercent:P2}]";
 
@@ -49,7 +49,7 @@ namespace Sharlayan.Core {
 
         public int HPMax { get; set; }
 
-        public double HPPercent => safeDivide(this.HPCurrent, this.HPMax);
+        public double HPPercent => this.safeDivide(this.HPCurrent, this.HPMax);
 
         public string HPString => $"{this.HPCurrent}/{this.HPMax} [{this.HPPercent:P2}]";
 
@@ -65,7 +65,7 @@ namespace Sharlayan.Core {
 
         public int MPMax { get; set; }
 
-        public double MPPercent => safeDivide(this.MPCurrent, this.MPMax);
+        public double MPPercent => this.safeDivide(this.MPCurrent, this.MPMax);
 
         public string MPString => $"{this.MPCurrent}/{this.MPMax} [{this.MPPercent:P2}]";
 
@@ -80,7 +80,7 @@ namespace Sharlayan.Core {
 
         public int TPMax { get; set; }
 
-        public double TPPercent => safeDivide(this.TPCurrent, this.TPMax);
+        public double TPPercent => this.safeDivide(this.TPCurrent, this.TPMax);
 
         public string TPString => $"{this.TPCurrent}/{this.TPMax} [{this.TPPercent:P2}]";
 
@@ -92,25 +92,8 @@ namespace Sharlayan.Core {
 
         public double Z { get; set; }
 
-        private double safeDivide(double a, double b)
-        {
-            try
-            {
-                if (b == 0)
-                    return 0;
-
-                return a / b;
-            }
-            catch
-            {
-                // due to multithreading, sometimes b can be set to 0 between the check and the division
-                return 0;
-            }
-        }
-
-        public float GetCastingDistanceTo(ActorItem compare)
-        {
-            var distance = this.GetHorizontalDistanceTo(compare) - compare.HitBoxRadius - HitBoxRadius;
+        public float GetCastingDistanceTo(ActorItem compare) {
+            var distance = this.GetHorizontalDistanceTo(compare) - compare.HitBoxRadius - this.HitBoxRadius;
             return distance > 0
                        ? distance
                        : 0;
@@ -127,6 +110,20 @@ namespace Sharlayan.Core {
             var distanceX = (float) Math.Abs(compare.X - this.X);
             var distanceY = (float) Math.Abs(compare.Y - this.Y);
             return (float) Math.Sqrt(Math.Pow(distanceX, 2) + Math.Pow(distanceY, 2));
+        }
+
+        private double safeDivide(double a, double b) {
+            try {
+                if (b == 0) {
+                    return 0;
+                }
+
+                return a / b;
+            }
+            catch {
+                // due to multithreading, sometimes b can be set to 0 between the check and the division
+                return 0;
+            }
         }
     }
 }

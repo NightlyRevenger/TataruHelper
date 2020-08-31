@@ -5,7 +5,7 @@
 
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="APIHelper.cs" company="SyndicatedLife">
-//   Copyright(c) 2018 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (http://syndicated.life/)
+//   Copyright© 2007 - 2020 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (https://syndicated.life/)
 //   Licensed under the MIT license. See LICENSE.md in the solution root for full license information.
 // </copyright>
 // <summary>
@@ -36,7 +36,7 @@ namespace Sharlayan.Utilities
 
         private static WebClient _webClient = new WebClient
         {
-            Encoding = Encoding.UTF8
+            Encoding = Encoding.UTF8,
         };
 
         public static void GetActions(ConcurrentDictionary<uint, ActionItem> actions, string patchVersion = "latest")
@@ -89,9 +89,8 @@ namespace Sharlayan.Utilities
 
         public static StructuresContainer GetStructures(ProcessModel processModel, string patchVersion = "latest")
         {
-            var architecture = processModel.IsWin64
-                                   ? "x64"
-                                   : "x86";
+            var architecture = processModel.IsWin64 ? "x64" : "x86";
+
             var file = Path.Combine(Directory.GetCurrentDirectory(), $"structures-{architecture}.json");
             if (File.Exists(file) && MemoryHandler.Instance.UseLocalCache)
             {
@@ -133,15 +132,15 @@ namespace Sharlayan.Utilities
             var json = APIResponseToJSON(uri);
             ConcurrentDictionary<uint, T> resolved = JsonConvert.DeserializeObject<ConcurrentDictionary<uint, T>>(json, Constants.SerializerSettings);
 
-            if(resolved!=null)
+            if (resolved != null)
             {
                 foreach (KeyValuePair<uint, T> kvp in resolved)
                 {
                     dictionary.AddOrUpdate(kvp.Key, kvp.Value, (k, v) => kvp.Value);
                 }
-
-                File.WriteAllText(file, JsonConvert.SerializeObject(dictionary, Formatting.Indented, Constants.SerializerSettings), Encoding.UTF8);
             }
+
+            File.WriteAllText(file, JsonConvert.SerializeObject(dictionary, Formatting.Indented, Constants.SerializerSettings), Encoding.UTF8);
         }
 
         private static string APIResponseToJSON(string uri)
@@ -152,7 +151,7 @@ namespace Sharlayan.Utilities
             {
                 result = _webClient.DownloadString(uri);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Logger.Debug(e.ToString());
 
@@ -165,7 +164,7 @@ namespace Sharlayan.Utilities
                 {
                     result = ParsePage(result);
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Logger.Debug(ex.ToString());
                     result = string.Empty;
@@ -206,12 +205,12 @@ namespace Sharlayan.Utilities
             string endWord = @"</table>";
 
             int startInd = text.IndexOf(startWord);
-            startInd=text.LastIndexOf("<", startInd);
-            int endInd = text.IndexOf(endWord, startInd + 50)+endWord.Length;
+            startInd = text.LastIndexOf("<", startInd);
+            int endInd = text.IndexOf(endWord, startInd + 50) + endWord.Length;
 
             text = text.Substring(startInd, endInd - startInd);
 
-            text=WebUtility.HtmlDecode(text);
+            text = WebUtility.HtmlDecode(text);
 
             text = System.Text.RegularExpressions.Regex.Replace(text, "<.*?>", string.Empty);
 

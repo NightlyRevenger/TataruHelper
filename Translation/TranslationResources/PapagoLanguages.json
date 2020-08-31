@@ -66,6 +66,16 @@
     "LanguageCode": "it"
   },
   {
+    "ShownName": "Hindi",
+    "SystemName": "Hindi",
+    "LanguageCode": "hi"
+  },
+  {
+    "ShownName": "Portuguese",
+    "SystemName": "Portuguese",
+    "LanguageCode": "pt"
+  },
+  {
     "ShownName": "French",
     "SystemName": "French",
     "LanguageCode": "fr"

@@ -5,7 +5,7 @@
 
 // --------------------------------------------------------------------------------------------------------------------
 // <copyright file="UnsafeNativeMethods.cs" company="SyndicatedLife">
-//   Copyright(c) 2018 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (http://syndicated.life/)
+//   Copyright© 2007 - 2020 Ryan Wilson &amp;lt;syndicated.life@gmail.com&amp;gt; (https://syndicated.life/)
 //   Licensed under the MIT license. See LICENSE.md in the solution root for full license information.
 // </copyright>
 // <summary>
@@ -20,25 +20,25 @@ namespace Sharlayan {
 
     internal static class UnsafeNativeMethods {
         public enum ProcessAccessFlags {
-            PROCESS_VM_ALL = 0x001F0FFF
+            PROCESS_VM_ALL = 0x001F0FFF,
         }
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern IntPtr OpenProcess(ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool)] bool bInheritHandle, uint dwProcessId);
+        public static extern IntPtr OpenProcess(ProcessAccessFlags dwDesiredAccess, [MarshalAs(UnmanagedType.Bool),] bool bInheritHandle, uint dwProcessId);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern int CloseHandle(IntPtr hObject);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern bool ReadProcessMemory(IntPtr processHandle, IntPtr lpBaseAddress, [In] [Out] byte[] lpBuffer, IntPtr regionSize, out IntPtr lpNumberOfBytesRead);
+        public static extern bool ReadProcessMemory(IntPtr processHandle, IntPtr lpBaseAddress, [In,] [Out,] byte[] lpBuffer, IntPtr regionSize, out IntPtr lpNumberOfBytesRead);
 
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern bool ReadProcessMemory(IntPtr processHandle, IntPtr lpBaseAddress, [In] [Out] IntPtr lpBuffer, IntPtr regionSize, out IntPtr lpNumberOfBytesRead);
+        public static extern bool ReadProcessMemory(IntPtr processHandle, IntPtr lpBaseAddress, [In,] [Out,] IntPtr lpBuffer, IntPtr regionSize, out IntPtr lpNumberOfBytesRead);
 
         [DllImport("kernel32.dll")]
         public static extern int VirtualQueryEx(IntPtr processHandle, IntPtr lpBaseAddress, out MEMORY_BASIC_INFORMATION lpBuffer, uint dwLength);
 
-        [StructLayout(LayoutKind.Sequential)]
+        [StructLayout(LayoutKind.Sequential),]
         public struct MEMORY_BASIC_INFORMATION {
             public IntPtr BaseAddress;
 

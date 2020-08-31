@@ -117,8 +117,6 @@ namespace FFXIVTataruHelper
                 { "0044",  new ChatMsgType("0044", MsgType.Translate,"NPCA",(Color)ColorConverter.ConvertFromString("#FFABD647")) },
             };
 
-            //ChatWindows = new List<ChatWindowViewModelSettings>(new ChatWindowViewModelSettings[] { new ChatWindowViewModelSettings() });
-
             ChatWindows = new List<ChatWindowViewModelSettings>();
 
             IsFirstTime = 0;
