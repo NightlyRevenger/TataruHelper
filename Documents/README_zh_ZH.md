@@ -76,7 +76,7 @@ P.S. 安装完成后，无需再从Setup.exe启动软件，那只是个安装文
 
 ## 感谢
 
-感谢各位为这个开源项目做贡献的老铁！以下是本项目的基石：
+感谢各位为这个开源项目做贡献的老铁！以下是本项目的基石:  
 [WPF Toolkit™](https://github.com/xceedsoftware/wpftoolkit)  
 [BondTech.HotKeyManagement](https://github.com/bondtech/HotKey-Manager-for-WinForm-and-WPF-Apps)  
 [NotifyIcon WPF](https://bitbucket.org/hardcodet/notifyicon-wpf/)  
