@@ -4,7 +4,7 @@
         <img src="https://img.shields.io/discord/592039000538349569?logo=discord"
             alt="chat on Discord"></a>
             
-## [바로 다운로드하기](https://github.com/NightlyRevenger/TataruHelper/releases/latest) (Setup.exe)
+## [바로 다운로드하기](https://github.com/NightlyRevenger/TataruHelper/releases/latest/download/Setup.exe) (Setup.exe)
 
 ## [Tataru's Discord Server (영어)](https://discord.gg/bSrpbd9)
 
