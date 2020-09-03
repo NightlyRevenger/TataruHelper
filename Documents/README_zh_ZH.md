@@ -4,7 +4,7 @@
         <img src="https://img.shields.io/discord/592039000538349569?logo=discord"
             alt="chat on Discord"></a>
             
-[下载链接](https://github.com/NightlyRevenger/TataruHelper/releases/latest)( ---> 下载 Setup.exe)  
+[下载链接](https://github.com/NightlyRevenger/TataruHelper/releases/latest/download/Setup.exe)( ---> 下载 Setup.exe)  
 -
 [Tataru's Discord Server](https://discord.gg/bSrpbd9)  
 -
