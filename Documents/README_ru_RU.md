@@ -4,7 +4,7 @@
         <img src="https://img.shields.io/discord/592039000538349569?logo=discord"
             alt="chat on Discord"></a>
             
-## [Скачать](https://github.com/NightlyRevenger/TataruHelper/releases/latest)( \---> Скачайте Setup.exe)
+## [Скачать](https://github.com/NightlyRevenger/TataruHelper/releases/latest/download/Setup.exe)( \---> Скачайте Setup.exe)
 
 ## [Наш сервер Discord](https://discord.gg/bSrpbd9)
 
