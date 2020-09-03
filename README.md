@@ -5,7 +5,7 @@
             alt="chat on Discord"></a>
 
 
-## [Download Now](https://github.com/NightlyRevenger/TataruHelper/releases/latest)( \---> Download Setup.exe)
+## [Download Now](https://github.com/NightlyRevenger/TataruHelper/releases/latest/download/Setup.exe)( \---> Download Setup.exe)
 
 ## [Tataru's Discord Server](https://discord.gg/bSrpbd9)
 
