@@ -60,7 +60,7 @@ namespace FFXIVTataruHelper.FFHandlers
         public bool UseDirectReading
         {
             get { return _UseDirectReading; }
-            set { _UseDirectReading = value; }
+            set { _UseDirectReading = value; } 
         }
 
         #endregion
