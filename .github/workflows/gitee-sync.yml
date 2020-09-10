@@ -29,3 +29,4 @@ jobs:
         account_type: user
         white_list: "TataruHelper"
         force_update: true
+        debug: true
