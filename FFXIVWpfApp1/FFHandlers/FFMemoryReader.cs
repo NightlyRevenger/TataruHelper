@@ -24,7 +24,7 @@ namespace FFXIVTataruHelper.FFHandlers
 
         public event AsyncEventHandler<AsyncPropertyChangedEventArgs> AsyncPropertyChanged
         {
-            add { this._AsyncPropertyChanged.Register(value); } 
+            add { this._AsyncPropertyChanged.Register(value); }  
             remove { this._AsyncPropertyChanged.Unregister(value); }
         }
         private AsyncEvent<AsyncPropertyChangedEventArgs> _AsyncPropertyChanged;
