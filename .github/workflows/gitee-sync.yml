@@ -27,6 +27,6 @@ jobs:
         dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
         dst_token: ${{ secrets.GITEE_TOKEN }}
         account_type: user
-        white_list: "tataruhelper"
+        white_list: "TataruHelper"
         force_update: true
         debug: true
