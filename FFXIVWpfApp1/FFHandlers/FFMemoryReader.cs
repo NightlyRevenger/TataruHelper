@@ -38,7 +38,7 @@ namespace FFXIVTataruHelper.FFHandlers
 
         public event AsyncEventHandler<ChatMessageArrivedEventArgs> FFChatMessageArrived
         {
-            add { this._FFChatMessageArrived.Register(value); } 
+            add { this._FFChatMessageArrived.Register(value); }  
             remove { this._FFChatMessageArrived.Unregister(value); }
         }
         private AsyncEvent<ChatMessageArrivedEventArgs> _FFChatMessageArrived;
