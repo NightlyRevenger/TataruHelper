@@ -32,7 +32,7 @@ namespace FFXIVTataruHelper.FFHandlers
         public event AsyncEventHandler<WindowStateChangeEventArgs> FFWindowStateChanged
         {
             add { this._FFWindowStateChanged.Register(value); }
-            remove { this._FFWindowStateChanged.Unregister(value); }
+            remove { this._FFWindowStateChanged.Unregister(value); } 
         }
         private AsyncEvent<WindowStateChangeEventArgs> _FFWindowStateChanged;
 
