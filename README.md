@@ -7,28 +7,28 @@
 
 ### [Download Now](https://github.com/NightlyRevenger/TataruHelper/releases/latest/download/Setup.exe)( \---> Download Setup.exe)
 
-## [Tataru's Discord Server](https://discord.gg/bSrpbd9)
+### [Tataru's Discord Server](https://discord.gg/bSrpbd9)
 
-## [ИНСТРУКЦИЯ НА РУССКОМ](Documents/README_ru_RU.md)  
+### [Инструкция на русском](Documents/README_ru_RU.md)  
 
-## [한국어 설명](Documents/README_ko_KR.md) 
+### [한국어 설명](Documents/README_ko_KR.md) 
 
-## [Descripción en español](Documents/README_es_ES.md) 
+### [Descripción en español](Documents/README_es_ES.md) 
 
-## [Descripció en català](Documents/README_ca_ES.md) 
+### [Descripció en català](Documents/README_ca_ES.md) 
 
-## [Інструкція на українській](Documents/README_uk_UA.md) 
+### [Інструкція на українській](Documents/README_uk_UA.md) 
 
-## [中文](Documents/README_zh_ZH.md) 
+### [中文](Documents/README_zh_ZH.md) 
 
 * * *
 
 ![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)  
 ![LiveTranslation](Documents/2020-08-18_21-12-52.gif)
 
-## [Demonstration](https://youtu.be/7HiQXzmkQuw)
+### [Demonstration](https://youtu.be/7HiQXzmkQuw)
 
-## [Donations](https://github.com/NightlyRevenger/TataruHelper/blob/master/README.md#support)
+### [Donations](https://github.com/NightlyRevenger/TataruHelper/blob/master/README.md#support)
 
 * * *
 
