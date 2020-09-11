@@ -10,7 +10,7 @@
 ### [Tataru's Discord Server](https://discord.gg/bSrpbd9)  
 
 ### [FAQ](https://github.com/NightlyRevenger/TataruHelper/wiki)  
--
+-  
 ### [Инструкция на русском](Documents/README_ru_RU.md)  
 
 ### [한국어 설명](Documents/README_ko_KR.md) 
@@ -22,7 +22,7 @@
 ### [Інструкція на українській](Documents/README_uk_UA.md) 
 
 ### [中文](Documents/README_zh_ZH.md) 
--
+-  
 * * *
 
 ![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)  
