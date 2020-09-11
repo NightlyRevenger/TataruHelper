@@ -11,7 +11,7 @@
 -
 [FAQ](https://github.com/NightlyRevenger/TataruHelper/wiki)  
 -
-### [Инструкция на русском](Documents/README_ru_RU.md)  
+### [Описание на русском](Documents/README_ru_RU.md)  
 
 ### [한국어 설명](Documents/README_ko_KR.md) 
 
@@ -19,7 +19,7 @@
 
 ### [Descripció en català](Documents/README_ca_ES.md) 
 
-### [Інструкція на українській](Documents/README_uk_UA.md) 
+### [Опис на українській](Documents/README_uk_UA.md) 
 
 ### [中文](Documents/README_zh_ZH.md) 
 
