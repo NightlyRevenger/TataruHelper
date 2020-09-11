@@ -8,6 +8,7 @@
 -
 [Tataru's Discord Server](https://discord.gg/bSrpbd9)  
 -
+[FAQ](https://github.com/NightlyRevenger/TataruHelper/wiki)
 ---
 ![TataruHead](Tataru_img.png) ![LiveAction](LiveAction.gif)  
 ![LiveTranslation](2020-08-18_21-12-52.gif)
