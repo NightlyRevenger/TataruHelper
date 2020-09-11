@@ -8,7 +8,7 @@
 [Download Now](https://github.com/NightlyRevenger/TataruHelper/releases/latest/download/Setup.exe)( \---> Download Setup.exe)
 -
 [Tataru's Discord Server](https://discord.gg/bSrpbd9)  
-
+-
 [FAQ](https://github.com/NightlyRevenger/TataruHelper/wiki)  
 -
 ### [Инструкция на русском](Documents/README_ru_RU.md)  
