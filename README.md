@@ -23,6 +23,8 @@
 
 ### [中文](Documents/README_zh_ZH.md) 
 
+### [日本語](Documents/README_ja_JP.md) 
+
 * * *
 
 ![TataruHead](Documents/Tataru_img.png) ![LiveAction](Documents/LiveAction.gif)  
