@@ -19,6 +19,8 @@
 
 ### [Descripció en català](Documents/README_ca_ES.md) 
 
+### [Polski](Documents/README_pl_PL.md) 
+
 ### [Опис на українській](Documents/README_uk_UA.md) 
 
 ### [中文](Documents/README_zh_ZH.md) 
