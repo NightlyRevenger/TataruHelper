@@ -21,6 +21,8 @@
 
 ### [Polski](Documents/README_pl_PL.md) 
 
+### [Português Brasileiro](Documents/README_pt_BR.md) 
+
 ### [Опис на українській](Documents/README_uk_UA.md) 
 
 ### [中文](Documents/README_zh_ZH.md) 
