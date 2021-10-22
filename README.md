@@ -120,7 +120,7 @@ NightlyRevenger(developer):
 ## Support
 
 If you want to support this project, use the links below:  
-VISA(Sberbank): 4274 3200 5656 5370  
+VISA(Sberbank): 5469 3800 2554 9048  
 Yandex.Money: [4100172621059](https://money.yandex.ru/to/4100172621059)  
 Bitcoin: 18vSbJnqL63emRfjTZwjAggv8DL4bAuTiE  
 PayPal: [paypal.me/xdarkone](https://www.paypal.me/xdarkone)  
