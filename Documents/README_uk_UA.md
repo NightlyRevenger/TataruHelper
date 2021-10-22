@@ -96,7 +96,7 @@ NightlyRever(developer):
 ## Підтримка
 
 Якщо ви хочете підтримати цей проект, скористайтеся посиланнями нижче:  
-VISA(Sberbank): 4274 3200 5656 5370  
+MasterCard(Sberbank): 5469 3800 2554 9048  
 Яндекс. он: [4100172621059](https://money.yandex.ru/to/4100172621059)  
 PayPal: [paypal.me/xdarkone](https://www.paypal.me/xdarkone)  
 Патреон: [TataruHelper](https://www.patreon.com/TataruHelper)
