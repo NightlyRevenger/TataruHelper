@@ -96,7 +96,7 @@ NightlyRevenger (개발자):
 ## 지원
 
 이 프로젝트를 후원하고 싶으시다면 아래 링크를 사용해주세요.  
-VISA(Sberbank): 4274 3200 5656 5370  
+MasterCard(Sberbank): 5469 3800 2554 9048  
 Yandex.Money: [4100172621059](https://money.yandex.ru/to/4100172621059)  
 PayPal: [paypal.me/xdarkone](https://www.paypal.me/xdarkone)  
 Patreon: [TataruHelper](https://www.patreon.com/TataruHelper)
