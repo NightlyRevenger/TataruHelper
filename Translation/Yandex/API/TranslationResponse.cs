@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace Translation.Yandex
+namespace Translation.Yandex.API
 {
     public class TranslationResponse
     {

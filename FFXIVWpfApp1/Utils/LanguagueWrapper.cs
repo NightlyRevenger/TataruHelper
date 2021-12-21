@@ -24,6 +24,9 @@ namespace FFXIVTataruHelper
             Catalan = 7,
             Italian = 8,
             Ukrainian = 9,
+            Chinese = 10,
+            ChineseTR = 11,
+            Japanese = 12,
         };
 
         public Languages CurrentLanguage
@@ -91,6 +94,15 @@ namespace FFXIVTataruHelper
                     case Languages.Ukrainian:
                         path += GlobalSettings.uk_UA_LanguaguePath;
                         break;
+                    case Languages.Chinese:
+                        path += GlobalSettings.zh_CN_LanguaguePath;
+                        break;
+                    case Languages.ChineseTR:
+                        path += GlobalSettings.zh_TR_LanguaguePath;
+                        break;
+                    case Languages.Japanese:
+                        path += GlobalSettings.ja_LanguaguePath;
+                        break;
 
                     default:
                         path += GlobalSettings.en_US_LanguaguePath;
@@ -129,7 +141,7 @@ namespace FFXIVTataruHelper
 
             _SettingsWindow.Resources["ChatAppearance"] = catalog.GetString("Chat Appearance");
             _SettingsWindow.Resources["TranslationSettings"] = catalog.GetString("Translation Settings");
-            _SettingsWindow.Resources["GeneralBehavior"] = catalog.GetString("General Behavior");
+            _SettingsWindow.Resources["GeneralBehavior"] = catalog.GetString("General");
 
             _SettingsWindow.Resources["ChatWindowBehavior"] = catalog.GetString("Behavior");
             _SettingsWindow.Resources["ChatWindowHotkeys"] = catalog.GetString("Hotkeys");
@@ -178,10 +190,9 @@ namespace FFXIVTataruHelper
             _SettingsWindow.Resources["DirectMemoryCB"] = catalog.GetString("Cutscenes/No delay");
             _SettingsWindow.Resources["DirectMemoryToolTip"] = catalog.GetString("EXPERIMENTAL FUNCTION. If this option is active, the application will catch text from quest clouds and cutscene subtitles directly, not from the chatlog. Errors can occur.");
 
-            _SettingsWindow.Resources["HideToTrayCB"] = catalog.GetString("Hide to Tray");
-
             _SettingsWindow.Resources["AlwaysOnTopCB"] = catalog.GetString("Always On Top");
             _SettingsWindow.Resources["HideToTrayCB"] = catalog.GetString("Hide to Tray");
+            _SettingsWindow.Resources["ShowTimestampsCb"] = catalog.GetString("Show Timestamps");
 
             _SettingsWindow.Resources["StreamerWindowCB"] = catalog.GetString("Streamer Window");
 
@@ -194,7 +205,7 @@ namespace FFXIVTataruHelper
 
             _SettingsWindow.Resources["FFStatusLable"] = catalog.GetString("FF Status:");
 
-            _SettingsWindow.Resources["FFStatusText"] = catalog.GetString("Couldn't find FFXIV process.");
+            _SettingsWindow.Resources["FFStatusText"] = catalog.GetString("FFXIV process not found. Make sure that FFXIV is running using DirectX 11.");
 
             _SettingsWindow.Resources["FFStatusTextFound"] = catalog.GetString("Process found:");
 

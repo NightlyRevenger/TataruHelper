@@ -3,7 +3,9 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
+using System.Web;
 
 namespace Translation.Baidu
 {
@@ -82,7 +84,7 @@ namespace Translation.Baidu
                         token = token
                     };
 
-                    reqv = WebApi.GetQueryString(request);
+                    reqv = GetQueryString(request);
                 }
                 catch (Exception e)
                 {
@@ -92,6 +94,15 @@ namespace Translation.Baidu
             }
 
             return reqv;
+        }
+
+        public static string GetQueryString(object obj)
+        {
+            var properties = from p in obj.GetType().GetProperties()
+                             where p.GetValue(obj, null) != null
+                             select p.Name + "=" + HttpUtility.UrlEncode(p.GetValue(obj, null).ToString());
+
+            return String.Join("&", properties.ToArray());
         }
     }
 }

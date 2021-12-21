@@ -16,18 +16,21 @@ namespace Translation.Yandex
     {
         ILog _Logger;
 
-        HttpUtilities.HttpReader _YandexWebReader;
-
         YandexRequestsEncoder _RequestsEncoder;
 
         bool _IsInitialised = false;
         bool _InitializationFailed = false;
 
+        YandexSession _YandexBaseSession;
+
+        List<YandexSession> _YandexSessions = new List<YandexSession>();
+
+        static string _Password = @"8c9c932bb1424b4c-a6f530447fe19972faafe633eff34d84";
+
         public YandexTranslator(ILog logger)
         {
             _Logger = logger;
 
-            _YandexWebReader = new HttpUtilities.HttpReader(@"translate.yandex.net", new HttpUtils.HttpILogWrapper(_Logger));
 
             InitTranslator();
         }
@@ -41,7 +44,23 @@ namespace Translation.Yandex
             {
                 try
                 {
-                    _RequestsEncoder = new YandexRequestsEncoder(GlobalTranslationSettings.YandexEncoderPath, GlobalTranslationSettings.YandexAuthFile, _Logger);
+                    _RequestsEncoder = new YandexRequestsEncoder(GlobalTranslationSettings.YandexEncoderPath, _Logger);
+
+                    _YandexBaseSession = new YandexSession(_RequestsEncoder, null, _Logger);
+
+                    var yandexAuthText = Helper.Base64Decode(File.ReadAllText(GlobalTranslationSettings.YandexAuthFile));
+                    yandexAuthText = StringCipher.Decrypt(yandexAuthText, _Password);
+
+                    List<YandexAuthContainer> yandexAuthContainers = JsonConvert.DeserializeObject<List<YandexAuthContainer>>(yandexAuthText);
+                    yandexAuthContainers = yandexAuthContainers.Shuffle();
+
+                    List<YandexSession> sessions = new List<YandexSession>();
+                    foreach (var auth in yandexAuthContainers)
+                    {
+                        sessions.Add(new YandexSession(_RequestsEncoder, auth, _Logger));
+                    }
+
+                    _YandexSessions = sessions.Shuffle();
 
                     _IsInitialised = true;
                 }
@@ -53,7 +72,6 @@ namespace Translation.Yandex
                 }
             });
         }
-
 
         public string Translate(string sentence, string inLang, string outLang)
         {
@@ -71,46 +89,22 @@ namespace Translation.Yandex
 
                     try
                     {
-
-                        var request = _RequestsEncoder.Encode(sentence, inLang, outLang);
-
-                        if (request != null)
+                        if (!_YandexBaseSession.IsBad)
                         {
+                            result = _YandexBaseSession.Translate(sentence, inLang, outLang);
 
-                            var reqvUrl = string.Format("https://translate.yandex.net/api/v1/tr.json/translate?{0}", request.UrlParams);
-                            var requestBodey = string.Format("text={0}&options=4", Uri.EscapeDataString(sentence));
+                            if (result == string.Empty)
+                                _YandexBaseSession = new YandexSession(_RequestsEncoder, null, _Logger);
 
-                            //var response = _YandexWebReader.RequestWebData(reqvUrl, HttpUtilities.HttpMethods.POST, request.BodyRequest);
-                            var response = _YandexWebReader.RequestWebData(reqvUrl, HttpUtilities.HttpMethods.POST, requestBodey);
+                            result = _YandexBaseSession.Translate(sentence, inLang, outLang);
+                        }
 
-                            if (response.IsSuccessful)
-                            {
-                                try
-                                {
-                                    var translationResponse = JsonConvert.DeserializeObject<TranslationResponse>(response.Body);
+                        if (result == string.Empty)
+                        {
+                            var seesion = _YandexSessions.FirstOrDefault(x => x.IsBad == false);
 
-                                    if (translationResponse?.Text != null && translationResponse.Text.Count > 0)
-                                    {
-                                        foreach (var str in translationResponse.Text)
-                                            result += str + " ";
-                                    }
-                                }
-                                catch (Exception e)
-                                {
-                                    request.YandexSession.IsBad = true;
-                                }
-                            }
-                            else
-                                request.YandexSession.IsBad = true;
-
-                            if (result.Length < 1 && request?.YandexSession != null)
-                            {
-                                request.YandexSession.IsBad = true;
-                            }
-                            if (result.Length > 1)
-                            {
-                                result = result.Replace(":", ": ");
-                            }
+                            if (seesion != null)
+                                result = seesion.Translate(sentence, inLang, outLang);
                         }
                     }
                     catch (Exception ex)
@@ -118,39 +112,6 @@ namespace Translation.Yandex
                         _Logger?.WriteLog(ex?.ToString() ?? "Exception is null");
                     }
                 }
-            }
-
-            return result;
-        }
-
-        public string TranslateOld(string sentence, string inLang, string outLang)
-        {
-            string result = String.Empty;
-            try
-            {
-                string yaApiKey = @"trnsl.1.1.20190204T134422Z.621647c1cffc2039.c2005599368f64d39003df38affa93a62699bcfe";
-                string _outLang = outLang;
-                string _inLang = inLang;
-
-                string _baseUrl = @"https://translate.yandex.net/api/v1.5/tr.json/translate?lang={0}-{1}&key={2}";
-                string url = string.Format(_baseUrl, _inLang, _outLang, yaApiKey);
-
-                var tmpResult = _YandexWebReader.RequestWebData(url, HttpUtilities.HttpMethods.POST, "text=" + sentence);
-
-                var resp = JsonConvert.DeserializeObject<YandexResponse>(tmpResult.Body);
-
-                if (resp.code == 200)
-                {
-                    for (int i = 0; i < resp.text.Count; i++)
-                    {
-                        result += resp.text[i] + " ";
-                    }
-                }
-
-            }
-            catch (Exception e)
-            {
-                _Logger?.WriteLog(Convert.ToString(e));
             }
 
             return result;

@@ -1,146 +1,188 @@
-﻿using System;
+﻿using IvanAkcheurov.Commons;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Translation.Yandex.API;
 
 namespace Translation.Yandex
 {
     class YandexSession
     {
-        YandexAuthContainer _YandexAcc;
-
-        public string SID
-        {
-            get
-            {
-                if (_sid != null)
-                    return _sid;
-
-                _sid = GetSid();
-
-                return _sid;
-            }
-        }
-
-        public bool IsAvailable { get => SID != null && _IsAvailable && IsInitialized; }
-
         public bool IsInitialized { get => _IsInitialized; }
 
-        public bool IsBad { get; set; }
+        public bool IsBad { get => _IsBad; }
 
-        static Regex windowConfigRegex = new Regex(@"window.config(\s)*=(\s)*{");
+        HttpUtilities.HttpReader _YandexWebReader;
 
+        YandexRequestsEncoder _RequestsEncoder;
 
-        HttpUtilities.HttpReader _YandexWebReader = null;
+        YandexAuthContainer _YandexAuth;
 
-        string yandexUrl = "https://translate.yandex.ru/";
+        bool _IsInitialized = false;
+        bool _IsBad = false;
 
         string _sid = null;
 
-        bool _IsInitialized = false;
+        string yandexTranslateUrl = "https://translate.yandex.ru/";
+
+        static Regex windowConfigRegex = new Regex(@"window.config(\s)*=(\s)*{", RegexOptions.Compiled);
 
         ILog _Logger = null;
 
         int _requestNUmber = 1;
 
-        bool _IsAvailable = true;
-
-        public YandexSession(YandexAuthContainer authContainer, ILog logger)
+        public YandexSession(YandexRequestsEncoder requestsEncoder, YandexAuthContainer yandexAuth = null, ILog logger = null)
         {
             _Logger = logger;
 
-            _YandexAcc = authContainer;
+            this._RequestsEncoder = requestsEncoder;
 
-            InitializeSession();
-        }
+            this._YandexAuth = yandexAuth;
 
-        public void ReinitializeSession()
-        {
-            InitializeSession();
+            _IsInitialized = false;
+            _IsBad = false;
         }
 
         void InitializeSession()
         {
-            IsBad = false;
+            _IsBad = false;
 
-            _YandexWebReader = new HttpUtilities.HttpReader(new Uri(yandexUrl).Host, LoadCookies(_YandexAcc), null, new HttpUtils.HttpILogWrapper(_Logger));
+            CreateYandexReader();
 
-            _YandexWebReader.Accept = _YandexAcc.Accept;
-            _YandexWebReader.ContentType = "application/x-www-form-urlencoded";
-            _YandexWebReader.UserAgent = _YandexAcc.UserAgent;
+            _sid = GetSid();
 
-            _IsAvailable = true;
-            _IsInitialized = false;
+            _IsInitialized = true;
 
-            if (_YandexAcc.AcceptLanguage != null)
-                _YandexWebReader.OptionalHeaders.Add("Accept-Language", _YandexAcc.AcceptLanguage);
-            /*
-            if (_YandexAcc.AcceptEncoding != null)
-                _YandexWebReader.OptionalHeaders.Add("Accept-Encoding", _YandexAcc.AcceptEncoding);//*?
-
-            /*
-            if (_YandexAcc.Referer != null)
-                _YandexWebReader.OptionalHeaders.Add("Referer", _YandexAcc.Referer);//*/
+            if (_sid == null)
+                _IsBad = true;
         }
 
-        public YandexRequest CreateRequest(Jurassic.ScriptEngine yandexEncoderEngine, string toTranslate, string fromLang, string toLang)
+        public string Translate(string textToTranslate, string fromLang, string toLang)
         {
-            YandexRequest yandexRequest = null;
+            string result = string.Empty;
 
-            var sid = this.SID;
-
-            var objectRes = yandexEncoderEngine.CallGlobalFunction<Jurassic.Library.ObjectInstance>("EncodeRequest", _requestNUmber, sid, fromLang, toLang, toTranslate);
-
-            if (objectRes == null)
+            try
             {
-                _IsAvailable = false;
+                if (!IsBad && !IsInitialized)
+                {
+                    InitializeSession();
+                }
+
+                if (!IsBad && IsInitialized)
+                {
+                    result = TranslateInternal(textToTranslate, fromLang, toLang);
+                }
+            }
+            catch (Exception ex)
+            {
+                _IsBad = true;
+                _Logger?.WriteLog(ex?.ToString() ?? "Exception in yandex is null");
+            }
+
+            if (result == string.Empty)
+                _IsBad = true;
+
+            return result;
+        }
+
+        public string TranslateInternal(string textToTranslate, string fromLang, string toLang)
+        {
+            string result = string.Empty;
+
+            var request = _RequestsEncoder.Encode(textToTranslate, fromLang, toLang, _requestNUmber, _sid);
+
+            var reqvUrl = string.Format("https://translate.yandex.net/api/v1/tr.json/translate?{0}", request.UrlParams);
+            var requestBody = string.Format("text={0}&options=4", Uri.EscapeDataString(textToTranslate));
+
+            _YandexWebReader.ContentType = "application/x-www-form-urlencoded";
+            var yandexRsponse = _YandexWebReader.RequestWebData(reqvUrl, HttpUtilities.HttpMethods.POST, requestBody, true);
+            _requestNUmber++;
+
+            if (yandexRsponse.IsSuccessful)
+            {
+                try
+                {
+                    var translationResponse = JsonConvert.DeserializeObject<TranslationResponse>(yandexRsponse.Body);
+
+                    if (translationResponse?.Text != null && translationResponse.Text.Count > 0)
+                    {
+                        var translationResult = new StringBuilder();
+
+                        foreach (var str in translationResponse.Text)
+                        {
+                            translationResult.Append(str);
+                            translationResult.Append(" ");
+                        }
+
+                        result = translationResult.ToString().Trim();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _Logger?.WriteLog(ex?.ToString() ?? "Exception in yandex is null");
+                }
             }
             else
             {
-                var reqParams = objectRes.GetPropertyValue("resParams").ToString();
-                var reqBodey = objectRes.GetPropertyValue("trReqv").ToString();
-
-                yandexRequest = new YandexRequest()
-                {
-                    BodyRequest = reqBodey,
-                    UrlParams = reqParams
-                };
-
+                _Logger?.WriteLog(yandexRsponse?.InnerException?.ToString() ?? "Yandex Exception is null");
             }
 
-            _requestNUmber++;
-            return yandexRequest;
+            if (result.Length > 1)
+            {
+                result = result.Replace(":", ": ");
+            }
+
+            return result;
         }
 
-        System.Net.CookieContainer LoadCookies(YandexAuthContainer authContainer)
+        void CreateYandexReader()
         {
-            System.Net.CookieContainer globalCookie = new System.Net.CookieContainer();
-            var yandexUri = new Uri(yandexUrl);
+            _YandexWebReader = new HttpUtilities.HttpReader();
 
-            foreach (var cookie in authContainer.Cookies)
+            _YandexWebReader.UserAgent = "Mozilla/5.0 (Windows NT 6.2; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.121 Safari/537.36";
+            _YandexWebReader.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9";
+
+            _YandexWebReader.OptionalHeaders.Add("Accept-Language", "en-US,en;q=0.9");
+            _YandexWebReader.OptionalHeaders.Add("DNT", "1");
+            _YandexWebReader.OptionalHeaders.Add("Upgrade-Insecure-Requests", "1");
+
+            _YandexWebReader.OptionalHeaders.Add("Pragma", "no-cache");
+            _YandexWebReader.OptionalHeaders.Add("Cache-Control", "no-cache");
+
+            _YandexWebReader.OptionalHeaders.Add("Sec-Fetch-Site", "none");
+            _YandexWebReader.OptionalHeaders.Add("Sec-Fetch-Mode", "navigate");
+            _YandexWebReader.OptionalHeaders.Add("Sec-Fetch-User", "?1");
+            _YandexWebReader.OptionalHeaders.Add("Sec-Fetch-Dest", "document");
+
+            //string _baseUrl = "https://translate.google.com/m";
+            //var requestResult = _YandexWebReader.RequestWebData(_baseUrl, HttpUtilities.HttpMethods.GET, true);
+
+            if (_YandexAuth?.Cookies != null)
             {
-                if (cookie.Key != null && cookie.Value != null)
+                var yandexUri = new Uri(yandexTranslateUrl);
+                foreach (var cookie in _YandexAuth.Cookies)
                 {
-
                     try
                     {
-                        globalCookie.Add(yandexUri, new System.Net.Cookie(cookie.Key, cookie.Value));
-                    }
-                    catch
-                    {
-                        try
-                        {
+                        System.Net.Cookie cook = null;
 
-                            globalCookie.Add(yandexUri, new System.Net.Cookie(cookie.Key, System.Web.HttpUtility.UrlEncode(cookie.Value)));
-                        }
-                        catch { }
+                        // if (cookie.Path!="/")
+                        cook = new System.Net.Cookie(name: cookie.Name, value: cookie.Value, path: cookie.Path, domain: cookie.Domain);
+                        // else
+                        //cook = new System.Net.Cookie(name: cookie.Name, value: cookie.Value, domain: cookie.Domain);
+
+                        _YandexWebReader.Cookies.Add(yandexUri, cook);
+                    }
+                    catch (Exception ex)
+                    {
+                        var t = ex.ToString();
                     }
                 }
             }
-
-            return globalCookie;
         }
 
         string GetSid()
@@ -151,13 +193,21 @@ namespace Translation.Yandex
 
             try
             {
-                var mainPage = _YandexWebReader.RequestWebData(yandexUrl, HttpUtilities.HttpMethods.GET, true);
+                _YandexWebReader.ContentType = null;
+                var mainPage = _YandexWebReader.RequestWebData(yandexTranslateUrl, HttpUtilities.HttpMethods.GET, true);
 
                 if (mainPage.IsSuccessful)
+                {
                     resultSid = ParseSidFromPage(mainPage.Body);
+                }
+                else
+                {
+                    _IsBad = true;
+                }
             }
             catch (Exception ex)
             {
+                _IsBad = true;
                 _Logger?.WriteLog(ex?.ToString() ?? "Exception is null");
             }
 
@@ -185,6 +235,10 @@ namespace Translation.Yandex
                 var sidEnd = sidTmp.LastIndexOf("'");
 
                 sid = sidTmp.Substring(sidStart, sidEnd - sidStart);
+            }
+            else
+            {
+                _IsBad = true;
             }
 
             return sid;

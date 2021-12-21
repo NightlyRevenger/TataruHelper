@@ -19,8 +19,6 @@ namespace Translation
 
         public static string GoogleTranslateLanguages = "TranslationResources/GoogleTranslateLanguages.json";
 
-        public static string MultillectTranslateLanguages = "TranslationResources/MultillectTranslateLanguages.json";
-
         public static string DeeplLanguages = "TranslationResources/DeeplLanguages.json";
 
         public static string BaiduLanguages = "TranslationResources/BaiduLanguages.json";
@@ -30,6 +28,8 @@ namespace Translation
         public static string YandexLanguages = "TranslationResources/YandexTranslateLanguages.json";
 
         public static string YandexAuthFile = "TranslationResources/YandexAuth";
+
+        public static string YandexUsersFile = "TranslationResources/YandexUsers.json";
 
         public static string YandexEncoderPath = "TranslationResources/YandexEncoder";
     }

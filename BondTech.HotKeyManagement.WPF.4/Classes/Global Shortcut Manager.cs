@@ -906,21 +906,46 @@ namespace BondTech.HotKeyManagement.WPF._4
             if (disposed)
                 return;
 
-            if (disposing)
+            try
             {
-                this.SuppressException = true;
-                hwndSource.RemoveHook(hook);
-            }
 
-            for (int i = GlobalHotKeyContainer.Count - 1; i >= 0; i--)
+                try
+                {
+                    if (disposing)
+                    {
+                        this.SuppressException = true;
+                        hwndSource.RemoveHook(hook);
+                    }
+                }
+                catch { }
+
+                try
+                {
+                    for (int i = GlobalHotKeyContainer.Count - 1; i >= 0; i--)
+                    {
+                        try
+                        {
+                            RemoveGlobalHotKey(GlobalHotKeyContainer[i]);
+                        }
+                        catch { }
+                    }
+                }
+                catch { }
+
+                try
+                {
+                    KeyBoardUnHook();
+                    LocalHotKeyContainer.Clear();
+                    ChordHotKeyContainer.Clear();
+                }
+                catch { }
+
+            }
+            catch { }
+            finally
             {
-                RemoveGlobalHotKey(GlobalHotKeyContainer[i]);
+                disposed = true;
             }
-
-            KeyBoardUnHook();
-            LocalHotKeyContainer.Clear();
-            ChordHotKeyContainer.Clear();
-            disposed = true;
         }
         /// <summary>Release all resources used by this class.
         /// </summary>

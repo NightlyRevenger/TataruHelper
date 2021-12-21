@@ -15,7 +15,7 @@ namespace Translation.Papago
     class PapagoEncoder
     {
         static string password = @"";
-        static string savedHash = @"";
+        static string savedHash = @"c7e0e74290b52beb135a108ea181c6633c38a37f9ee136c457e48cfc2c14d881";
 
         public bool IsAvaliable { get { return _IsAvaliable; } }
 

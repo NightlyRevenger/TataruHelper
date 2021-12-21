@@ -31,17 +31,35 @@
                     :
                 </TextBlock>
                 <TextBlock FontSize="16" FontWeight="Bold"  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="10,0,10,0">
-                    <StackPanel>
+                    <WrapPanel Orientation="Vertical" Width="415" Height="137">
                         <TextBlock Margin="0,0,0,2">
+                            Phantom_Octave
+                        </TextBlock>
+                        <TextBlock Margin="2,2">
+                            S.J
+                        </TextBlock>
+                        <TextBlock Margin="0,2">
+                            Sang Su Seo
+                        </TextBlock>
+                        <TextBlock Margin="0,2">
+                            w
+                        </TextBlock>
+                        <TextBlock Margin="0,2">
                             Walrus Juice
                         </TextBlock>
-                        <TextBlock Margin="0,2">
-                            Prinnie PUGI
+                        <TextBlock Margin="30,2,0,2">
+                            Yujun Cho
                         </TextBlock>
-                        <TextBlock Margin="0,2">
+                        <TextBlock Margin="30,2,0,2">
                             Айлин
                         </TextBlock>
-                    </StackPanel>
+                        <TextBlock Margin="30,2,0,2">
+                            야 산
+                        </TextBlock>
+                        <TextBlock Margin="30,2,0,2">
+                            히오스갓겜인정 -
+                        </TextBlock>
+                    </WrapPanel >
                 </TextBlock>
             </StackPanel>
         </Grid>

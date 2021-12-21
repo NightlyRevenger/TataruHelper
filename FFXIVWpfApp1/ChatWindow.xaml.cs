@@ -144,59 +144,75 @@ namespace FFXIVTataruHelper
             int translateTryCount = 0;
             bool notTransalted = true;
 
-            while (translateTryCount < GlobalSettings.MaxTranslateTryCount && notTransalted)
+            if (ea.ChatMessage.Text.Length > 0)
             {
-                var translationEngines = _TataruModel.ChatProcessor.TranslationEngines;
-                string translation = string.Empty;
-                Task.Run(async () =>
+                while (translateTryCount < GlobalSettings.MaxTranslateTryCount && notTransalted)
                 {
-                    translation = await _TataruModel.ChatProcessor.Translate(ea.ChatMessage.Text, _ChatWindowViewModel.CurrentTransaltionEngine,
-                _ChatWindowViewModel.CurrentTranslateFromLanguague, _ChatWindowViewModel.CurrentTranslateToLanguague, chatCode.Code);
+                    var translationEngines = _TataruModel.ChatProcessor.TranslationEngines;
+                    string translation = string.Empty;
 
-                }).Wait(GlobalSettings.TranslatorWaitTime);
-                translateTryCount++;
 
-                if (translation.Length < 1)
-                {
-                    var engineIndex = translationEngines.IndexOf(_ChatWindowViewModel.CurrentTransaltionEngine);
-                    if (engineIndex < 0)
-                        engineIndex = translationEngines.Count - 1;
+                        var translationTask = _TataruModel.ChatProcessor.Translate(
+                            ea.ChatMessage.Text,
+                            _ChatWindowViewModel.CurrentTransaltionEngine,
+                            _ChatWindowViewModel.CurrentTranslateFromLanguague,
+                            _ChatWindowViewModel.CurrentTranslateToLanguague,
+                            chatCode.Code);
 
-                    bool supported = false;
-
-                    int iterCount = 0;
-                    do
+                    if(translationTask.Wait(GlobalSettings.TranslatorWaitTime))
                     {
-                        engineIndex++;
-                        iterCount++;
-                        if (engineIndex >= translationEngines.Count)
-                            engineIndex = 0;
+                        translation = translationTask.Result;
+                    }
 
-                        var tmpEngine = translationEngines[engineIndex];
-                        if (tmpEngine.SupportedLanguages.Contains(_ChatWindowViewModel.CurrentTranslateFromLanguague)
-                            && tmpEngine.SupportedLanguages.Contains(_ChatWindowViewModel.CurrentTranslateToLanguague))
+                    translateTryCount++;
+
+                    if (translation.Length < 1)
+                    {
+                        var engineIndex = translationEngines.IndexOf(_ChatWindowViewModel.CurrentTransaltionEngine);
+                        if (engineIndex < 0)
+                            engineIndex = translationEngines.Count - 1;
+
+                        bool supported = false;
+
+                        int iterCount = 0;
+                        do
                         {
-                            supported = true;
+                            engineIndex++;
+                            iterCount++;
+                            if (engineIndex >= translationEngines.Count)
+                                engineIndex = 0;
 
-                            UiWindow.Window.UIThread(() =>
+                            var tmpEngine = translationEngines[engineIndex];
+                            if (tmpEngine.SupportedLanguages.Contains(_ChatWindowViewModel.CurrentTranslateFromLanguague)
+                                && tmpEngine.SupportedLanguages.Contains(_ChatWindowViewModel.CurrentTranslateToLanguague))
                             {
-                                _ChatWindowViewModel.TranslationEngines.MoveCurrentToPosition(engineIndex);
-                            });
+                                supported = true;
 
-                        }
+                                UiWindow.Window.UIThread(() =>
+                                {
+                                    _ChatWindowViewModel.TranslationEngines.MoveCurrentToPosition(engineIndex);
+                                });
 
-                    } while (!supported && iterCount <= translationEngines.Count);
+                            }
 
-                    UiWindow.Window.UIThread(() =>
+                        } while (!supported && iterCount <= translationEngines.Count);
+
+                        UiWindow.Window.UIThread(() =>
+                        {
+                            ShowErorrText(1, _ChatWindowViewModel.CurrentTransaltionEngine.Name, textColor);
+                        });
+                    }
+                    else
                     {
-                        ShowErorrText(1, _ChatWindowViewModel.CurrentTransaltionEngine.Name, textColor);
-                    });
+                        text = translation;
+                        notTransalted = false;
+                    }
                 }
-                else
-                {
-                    text = translation;
-                    notTransalted = false;
-                }
+
+            }
+            else
+            {
+                text = string.Empty;
             }
 
             DateTime timeStamp = default(DateTime);

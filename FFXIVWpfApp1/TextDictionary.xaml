@@ -18,6 +18,9 @@
     <system:String x:Key="DocLanguageCat">Català</system:String>
     <system:String x:Key="DocLanguageIta">Italiano</system:String>
     <system:String x:Key="DocLanguageUkr">Українська</system:String>
+    <system:String x:Key="DocLanguageZhCN">汉语</system:String>
+    <system:String x:Key="DocLanguageZhTW">繁體中文</system:String>
+    <system:String x:Key="DocLanguageJa">日本語</system:String>
 
     <system:String x:Key="DockHelp">Help</system:String>
 
@@ -28,7 +31,7 @@
 
     <system:String x:Key="FFStatusLable">FF Status:</system:String>
 
-    <system:String x:Key="FFStatusText">Couldn't find FFXIV process.</system:String>
+    <system:String x:Key="FFStatusText">FFXIV process not found. Make sure that FFXIV is running using DirectX 11.</system:String>
     <system:String x:Key="FFStatusTextFound">Process found:</system:String>
 
     <system:String x:Key="ChatWindowsTab">Chat Windows</system:String>
@@ -98,6 +101,7 @@
     <system:String x:Key="CkNPCD">NPCD</system:String>
     <system:String x:Key="CkNPCA">NPCA</system:String>
     <system:String x:Key="CkRecruitment">Recruitment</system:String>
+    <system:String x:Key="CkBossQuotes">Boss quotes</system:String>
     <system:String x:Key="CkSay">Say</system:String>
     <system:String x:Key="CkShout">Shout</system:String>
     <system:String x:Key="CkParty">Party</system:String>

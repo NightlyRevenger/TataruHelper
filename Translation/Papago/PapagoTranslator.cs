@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Translation.Papago
@@ -21,14 +22,35 @@ namespace Translation.Papago
         {
             _Logger = logger;
 
-            _PapagoReader = new HttpUtilities.HttpReader(@"papago.naver.com", new HttpUtils.HttpILogWrapper(_Logger));
+            CreatePapagoReader();
+        }
+
+        void CreatePapagoReader()
+        {
+            _PapagoReader = new HttpUtilities.HttpReader(new HttpUtils.HttpILogWrapper(_Logger));
             _PapagoReader.ContentType = "application/x-www-form-urlencoded; charset=UTF-8";
         }
 
         public string Translate(string sentence, string inLang, string outLang)
         {
+            string result = string.Empty;
+
+            result = TranslateInternal(sentence, inLang, outLang);
+
+            if (result == string.Empty)
+            {
+                Thread.Sleep(2000);
+                result = TranslateInternal(sentence, inLang, outLang);
+            }
+
+            return result;
+        }
+
+        string TranslateInternal(string sentence, string inLang, string outLang)
+        {
             sentence = sentence.Replace(":", " : ");
             string result = string.Empty;
+
             string url = @"https://papago.naver.com/apis/n2mt/translate";
 
             if (_PapagoEncoder == null)
@@ -74,16 +96,27 @@ namespace Translation.Papago
                         _PapagoReader.OptionalHeaders.Add("Authorization", reqvObj.AuthorizationHeader);
                         _PapagoReader.OptionalHeaders.Add("Timestamp", reqvObj.Timestamp);
 
-                        var webResponse = _PapagoReader.RequestWebData(url, HttpUtilities.HttpMethods.POST, reqvObj.StringRequest, true);
+                        var requestBody = reqvObj.StringRequest + $"&authroization={Uri.EscapeDataString(reqvObj.AuthorizationHeader)}" + $"&timestamp={reqvObj.Timestamp}";
 
-                        PapagoResponse papagoResponse = JsonConvert.DeserializeObject<PapagoResponse>(webResponse.Body);
+                        var papagoWebResponse = _PapagoReader.RequestWebData(url, HttpUtilities.HttpMethods.POST, requestBody, true);
 
-                        result = papagoResponse.translatedText;
+                        if (papagoWebResponse.IsSuccessful)
+                        {
+                            PapagoResponse papagoResponse = JsonConvert.DeserializeObject<PapagoResponse>(papagoWebResponse.Body);
+
+                            result = papagoResponse.translatedText;
+                        }
+                        else
+                        {
+                            CreatePapagoReader();
+
+                            _Logger?.WriteLog(papagoWebResponse?.InnerException?.ToString() ?? "Papago Exception is null");
+                        }
 
                     }
                     else
                     {
-                        _Logger?.WriteLog("reqvObj != null");
+                        _Logger?.WriteLog("reqvObj == null");
                     }
 
                 }
@@ -92,6 +125,9 @@ namespace Translation.Papago
                     _Logger?.WriteLog(e.ToString());
                 }
             }
+
+            if (result == null)
+                result = string.Empty;
 
             return result;
         }

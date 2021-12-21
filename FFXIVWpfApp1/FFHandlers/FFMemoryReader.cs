@@ -24,7 +24,7 @@ namespace FFXIVTataruHelper.FFHandlers
 
         public event AsyncEventHandler<AsyncPropertyChangedEventArgs> AsyncPropertyChanged
         {
-            add { this._AsyncPropertyChanged.Register(value); }  
+            add { this._AsyncPropertyChanged.Register(value); }
             remove { this._AsyncPropertyChanged.Unregister(value); }
         }
         private AsyncEvent<AsyncPropertyChangedEventArgs> _AsyncPropertyChanged;
@@ -32,13 +32,13 @@ namespace FFXIVTataruHelper.FFHandlers
         public event AsyncEventHandler<WindowStateChangeEventArgs> FFWindowStateChanged
         {
             add { this._FFWindowStateChanged.Register(value); }
-            remove { this._FFWindowStateChanged.Unregister(value); } 
+            remove { this._FFWindowStateChanged.Unregister(value); }
         }
         private AsyncEvent<WindowStateChangeEventArgs> _FFWindowStateChanged;
 
         public event AsyncEventHandler<ChatMessageArrivedEventArgs> FFChatMessageArrived
         {
-            add { this._FFChatMessageArrived.Register(value); }  
+            add { this._FFChatMessageArrived.Register(value); }
             remove { this._FFChatMessageArrived.Unregister(value); }
         }
         private AsyncEvent<ChatMessageArrivedEventArgs> _FFChatMessageArrived;
@@ -60,7 +60,7 @@ namespace FFXIVTataruHelper.FFHandlers
         public bool UseDirectReading
         {
             get { return _UseDirectReading; }
-            set { _UseDirectReading = value; } 
+            set { _UseDirectReading = value; }
         }
 
         #endregion
@@ -163,6 +163,7 @@ namespace FFXIVTataruHelper.FFHandlers
                             string gameLanguage = "English";
                             // whether to always hit API on start to get the latest sigs based on patchVersion, or use the local json cache (if the file doesn't exist, API will be hit)
                             bool useLocalCache = true;
+                            bool scanAllMemoryRegions = false;
                             // patchVersion of game, or latest//
                             string patchVersion = "latest";
                             Process process = processes[0];
@@ -177,7 +178,7 @@ namespace FFXIVTataruHelper.FFHandlers
                                 IsWin64 = true
                             };
 
-                            MemoryHandler.Instance.SetProcess(processModel, gameLanguage, patchVersion, useLocalCache);
+                            MemoryHandler.Instance.SetProcess(processModel, gameLanguage, patchVersion, useLocalCache, scanAllMemoryRegions);
 
                             porcessNotFound = false;
                             _KeepReading = true;
@@ -457,7 +458,7 @@ namespace FFXIVTataruHelper.FFHandlers
             return text;
         }
 
-        private void OnPropertyChanged([CallerMemberName]string prop = "")
+        private void OnPropertyChanged([CallerMemberName] string prop = "")
         {
             var ea = new AsyncPropertyChangedEventArgs(this, prop);
             _AsyncPropertyChanged.InvokeAsync(ea).Forget();
@@ -490,7 +491,7 @@ namespace FFXIVTataruHelper.FFHandlers
                 /*
                 _FFxivChat.Enqueue(new FFChatMsg(@"_11_ Inoshishi Bugyo: Für immer mit dieser Täuschung leben zu können  Endkampf zuerst die Augen der Wahrheit an sich reißen und schließlich die beiden Furien töten. Im Sterben sagt Alekto dem Spartaner voraus, dass ihr Tod nichts ändern und ihn nicht befreien werde. ", "003D", DateTime.Now));
                 _FFxivChat.Enqueue(new FFChatMsg(@"_12_ Inoshishi Bugyo: to live forever with this deception final battle first to grab the eyes of the truth and finally kill the two Furies. In dying, Alekto predicts to the Spartan that her death will not change anything and will not free him. ", "003D", DateTime.Now));//*/
-               
+
                 _FFxivChat.Enqueue(new FFChatMsg(@"_1_ Dakshina:Once you have finished the task, feel free to disssmount your marid.", "003D", DateTime.Now));
                 _FFxivChat.Enqueue(new FFChatMsg(@"_2_ Dakshina:Once you have finished the task, feel free to disssmount your marid. It will make its own way back here.", "003D", DateTime.Now));
                 _FFxivChat.Enqueue(new FFChatMsg(@"_3_ Inoshishi Bugyo:But...the boar will not be next year's totem animal... <sigh>", "", DateTime.Now));

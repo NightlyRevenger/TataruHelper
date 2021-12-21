@@ -54,7 +54,9 @@ namespace Sharlayan.Core
             try
             {
                 List<byte> autoTranslateList = new List<byte>(bytes.Length);
+
                 List<byte> newList = new List<byte>();
+
                 for (var x = 0; x < bytes.Count(); x++)
                 {
                     switch (bytes[x])
@@ -70,7 +72,7 @@ namespace Sharlayan.Core
                             {
                                 x = x + 3 ;
 
-
+                                ///////////////////////////
                                 autoTranslateList.Add(Convert.ToByte('['));
                                 byte[] translated = new byte[limit];
                                 Buffer.BlockCopy(bytes, x, translated, 0, limit);
@@ -95,8 +97,9 @@ namespace Sharlayan.Core
                                         newList.AddRange(Encoding.UTF8.GetBytes(AutoTranslateVal));
                                     }
                                 }
-
                                 autoTranslateList.Clear();
+                                ///////////////////////////
+
                                 x += limit;
                             }
                             else
@@ -107,6 +110,7 @@ namespace Sharlayan.Core
                             }
 
                             break;
+
                         // unit separator
                         case 31:
                             // TODO: this breaks in some areas like NOVICE chat

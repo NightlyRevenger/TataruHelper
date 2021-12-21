@@ -191,7 +191,6 @@ namespace FFXIVTataruHelper
                         await _TextArrivedArrived.InvokeAsync(translation);
 
                         break;
-
                     }
             }
         }

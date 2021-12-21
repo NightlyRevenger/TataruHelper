@@ -41,6 +41,8 @@ namespace Sharlayan.Utilities
 
         public static void GetActions(ConcurrentDictionary<uint, ActionItem> actions, string patchVersion = "latest")
         {
+            return;
+            /*
             var file = Path.Combine(Directory.GetCurrentDirectory(), "actions.json");
             if (File.Exists(file) && MemoryHandler.Instance.UseLocalCache)
             {
@@ -49,14 +51,13 @@ namespace Sharlayan.Utilities
             else
             {
                 APIResponseToDictionary(actions, file, String.Format(GlobalSettings.FFxivActions, patchVersion));
-            }
+            }//*/
         }
 
         public static IEnumerable<Signature> GetSignatures(ProcessModel processModel, string patchVersion = "latest")
         {
-            var architecture = processModel.IsWin64
-                                   ? "x64"
-                                   : "x86";
+            var architecture = processModel.IsWin64 ? "x64" : "x86";
+
             var file = Path.Combine(Directory.GetCurrentDirectory(), $"signatures-{architecture}.json");
             if (File.Exists(file) && MemoryHandler.Instance.UseLocalCache)
             {
@@ -76,6 +77,8 @@ namespace Sharlayan.Utilities
 
         public static void GetStatusEffects(ConcurrentDictionary<uint, StatusItem> statusEffects, string patchVersion = "latest")
         {
+            return;
+            /*
             var file = Path.Combine(Directory.GetCurrentDirectory(), "statuses.json");
             if (File.Exists(file) && MemoryHandler.Instance.UseLocalCache)
             {
@@ -84,7 +87,7 @@ namespace Sharlayan.Utilities
             else
             {
                 APIResponseToDictionary(statusEffects, file, String.Format(GlobalSettings.FFxivStatuses, patchVersion));
-            }
+            }//*/
         }
 
         public static StructuresContainer GetStructures(ProcessModel processModel, string patchVersion = "latest")
@@ -102,6 +105,8 @@ namespace Sharlayan.Utilities
 
         public static void GetZones(ConcurrentDictionary<uint, MapItem> mapInfos, string patchVersion = "latest")
         {
+            return;
+            /*
             // These ID's link to offset 7 in the old JSON values.
             // eg: "map id = 4" would be 148 in offset 7.
             // This is known as the TerritoryType value
@@ -114,7 +119,7 @@ namespace Sharlayan.Utilities
             else
             {
                 APIResponseToDictionary(mapInfos, file, String.Format(GlobalSettings.FFxivZones, patchVersion));
-            }
+            }//*/
         }
 
         private static T APIResponseToClass<T>(string file, string uri)
@@ -147,27 +152,46 @@ namespace Sharlayan.Utilities
         {
             string result = string.Empty;
 
+            string originalUri = uri;
+
             try
             {
                 result = _webClient.DownloadString(uri);
             }
-            catch (Exception e)
+            catch (Exception ex1)
             {
-                Logger.Debug(e.ToString());
-
-                uri = uri.Replace("https://raw.githubusercontent.com/", "https://github.com/");
-                uri = uri.Replace("/master/", "/blob/master/");
-
-                result = _webClient.DownloadString(uri);
-
                 try
                 {
+                    Logger.Debug(ex1?.ToString() ?? "Exception is null");
+
+                    uri = uri.Replace("https://raw.githubusercontent.com/", "https://github.com/");
+                    uri = uri.Replace("/master/", "/blob/master/");
+
+                    result = _webClient.DownloadString(uri);
+
                     result = ParsePage(result);
+
+                    if (result == null || result.Length < 10)
+                        throw new InvalidDataException($"Resonpse from: {uri} was to short: {result ?? "null"}");
                 }
-                catch (Exception ex)
+                catch (Exception ex2)
                 {
-                    Logger.Debug(ex.ToString());
-                    result = string.Empty;
+                    Logger.Debug(ex2?.ToString() ?? "Exception is null");
+
+                    try
+                    {
+                        uri = originalUri.ToLower();
+
+                        uri = uri.Replace("https://raw.githubusercontent.com/", "https://gitee.com/");
+                        uri = uri.Replace("/master/", "/raw/master/");
+
+                        result = _webClient.DownloadString(uri);
+                    }
+                    catch (Exception ex3)
+                    {
+                        Logger.Debug(ex3?.ToString() ?? "Exception is null");
+                        result = string.Empty;
+                    }
                 }
             }
 
@@ -205,7 +229,9 @@ namespace Sharlayan.Utilities
             string endWord = @"</table>";
 
             int startInd = text.IndexOf(startWord);
+
             startInd = text.LastIndexOf("<", startInd);
+
             int endInd = text.IndexOf(endWord, startInd + 50) + endWord.Length;
 
             text = text.Substring(startInd, endInd - startInd);
@@ -213,6 +239,11 @@ namespace Sharlayan.Utilities
             text = WebUtility.HtmlDecode(text);
 
             text = System.Text.RegularExpressions.Regex.Replace(text, "<.*?>", string.Empty);
+
+            var jObject = Newtonsoft.Json.Linq.JObject.Parse(text);
+
+            if (Object.ReferenceEquals(jObject, null))
+                throw new InvalidDataException($"Invalid json");
 
             return text;
         }

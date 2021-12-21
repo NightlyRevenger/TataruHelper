@@ -1,394 +1,403 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tataru-helper\n"
-"POT-Creation-Date: 2019-11-19 19:15+0300\n"
-"PO-Revision-Date: 2020-05-03 22:07\n"
+"POT-Creation-Date: 2020-09-02 21:55+0300\n"
+"PO-Revision-Date: 2020-09-13 12:18\n"
 "Last-Translator: \n"
 "Language-Team: English\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.4.1\n"
 "X-Poedit-Basepath: ../..\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Poedit-KeywordsList: GetString;GetPluralString:1,2;GetParticularString:1c,2;GetParticularPluralString:1c,2,3;_;_n:1,2;_p:1c,2;_pn:1c,2,3\\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Crowdin-Project: tataru-helper\n"
+"X-Crowdin-Project-ID: 367037\n"
 "X-Crowdin-Language: en\n"
 "X-Crowdin-File: en_US.po\n"
+"X-Crowdin-File-ID: 6\n"
 
-#: Utils/LanguagueWrapper.cs:109
+#: Utils/LanguagueWrapper.cs:124
 msgid "Settings"
 msgstr "Settings"
 
-#: Utils/LanguagueWrapper.cs:110
+#: Utils/LanguagueWrapper.cs:125
 msgid "Chat Window"
 msgstr "Chat Window"
 
-#: Utils/LanguagueWrapper.cs:111
+#: Utils/LanguagueWrapper.cs:126
 msgid "Stream Chat Window"
 msgstr "Stream Chat Window"
 
-#: Utils/LanguagueWrapper.cs:113
+#: Utils/LanguagueWrapper.cs:128
 msgid "Language"
 msgstr "Language"
 
-#: Utils/LanguagueWrapper.cs:117
+#: Utils/LanguagueWrapper.cs:132
 msgid "Help"
 msgstr "Help"
 
-#: Utils/LanguagueWrapper.cs:119
+#: Utils/LanguagueWrapper.cs:134
 msgid "Chat Appearance"
 msgstr "Chat Appearance"
 
-#: Utils/LanguagueWrapper.cs:120
+#: Utils/LanguagueWrapper.cs:135
 msgid "Translation Settings"
 msgstr "Translation Settings"
 
-#: Utils/LanguagueWrapper.cs:121
-msgid "General Behavior"
+#: Utils/LanguagueWrapper.cs:136
+msgid "General"
 msgstr "General"
 
-#: Utils/LanguagueWrapper.cs:123
+#: Utils/LanguagueWrapper.cs:138
 msgid "Behavior"
 msgstr "Behavior"
 
-#: Utils/LanguagueWrapper.cs:124
+#: Utils/LanguagueWrapper.cs:139
 msgid "Hotkeys"
 msgstr "Hotkeys"
 
-#: Utils/LanguagueWrapper.cs:126
+#: Utils/LanguagueWrapper.cs:141
 msgid "Font Settings"
 msgstr "Font Settings"
 
-#: Utils/LanguagueWrapper.cs:127
+#: Utils/LanguagueWrapper.cs:142
 msgid "Font Size"
 msgstr "Font Size"
 
-#: Utils/LanguagueWrapper.cs:129
+#: Utils/LanguagueWrapper.cs:144
 msgid "Font Color"
 msgstr "Font Color"
 
-#: Utils/LanguagueWrapper.cs:130
+#: Utils/LanguagueWrapper.cs:145
 msgid "Color 1"
 msgstr "Color 1"
 
-#: Utils/LanguagueWrapper.cs:131
+#: Utils/LanguagueWrapper.cs:146
 msgid "Color 2"
 msgstr "Color 2"
 
-#: Utils/LanguagueWrapper.cs:133
+#: Utils/LanguagueWrapper.cs:148
 msgid "Font"
 msgstr "Font"
 
-#: Utils/LanguagueWrapper.cs:135
+#: Utils/LanguagueWrapper.cs:150
 msgid "Background Color"
 msgstr "Background Color"
 
-#: Utils/LanguagueWrapper.cs:137
+#: Utils/LanguagueWrapper.cs:152
 msgid "Standard"
 msgstr "Standard"
 
-#: Utils/LanguagueWrapper.cs:138
+#: Utils/LanguagueWrapper.cs:153
 msgid "Advanced"
 msgstr "Advanced"
 
-#: Utils/LanguagueWrapper.cs:139
+#: Utils/LanguagueWrapper.cs:154
 msgid "Available Colors"
 msgstr "Available Colors"
 
-#: Utils/LanguagueWrapper.cs:140
+#: Utils/LanguagueWrapper.cs:155
 msgid "Standard Colors"
 msgstr "Standard Colors"
 
-#: Utils/LanguagueWrapper.cs:141
+#: Utils/LanguagueWrapper.cs:156
 msgid "Recent Colors"
 msgstr "Recent Colors"
 
-#: Utils/LanguagueWrapper.cs:143
+#: Utils/LanguagueWrapper.cs:158
 msgid "Paragraph Settings"
 msgstr "Paragraph Settings"
 
-#: Utils/LanguagueWrapper.cs:144
+#: Utils/LanguagueWrapper.cs:159
 msgid "Spacing"
 msgstr "Spacing"
 
-#: Utils/LanguagueWrapper.cs:145
+#: Utils/LanguagueWrapper.cs:160
 msgid "Line Break Height"
 msgstr "Line Break Height"
 
-#: Utils/LanguagueWrapper.cs:147
+#: Utils/LanguagueWrapper.cs:162
 msgid "Chat Codes"
 msgstr "Chat Codes"
 
-#: Utils/LanguagueWrapper.cs:149
+#: Utils/LanguagueWrapper.cs:164
 msgid "Translation Engine"
 msgstr "Translation Engine"
 
-#: Utils/LanguagueWrapper.cs:150
+#: Utils/LanguagueWrapper.cs:165
 msgid "FF Language"
 msgstr "FF Language"
 
-#: Utils/LanguagueWrapper.cs:151
+#: Utils/LanguagueWrapper.cs:166
 msgid "Translate to"
 msgstr "Translate to"
 
-#: Utils/LanguagueWrapper.cs:153
+#: Utils/LanguagueWrapper.cs:168
 msgid "Show/hide Chat Window"
 msgstr "Show/Hide Chat Window"
 
-#: Utils/LanguagueWrapper.cs:154
+#: Utils/LanguagueWrapper.cs:169
 msgid "Hotkey to hide a Chat Box when it is not needed and call it up when it is needed. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
 msgstr "Hotkey to hide a Chat Box when it is not needed and call it up when it is needed. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
 
-#: Utils/LanguagueWrapper.cs:156 Utils/LanguagueWrapper.cs:163
+#: Utils/LanguagueWrapper.cs:171 Utils/LanguagueWrapper.cs:178
 msgid "Click Through"
 msgstr "Click Through"
 
-#: Utils/LanguagueWrapper.cs:157
+#: Utils/LanguagueWrapper.cs:172
 msgid "Hotkey to turn on/off clicks through the windows. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
 msgstr "Hotkey to turn on/off clicks through the windows. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
 
-#: Utils/LanguagueWrapper.cs:159
+#: Utils/LanguagueWrapper.cs:174
 msgid "Clear Chat"
 msgstr "Clear Chat"
 
-#: Utils/LanguagueWrapper.cs:160
+#: Utils/LanguagueWrapper.cs:175
 msgid "Hotkey to clear any text in the chatbox. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
 msgstr "Hotkey to clear any text in the chatbox. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
 
-#: Utils/LanguagueWrapper.cs:162
+#: Utils/LanguagueWrapper.cs:177
 msgid "Other"
 msgstr "Other"
 
-#: Utils/LanguagueWrapper.cs:164 Utils/LanguagueWrapper.cs:172
+#: Utils/LanguagueWrapper.cs:179 Utils/LanguagueWrapper.cs:185
 msgid "Always On Top"
 msgstr "Always On Top"
 
-#: Utils/LanguagueWrapper.cs:165
+#: Utils/LanguagueWrapper.cs:180
 msgid "Auto Hide"
 msgstr "Auto Hide"
 
-#: Utils/LanguagueWrapper.cs:167
+#: Utils/LanguagueWrapper.cs:182
 msgid "Cutscenes/No delay"
 msgstr "Cutscenes/No delay"
 
-#: Utils/LanguagueWrapper.cs:168
+#: Utils/LanguagueWrapper.cs:183
 msgid "EXPERIMENTAL FUNCTION. If this option is active, the application will catch text from quest clouds and cutscene subtitles directly, not from the chatlog. Errors can occur."
 msgstr "EXPERIMENTAL FUNCTION. If this option is active, the application will catch text from quest clouds and cutscene subtitles directly, not from the chatlog. Errors can occur."
 
-#: Utils/LanguagueWrapper.cs:170 Utils/LanguagueWrapper.cs:173
+#: Utils/LanguagueWrapper.cs:186
 msgid "Hide to Tray"
 msgstr "Hide To Tray"
 
-#: Utils/LanguagueWrapper.cs:175
+#: Utils/LanguagueWrapper.cs:187
+msgid "Show Timestamps"
+msgstr "Show Timestamps"
+
+#: Utils/LanguagueWrapper.cs:189
 msgid "Streamer Window"
 msgstr "Stream Window"
 
-#: Utils/LanguagueWrapper.cs:177
+#: Utils/LanguagueWrapper.cs:191
 msgid "Show Chat Window"
 msgstr "Show Chat Window"
 
-#: Utils/LanguagueWrapper.cs:178
+#: Utils/LanguagueWrapper.cs:192
 msgid "Hide Chat Window"
 msgstr "Hide Chat Window"
 
-#: Utils/LanguagueWrapper.cs:180
+#: Utils/LanguagueWrapper.cs:194
 msgid "Reset Chat Position"
 msgstr "Reset Chat Position"
 
-#: Utils/LanguagueWrapper.cs:182
+#: Utils/LanguagueWrapper.cs:196
 msgid "Translation engine error. Consider switching to other engine."
 msgstr "Translation engine error. Consider switching to other engine."
 
-#: Utils/LanguagueWrapper.cs:184
+#: Utils/LanguagueWrapper.cs:198
 msgid "FF Status:"
 msgstr "FF Status:"
 
-#: Utils/LanguagueWrapper.cs:186
-msgid "Couldn't find FFXIV process."
-msgstr "Couldn't find FFXIV process."
+#: Utils/LanguagueWrapper.cs:200
+msgid "FFXIV process not found. Make sure that FFXIV is running using DirectX 11."
+msgstr "FFXIV process not found. Make sure that FFXIV is running using DirectX 11."
 
-#: Utils/LanguagueWrapper.cs:188
+#: Utils/LanguagueWrapper.cs:202
 msgid "Process found:"
 msgstr "Process found:"
 
-#: Utils/LanguagueWrapper.cs:190
+#: Utils/LanguagueWrapper.cs:204
 msgid "Dear Patrons!"
 msgstr "Dear Patrons!"
 
-#: Utils/LanguagueWrapper.cs:191
+#: Utils/LanguagueWrapper.cs:205
 msgid "We express our great appreciation to the people who support our project and motivate us for new achievements."
 msgstr "We express our great appreciation to the people who support our project and motivate us for new achievements."
 
-#: Utils/LanguagueWrapper.cs:192
+#: Utils/LanguagueWrapper.cs:206
 msgid "Thank you"
 msgstr "Thank you"
 
-#: Utils/LanguagueWrapper.cs:194
+#: Utils/LanguagueWrapper.cs:208
 msgid "Translation engine error. Switching to:"
 msgstr "Translation engine error. Switching to:"
 
-#: Utils/LanguagueWrapper.cs:196
+#: Utils/LanguagueWrapper.cs:210
 msgid "System"
 msgstr "System"
 
-#: Utils/LanguagueWrapper.cs:197
+#: Utils/LanguagueWrapper.cs:211
 msgid "Echo"
 msgstr "Echo"
 
-#: Utils/LanguagueWrapper.cs:198
+#: Utils/LanguagueWrapper.cs:212
 msgid "Error"
 msgstr "Error"
 
-#: Utils/LanguagueWrapper.cs:199
+#: Utils/LanguagueWrapper.cs:213
 msgid "NPCD"
 msgstr "NPC"
 
-#: Utils/LanguagueWrapper.cs:200
+#: Utils/LanguagueWrapper.cs:214
 msgid "NPCA"
 msgstr "NPC(Announce)"
 
-#: Utils/LanguagueWrapper.cs:201
+#: Utils/LanguagueWrapper.cs:215
 msgid "Recruitment"
 msgstr "Recruitment"
 
-#: Utils/LanguagueWrapper.cs:202
+#: Utils/LanguagueWrapper.cs:216
 msgid "Say"
 msgstr "Say"
 
-#: Utils/LanguagueWrapper.cs:203
+#: Utils/LanguagueWrapper.cs:217
 msgid "Shout"
 msgstr "Shout"
 
-#: Utils/LanguagueWrapper.cs:204
+#: Utils/LanguagueWrapper.cs:218
 msgid "Party"
 msgstr "Party"
 
-#: Utils/LanguagueWrapper.cs:205
+#: Utils/LanguagueWrapper.cs:219
 msgid "Tell"
 msgstr "Tell"
 
-#: Utils/LanguagueWrapper.cs:206
+#: Utils/LanguagueWrapper.cs:220
 msgid "FreeCompany"
 msgstr "FreeCompany"
 
-#: Utils/LanguagueWrapper.cs:207
+#: Utils/LanguagueWrapper.cs:221
 msgid "Yell"
 msgstr "Yell"
 
-#: Utils/LanguagueWrapper.cs:208
+#: Utils/LanguagueWrapper.cs:222
 msgid "Alliance"
 msgstr "Alliance"
 
-#: Utils/LanguagueWrapper.cs:209
+#: Utils/LanguagueWrapper.cs:223
 msgid "LinkShell1"
 msgstr "LinkShell 1"
 
-#: Utils/LanguagueWrapper.cs:210
+#: Utils/LanguagueWrapper.cs:224
 msgid "LinkShell2"
 msgstr "LinkShell 2"
 
-#: Utils/LanguagueWrapper.cs:211
+#: Utils/LanguagueWrapper.cs:225
 msgid "LinkShell3"
 msgstr "LinkShell 3"
 
-#: Utils/LanguagueWrapper.cs:212
+#: Utils/LanguagueWrapper.cs:226
 msgid "LinkShell4"
 msgstr "LinkShell 4"
 
-#: Utils/LanguagueWrapper.cs:213
+#: Utils/LanguagueWrapper.cs:227
 msgid "LinkShell5"
 msgstr "LinkShell 5"
 
-#: Utils/LanguagueWrapper.cs:214
+#: Utils/LanguagueWrapper.cs:228
 msgid "LinkShell6"
 msgstr "LinkShell 6"
 
-#: Utils/LanguagueWrapper.cs:215
+#: Utils/LanguagueWrapper.cs:229
 msgid "LinkShell7"
 msgstr "LinkShell 7"
 
-#: Utils/LanguagueWrapper.cs:216
+#: Utils/LanguagueWrapper.cs:230
 msgid "LinkShell8"
 msgstr "LinkShell 8"
 
-#: Utils/LanguagueWrapper.cs:218
+#: Utils/LanguagueWrapper.cs:232
 msgid "Novice Network"
 msgstr "Novice Network"
 
-#: Utils/LanguagueWrapper.cs:220
+#: Utils/LanguagueWrapper.cs:234
 msgid "Server Info"
 msgstr "Server Info"
 
-#: Utils/LanguagueWrapper.cs:222
+#: Utils/LanguagueWrapper.cs:236
 msgid "CWLS1"
 msgstr "CWLS[1]"
 
-#: Utils/LanguagueWrapper.cs:223
+#: Utils/LanguagueWrapper.cs:237
 msgid "CWLS2"
 msgstr "CWLS[2]"
 
-#: Utils/LanguagueWrapper.cs:224
+#: Utils/LanguagueWrapper.cs:238
 msgid "CWLS3"
 msgstr "CWLS[3]"
 
-#: Utils/LanguagueWrapper.cs:225
+#: Utils/LanguagueWrapper.cs:239
 msgid "CWLS4"
 msgstr "CWLS[4]"
 
-#: Utils/LanguagueWrapper.cs:226
+#: Utils/LanguagueWrapper.cs:240
 msgid "CWLS5"
 msgstr "CWLS[5]"
 
-#: Utils/LanguagueWrapper.cs:227
+#: Utils/LanguagueWrapper.cs:241
 msgid "CWLS6"
 msgstr "CWLS[6]"
 
-#: Utils/LanguagueWrapper.cs:228
+#: Utils/LanguagueWrapper.cs:242
 msgid "CWLS7"
 msgstr "CWLS[7]"
 
-#: Utils/LanguagueWrapper.cs:229
+#: Utils/LanguagueWrapper.cs:243
 msgid "CWLS8"
 msgstr "CWLS[8]"
 
-#: Utils/LanguagueWrapper.cs:231
+#: Utils/LanguagueWrapper.cs:245
 msgid "Emotes"
 msgstr "Emotes"
 
-#: Utils/LanguagueWrapper.cs:232
+#: Utils/LanguagueWrapper.cs:246
 msgid "Custom Emotes"
 msgstr "Custom Emotes"
 
-#: Utils/LanguagueWrapper.cs:234
+#: Utils/LanguagueWrapper.cs:248
 msgid "Downloading new version:"
 msgstr "Downloading a newer version:"
 
-#: Utils/LanguagueWrapper.cs:235
+#: Utils/LanguagueWrapper.cs:249
 msgid "Click here to update to new version."
 msgstr "Click here to upgrade to a newer version."
 
-#: Utils/LanguagueWrapper.cs:237
+#: Utils/LanguagueWrapper.cs:251
 msgid "Tataru Update"
 msgstr "Tataru Update"
 
-#: Utils/LanguagueWrapper.cs:238
+#: Utils/LanguagueWrapper.cs:252
 msgid "New Tataru helper version is available. Restart Application to update."
 msgstr "Update available, restart Tataru Helper for changes to take effect."
 
-#: Utils/LanguagueWrapper.cs:240
+#: Utils/LanguagueWrapper.cs:254
 msgid "Check updates"
 msgstr "Check for updates"
 
-#: Utils/LanguagueWrapper.cs:241
+#: Utils/LanguagueWrapper.cs:255
 msgid "Looking for updates..."
 msgstr "Checking for updates. Please wait..."
 
-#: Utils/LanguagueWrapper.cs:242
+#: Utils/LanguagueWrapper.cs:256
 msgid "No updates found."
 msgstr "Tataru Helper is up to date."
+
+#~ msgid "Couldn't find FFXIV process."
+#~ msgstr "Couldn't find FFXIV process."
 
 #~ msgid "Interval Width"
 #~ msgstr "Spacing"

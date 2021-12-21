@@ -9,7 +9,7 @@ namespace FFXIVTataruHelper
 {
     public static class CmdArgsStatus
     {
-        public static bool PreRelease { get; private set; }
+        public static bool IsPreRelease { get; private set; }
 
         public static bool LogPlotChat { get; private set; }
 
@@ -17,7 +17,7 @@ namespace FFXIVTataruHelper
 
         public static void LoadArgs()
         {
-            PreRelease = false;
+            IsPreRelease = false;
             LogPlotChat = false;
             LogAllChat = false;
 
@@ -34,7 +34,7 @@ namespace FFXIVTataruHelper
             if (argsList.Count > 0)
             {
                 if (argsList.Any(x => x.ToLower() == "-prerelease"))
-                    PreRelease = true;
+                    IsPreRelease = true;
 
                 if (argsList.Any(x => x.ToLower() == "-logall"))
                     LogAllChat = true;

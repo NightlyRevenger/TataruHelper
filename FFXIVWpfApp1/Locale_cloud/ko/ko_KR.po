@@ -1,15 +1,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: tataru-helper\n"
-"POT-Creation-Date: 2019-11-19 19:15+0300\n"
-"PO-Revision-Date: 2020-08-15 15:35\n"
+"POT-Creation-Date: 2020-09-02 21:55+0300\n"
+"PO-Revision-Date: 2021-01-14 17:31\n"
 "Last-Translator: \n"
 "Language-Team: Korean\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.4.1\n"
 "X-Poedit-Basepath: ../..\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-KeywordsList: GetString;GetPluralString:1,2;GetParticularString:1c,2;GetParticularPluralString:1c,2,3;_;_n:1,2;_p:1c,2;_pn:1c,2,3\\n"
@@ -20,377 +20,384 @@ msgstr ""
 "X-Crowdin-File: en_US.po\n"
 "X-Crowdin-File-ID: 6\n"
 
-#: Utils/LanguagueWrapper.cs:109
+#: Utils/LanguagueWrapper.cs:124
 msgid "Settings"
 msgstr "설정"
 
-#: Utils/LanguagueWrapper.cs:110
+#: Utils/LanguagueWrapper.cs:125
 msgid "Chat Window"
 msgstr "대화 창"
 
-#: Utils/LanguagueWrapper.cs:111
+#: Utils/LanguagueWrapper.cs:126
 msgid "Stream Chat Window"
 msgstr "실시간 대화 창"
 
-#: Utils/LanguagueWrapper.cs:113
+#: Utils/LanguagueWrapper.cs:128
 msgid "Language"
 msgstr "언어"
 
-#: Utils/LanguagueWrapper.cs:117
+#: Utils/LanguagueWrapper.cs:132
 msgid "Help"
 msgstr "도움말"
 
-#: Utils/LanguagueWrapper.cs:119
+#: Utils/LanguagueWrapper.cs:134
 msgid "Chat Appearance"
 msgstr "대화 설정"
 
-#: Utils/LanguagueWrapper.cs:120
+#: Utils/LanguagueWrapper.cs:135
 msgid "Translation Settings"
 msgstr "번역 설정"
 
-#: Utils/LanguagueWrapper.cs:121
-msgid "General Behavior"
+#: Utils/LanguagueWrapper.cs:136
+msgid "General"
 msgstr "일반 설정"
 
-#: Utils/LanguagueWrapper.cs:123
+#: Utils/LanguagueWrapper.cs:138
 msgid "Behavior"
 msgstr "창 설정"
 
-#: Utils/LanguagueWrapper.cs:124
+#: Utils/LanguagueWrapper.cs:139
 msgid "Hotkeys"
 msgstr "단축키"
 
-#: Utils/LanguagueWrapper.cs:126
+#: Utils/LanguagueWrapper.cs:141
 msgid "Font Settings"
 msgstr "글꼴 설정"
 
-#: Utils/LanguagueWrapper.cs:127
+#: Utils/LanguagueWrapper.cs:142
 msgid "Font Size"
 msgstr "글꼴 크기"
 
-#: Utils/LanguagueWrapper.cs:129
+#: Utils/LanguagueWrapper.cs:144
 msgid "Font Color"
 msgstr "글꼴 색"
 
-#: Utils/LanguagueWrapper.cs:130
+#: Utils/LanguagueWrapper.cs:145
 msgid "Color 1"
 msgstr "색상 1"
 
-#: Utils/LanguagueWrapper.cs:131
+#: Utils/LanguagueWrapper.cs:146
 msgid "Color 2"
 msgstr "색상 2"
 
-#: Utils/LanguagueWrapper.cs:133
+#: Utils/LanguagueWrapper.cs:148
 msgid "Font"
 msgstr "글꼴"
 
-#: Utils/LanguagueWrapper.cs:135
+#: Utils/LanguagueWrapper.cs:150
 msgid "Background Color"
 msgstr "배경 색상"
 
-#: Utils/LanguagueWrapper.cs:137
+#: Utils/LanguagueWrapper.cs:152
 msgid "Standard"
 msgstr "표준"
 
-#: Utils/LanguagueWrapper.cs:138
+#: Utils/LanguagueWrapper.cs:153
 msgid "Advanced"
 msgstr "고급"
 
-#: Utils/LanguagueWrapper.cs:139
+#: Utils/LanguagueWrapper.cs:154
 msgid "Available Colors"
 msgstr "가능한 색상"
 
-#: Utils/LanguagueWrapper.cs:140
+#: Utils/LanguagueWrapper.cs:155
 msgid "Standard Colors"
 msgstr "표준 색상"
 
-#: Utils/LanguagueWrapper.cs:141
+#: Utils/LanguagueWrapper.cs:156
 msgid "Recent Colors"
 msgstr "최근 색상"
 
-#: Utils/LanguagueWrapper.cs:143
+#: Utils/LanguagueWrapper.cs:158
 msgid "Paragraph Settings"
 msgstr "문단 설정"
 
-#: Utils/LanguagueWrapper.cs:144
+#: Utils/LanguagueWrapper.cs:159
 msgid "Spacing"
 msgstr "간격"
 
-#: Utils/LanguagueWrapper.cs:145
+#: Utils/LanguagueWrapper.cs:160
 msgid "Line Break Height"
 msgstr "줄바꿈 간격"
 
-#: Utils/LanguagueWrapper.cs:147
+#: Utils/LanguagueWrapper.cs:162
 msgid "Chat Codes"
 msgstr "번역할 대화"
 
-#: Utils/LanguagueWrapper.cs:149
+#: Utils/LanguagueWrapper.cs:164
 msgid "Translation Engine"
 msgstr "번역기 엔진"
 
-#: Utils/LanguagueWrapper.cs:150
+#: Utils/LanguagueWrapper.cs:165
 msgid "FF Language"
 msgstr "게임 클라이언트 언어"
 
-#: Utils/LanguagueWrapper.cs:151
+#: Utils/LanguagueWrapper.cs:166
 msgid "Translate to"
 msgstr "번역할 언어"
 
-#: Utils/LanguagueWrapper.cs:153
+#: Utils/LanguagueWrapper.cs:168
 msgid "Show/hide Chat Window"
 msgstr "창 표시/숨기기"
 
-#: Utils/LanguagueWrapper.cs:154
+#: Utils/LanguagueWrapper.cs:169
 msgid "Hotkey to hide a Chat Box when it is not needed and call it up when it is needed. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
 msgstr "채팅 창을 필요에 따라 숨기거나 나타낼 수 있는 단축키입니다. Ctrl/Shift/Alt + 특정 키 혹은 Ctrl+Shift+Alt + 특정 키 와 같은 형태로 설정하는 것이 좋습니다. 키 조합은 중복될 수 없습니다. 특정 단축키 조합이 설정되지 않는다면, 프로그램 또는 시스템이 이미 설정해둔 조합입니다. 예: Ctrl+Q, Ctrl+Alt+R, Shift+Alt+Ctrl+T 등"
 
-#: Utils/LanguagueWrapper.cs:156 Utils/LanguagueWrapper.cs:163
+#: Utils/LanguagueWrapper.cs:171 Utils/LanguagueWrapper.cs:178
 msgid "Click Through"
 msgstr "마우스 통과"
 
-#: Utils/LanguagueWrapper.cs:157
+#: Utils/LanguagueWrapper.cs:172
 msgid "Hotkey to turn on/off clicks through the windows. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
 msgstr "채팅 창 너머로 클릭을 통과시키는 옵션을 켜고 끄는 단축키입니다. Ctrl/Shift/Alt + 특정 키 혹은 Ctrl+Shift+Alt + 특정키 같은 형태로 설정하는게 좋습니다. 키 조합은 중복될 수 없는데, 프로그램 또는 시스템이 이미 설정해둔 키 조합이면 중복이므로 쓸 수 없습니다. 예: Ctrl+Q, Ctrl+Alt+R, Shift+Alt+Ctrl+T 등.."
 
-#: Utils/LanguagueWrapper.cs:159
+#: Utils/LanguagueWrapper.cs:174
 msgid "Clear Chat"
 msgstr "채팅 기록 지우기"
 
-#: Utils/LanguagueWrapper.cs:160
+#: Utils/LanguagueWrapper.cs:175
 msgid "Hotkey to clear any text in the chatbox. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
 msgstr "채팅 창을 비우는 단축키입니다. Ctrl/Shift/Alt + 특정 키 혹은 Ctrl+Shift+Alt + 특정 키 와 같은 형태로 설정하는 것이 좋습니다. 키 조합은 중복될 수 없습니다. 특정 단축키 조합이 설정되지 않는다면, 프로그램 또는 시스템이 이미 설정해둔 조합입니다. 예: Ctrl+Q, Ctrl+Alt+R, Shift+Alt+Ctrl+T 등"
 
-#: Utils/LanguagueWrapper.cs:162
+#: Utils/LanguagueWrapper.cs:177
 msgid "Other"
 msgstr "기타"
 
-#: Utils/LanguagueWrapper.cs:164 Utils/LanguagueWrapper.cs:172
+#: Utils/LanguagueWrapper.cs:179 Utils/LanguagueWrapper.cs:185
 msgid "Always On Top"
 msgstr "항상 위에 표시"
 
-#: Utils/LanguagueWrapper.cs:165
+#: Utils/LanguagueWrapper.cs:180
 msgid "Auto Hide"
 msgstr "자동 숨김"
 
-#: Utils/LanguagueWrapper.cs:167
+#: Utils/LanguagueWrapper.cs:182
 msgid "Cutscenes/No delay"
 msgstr "컷씬/딜레이 없음"
 
-#: Utils/LanguagueWrapper.cs:168
+#: Utils/LanguagueWrapper.cs:183
 msgid "EXPERIMENTAL FUNCTION. If this option is active, the application will catch text from quest clouds and cutscene subtitles directly, not from the chatlog. Errors can occur."
 msgstr "실험 중인 기능입니다. 퀘스트 말풍선과 컷씬 자막을 채팅 로그를 거치지 않고 바로 번역합니다. 오류가 발생할 수 있습니다."
 
-#: Utils/LanguagueWrapper.cs:170 Utils/LanguagueWrapper.cs:173
+#: Utils/LanguagueWrapper.cs:186
 msgid "Hide to Tray"
 msgstr "알림 영역으로 숨기기"
 
-#: Utils/LanguagueWrapper.cs:175
+#: Utils/LanguagueWrapper.cs:187
+msgid "Show Timestamps"
+msgstr "타임 스탬프 보기"
+
+#: Utils/LanguagueWrapper.cs:189
 msgid "Streamer Window"
 msgstr "실시간 창"
 
-#: Utils/LanguagueWrapper.cs:177
+#: Utils/LanguagueWrapper.cs:191
 msgid "Show Chat Window"
 msgstr "채팅 창 표시"
 
-#: Utils/LanguagueWrapper.cs:178
+#: Utils/LanguagueWrapper.cs:192
 msgid "Hide Chat Window"
 msgstr "채팅 창 숨기기"
 
-#: Utils/LanguagueWrapper.cs:180
+#: Utils/LanguagueWrapper.cs:194
 msgid "Reset Chat Position"
 msgstr "채팅 창 위치 초기화"
 
-#: Utils/LanguagueWrapper.cs:182
+#: Utils/LanguagueWrapper.cs:196
 msgid "Translation engine error. Consider switching to other engine."
 msgstr "번역 엔진이 제대로 작동하지 않네요. 다른 엔진을 이용해보세요."
 
-#: Utils/LanguagueWrapper.cs:184
+#: Utils/LanguagueWrapper.cs:198
 msgid "FF Status:"
 msgstr "게임 상태:"
 
-#: Utils/LanguagueWrapper.cs:186
-msgid "Couldn't find FFXIV process."
-msgstr "FF14 프로세스를 찾을 수 없습니다."
+#: Utils/LanguagueWrapper.cs:200
+msgid "FFXIV process not found. Make sure that FFXIV is running using DirectX 11."
+msgstr "FFXIV 프로세스를 찾을 수 없습니다. DirectX 11을 사용하여 FFXIV를 실행하십시오."
 
-#: Utils/LanguagueWrapper.cs:188
+#: Utils/LanguagueWrapper.cs:202
 msgid "Process found:"
 msgstr "프로세스:"
 
-#: Utils/LanguagueWrapper.cs:190
+#: Utils/LanguagueWrapper.cs:204
 msgid "Dear Patrons!"
 msgstr "후원자 여러분!"
 
-#: Utils/LanguagueWrapper.cs:191
+#: Utils/LanguagueWrapper.cs:205
 msgid "We express our great appreciation to the people who support our project and motivate us for new achievements."
 msgstr "여러분들의 후원에 항상 감사드리며, 덕분에 열심히 개선하고 있습니다."
 
-#: Utils/LanguagueWrapper.cs:192
+#: Utils/LanguagueWrapper.cs:206
 msgid "Thank you"
 msgstr "감사합니다."
 
-#: Utils/LanguagueWrapper.cs:194
+#: Utils/LanguagueWrapper.cs:208
 msgid "Translation engine error. Switching to:"
 msgstr "번역기 엔진이 고장났습니다. 다른 엔진으로 교체합니다:"
 
-#: Utils/LanguagueWrapper.cs:196
+#: Utils/LanguagueWrapper.cs:210
 msgid "System"
 msgstr "시스템"
 
-#: Utils/LanguagueWrapper.cs:197
+#: Utils/LanguagueWrapper.cs:211
 msgid "Echo"
 msgstr "혼잣말"
 
-#: Utils/LanguagueWrapper.cs:198
+#: Utils/LanguagueWrapper.cs:212
 msgid "Error"
 msgstr "오류"
 
-#: Utils/LanguagueWrapper.cs:199
+#: Utils/LanguagueWrapper.cs:213
 msgid "NPCD"
 msgstr "NPC 대화"
 
-#: Utils/LanguagueWrapper.cs:200
+#: Utils/LanguagueWrapper.cs:214
 msgid "NPCA"
 msgstr "NPC 대화(알림)"
 
-#: Utils/LanguagueWrapper.cs:201
+#: Utils/LanguagueWrapper.cs:215
 msgid "Recruitment"
 msgstr "파티 모집"
 
-#: Utils/LanguagueWrapper.cs:202
+#: Utils/LanguagueWrapper.cs:216
 msgid "Say"
 msgstr "말하기"
 
-#: Utils/LanguagueWrapper.cs:203
+#: Utils/LanguagueWrapper.cs:217
 msgid "Shout"
 msgstr "외치기"
 
-#: Utils/LanguagueWrapper.cs:204
+#: Utils/LanguagueWrapper.cs:218
 msgid "Party"
 msgstr "파티"
 
-#: Utils/LanguagueWrapper.cs:205
+#: Utils/LanguagueWrapper.cs:219
 msgid "Tell"
 msgstr "귓속말"
 
-#: Utils/LanguagueWrapper.cs:206
+#: Utils/LanguagueWrapper.cs:220
 msgid "FreeCompany"
 msgstr "자유부대"
 
-#: Utils/LanguagueWrapper.cs:207
+#: Utils/LanguagueWrapper.cs:221
 msgid "Yell"
 msgstr "떠들기"
 
-#: Utils/LanguagueWrapper.cs:208
+#: Utils/LanguagueWrapper.cs:222
 msgid "Alliance"
 msgstr "연합 파티"
 
-#: Utils/LanguagueWrapper.cs:209
+#: Utils/LanguagueWrapper.cs:223
 msgid "LinkShell1"
 msgstr "링크셸[1]"
 
-#: Utils/LanguagueWrapper.cs:210
+#: Utils/LanguagueWrapper.cs:224
 msgid "LinkShell2"
 msgstr "링크셸[2]"
 
-#: Utils/LanguagueWrapper.cs:211
+#: Utils/LanguagueWrapper.cs:225
 msgid "LinkShell3"
 msgstr "링크셸[3]"
 
-#: Utils/LanguagueWrapper.cs:212
+#: Utils/LanguagueWrapper.cs:226
 msgid "LinkShell4"
 msgstr "링크셸[4]"
 
-#: Utils/LanguagueWrapper.cs:213
+#: Utils/LanguagueWrapper.cs:227
 msgid "LinkShell5"
 msgstr "링크셸[5]"
 
-#: Utils/LanguagueWrapper.cs:214
+#: Utils/LanguagueWrapper.cs:228
 msgid "LinkShell6"
 msgstr "링크셸[6]"
 
-#: Utils/LanguagueWrapper.cs:215
+#: Utils/LanguagueWrapper.cs:229
 msgid "LinkShell7"
 msgstr "링크셸[7]"
 
-#: Utils/LanguagueWrapper.cs:216
+#: Utils/LanguagueWrapper.cs:230
 msgid "LinkShell8"
 msgstr "링크셸[8]"
 
-#: Utils/LanguagueWrapper.cs:218
+#: Utils/LanguagueWrapper.cs:232
 msgid "Novice Network"
 msgstr "초보자 채널"
 
-#: Utils/LanguagueWrapper.cs:220
+#: Utils/LanguagueWrapper.cs:234
 msgid "Server Info"
 msgstr "서버 정보"
 
-#: Utils/LanguagueWrapper.cs:222
+#: Utils/LanguagueWrapper.cs:236
 msgid "CWLS1"
 msgstr "서버초월 링크셸[1]"
 
-#: Utils/LanguagueWrapper.cs:223
+#: Utils/LanguagueWrapper.cs:237
 msgid "CWLS2"
 msgstr "서버초월 링크셸[2]"
 
-#: Utils/LanguagueWrapper.cs:224
+#: Utils/LanguagueWrapper.cs:238
 msgid "CWLS3"
 msgstr "서버초월 링크셸[3]"
 
-#: Utils/LanguagueWrapper.cs:225
+#: Utils/LanguagueWrapper.cs:239
 msgid "CWLS4"
 msgstr "서버초월 링크셸[4]"
 
-#: Utils/LanguagueWrapper.cs:226
+#: Utils/LanguagueWrapper.cs:240
 msgid "CWLS5"
 msgstr "서버초월 링크셸[5]"
 
-#: Utils/LanguagueWrapper.cs:227
+#: Utils/LanguagueWrapper.cs:241
 msgid "CWLS6"
 msgstr "서버초월 링크셸[6]"
 
-#: Utils/LanguagueWrapper.cs:228
+#: Utils/LanguagueWrapper.cs:242
 msgid "CWLS7"
 msgstr "서버초월 링크셸[7]"
 
-#: Utils/LanguagueWrapper.cs:229
+#: Utils/LanguagueWrapper.cs:243
 msgid "CWLS8"
 msgstr "서버초월 링크셸[8]"
 
-#: Utils/LanguagueWrapper.cs:231
+#: Utils/LanguagueWrapper.cs:245
 msgid "Emotes"
 msgstr "감정표현"
 
-#: Utils/LanguagueWrapper.cs:232
+#: Utils/LanguagueWrapper.cs:246
 msgid "Custom Emotes"
 msgstr "사용자 감정표현"
 
-#: Utils/LanguagueWrapper.cs:234
+#: Utils/LanguagueWrapper.cs:248
 msgid "Downloading new version:"
 msgstr "새로운 버전을 다운로드합니다"
 
-#: Utils/LanguagueWrapper.cs:235
+#: Utils/LanguagueWrapper.cs:249
 msgid "Click here to update to new version."
 msgstr "새 버전으로 업데이트하려면 여기를 클릭하십시오."
 
-#: Utils/LanguagueWrapper.cs:237
+#: Utils/LanguagueWrapper.cs:251
 msgid "Tataru Update"
 msgstr "타타루 업데이트"
 
-#: Utils/LanguagueWrapper.cs:238
+#: Utils/LanguagueWrapper.cs:252
 msgid "New Tataru helper version is available. Restart Application to update."
 msgstr "새 타타루 헬퍼 버전을 사용할 수 있습니다. 업데이트하려면 응용 프로그램을 다시 시작하십시오."
 
-#: Utils/LanguagueWrapper.cs:240
+#: Utils/LanguagueWrapper.cs:254
 msgid "Check updates"
 msgstr "업데이트 확인"
 
-#: Utils/LanguagueWrapper.cs:241
+#: Utils/LanguagueWrapper.cs:255
 msgid "Looking for updates..."
 msgstr "업데이트를 찾고 있습니다..."
 
-#: Utils/LanguagueWrapper.cs:242
+#: Utils/LanguagueWrapper.cs:256
 msgid "No updates found."
 msgstr "업데이트를 찾을 수 없습니다."
+
+#~ msgid "Couldn't find FFXIV process."
+#~ msgstr "Couldn't find FFXIV process."
 
 #~ msgid "Interval Width"
 #~ msgstr "Spacing"

@@ -12,11 +12,14 @@ namespace HttpUtilities
     public class HttpReader
     {
         #region Properties
-        public string Host { get => _GlobalHost; }
+        // public string Host { get => _GlobalHost; }
+        public CookieContainer Cookies { get => _GlobalCookie; set => _GlobalCookie = value; }
 
         public string UserAgent { get; set; } = "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko";
         public string Accept { get; set; } = "text/html, application/xhtml+xml, */*";
         public string ContentType { get; set; } = "application/x-www-form-urlencoded";
+
+        public string Referer { get; set; } = null;
 
         public bool ThrowExceptions { get => _ThrowExceptions; set => _ThrowExceptions = value; }
 
@@ -26,7 +29,7 @@ namespace HttpUtilities
 
         #region Protected fileds
 
-        protected string _GlobalHost;
+        //protected string _GlobalHost;
 
         protected CookieContainer _GlobalCookie;
 
@@ -40,46 +43,43 @@ namespace HttpUtilities
 
         #endregion
 
+        public HttpReader()
+        {
+            Init(null, null);
+        }
+
+        public HttpReader(ILog logger)
+        {
+            _Logger = logger;
+            Init(null, null);
+        }
+
         public HttpReader(CookieContainer cookieIn, ILog logger = null)
         {
             _Logger = logger;
-            Init(null, cookieIn, null);
+            Init(cookieIn, null);
         }
 
-        public HttpReader(ILog logger = null)
+        private HttpReader(string authorizationString, ILog logger = null)
         {
             _Logger = logger;
-            Init(null, null, null);
+            Init(null, authorizationString);
         }
 
-        public HttpReader(string host, ILog logger = null)
+        private HttpReader(CookieContainer cookieIn, string authorizationString = null, ILog logger = null)
         {
             _Logger = logger;
-            Init(host, null, null);
-        }
-
-        public HttpReader(string host, string authorizationString, ILog logger = null)
-        {
-            _Logger = logger;
-            Init(host, null, authorizationString);
-        }
-
-        public HttpReader(string host, CookieContainer cookieIn, string authorizationString = null, ILog logger = null)
-        {
-            _Logger = logger;
-            Init(host, cookieIn, authorizationString);
+            Init(cookieIn, authorizationString);
         }
 
         public HttpReader(HttpReader reader)
         {
             this._Logger = reader._Logger;
-            Init(reader._GlobalHost, reader._GlobalCookie, reader._AuthorizationString);
+            Init(reader._GlobalCookie, reader._AuthorizationString);
         }
 
-        private void Init(string host, CookieContainer cookieIn, string authorizationString)
+        private void Init(CookieContainer cookieIn, string authorizationString)
         {
-            _GlobalHost = host;
-
             if (cookieIn != null)
                 _GlobalCookie = cookieIn;
             else
@@ -183,34 +183,38 @@ namespace HttpUtilities
         protected virtual WebRequest PrepRequest(string url, HttpMethods method, CookieContainer cookie = null, string authorizationString = null)
         {
             var uri = new Uri(url);
+
             WebRequest localRequest = WebRequest.Create(uri);
+
             localRequest.Method = method.ToString();
 
-            if (UserAgent != null)
-                ((HttpWebRequest)localRequest).UserAgent = UserAgent;
-            if (Accept != null)
-                ((HttpWebRequest)localRequest).Accept = Accept;
+            var localHttpWebRequest = (HttpWebRequest)localRequest;
 
-            if (_GlobalHost != null)
-                ((HttpWebRequest)localRequest).Host = _GlobalHost;
-            else
-                ((HttpWebRequest)localRequest).Host = uri.Host;
+            if (this.UserAgent != null)
+                localHttpWebRequest.UserAgent = this.UserAgent;
+            if (this.Accept != null)
+                localHttpWebRequest.Accept = this.Accept;
 
-            if (ContentType != null)
-                localRequest.ContentType = ContentType;
+            localHttpWebRequest.Host = uri.Host;
+
+            if (this.ContentType != null)
+                localRequest.ContentType = this.ContentType;
+
+            if (this.Referer != null)
+                localHttpWebRequest.Referer = this.Referer;
 
             if (cookie != null)
-                ((HttpWebRequest)localRequest).CookieContainer = cookie;
+                localHttpWebRequest.CookieContainer = cookie;
 
             if (authorizationString != null)
-                ((HttpWebRequest)localRequest).Headers.Add("Authorization", authorizationString);
+                localHttpWebRequest.Headers.Add("Authorization", authorizationString);
 
-            if (_OptionalHeaders != null)
+            if (this._OptionalHeaders != null)
             {
-                foreach (KeyValuePair<string, string> headerPair in _OptionalHeaders)
+                foreach (KeyValuePair<string, string> headerPair in this._OptionalHeaders)
                 {
                     if (headerPair.Key != null && headerPair.Value != null)
-                        ((HttpWebRequest)localRequest).Headers.Add(headerPair.Key, headerPair.Value);
+                        localHttpWebRequest.Headers.Add(headerPair.Key, headerPair.Value);
                 }
             }
 

@@ -25,7 +25,7 @@ namespace Translation.Baidu
         public BaiduTranslater(ILog logger)
         {
             _Logger = logger;
-            _BaiduWebRead = new HttpUtilities.HttpReader(@"fanyi.baidu.com", new HttpUtils.HttpILogWrapper(_Logger));
+            _BaiduWebRead = new HttpUtilities.HttpReader(new HttpUtils.HttpILogWrapper(_Logger));
 
             InitTranslator();
         }
@@ -94,17 +94,18 @@ namespace Translation.Baidu
                     {
                         string reqv = _BaiduEncoder.Encode(sentence, inLang, outLang, _Gtk, _Token);
 
-                        var tmpResponse = _BaiduWebRead.RequestWebData(serviceUrl, HttpUtilities.HttpMethods.POST, reqv);
+                        var baiduResponse = _BaiduWebRead.RequestWebData(serviceUrl, HttpUtilities.HttpMethods.POST, reqv);
 
-                        var escapedResult = JsonConvert.DeserializeObject<BaiduResponse>(tmpResponse.Body);
+                        if (baiduResponse.IsSuccessful)
+                        {
+                            var escapedResult = JsonConvert.DeserializeObject<BaiduResponse>(baiduResponse.Body);
 
-                        translationResult = Regex.Unescape(escapedResult.TransResult.Data[0].Dst);//*/
-                        /*s
-                        var unescaped = Regex.Unescape(tmpResponse.Body);
-
-                        var result = JsonConvert.DeserializeObject<BaiduResponse>(unescaped);
-
-                        translationResult = result.TransResult.Data[0].Dst;//*/
+                            translationResult = Regex.Unescape(escapedResult.TransResult.Data[0].Dst);//*/
+                        }
+                        else
+                        {
+                            _Logger?.WriteLog(baiduResponse?.InnerException?.ToString() ?? "Baidu Exception is null");
+                        }
                     }
                     catch (Exception e)
                     {

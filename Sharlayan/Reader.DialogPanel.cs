@@ -141,6 +141,7 @@ namespace Sharlayan
                     result = chatLogItem;
 
             }
+
             return result;
         }
 

@@ -74,5 +74,10 @@ namespace Translation
         {
             return SystemName.GetHashCode();
         }
+
+        public override string ToString()
+        {
+            return $"Name: {ShownName ?? SystemName ?? "null" }; Code: {LanguageCode ?? "null"}";
+        }
     }
 }

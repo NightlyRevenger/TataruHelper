@@ -47,7 +47,10 @@
                     <MenuItem Header="{DynamicResource DocLanguagePtBr}" Command="{Binding SwitchLanguageCommand}" CommandParameter="PortugueseBR" />
                     <MenuItem Header="{DynamicResource DocLanguageCat}" Command="{Binding SwitchLanguageCommand}" CommandParameter="Catalan" />
                     <MenuItem Header="{DynamicResource DocLanguageIta}" Command="{Binding SwitchLanguageCommand}" CommandParameter="Italian" />
+                    <MenuItem Header="{DynamicResource DocLanguageJa}" Command="{Binding SwitchLanguageCommand}" CommandParameter="Japanese" />
                     <MenuItem Header="{DynamicResource DocLanguageUkr}" Command="{Binding SwitchLanguageCommand}" CommandParameter="Ukrainian" />
+                    <MenuItem Header="{DynamicResource DocLanguageZhCN}" Command="{Binding SwitchLanguageCommand}" CommandParameter="Chinese" />
+                    <MenuItem Header="{DynamicResource DocLanguageZhTW}" Command="{Binding SwitchLanguageCommand}" CommandParameter="ChineseTR" />
                     <MenuItem >
                         <MenuItem.Header>
                             <Hyperlink NavigateUri="https://crowdin.com/project/tataru-helper" RequestNavigate="Hyperlink_RequestNavigate">

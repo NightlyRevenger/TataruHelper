@@ -73,9 +73,12 @@ namespace Translation
 
         public void LoadLanguages()
         {
-            LoadLanguages(GlobalTranslationSettings.GoogleTranslateLanguages, GlobalTranslationSettings.MultillectTranslateLanguages,
-                GlobalTranslationSettings.DeeplLanguages, GlobalTranslationSettings.YandexLanguages,
-                GlobalTranslationSettings.PapagoLanguages, GlobalTranslationSettings.BaiduLanguages);
+            LoadLanguages(
+                GlobalTranslationSettings.GoogleTranslateLanguages,
+                GlobalTranslationSettings.DeeplLanguages,
+                GlobalTranslationSettings.YandexLanguages,
+                GlobalTranslationSettings.PapagoLanguages,
+                GlobalTranslationSettings.BaiduLanguages);
         }
 
         public async Task<string> TranslateAsync(string inSentence, TranslationEngine translationEngine, TranslatorLanguague fromLang, TranslatorLanguague toLang)
@@ -190,17 +193,13 @@ namespace Translation
             return result;
         }
 
-        private void LoadLanguages(string glTrPath, string MultTrPath, string deepPath, string YaTrPath, string PapagoTrPath, string baiduTrPath)
+        private void LoadLanguages(string glTrPath, string deepPath, string YaTrPath, string PapagoTrPath, string baiduTrPath)
         {
             try
             {
                 List<TranslationEngine> tmptranslationEngines = new List<TranslationEngine>();
                 var tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(glTrPath, _Logger);
                 tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.GoogleTranslate, tmpList, 9));
-
-                /*
-                tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(MultTrPath, _Logger);
-                tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.Multillect, tmpList, 1));//*/
 
                 tmpList = Helper.LoadJsonData<List<TranslatorLanguague>>(deepPath, _Logger);
                 tmptranslationEngines.Add(new TranslationEngine(TranslationEngineName.DeepL, tmpList, 10));

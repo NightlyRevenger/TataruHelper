@@ -36,6 +36,12 @@
     "Color": "#FFABD647"
   },
   {
+    "ChatCode": "2AB9",
+    "MsgType": 1,
+    "Name": "BossQuotes",
+    "Color": "#FFABD647"
+  },
+  {
     "ChatCode": "0048",
     "MsgType": 3,
     "Name": "Recruitment",
@@ -196,5 +202,5 @@
     "MsgType": 3,
     "Name": "CustomEmotes",
     "Color": "#FFCCCCCC"
-  },
+  }
 ]

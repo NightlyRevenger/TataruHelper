@@ -81,16 +81,16 @@
     <Compile Include="TranslationEngine.cs" />
     <Compile Include="TranslationRequset.cs" />
     <Compile Include="TranslatorLanguague.cs" />
-    <Compile Include="HttpUtils\WebApi.cs" />
     <Compile Include="Utils\LanguageDetector.cs" />
     <Compile Include="WebTranslator.cs" />
-    <Compile Include="Yandex\TranslationResponse.cs" />
+    <Compile Include="Yandex\API\TranslationResponse.cs" />
     <Compile Include="Yandex\YandexAuthContainer.cs" />
-    <Compile Include="Yandex\YandexRequest.cs" />
-    <Compile Include="Yandex\YandexRequestsEncoder.cs" />
+    <Compile Include="Yandex\API\YandexRequest.cs" />
+    <Compile Include="Yandex\YandexRequestsEncoder2.cs" />
     <Compile Include="Yandex\YandexResponse.cs" />
     <Compile Include="Yandex\YandexSession.cs" />
     <Compile Include="Yandex\YandexTranslator.cs" />
+    <Compile Include="Yandex\YandexUser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -122,6 +122,7 @@
     <None Include="TranslationResources\YandexTranslateLanguages.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TranslationResources\YandexUsers.json" />
   </ItemGroup>
   <ItemGroup>
     <None Include="TranslationResources\BaiduEncoder.js" />

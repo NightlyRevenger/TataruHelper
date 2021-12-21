@@ -146,7 +146,7 @@ namespace FFXIVTataruHelper
             _TataruModel.TataruViewModel.UpdateCheckByUser = true;
             _TataruModel.TataruViewModel.UserStartedUpdateTextVisibility = true;
 
-            _Updater.CheckAndInstallUpdates(CmdArgsStatus.PreRelease);
+            _Updater.CheckAndInstallUpdates(CmdArgsStatus.IsPreRelease);
         }
 
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
@@ -205,7 +205,7 @@ namespace FFXIVTataruHelper
                 Task.Run(() =>
                 {
 
-                    _Updater.CheckAndInstallUpdates(CmdArgsStatus.PreRelease);
+                    _Updater.CheckAndInstallUpdates(CmdArgsStatus.IsPreRelease);
 
                     _UpdaterTimer = new Timer(TimeSpan.FromMinutes(30).TotalMilliseconds);
                     _UpdaterTimer.Elapsed += async (senderr, ee) => await UpdateTimerHandler();
@@ -544,7 +544,7 @@ namespace FFXIVTataruHelper
         {
             await Task.Run(() =>
             {
-                _Updater?.CheckAndInstallUpdates(CmdArgsStatus.PreRelease);
+                _Updater?.CheckAndInstallUpdates(CmdArgsStatus.IsPreRelease);
             });
         }
 

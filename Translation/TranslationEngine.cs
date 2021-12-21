@@ -18,7 +18,7 @@ namespace Translation
         Yandex = 3,
         Amazon = 4,
         Papago = 5,
-		 Baidu = 6,
+        Baidu = 6,
     }
 
     public class TranslationEngine : IEquatable<TranslationEngine>

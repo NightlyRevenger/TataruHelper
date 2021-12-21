@@ -33,6 +33,12 @@ namespace FFXIVTataruHelper
 
         public static string uk_UA_LanguaguePath = @"uk\uk_UA.mo";
 
+        public static string zh_CN_LanguaguePath = @"zh-CN\zh_CN.mo";
+
+        public static string zh_TR_LanguaguePath = @"zh-TW\zh_TW.mo";
+
+        public static string ja_LanguaguePath = @"ja\ja_JP.mo";
+
         public static int SpiWaitTimeOutMS = 500;
 
         public static int LookForPorcessDelay = 500;

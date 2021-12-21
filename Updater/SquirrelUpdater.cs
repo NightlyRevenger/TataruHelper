@@ -77,7 +77,7 @@ namespace Updater
                 try
                 {
                     if (_UpdateManager != null)
-                        _UpdateManager.Dispose();
+                        _UpdateManager?.Dispose();
 
                 }
                 catch (Exception e)
@@ -110,7 +110,11 @@ namespace Updater
                     }
                     catch { }
                 }
-                _UpdaterThreads.Clear();
+
+                lock (_UpdaterThreads)
+                {
+                    _UpdaterThreads.Clear();
+                }
             }
             catch (Exception e)
             {

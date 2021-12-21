@@ -2,399 +2,399 @@ msgid ""
 msgstr ""
 "Project-Id-Version: tataru-helper\n"
 "POT-Creation-Date: 2020-09-02 21:55+0300\n"
-"PO-Revision-Date: 2020-09-02 19:04\n"
+"PO-Revision-Date: 2021-03-04 16:54\n"
 "Last-Translator: \n"
-"Language-Team: Italian\n"
-"Language: it\n"
+"Language-Team: Chinese Traditional\n"
+"Language: zh\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.4.1\n"
 "X-Poedit-Basepath: ../..\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 "X-Poedit-KeywordsList: GetString;GetPluralString:1,2;GetParticularString:1c,2;GetParticularPluralString:1c,2,3;_;_n:1,2;_p:1c,2;_pn:1c,2,3\\n"
 "X-Poedit-SearchPath-0: .\n"
 "X-Crowdin-Project: tataru-helper\n"
 "X-Crowdin-Project-ID: 367037\n"
-"X-Crowdin-Language: it\n"
+"X-Crowdin-Language: zh-TW\n"
 "X-Crowdin-File: en_US.po\n"
 "X-Crowdin-File-ID: 6\n"
 
 #: Utils/LanguagueWrapper.cs:124
 msgid "Settings"
-msgstr "Impostazioni"
+msgstr "設置"
 
 #: Utils/LanguagueWrapper.cs:125
 msgid "Chat Window"
-msgstr "Finestra della Chat"
+msgstr "聊天視窗"
 
 #: Utils/LanguagueWrapper.cs:126
 msgid "Stream Chat Window"
-msgstr "Finestra della Chat dello Stream"
+msgstr " 聊天視窗"
 
 #: Utils/LanguagueWrapper.cs:128
 msgid "Language"
-msgstr "Lingua"
+msgstr "語言"
 
 #: Utils/LanguagueWrapper.cs:132
 msgid "Help"
-msgstr "Guida"
+msgstr "幫助"
 
 #: Utils/LanguagueWrapper.cs:134
 msgid "Chat Appearance"
-msgstr "Aspetto della Chat"
+msgstr "對話外觀"
 
 #: Utils/LanguagueWrapper.cs:135
 msgid "Translation Settings"
-msgstr "Impostazioni di Traduzione"
+msgstr "翻譯設置"
 
 #: Utils/LanguagueWrapper.cs:136
 msgid "General"
-msgstr ""
+msgstr "通用"
 
 #: Utils/LanguagueWrapper.cs:138
 msgid "Behavior"
-msgstr "Comportamento"
+msgstr "行爲"
 
 #: Utils/LanguagueWrapper.cs:139
 msgid "Hotkeys"
-msgstr "Tasti di scelta rapida"
+msgstr "快速鍵"
 
 #: Utils/LanguagueWrapper.cs:141
 msgid "Font Settings"
-msgstr "Impostazioni Carattere"
+msgstr "字型設定"
 
 #: Utils/LanguagueWrapper.cs:142
 msgid "Font Size"
-msgstr "Dimensione Carattere"
+msgstr "字型尺寸"
 
 #: Utils/LanguagueWrapper.cs:144
 msgid "Font Color"
-msgstr "Colore Carattere"
+msgstr "字型顏色"
 
 #: Utils/LanguagueWrapper.cs:145
 msgid "Color 1"
-msgstr "Colore 1"
+msgstr "顏色 1"
 
 #: Utils/LanguagueWrapper.cs:146
 msgid "Color 2"
-msgstr "Colore 2"
+msgstr "顏色 2"
 
 #: Utils/LanguagueWrapper.cs:148
 msgid "Font"
-msgstr "Carattere"
+msgstr "字型"
 
 #: Utils/LanguagueWrapper.cs:150
 msgid "Background Color"
-msgstr "Colore dello Sfondo"
+msgstr "背景顏色"
 
 #: Utils/LanguagueWrapper.cs:152
 msgid "Standard"
-msgstr "Standard"
+msgstr "標準"
 
 #: Utils/LanguagueWrapper.cs:153
 msgid "Advanced"
-msgstr "Avanzato"
+msgstr "進階"
 
 #: Utils/LanguagueWrapper.cs:154
 msgid "Available Colors"
-msgstr "Colori Disponibili"
+msgstr "可用顏色"
 
 #: Utils/LanguagueWrapper.cs:155
 msgid "Standard Colors"
-msgstr "Colori Standard"
+msgstr "標準顏色"
 
 #: Utils/LanguagueWrapper.cs:156
 msgid "Recent Colors"
-msgstr "Colori Recenti"
+msgstr "最近使用的顏色"
 
 #: Utils/LanguagueWrapper.cs:158
 msgid "Paragraph Settings"
-msgstr "Impostazioni Paragrafo"
+msgstr "段落設置"
 
 #: Utils/LanguagueWrapper.cs:159
 msgid "Spacing"
-msgstr "Spaziatura"
+msgstr "間距"
 
 #: Utils/LanguagueWrapper.cs:160
 msgid "Line Break Height"
-msgstr "Altezza Interruzione di Linea"
+msgstr "段落間距"
 
 #: Utils/LanguagueWrapper.cs:162
 msgid "Chat Codes"
-msgstr "Codici Chat"
+msgstr "翻譯範圍"
 
 #: Utils/LanguagueWrapper.cs:164
 msgid "Translation Engine"
-msgstr ""
+msgstr "翻譯引擎"
 
 #: Utils/LanguagueWrapper.cs:165
 msgid "FF Language"
-msgstr "Lingua di FF"
+msgstr "FF語言"
 
 #: Utils/LanguagueWrapper.cs:166
 msgid "Translate to"
-msgstr "Traduci in"
+msgstr "翻譯至"
 
 #: Utils/LanguagueWrapper.cs:168
 msgid "Show/hide Chat Window"
-msgstr "Mostra/nascondi Finestra della Chat"
+msgstr "顯示/隱藏聊天視窗"
 
 #: Utils/LanguagueWrapper.cs:169
 msgid "Hotkey to hide a Chat Box when it is not needed and call it up when it is needed. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
-msgstr "Usa i comandi rapidi per nascondere la chat quando non ti serve e farla comparire quando ti serve. Usa un comando come Ctrl/Shift/Alt + qualsiasi tasto o una combinazione come Ctrl+Shift+Alt + qualsiasi tasto, etc. Le combinazioni non si devono ripetere. Se non ti fa associare un tasto, vuol dire che è già in uso dall'applicazione o dal sistema. Esempi: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
+msgstr "設置快速鍵來顯示/隱藏消息窗口。 您應該使用 Ctrl/Shift/Alt+任意按鍵，或是Ctrl+Shift+Alt+任意按鍵。 組合鍵不能重複。 如果您不能分配快速鍵，它可能已被程序或系統佔用。 您可設置例如：CTRL+Q、CTRL+ALT+R、SHIFT+ALT+CTRL+T、ALT+SHIF+Y、SHIF+CTRL+G等。"
 
 #: Utils/LanguagueWrapper.cs:171 Utils/LanguagueWrapper.cs:178
 msgid "Click Through"
-msgstr ""
+msgstr "點擊穿透"
 
 #: Utils/LanguagueWrapper.cs:172
 msgid "Hotkey to turn on/off clicks through the windows. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
-msgstr ""
+msgstr "設置快速鍵來開啟/關閉點擊穿透。 您應該使用 Ctrl/Shift/Alt+任意按鍵，或是Ctrl+Shift+Alt+任意按鍵。 組合鍵不能重複。 如果您不能分配快速鍵，它可能已被程序或系統佔用。 您可設置例如：CTRL+Q、CTRL+ALT+R、SHIFT+ALT+CTRL+T、ALT+SHIF+Y、SHIF+CTRL+G等。"
 
 #: Utils/LanguagueWrapper.cs:174
 msgid "Clear Chat"
-msgstr "Cancella la Chat"
+msgstr "清除對話"
 
 #: Utils/LanguagueWrapper.cs:175
 msgid "Hotkey to clear any text in the chatbox. You should use Ctrl/Shift/Alt + Any key or combination of Ctrl+Shift+Alt + Any key, etc. The key combinations must not be repeated. If you cannot assign a key, it is occupied by the application or system. Example: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
-msgstr "Usa i comandi rapidi per eliminare qualsiasi testo nella chat. Usa un comando come Ctrl/Shift/Alt + qualsiasi tasto o una combinazione di Ctrl+Shift+Alt + qualsiasi tasto, etc. Le combinazioni non si devono ripetere. Se non ti fa associare un tasto, vuol dire che è già in uso dall'applicazione o dal sistema. Esempi: CTRL+Q, CTRL+ALT+R, SHIFT+ALT+CTRL+T, ALT+SHIFT+Y, SHIFT+CTRL+G, etc."
+msgstr "設置快速鍵來清除聊天視窗中的所有文本。 您應該使用 Ctrl/Shift/Alt+任意按鍵，或是Ctrl+Shift+Alt+任意按鍵。 組合鍵不能重複。 如果您不能分配快速鍵，它可能已被程序或系統佔用。 您可設置例如：CTRL+Q、CTRL+ALT+R、SHIFT+ALT+CTRL+T、ALT+SHIF+Y、SHIF+CTRL+G等。"
 
 #: Utils/LanguagueWrapper.cs:177
 msgid "Other"
-msgstr "Altro"
+msgstr "其他"
 
 #: Utils/LanguagueWrapper.cs:179 Utils/LanguagueWrapper.cs:185
 msgid "Always On Top"
-msgstr ""
+msgstr "總在最上層"
 
 #: Utils/LanguagueWrapper.cs:180
 msgid "Auto Hide"
-msgstr "Nascondi Automaticamente"
+msgstr "自動隱藏"
 
 #: Utils/LanguagueWrapper.cs:182
 msgid "Cutscenes/No delay"
-msgstr "Cutscene/Nessun ritardo"
+msgstr "過場動畫/無延遲"
 
 #: Utils/LanguagueWrapper.cs:183
 msgid "EXPERIMENTAL FUNCTION. If this option is active, the application will catch text from quest clouds and cutscene subtitles directly, not from the chatlog. Errors can occur."
-msgstr ""
+msgstr "實驗性功能。 如勾選此項，程式會從對話框和過場動畫字幕中直接捕獲文本，而非消息欄中。 可能會出現錯誤。"
 
 #: Utils/LanguagueWrapper.cs:186
 msgid "Hide to Tray"
-msgstr ""
+msgstr "隱藏至系統匣"
 
 #: Utils/LanguagueWrapper.cs:187
 msgid "Show Timestamps"
-msgstr ""
+msgstr "顯示時間戳"
 
 #: Utils/LanguagueWrapper.cs:189
 msgid "Streamer Window"
-msgstr "Finestra dello Stream"
+msgstr "直播視窗"
 
 #: Utils/LanguagueWrapper.cs:191
 msgid "Show Chat Window"
-msgstr "Mostra Finestra Chat"
+msgstr "顯示聊天視窗"
 
 #: Utils/LanguagueWrapper.cs:192
 msgid "Hide Chat Window"
-msgstr "Nascondi Finestra Chat"
+msgstr "隱藏聊天視窗"
 
 #: Utils/LanguagueWrapper.cs:194
 msgid "Reset Chat Position"
-msgstr "Resetta la Posizione della Chat"
+msgstr "重置位置"
 
 #: Utils/LanguagueWrapper.cs:196
 msgid "Translation engine error. Consider switching to other engine."
-msgstr ""
+msgstr "翻譯引擎發生錯誤。 請嘗試切換至其他引擎。"
 
 #: Utils/LanguagueWrapper.cs:198
 msgid "FF Status:"
-msgstr "Stato FF:"
+msgstr "FF狀態:"
 
 #: Utils/LanguagueWrapper.cs:200
 msgid "FFXIV process not found. Make sure that FFXIV is running using DirectX 11."
-msgstr ""
+msgstr "未發現FFXIV程序，請確保FFXIV已經運行在DX11模式。"
 
 #: Utils/LanguagueWrapper.cs:202
 msgid "Process found:"
-msgstr "Processo trovato:"
+msgstr "找到程序:"
 
 #: Utils/LanguagueWrapper.cs:204
 msgid "Dear Patrons!"
-msgstr ""
+msgstr "親愛的贊助者！"
 
 #: Utils/LanguagueWrapper.cs:205
 msgid "We express our great appreciation to the people who support our project and motivate us for new achievements."
-msgstr ""
+msgstr "我們非常讚賞支持我們項目並促使我們取得新成就的人。"
 
 #: Utils/LanguagueWrapper.cs:206
 msgid "Thank you"
-msgstr "Grazie"
+msgstr "感謝您！"
 
 #: Utils/LanguagueWrapper.cs:208
 msgid "Translation engine error. Switching to:"
-msgstr "Errore del motore di traduzione. Passare a:"
+msgstr "翻譯引擎發生錯誤。切換至:"
 
 #: Utils/LanguagueWrapper.cs:210
 msgid "System"
-msgstr ""
+msgstr "系統"
 
 #: Utils/LanguagueWrapper.cs:211
 msgid "Echo"
-msgstr ""
+msgstr "回響"
 
 #: Utils/LanguagueWrapper.cs:212
 msgid "Error"
-msgstr ""
+msgstr "錯誤"
 
 #: Utils/LanguagueWrapper.cs:213
 msgid "NPCD"
-msgstr ""
+msgstr "NPC"
 
 #: Utils/LanguagueWrapper.cs:214
 msgid "NPCA"
-msgstr ""
+msgstr "NPC(通告)"
 
 #: Utils/LanguagueWrapper.cs:215
 msgid "Recruitment"
-msgstr ""
+msgstr "招募"
 
 #: Utils/LanguagueWrapper.cs:216
 msgid "Say"
-msgstr ""
+msgstr "說話"
 
 #: Utils/LanguagueWrapper.cs:217
 msgid "Shout"
-msgstr ""
+msgstr "喊話"
 
 #: Utils/LanguagueWrapper.cs:218
 msgid "Party"
-msgstr ""
+msgstr "小隊"
 
 #: Utils/LanguagueWrapper.cs:219
 msgid "Tell"
-msgstr ""
+msgstr "密語"
 
 #: Utils/LanguagueWrapper.cs:220
 msgid "FreeCompany"
-msgstr ""
+msgstr "部隊"
 
 #: Utils/LanguagueWrapper.cs:221
 msgid "Yell"
-msgstr ""
+msgstr "呼喊"
 
 #: Utils/LanguagueWrapper.cs:222
 msgid "Alliance"
-msgstr ""
+msgstr "團隊"
 
 #: Utils/LanguagueWrapper.cs:223
 msgid "LinkShell1"
-msgstr ""
+msgstr "通訊貝1"
 
 #: Utils/LanguagueWrapper.cs:224
 msgid "LinkShell2"
-msgstr ""
+msgstr "通訊貝2"
 
 #: Utils/LanguagueWrapper.cs:225
 msgid "LinkShell3"
-msgstr ""
+msgstr "通訊貝3"
 
 #: Utils/LanguagueWrapper.cs:226
 msgid "LinkShell4"
-msgstr ""
+msgstr "通訊貝4"
 
 #: Utils/LanguagueWrapper.cs:227
 msgid "LinkShell5"
-msgstr ""
+msgstr "通訊貝5"
 
 #: Utils/LanguagueWrapper.cs:228
 msgid "LinkShell6"
-msgstr ""
+msgstr "通訊貝6"
 
 #: Utils/LanguagueWrapper.cs:229
 msgid "LinkShell7"
-msgstr ""
+msgstr "通訊貝7"
 
 #: Utils/LanguagueWrapper.cs:230
 msgid "LinkShell8"
-msgstr ""
+msgstr "通訊貝8"
 
 #: Utils/LanguagueWrapper.cs:232
 msgid "Novice Network"
-msgstr ""
+msgstr "新人頻道"
 
 #: Utils/LanguagueWrapper.cs:234
 msgid "Server Info"
-msgstr "Informazioni sul Server"
+msgstr "伺服器資訊"
 
 #: Utils/LanguagueWrapper.cs:236
 msgid "CWLS1"
-msgstr ""
+msgstr "跨服通訊貝1"
 
 #: Utils/LanguagueWrapper.cs:237
 msgid "CWLS2"
-msgstr ""
+msgstr "跨服通訊貝2"
 
 #: Utils/LanguagueWrapper.cs:238
 msgid "CWLS3"
-msgstr ""
+msgstr "跨服通訊貝3"
 
 #: Utils/LanguagueWrapper.cs:239
 msgid "CWLS4"
-msgstr ""
+msgstr "跨服通訊貝4"
 
 #: Utils/LanguagueWrapper.cs:240
 msgid "CWLS5"
-msgstr ""
+msgstr "跨服通訊貝5"
 
 #: Utils/LanguagueWrapper.cs:241
 msgid "CWLS6"
-msgstr ""
+msgstr "跨服通訊貝6"
 
 #: Utils/LanguagueWrapper.cs:242
 msgid "CWLS7"
-msgstr ""
+msgstr "跨服通訊貝7"
 
 #: Utils/LanguagueWrapper.cs:243
 msgid "CWLS8"
-msgstr ""
+msgstr "跨服通訊貝8"
 
 #: Utils/LanguagueWrapper.cs:245
 msgid "Emotes"
-msgstr ""
+msgstr "情感動作"
 
 #: Utils/LanguagueWrapper.cs:246
 msgid "Custom Emotes"
-msgstr ""
+msgstr "自定義情感動作"
 
 #: Utils/LanguagueWrapper.cs:248
 msgid "Downloading new version:"
-msgstr "Scarica la nuova versione:"
+msgstr "正在下載新版本:"
 
 #: Utils/LanguagueWrapper.cs:249
 msgid "Click here to update to new version."
-msgstr "Clicca qui per aggiornare alla nuova versione."
+msgstr "點擊此處更新。"
 
 #: Utils/LanguagueWrapper.cs:251
 msgid "Tataru Update"
-msgstr ""
+msgstr "Tataru更新"
 
 #: Utils/LanguagueWrapper.cs:252
 msgid "New Tataru helper version is available. Restart Application to update."
-msgstr "È disponibile una nuova versione dell'assistenza di Tataru. Riavvia l'applicazione per aggiornare."
+msgstr "有新的Tataru助手版本可用。 重新啟動應用程式以更新。"
 
 #: Utils/LanguagueWrapper.cs:254
 msgid "Check updates"
-msgstr "Controlla aggiornamenti"
+msgstr "檢查更新"
 
 #: Utils/LanguagueWrapper.cs:255
 msgid "Looking for updates..."
-msgstr "Ricerca aggiornamenti..."
+msgstr "正在檢查更新..."
 
 #: Utils/LanguagueWrapper.cs:256
 msgid "No updates found."
-msgstr "Nessun aggiornamento trovato."
+msgstr "未找到更新。"
 
 #~ msgid "Couldn't find FFXIV process."
 #~ msgstr "Couldn't find FFXIV process."
