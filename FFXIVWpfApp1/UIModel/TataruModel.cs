@@ -148,6 +148,8 @@ namespace FFXIVTataruHelper
             _TataruViewModel.ChatWindowsListChangedAsync += AsyncOnViewModelWindowsListChanged;
 
             _TataruViewModel.ChatWindowsListChangedAsync += AsyncOnViewModelChatWindowsListChanged;
+
+            _TataruUIModel.IsCopyToClipboardChanged += AsyncOnChatProcessorSettingsChanged;
         }
 
         public void Stop()
@@ -448,6 +450,11 @@ namespace FFXIVTataruHelper
                     Logger.WriteLog(e);
                 }
             });
+        }
+
+        private async Task AsyncOnChatProcessorSettingsChanged(BooleanChangeEventArgs ea)
+        {
+            _ChatProcessor.CopyToCLipboard = ea.NewValue;
         }
 
         private void CreateBinderCouples(PropertyBinder binder)

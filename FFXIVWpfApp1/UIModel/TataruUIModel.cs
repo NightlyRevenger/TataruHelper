@@ -45,6 +45,13 @@ namespace FFXIVTataruHelper
         }
         private AsyncEvent<BooleanChangeEventArgs> _IsHideSettingsToTrayChanged;
 
+        public event AsyncEventHandler<BooleanChangeEventArgs> IsCopyToClipboardChanged
+        {
+            add { this._IsCopyToClipboardChanged.Register(value); }
+            remove { this._IsCopyToClipboardChanged.Unregister(value); }
+        }
+        private AsyncEvent<BooleanChangeEventArgs> _IsCopyToClipboardChanged;
+
         public event AsyncEventHandler<BooleanChangeEventArgs> IsDirecMemoryReadingChanged
         {
             add { this._IsDirecMemoryReadingChanged.Register(value); }
@@ -85,6 +92,24 @@ namespace FFXIVTataruHelper
                 };
 
                 _IsHideSettingsToTrayChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
+            }
+        }
+
+        public bool IsCopyToClipboard
+        {
+            get { return _IsCopyToClipboard; }
+            set
+            {
+                var oldValue = _IsCopyToClipboard;
+                _IsCopyToClipboard = value;
+
+                var ea = new BooleanChangeEventArgs(this)
+                {
+                    OldValue = oldValue,
+                    NewValue = value
+                };
+
+                _IsCopyToClipboardChanged.InvokeAsync(ea).EndWith(() => { NotifyPropertyChanged(); });
             }
         }
 
@@ -178,6 +203,8 @@ namespace FFXIVTataruHelper
 
         bool _IsHideSettingsToTray;
 
+        bool _IsCopyToClipboard;
+
         bool _IsDirecMemoryReading;
 
         System.Drawing.PointD _SettingsWindowSize = new System.Drawing.PointD(0.0, 0.0);
@@ -198,6 +225,8 @@ namespace FFXIVTataruHelper
 
             this._IsHideSettingsToTrayChanged = new AsyncEvent<BooleanChangeEventArgs>(this.EventErrorHandler, "IsHideSettingsToTrayChanged");
 
+            this._IsCopyToClipboardChanged = new AsyncEvent<BooleanChangeEventArgs>(this.EventErrorHandler, "IsCopyToClipboardChanged");
+
             this._IsDirecMemoryReadingChanged = new AsyncEvent<BooleanChangeEventArgs>(this.EventErrorHandler, "IsDirecMemoryReadingChanged");
 
             this._SettingsWindowSizeChanged = new AsyncEvent<PointDValueChangeEventArgs>(this.EventErrorHandler, "SettingsWindowSizeChanged");
@@ -214,6 +243,8 @@ namespace FFXIVTataruHelper
             UiLanguage = userSettings.CurentUILanguague;
 
             IsHideSettingsToTray = userSettings.IsHideToTray;
+
+            IsCopyToClipboard = userSettings.IsCopyToClipboard;
 
             IsDirecMemoryReading = userSettings.IsDirecMemoryReading;
 
@@ -241,6 +272,8 @@ namespace FFXIVTataruHelper
             userSettings.CurentUILanguague = this.UiLanguage;
 
             userSettings.IsHideToTray = this.IsHideSettingsToTray;
+
+            userSettings.IsCopyToClipboard = this.IsCopyToClipboard;
 
             userSettings.IsDirecMemoryReading = this.IsDirecMemoryReading;
 

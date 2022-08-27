@@ -127,6 +127,12 @@ namespace FFXIVTataruHelper
             _TataruUIModel.IsHideSettingsToTray = isHideToTray;
         }
 
+        private void CopyToClipboard_Changed(object sender, RoutedEventArgs e)
+        {
+            var isCopyToClipboard = (bool)((CheckBox)sender).IsChecked;
+            _TataruUIModel.IsCopyToClipboard = isCopyToClipboard;
+        }
+
         private void DirectMemoryReading_Changed(object sender, RoutedEventArgs e)
         {
             var isDirectMemoryReading = (bool)((CheckBox)sender).IsChecked;
@@ -299,6 +305,18 @@ namespace FFXIVTataruHelper
             });
         }
 
+
+        private async Task OnCopyToClipboardChange(BooleanChangeEventArgs ea)
+        {
+            await this.UIThreadAsync(() =>
+            {
+                if (ea.NewValue != CopyToClipboard.IsChecked)
+                {
+                    CopyToClipboard.IsChecked = ea.NewValue;
+                }
+            });
+        }
+
         private async Task OnDirecMemoryReadingChange(BooleanChangeEventArgs ea)
         {
             await this.UIThreadAsync(() =>
@@ -439,9 +457,10 @@ namespace FFXIVTataruHelper
             var UIModel = _TataruModel.TataruUIModel;
 
             UIModel.UiLanguageChanged += OnUiLanguageChange;
-
+            
 
             UIModel.IsHideSettingsToTrayChanged += OnHideSettingsToTrayChange;
+            UIModel.IsCopyToClipboardChanged += OnCopyToClipboardChange;
             UIModel.IsDirecMemoryReadingChanged += OnDirecMemoryReadingChange;
 
             UIModel.SettingsWindowSizeChanged += OnSettingsWindowSizeChange;
