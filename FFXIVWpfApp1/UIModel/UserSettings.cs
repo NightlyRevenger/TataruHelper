@@ -25,6 +25,8 @@ namespace FFXIVTataruHelper
 
         public bool IsHideToTray { get; set; } = false;
 
+        public bool IsCopyToClipboard { get; set; } = false;
+
         public bool IsAutoHide { get; set; } = false;
 
         public bool IsDirecMemoryReading { get; set; } = true;
@@ -81,6 +83,8 @@ namespace FFXIVTataruHelper
 
             IsHideToTray = false;
 
+            IsCopyToClipboard = false;
+
             IsAutoHide = false;
 
             IsDirecMemoryReading = true;
@@ -135,6 +139,8 @@ namespace FFXIVTataruHelper
             IsAlwaysOnTop = userSettings.IsAlwaysOnTop;
 
             IsHideToTray = userSettings.IsHideToTray;
+
+            IsCopyToClipboard = userSettings.IsCopyToClipboard;
 
             IsAutoHide = userSettings.IsAutoHide;
 

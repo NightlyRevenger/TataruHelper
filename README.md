@@ -1,8 +1,14 @@
-# Tataru Helper
+# Tataru Study
 
 [![Current Version](https://img.shields.io/github/release/NightlyRevenger/TataruHelper)](https://github.com/NightlyRevenger/TataruHelper/releases) ![GitHub Releases (by Asset)](https://img.shields.io/github/downloads/NightlyRevenger/TataruHelper/latest/TataruHelper-0.9.106-delta.nupkg?label=Downloads)  [![Crowdin](https://badges.crowdin.net/tataru-helper/localized.svg)](https://crowdin.com/project/tataru-helper) <a href="https://discord.gg/bSrpbd9">
         <img src="https://img.shields.io/discord/592039000538349569?logo=discord"
             alt="chat on Discord"></a>
+
+A simple fork of [Tataru Helper](https://github.com/NightlyRevenger/TataruHelper) adding auto-copy to clipboard feature. You can use it together with a clipboard-capturing dictionary like yomichan, with a second monitor or always-on-top, and you have yomichan grabbing the ncp's dialogues automatically. I use this flow myself to practice my reading skills while having some fun with the game.
+
+Currently it copies only NPC dialog and system messages.
+
+Please help the developers of Tataru helper as much as you can. Below follows the readme of the original project.
 
 
 [Download Now](https://github.com/NightlyRevenger/TataruHelper/releases/latest/download/Setup.exe)( \---> Download Setup.exe)

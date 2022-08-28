@@ -7,7 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using System.Windows.Media;
 using Translation;
 
@@ -41,7 +43,17 @@ namespace FFXIVTataruHelper
             }
         }
 
+        public Boolean CopyToCLipboard
+        {
+            set
+            {
+                this._CopyToCLipboard = value;
+            }
+        }
+
         #endregion
+
+
 
         #region **LocalVariables.
 
@@ -54,6 +66,8 @@ namespace FFXIVTataruHelper
         List<string> MsgBlackList;
 
         List<string> ChatCodesWithNickNames;
+
+        Boolean _CopyToCLipboard;
 
         #endregion
 
@@ -185,8 +199,18 @@ namespace FFXIVTataruHelper
             switch (msgType.MsgType)
             {
                 default:
-                    {
+                    {   
                         var translation = new ChatMessageArrivedEventArgs(ea);
+
+
+                        // Put text to Clipboard, only works in STA threads, filter only relevant message types
+                        if (_CopyToCLipboard && ( ea.ChatMessage.Code == "003D" || ea.ChatMessage.Code == "0044" || ea.ChatMessage.Code == "0039"))
+                        {
+                            Thread thread = new Thread(() => Clipboard.SetText(ea.ChatMessage.Text, TextDataFormat.UnicodeText));
+                            thread.SetApartmentState(ApartmentState.STA);
+                            thread.Start();
+                            thread.Join();
+                        }
 
                         await _TextArrivedArrived.InvokeAsync(translation);
 

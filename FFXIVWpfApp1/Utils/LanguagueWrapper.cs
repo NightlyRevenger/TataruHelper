@@ -192,6 +192,7 @@ namespace FFXIVTataruHelper
 
             _SettingsWindow.Resources["AlwaysOnTopCB"] = catalog.GetString("Always On Top");
             _SettingsWindow.Resources["HideToTrayCB"] = catalog.GetString("Hide to Tray");
+            _SettingsWindow.Resources["CopyToClipboardCB"] = catalog.GetString("Copy To Clipboard");
             _SettingsWindow.Resources["ShowTimestampsCb"] = catalog.GetString("Show Timestamps");
 
             _SettingsWindow.Resources["StreamerWindowCB"] = catalog.GetString("Streamer Window");

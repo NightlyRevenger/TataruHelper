@@ -251,6 +251,7 @@
                                     </StackPanel>
                                 </CheckBox>
                                 <CheckBox x:Name="HideToTray" Content="{DynamicResource HideToTrayCB}" HorizontalAlignment="Left" Height="21" VerticalAlignment="Bottom" Width="158" Checked="HideToTray_Changed" Unchecked="HideToTray_Changed" Margin="0,0,0,2"/>
+                                <CheckBox x:Name="CopyToClipboard" Content="{DynamicResource CopyToClipboardCB}" HorizontalAlignment="Left" Height="21" VerticalAlignment="Bottom" Width="158" Checked="CopyToClipboard_Changed" Unchecked="CopyToClipboard_Changed" Margin="0,0,0,2"/>
                             </StackPanel>
                         </GroupBox>
 
