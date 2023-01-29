@@ -143,6 +143,18 @@ namespace FFXIVTataruHelper.FFHandlers
             }
         }
 
+        private static Process GetForegroundProcessByName(string processName)
+        {
+            Process[] processes = Process.GetProcessesByName(processName);
+            if (processes.Length == 0)
+                return null;
+            if (processes.Length == 1)
+                return processes[0];
+            IntPtr hWnd = Win32Interfaces.GetForegroundWindow();
+            Process process = processes.ToList().Find(p => p.MainWindowHandle == hWnd);
+            return process;
+        }
+
         private async Task InitMemoryReader()
         {
             try
@@ -154,8 +166,9 @@ namespace FFXIVTataruHelper.FFHandlers
 
                 while (_KeepWorking && porcessNotFound)
                 {
-                    Process[] processes = Process.GetProcessesByName(_FfProcessName);
-                    if (processes.Length > 0)
+                    Process process = GetForegroundProcessByName(_FfProcessName);
+
+                    if (process != null)
                     {
                         try
                         {
@@ -166,7 +179,6 @@ namespace FFXIVTataruHelper.FFHandlers
                             bool scanAllMemoryRegions = false;
                             // patchVersion of game, or latest//
                             string patchVersion = "latest";
-                            Process process = processes[0];
 
                             if (_FfXivProcess != null)
                                 _FfXivProcess.Dispose();
@@ -260,8 +272,9 @@ namespace FFXIVTataruHelper.FFHandlers
                             FFWindowState = FFXIVPrevWindowState;
                         }
 
-                        Process[] processes = Process.GetProcessesByName(_FfProcessName);
-                        if (processes.Length == 0)
+                        Process process = _FfXivProcess ?? GetForegroundProcessByName(_FfProcessName);
+
+                        if (process == null)
                         {
                             System.Windows.WindowState oldState = System.Windows.WindowState.Normal;
                             var ea = new WindowStateChangeEventArgs(this)
@@ -297,7 +310,7 @@ namespace FFXIVTataruHelper.FFHandlers
 
                                     IsRunningOld = _isRunningPrev,
                                     IsRunningNew = true,
-                                    Text = processes[0].ProcessName + ".exe" + "  PID: " + processes[0].Id.ToString()
+                                    Text = process.ProcessName + ".exe" + "  PID: " + process.Id.ToString()
                                 };
 
                                 _FFWindowStateChanged.InvokeAsync(ea).Forget();
