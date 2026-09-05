@@ -209,6 +209,8 @@
     <system:String x:Key="MarkMachineTranslationDescription">Put a dot in front of lines an engine translated, so the ones from XIV Rus Translation are the plain ones.</system:String>
     <system:String x:Key="TranslateSpeakerNamesCB">Translate speaker names</system:String>
     <system:String x:Key="TranslateSpeakerNamesDescription">Show who is speaking in the reading language, using the XIV Rus Translation spelling where there is one.</system:String>
+    <system:String x:Key="TranslatePlayerNicknamesCB">Translate player nicknames</system:String>
+    <system:String x:Key="TranslatePlayerNicknamesDescription">Show player names in the reading language. Turn this off to keep their original spelling.</system:String>
 
     <system:String x:Key="ReferenceIndexTitle">XIV Rus Translation</system:String>
     <system:String x:Key="ReferenceIndexHint">XIV Rus Translation gains lines every week. Rebuilding fetches its current work; around a gigabyte is read as it downloads and only the index is kept.</system:String>

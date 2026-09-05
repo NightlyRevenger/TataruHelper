@@ -268,6 +268,21 @@
                             <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
                         <StackPanel Grid.Column="0">
+                            <TextBlock Text="{DynamicResource TranslatePlayerNicknamesCB}" FontWeight="SemiBold" />
+                            <TextBlock Style="{DynamicResource CaptionTextStyle}"
+                                       Text="{DynamicResource TranslatePlayerNicknamesDescription}"
+                                       TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ui:ToggleSwitch Grid.Column="1" VerticalAlignment="Center"
+                                         IsChecked="{Binding Shell.IsPlayerNicknameTranslated, Mode=TwoWay}" />
+                    </Grid>
+
+                    <Grid Margin="0,12,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
                             <TextBlock Text="{DynamicResource MarkMachineTranslationCB}" FontWeight="SemiBold" />
                             <TextBlock Style="{DynamicResource CaptionTextStyle}"
                                        Text="{DynamicResource MarkMachineTranslationDescription}"

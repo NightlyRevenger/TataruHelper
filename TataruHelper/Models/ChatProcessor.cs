@@ -130,8 +130,12 @@ namespace FFXIVTataruHelper
         public async Task OnFFChatMessageArrived(ChatMessageArrivedEventArgs ea)
         {
             ChatMsgType msgType = new ChatMsgType();
+            var shouldTranslate = _ChatMessageFilter.ShouldTranslate(ea.ChatMessage.Text);
 
-            if (_ChatMessageFilter.ShouldTranslate(ea.ChatMessage.Text))
+            Logger.WriteRawDialogLog(
+                $"ChatReceive code=[{ea.ChatMessage.Code}] text=[{ea.ChatMessage.Text}] shouldTranslate=[{shouldTranslate}]");
+
+            if (shouldTranslate)
                 await ProcessChatMsg(ea, msgType);
 
             if (ShouldLogToChatLog(ea.ChatMessage.Code))
@@ -178,7 +182,16 @@ namespace FFXIVTataruHelper
         {
             string nickName;
             string sentenceToTranslate;
-            _ChatMessageFilter.TrySplitNickname(chatCode, inSentence, out nickName, out sentenceToTranslate);
+            var nicknameWasSplit =
+                _ChatMessageFilter.TrySplitNickname(chatCode, inSentence, out nickName, out sentenceToTranslate);
+            var isPlayerChat = ChatMessageFilter.IsPlayerChatCode(chatCode);
+
+            Logger.WriteRawDialogLog(
+                $"ChatTranslateStart code=[{chatCode}] input=[{inSentence}] split=[{nicknameWasSplit}] " +
+                $"playerChat=[{isPlayerChat}] nickname=[{nickName}] body=[{sentenceToTranslate}] " +
+                $"translatePlayerNicknames=[{TranslatePlayerNicknames}] " +
+                $"translateSpeakerNames=[{TranslateSpeakerNames}] engine=[{translationEngine?.EngineName}] " +
+                $"from=[{fromLang?.LanguageCode}] to=[{toLang?.LanguageCode}]");
 
             var batchKey = BuildTranslationBatchKey(chatCode, nickName, translationEngine, fromLang, toLang);
             var result = await QueueForBatchedTranslation(
@@ -191,10 +204,14 @@ namespace FFXIVTataruHelper
 
             if (!result.IsSuccess || result.Text.Length == 0)
             {
+                Logger.WriteRawDialogLog(
+                    $"ChatTranslateBodyResult success=[{result.IsSuccess}] engine=[{result.Engine}] " +
+                    $"failure=[{result.FailureKind}] reason=[{result.FailureReason}] text=[{result.Text}]");
                 return result;
             }
 
-            if (TranslateSpeakerNames && nickName.Length > 0)
+            if (nickName.Length > 0 &&
+                (isPlayerChat ? TranslatePlayerNicknames : TranslateSpeakerNames))
             {
                 nickName = await ResolveSpeakerName(nickName, translationEngine, fromLang, toLang, cancellationToken);
             }
@@ -209,7 +226,11 @@ namespace FFXIVTataruHelper
                 line = MachineTranslationMarker + line;
             }
 
-            return result.WithText(line).WithSpeaker(nickName);
+            var rendered = result.WithText(line).WithSpeaker(nickName);
+            Logger.WriteRawDialogLog(
+                $"ChatTranslateResult success=[{rendered.IsSuccess}] engine=[{rendered.Engine}] " +
+                $"literary=[{rendered.IsLiterary}] speaker=[{rendered.SpeakerName}] text=[{rendered.Text}]");
+            return rendered;
         }
 
         /// <summary>
@@ -230,8 +251,11 @@ namespace FFXIVTataruHelper
         {
             // The speaker arrives punctuated the way it will be shown - "Cid:" -
             // and only the name itself is looked up.
-            var trailing = nickName.TrimStart().StartsWith("(") ? string.Empty : ":";
-            var name = nickName.Trim().TrimEnd(':').Trim();
+            var trimmedNickname = nickName.Trim();
+            var trailing = trimmedNickname.StartsWith("(")
+                ? string.Empty
+                : trimmedNickname.EndsWith("\uFF1A", StringComparison.Ordinal) ? "\uFF1A" : ":";
+            var name = trimmedNickname.TrimEnd(':', '\uFF1A').Trim();
             if (name.Length == 0)
             {
                 return nickName;
@@ -239,16 +263,25 @@ namespace FFXIVTataruHelper
 
             if (_WebTranslator.TryGetReferenceSpeakerName(name, fromLang, toLang, out var known))
             {
+                Logger.WriteRawDialogLog($"ChatSpeakerReference name=[{name}] translated=[{known}]");
                 return known + trailing;
             }
 
+            Logger.WriteRawDialogLog(
+                $"ChatSpeakerTranslateStart name=[{name}] engine=[{translationEngine?.EngineName}] " +
+                $"from=[{fromLang?.LanguageCode}] to=[{toLang?.LanguageCode}]");
             var translated = await _WebTranslator
                 .TranslateAsync(name, translationEngine, fromLang, toLang, cancellationToken)
                 .ConfigureAwait(false);
 
-            return translated.IsSuccess && translated.Text.Length > 0
+            var resolved = translated.IsSuccess && translated.Text.Length > 0
                 ? translated.Text.Trim() + trailing
                 : nickName;
+            Logger.WriteRawDialogLog(
+                $"ChatSpeakerTranslateResult success=[{translated.IsSuccess}] engine=[{translated.Engine}] " +
+                $"failure=[{translated.FailureKind}] reason=[{translated.FailureReason}] " +
+                $"text=[{translated.Text}] rendered=[{resolved}]");
+            return resolved;
         }
 
         /// <summary>
@@ -257,6 +290,9 @@ namespace FFXIVTataruHelper
         /// alphabet halfway through.
         /// </summary>
         public bool TranslateSpeakerNames { get; set; }
+
+        /// <summary>Whether player-chat sender prefixes are translated into the reading language.</summary>
+        public bool TranslatePlayerNicknames { get; set; }
 
         /// <summary>Prefix shown on lines an engine translated, when asked for.</summary>
         internal const string MachineTranslationMarker = "• ";

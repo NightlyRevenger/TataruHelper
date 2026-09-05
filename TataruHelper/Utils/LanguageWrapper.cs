@@ -240,6 +240,7 @@ namespace FFXIVTataruHelper
             _SettingsWindow.Resources["LiteraryTranslationCB"] = catalog.GetString("XIV Rus Translation");
             _SettingsWindow.Resources["MarkMachineTranslationCB"] = catalog.GetString("Mark machine translation");
             _SettingsWindow.Resources["TranslateSpeakerNamesCB"] = catalog.GetString("Translate speaker names");
+            _SettingsWindow.Resources["TranslatePlayerNicknamesCB"] = catalog.GetString("Translate player nicknames");
             _SettingsWindow.Resources["ShowTimestampsCb"] = catalog.GetString("Show Timestamps");
 
             _SettingsWindow.Resources["StreamerWindowCB"] = catalog.GetString("Streamer Window");
@@ -384,6 +385,9 @@ namespace FFXIVTataruHelper
             _SettingsWindow.Resources["TranslateSpeakerNamesDescription"] =
                 catalog.GetString(
                     "Show who is speaking in the reading language, using the XIV Rus Translation spelling where there is one.");
+            _SettingsWindow.Resources["TranslatePlayerNicknamesDescription"] =
+                catalog.GetString(
+                    "Show player names in the reading language. Turn this off to keep their original spelling.");
             _SettingsWindow.Resources["LanguageGroupHint"] =
                 catalog.GetString("Interface language for the settings window and overlays.");
 

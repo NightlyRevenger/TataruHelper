@@ -337,6 +337,22 @@ public sealed class SettingsShellViewModel : INotifyPropertyChanged, IDisposable
         }
     }
 
+    /// <summary>Show player-chat sender names in the reading language.</summary>
+    public bool IsPlayerNicknameTranslated
+    {
+        get => _uiModel.IsPlayerNicknameTranslated;
+        set
+        {
+            if (_uiModel.IsPlayerNicknameTranslated == value)
+            {
+                return;
+            }
+
+            _uiModel.IsPlayerNicknameTranslated = value;
+            OnPropertyChanged();
+        }
+    }
+
     /// <summary>
     /// Whether the daily check may act on what it finds, or only report it.
     ///
@@ -1047,6 +1063,12 @@ public sealed class SettingsShellViewModel : INotifyPropertyChanged, IDisposable
         if (e.PropertyName == nameof(TataruUIModel.IsReferenceIndexAutoInstall))
         {
             OnPropertyChanged(nameof(IsReferenceIndexAutoInstall));
+            return;
+        }
+
+        if (e.PropertyName == nameof(TataruUIModel.IsPlayerNicknameTranslated))
+        {
+            OnPropertyChanged(nameof(IsPlayerNicknameTranslated));
             return;
         }
 

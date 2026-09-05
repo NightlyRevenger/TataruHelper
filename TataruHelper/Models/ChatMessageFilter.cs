@@ -6,6 +6,25 @@ namespace FFXIVTataruHelper
 {
     public class ChatMessageFilter
     {
+        private static readonly HashSet<string> PlayerChatCodes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "0048", // Recruitment
+            "000A", // Say
+            "000B", // Shout
+            "000C", // Outgoing tell
+            "000E", // Party
+            "000D", // Tell
+            "0018", // Free Company
+            "0019", // PvP team
+            "001E", // Yell
+            "000F", // Alliance
+            "0010", "0011", "0012", "0013", "0014", "0015", "0016", "0017", // Linkshells
+            "0025", "0065", "0066", "0067", "0068", "0069", "006A", "006B", // Cross-world Linkshells
+            "001B", // Novice Network
+            "001D", // Emotes
+            "001C"  // Custom emotes
+        };
+
         private readonly HashSet<string> _blackList;
         private readonly HashSet<string> _chatCodesWithNickNames;
 
@@ -36,7 +55,11 @@ namespace FFXIVTataruHelper
             if (String.IsNullOrEmpty(textToTranslate))
                 return false;
 
-            var separatorIndex = textToTranslate.IndexOf(":");
+            var separatorIndex = textToTranslate.IndexOf(':');
+            if (separatorIndex < 0)
+            {
+                separatorIndex = textToTranslate.IndexOf('\uFF1A');
+            }
             if (separatorIndex <= 0)
                 return false;
 
@@ -47,6 +70,12 @@ namespace FFXIVTataruHelper
             nickName = textToTranslate.Substring(0, separatorIndex);
             textToTranslate = textToTranslate.Remove(0, separatorIndex);
             return true;
+        }
+
+        /// <summary>Whether a code belongs to player-created chat rather than story dialogue.</summary>
+        internal static bool IsPlayerChatCode(string chatCode)
+        {
+            return !string.IsNullOrEmpty(chatCode) && PlayerChatCodes.Contains(chatCode);
         }
 
         /// <summary>

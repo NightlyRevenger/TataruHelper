@@ -181,6 +181,17 @@ namespace FFXIVTataruHelper
 
         }
 
+        /// <summary>Whether player-chat sender prefixes are translated into the reading language.</summary>
+        public bool IsPlayerNicknameTranslated
+        {
+            get { return _IsPlayerNicknameTranslated; }
+            set
+            {
+                _IsPlayerNicknameTranslated = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         /// <summary>
         /// Whether new hand-made translations are fetched as they appear.
         ///
@@ -277,6 +288,8 @@ namespace FFXIVTataruHelper
 
         bool _IsSpeakerNameTranslated;
 
+        bool _IsPlayerNicknameTranslated;
+
         bool _IsReferenceIndexAutoInstall;
 
         PointD _SettingsWindowSize = new PointD(0.0, 0.0);
@@ -346,6 +359,8 @@ namespace FFXIVTataruHelper
 
             IsSpeakerNameTranslated = userSettings.IsSpeakerNameTranslated;
 
+            IsPlayerNicknameTranslated = userSettings.IsPlayerNicknameTranslated;
+
             IsReferenceIndexAutoInstall = userSettings.IsReferenceIndexAutoInstall;
 
             SettingsWindowSize = userSettings.SettingsWindowSize;
@@ -386,6 +401,8 @@ namespace FFXIVTataruHelper
             userSettings.IsMachineTranslationMarked = this.IsMachineTranslationMarked;
 
             userSettings.IsSpeakerNameTranslated = this.IsSpeakerNameTranslated;
+
+            userSettings.IsPlayerNicknameTranslated = this.IsPlayerNicknameTranslated;
 
             userSettings.IsReferenceIndexAutoInstall = this.IsReferenceIndexAutoInstall;
 

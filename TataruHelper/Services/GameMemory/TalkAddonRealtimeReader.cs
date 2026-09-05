@@ -414,6 +414,8 @@ namespace FFXIVTataruHelper.Services.GameMemory
                         continue;
                     }
 
+                    LogNodeList(addonSpec.AddonName, loadedAddon.AddonAddress);
+
                     if (!TryReadAddonNodeTexts(loadedAddon.AddonAddress, addonSpec, out var nodeTexts))
                     {
                         continue;
@@ -425,7 +427,6 @@ namespace FFXIVTataruHelper.Services.GameMemory
                             (nodeTexts ?? Array.Empty<string>()).Select(text => $"[{text}]"));
                         WriteDistinctRawDialogLog(ref _lastLoggedAddonNodes,
                             $"Addon=[{addonSpec.AddonName}] code=[{addonSpec.ChatCode}] nodes={{ {joinedNodes} }}");
-                        LogNodeList(addonSpec.AddonName, loadedAddon.AddonAddress);
                     }
 
                     var addonSnapshot = BuildAddonSnapshot(addonSpec, nodeTexts, speakerName, lastTalkText);
@@ -795,13 +796,13 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 return true;
             }
 
+            if (TryReadNamedNodeTexts(addonAddress, addonSpec, out nodeTexts))
+            {
+                return true;
+            }
+
             if (addonSpec.TextNodeOffsets != null && addonSpec.TextNodeOffsets.Length > 0)
             {
-                if (TryReadNamedNodeTexts(addonAddress, addonSpec, out nodeTexts))
-                {
-                    return true;
-                }
-
                 return TryReadDirectTextNodeTexts(addonAddress, addonSpec.TextNodeOffsets, out nodeTexts);
             }
 
@@ -1686,17 +1687,13 @@ namespace FFXIVTataruHelper.Services.GameMemory
         private static AddonRealtimeTextSpec[] ResolveAddonSpecs(Type addonTalkType)
         {
             var addonSpecs = new List<AddonRealtimeTextSpec>();
-            var addonTalkTextNodeOffsets = ResolveAddonTalkTextNodeOffsets(addonTalkType);
-            if (addonTalkTextNodeOffsets.Length > 0)
-            {
-                addonSpecs.Add(AddonRealtimeTextSpec.Direct(
-                    TalkAddonName,
-                    DirectDialogCode,
-                    addonTalkTextNodeOffsets,
-                    true,
-                    TalkSpeakerNodeId,
-                    TalkTextNodeId));
-            }
+            addonSpecs.Add(AddonRealtimeTextSpec.Direct(
+                TalkAddonName,
+                DirectDialogCode,
+                ResolveAddonTalkTextNodeOffsets(addonTalkType),
+                true,
+                TalkSpeakerNodeId,
+                TalkTextNodeId));
 
             var miniTalkSpec = ResolveMiniTalkAddonSpec(MiniTalkAddonName);
             if (miniTalkSpec != null)

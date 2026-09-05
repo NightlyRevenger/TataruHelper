@@ -45,6 +45,11 @@ namespace FFXIVTataruHelper
         public bool IsSpeakerNameTranslated { get; set; }
 
 
+        /// <summary>Translate player-chat sender prefixes into the reading language.</summary>
+
+        public bool IsPlayerNicknameTranslated { get; set; }
+
+
         /// <summary>
         /// Fetch new hand-made translations as they appear, rather than saying
         /// they exist and waiting to be told to.
@@ -196,6 +201,8 @@ namespace FFXIVTataruHelper
             IsMachineTranslationMarked = userSettings.IsMachineTranslationMarked;
 
             IsSpeakerNameTranslated = userSettings.IsSpeakerNameTranslated;
+
+            IsPlayerNicknameTranslated = userSettings.IsPlayerNicknameTranslated;
 
             IsReferenceIndexAutoInstall = userSettings.IsReferenceIndexAutoInstall;
 
