@@ -65,6 +65,8 @@ namespace FFXIVTataruHelper.Services.GameMemory
 
         private string _lastLoggedNodeParts = string.Empty;
 
+        private string _lastLoggedChoice = string.Empty;
+
         /// <summary>
         /// Payloads already written to the raw-dialog log. Kept as a set rather
         /// than as "the last one": a line carrying three icons cycles through
@@ -171,6 +173,19 @@ namespace FFXIVTataruHelper.Services.GameMemory
                    || string.Equals(addonName, TalkSubtitleAddonName, StringComparison.OrdinalIgnoreCase)
                    || string.Equals(addonName, MiniTalkAddonName, StringComparison.OrdinalIgnoreCase)
                    || string.Equals(addonName, AlternateMiniTalkAddonName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// The windows a conversation offers a choice in: an NPC's menu, the
+        /// list a cutscene puts over the picture, a yes-or-no. Looked at for
+        /// the raw-dialog log and nothing else so far.
+        /// </summary>
+        private static bool IsChoiceAddonName(string addonName)
+        {
+            return !string.IsNullOrEmpty(addonName) &&
+                   (addonName.StartsWith("Select", StringComparison.OrdinalIgnoreCase) ||
+                    addonName.StartsWith("CutSceneSelect", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(addonName, "_TextInput", StringComparison.OrdinalIgnoreCase));
         }
 
         private TalkAddonRealtimeDialogSnapshot _lastSelectedSnapshot;
@@ -553,6 +568,15 @@ namespace FFXIVTataruHelper.Services.GameMemory
 
                 if (!IsWantedAddonName(addonName))
                 {
+                    // Not read, only looked at: the windows a conversation
+                    // offers a choice in. Nothing is done with them yet, and
+                    // whether anything can be is a question about what their
+                    // nodes hold - which is what this writes down.
+                    if (Logger.RawDialogLogEnabled && IsChoiceAddonName(addonName))
+                    {
+                        LogChoiceTexts(addonName, addonAddress);
+                    }
+
                     continue;
                 }
 
@@ -1605,6 +1629,89 @@ namespace FFXIVTataruHelper.Services.GameMemory
         /// Dumps an addon's node list so the walk can be checked against the
         /// running client: what ids it has, which are text, which are on screen.
         /// </summary>
+        /// <summary>
+        /// Writes down every word a choice window is showing, going inside its
+        /// component nodes to find them.
+        ///
+        /// A window's own node list stops at the components. The cutscene's
+        /// choice strip has five nodes and not one of them is text: the
+        /// question is a component and so is the list of answers, and the words
+        /// are one level further in.
+        ///
+        /// For the raw-dialog log and nothing else. Whether these windows can
+        /// be read is the question; this is what answers it.
+        /// </summary>
+        private void LogChoiceTexts(string addonName, IntPtr addonAddress)
+        {
+            var walk = _uiDirectDialogOffsets.Value.NodeWalk;
+            if (!walk.IsValid || addonAddress == IntPtr.Zero)
+            {
+                return;
+            }
+
+            var found = new List<string>();
+            GatherTexts(AddAddress(addonAddress, walk.UldManagerOffset), walk, found, 0);
+
+            if (found.Count == 0)
+            {
+                return;
+            }
+
+            WriteDistinctRawDialogLog(ref _lastLoggedChoice,
+                $"Choice addon=[{addonName}] text={{ {string.Join(" | ", found)} }}");
+        }
+
+        private void GatherTexts(IntPtr uldManagerAddress, AtkNodeWalkOffsets walk, List<string> found, int depth)
+        {
+            if (uldManagerAddress == IntPtr.Zero || depth > 4 || found.Count > 32)
+            {
+                return;
+            }
+
+            var nodeCount = _memoryHandler.GetUInt16(uldManagerAddress, walk.NodeListCountOffset);
+            var nodeListAddress = _memoryHandler.ReadPointer(uldManagerAddress, walk.NodeListOffset);
+            if (nodeCount <= 0 || nodeCount > MaxNodeListEntries || nodeListAddress == IntPtr.Zero)
+            {
+                return;
+            }
+
+            for (var index = 0; index < nodeCount; index++)
+            {
+                var nodeAddress = _memoryHandler.ReadPointer(nodeListAddress, index * IntPtr.Size);
+                if (nodeAddress == IntPtr.Zero)
+                {
+                    continue;
+                }
+
+                var type = _memoryHandler.GetUInt16(nodeAddress, walk.NodeTypeOffset);
+                var visible = (_memoryHandler.GetUInt16(nodeAddress, walk.NodeFlagsOffset) & VisibleNodeFlag) != 0;
+
+                if (type == TextNodeType)
+                {
+                    if (visible &&
+                        TryReadUtf8String(nodeAddress, _uiDirectDialogOffsets.Value.AtkTextNodeNodeTextOffset,
+                            out var text) &&
+                        text.Length > 0)
+                    {
+                        found.Add("[" + text + "]");
+                    }
+
+                    continue;
+                }
+
+                // Anything numbered a thousand or more is a component, and what
+                // it draws is inside it.
+                if (type >= 1000 && walk.CanGoInsideComponents)
+                {
+                    var component = _memoryHandler.ReadPointer(nodeAddress, walk.ComponentOffset);
+                    if (component != IntPtr.Zero)
+                    {
+                        GatherTexts(AddAddress(component, walk.ComponentUldManagerOffset), walk, found, depth + 1);
+                    }
+                }
+            }
+        }
+
         private void LogNodeList(string addonName, IntPtr addonAddress)
         {
             var offsets = _uiDirectDialogOffsets.Value;
@@ -2137,13 +2244,20 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 return AtkNodeWalkOffsets.Empty;
             }
 
+            var componentNodeType =
+                Type.GetType("FFXIVClientStructs.FFXIV.Component.GUI.AtkComponentNode, Sharlayan");
+            var componentBaseType =
+                Type.GetType("FFXIVClientStructs.FFXIV.Component.GUI.AtkComponentBase, Sharlayan");
+
             return new AtkNodeWalkOffsets(
                 ResolveFieldOffset(atkUnitBaseType, "UldManager"),
                 ResolveFieldOffset(uldManagerType, "NodeList"),
                 ResolveFieldOffset(uldManagerType, "NodeListCount"),
                 ResolveFieldOffset(atkResNodeType, "NodeId"),
                 ResolveFieldOffset(atkResNodeType, "Type"),
-                ResolveFieldOffset(atkResNodeType, "NodeFlags"));
+                ResolveFieldOffset(atkResNodeType, "NodeFlags"),
+                componentNodeType == null ? -1 : ResolveFieldOffset(componentNodeType, "Component"),
+                componentBaseType == null ? -1 : ResolveFieldOffset(componentBaseType, "UldManager"));
         }
 
         private static long ResolveFieldOffset(Type type, string fieldName)
@@ -2296,6 +2410,19 @@ namespace FFXIVTataruHelper.Services.GameMemory
             public long NodeTypeOffset { get; }
             public long NodeFlagsOffset { get; }
 
+            /// <summary>
+            /// How to get inside a component node. A window's own node list
+            /// stops at the component - the question and the list of answers a
+            /// conversation offers are components - and what they hold is one
+            /// level further in. Negative when the metadata does not describe
+            /// them, which costs the walk nothing else.
+            /// </summary>
+            public long ComponentOffset { get; }
+
+            public long ComponentUldManagerOffset { get; }
+
+            public bool CanGoInsideComponents => ComponentOffset >= 0 && ComponentUldManagerOffset >= 0;
+
             public bool IsValid =>
                 UldManagerOffset >= 0 &&
                 NodeListOffset >= 0 &&
@@ -2310,8 +2437,12 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 long nodeListCountOffset,
                 long nodeIdOffset,
                 long nodeTypeOffset,
-                long nodeFlagsOffset)
+                long nodeFlagsOffset,
+                long componentOffset = -1,
+                long componentUldManagerOffset = -1)
             {
+                ComponentOffset = componentOffset;
+                ComponentUldManagerOffset = componentUldManagerOffset;
                 UldManagerOffset = uldManagerOffset;
                 NodeListOffset = nodeListOffset;
                 NodeListCountOffset = nodeListCountOffset;
