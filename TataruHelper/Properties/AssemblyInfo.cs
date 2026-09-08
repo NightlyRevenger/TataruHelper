@@ -55,6 +55,6 @@ using System.Windows;
 // master packs a Velopack release from this number, and Velopack refuses to
 // pack a version that is already out - so leaving it at the published one
 // turns the build red on every commit until somebody raises it.
-[assembly: AssemblyVersion("1.0.9")]
-[assembly: AssemblyFileVersion("1.0.9")]
+[assembly: AssemblyVersion("1.0.10")]
+[assembly: AssemblyFileVersion("1.0.10")]
 [assembly: InternalsVisibleTo("TataruHelper.Tests")]
