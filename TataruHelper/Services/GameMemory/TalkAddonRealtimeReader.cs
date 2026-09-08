@@ -65,6 +65,13 @@ namespace FFXIVTataruHelper.Services.GameMemory
 
         private string _lastLoggedNodeParts = string.Empty;
 
+        /// <summary>
+        /// Payloads already written to the raw-dialog log. Kept as a set rather
+        /// than as "the last one": a line carrying three icons cycles through
+        /// three payloads, and each would be new against the one before it.
+        /// </summary>
+        private static readonly HashSet<string> _loggedPayloads = new HashSet<string>(StringComparer.Ordinal);
+
         // AtkResNode.Type for the two node kinds that draw a picture. The
         // dialogue window's frame is a nine-grid, which is how a panel that
         // stretches to any size is drawn.
@@ -1701,6 +1708,40 @@ namespace FFXIVTataruHelper.Services.GameMemory
         /// stray letter - an emphasised line arrived as "H&#65533;#O mournful voice of
         /// creation!...H".
         /// </summary>
+        /// <summary>
+        /// Writes a payload this reader is dropping to the raw-dialog log, once
+        /// for each kind of payload seen.
+        ///
+        /// What is dropped is not nothing. An icon is a payload - the mentor
+        /// crowns, the new-adventurer leaf - and dropping it is why a line can
+        /// arrive reading "Mentor symbols are as follows: : Expert in PvE
+        /// combat". Seeing the bytes is the first step to keeping them.
+        /// </summary>
+        private static void LogPayloadOnce(byte[] data, int start, int end)
+        {
+            if (!Logger.RawDialogLogEnabled || _loggedPayloads.Count > 256)
+            {
+                return;
+            }
+
+            var hex = new StringBuilder((end - start + 1) * 3);
+            for (var b = start; b <= end; b++)
+            {
+                hex.Append(data[b].ToString("X2")).Append(' ');
+            }
+
+            var payload = hex.ToString().TrimEnd();
+            lock (_loggedPayloads)
+            {
+                if (!_loggedPayloads.Add(payload))
+                {
+                    return;
+                }
+            }
+
+            Logger.WriteRawDialogLog("Payload dropped: " + payload);
+        }
+
         internal static string DecodeGameString(byte[] data, int start, int count)
         {
             if (data == null || count <= 0 || start < 0 || start >= data.Length)
@@ -1727,6 +1768,8 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 {
                     break;
                 }
+
+                LogPayloadOnce(data, i, payloadEnd);
 
                 i = payloadEnd;
             }

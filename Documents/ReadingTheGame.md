@@ -106,6 +106,39 @@ If a field is missing altogether - FFXIVClientStructs renames one - the road
 goes down and the log says which name could not be found. That message is the
 first thing to look for.
 
+## What is thrown away with the markup
+
+A line off the screen is not plain text. It is a SeString: text with payloads
+wrapped in `0x02 ... 0x03` carrying colour changes, line breaks, player names,
+item links - and **icons**. `DecodeGameString` drops every payload whole, which
+is right for the colour changes and wrong for the icons.
+
+That is why a line can arrive reading
+
+    Mentor symbols are as follows: : Expert in PvE combat : Expert in PvP combat
+
+with a hole where each crown should be, and why the new-adventurer line says
+"the two-leaf symbol ( )" with nothing between the brackets.
+
+An icon payload is as simple as they come - measured on 2026-09-08:
+
+    02 12 02 50 03      start, macro 0x12 (icon), length 2, id, end
+
+The id is stored as the byte minus one, so `0x50` is icon 79. Those three are
+79, 80 and 81: the mentor crowns for combat, crafting and PvP.
+
+The pictures are in the player's own installation and can be read from it. The
+Lumina that Sharlayan depends on already ships with this application, and the
+game's folder is known from the process being read:
+
+- `common/font/gfdata.gfd` - 188 entries of sixteen bytes: id, left, top,
+  width, height. Icon 79 is 20x20 at 208,60.
+- `common/font/fonticon_xinput.tex` - 512x1024, A8R8G8B8, which Lumina decodes
+  to straight RGBA.
+
+Run with `--log-raw-dialog` and every kind of payload being dropped is written
+out once as `Payload dropped: ...`.
+
 ## Not saying it twice
 
 `RecentUtterance` is the memory both roads report to and both consult. A second
