@@ -61,6 +61,7 @@ namespace FFXIVTataruHelper
             services.AddSingleton<IHotKeyBindingService, HotKeyBindingService>();
             services.AddSingleton<IHotkeyCaptureService, HotkeyCaptureService>();
             services.AddSingleton<DialogueOverlayHost>();
+            services.AddSingleton<GameIconReader>();
             services.AddSingleton<IChatWindowFactory, ChatWindowFactory>();
             services.AddTransient<IChatWindowCoordinator, ChatWindowCoordinator>();
             services.AddTransient<IChatWindowsEventCoordinator, ChatWindowsEventCoordinator>();

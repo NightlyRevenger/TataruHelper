@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Documents;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Media.Effects;
@@ -34,6 +35,13 @@ namespace FFXIVTataruHelper
 
         private readonly IFFMemoryReaderService _memoryReader;
         private readonly Func<IntPtr> _gameWindow;
+
+        /// <summary>
+        /// The little pictures a line can have in the middle of it, read out of
+        /// the player's own game. This is the only place in the application
+        /// that draws them: everywhere else they are taken out of the text.
+        /// </summary>
+        private readonly GameIconReader _icons;
         private readonly DispatcherTimer _timer;
 
         private readonly TextBlock _speaker;
@@ -80,10 +88,19 @@ namespace FFXIVTataruHelper
         /// </summary>
         private string _shownLineKey = string.Empty;
 
-        public DialogueOverlayWindow(IFFMemoryReaderService memoryReader, Func<IntPtr> gameWindow)
+        /// <summary>
+        /// The words currently in front of the reader. Kept because the line is
+        /// no longer one piece of text that can be compared against the block
+        /// showing it - it may be text, a picture and more text.
+        /// </summary>
+        private string _shownWords;
+
+        public DialogueOverlayWindow(IFFMemoryReaderService memoryReader, Func<IntPtr> gameWindow,
+            GameIconReader icons)
         {
             _memoryReader = memoryReader;
             _gameWindow = gameWindow;
+            _icons = icons;
 
             WindowStyle = WindowStyle.None;
             AllowsTransparency = true;
@@ -239,10 +256,68 @@ namespace FFXIVTataruHelper
                 _speaker.Visibility = speaker.Length > 0 ? Visibility.Visible : Visibility.Collapsed;
             }
 
-            if (!string.Equals(_line.Text, line, StringComparison.Ordinal))
+            if (string.Equals(_shownWords, line, StringComparison.Ordinal))
             {
-                _line.Text = line;
+                return;
             }
+
+            _shownWords = line;
+            _line.Inlines.Clear();
+
+            var from = 0;
+            for (var at = 0; at < line.Length; at++)
+            {
+                if (!GameIcons.IsMark(line[at]))
+                {
+                    continue;
+                }
+
+                var picture = _icons?.Icon(GameIcons.IdOf(line[at]));
+                if (picture == null)
+                {
+                    // No picture to be had. The mark still goes: a line reads
+                    // better with a gap where a crown belongs than with an
+                    // empty box drawn in its place.
+                    continue;
+                }
+
+                if (at > from)
+                {
+                    _line.Inlines.Add(new Run(GameIcons.Strip(line.Substring(from, at - from))));
+                }
+
+                _line.Inlines.Add(Draw(picture));
+                from = at + 1;
+            }
+
+            if (from < line.Length)
+            {
+                _line.Inlines.Add(new Run(GameIcons.Strip(line.Substring(from))));
+            }
+        }
+
+        /// <summary>
+        /// An icon set among the words.
+        ///
+        /// Sized off the text rather than drawn at the size it is stored -
+        /// twenty pixels, which is right at one interface scale and wrong at
+        /// every other - and dropped a little below the line, where the game
+        /// sits it.
+        /// </summary>
+        private InlineUIContainer Draw(ImageSource picture)
+        {
+            var height = _line.FontSize * 1.15;
+            return new InlineUIContainer(new Image
+            {
+                Source = picture,
+                Height = height,
+                Width = height * (picture.Width / Math.Max(picture.Height, 1)),
+                Stretch = Stretch.Uniform,
+                Margin = new Thickness(0, 0, 0, -height * 0.18)
+            })
+            {
+                BaselineAlignment = BaselineAlignment.Baseline
+            };
         }
 
         /// <summary>
@@ -312,6 +387,8 @@ namespace FFXIVTataruHelper
             // in the copy means the box goes up at once and the words change
             // in place when the translation lands; and if it never lands, the
             // reader is left with the line rather than with an empty box.
+            _icons?.Follow(_memoryReader.GameExecutablePath);
+
             var gameLine = _memoryReader.CurrentDialogueLine;
             var translated = gameLine.Length == 0 ||
                              DialogueOverlayLineCheck.IsCurrent(_shownLineKey, gameLine);
@@ -510,7 +587,8 @@ namespace FFXIVTataruHelper
         {
             _lineText = string.Empty;
             _speakerText = string.Empty;
-            _line.Text = string.Empty;
+            _line.Inlines.Clear();
+            _shownWords = null;
             _speaker.Text = string.Empty;
             _motion.Forget();
             _shownLineKey = string.Empty;

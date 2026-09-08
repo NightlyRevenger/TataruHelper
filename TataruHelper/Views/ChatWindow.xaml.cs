@@ -14,6 +14,7 @@ using System.Windows.Media;
 using FFXIVTataruHelper.EventArguments;
 using FFXIVTataruHelper.Services.Logging;
 using FFXIVTataruHelper.Services.Settings;
+using FFXIVTataruHelper.Services.GameMemory;
 using FFXIVTataruHelper.Services.UI;
 using FFXIVTataruHelper.TataruComponentModel;
 using FFXIVTataruHelper.ViewModel;
@@ -67,6 +68,7 @@ namespace FFXIVTataruHelper
         readonly ISettingsStore _SettingsStore;
         readonly IUiDispatcher _UiDispatcher;
         readonly DialogueOverlayHost _dialogueOverlayHost;
+        readonly GameIconReader _gameIcons;
 
         public ChatWindow(
             TataruModel tataruModel,
@@ -75,7 +77,8 @@ namespace FFXIVTataruHelper
             IAppLogger logger,
             ISettingsStore settingsStore,
             IUiDispatcher uiDispatcher,
-            DialogueOverlayHost dialogueOverlayHost)
+            DialogueOverlayHost dialogueOverlayHost,
+            GameIconReader gameIcons)
         {
             InitializeComponent();
 
@@ -89,6 +92,7 @@ namespace FFXIVTataruHelper
                 _SettingsStore = settingsStore;
                 _UiDispatcher = uiDispatcher;
                 _dialogueOverlayHost = dialogueOverlayHost;
+                _gameIcons = gameIcons;
 
                 this.DataContext = _ChatWindowViewModel;
 
@@ -461,7 +465,8 @@ namespace FFXIVTataruHelper
             {
                 _dialogueOverlay = new DialogueOverlayWindow(
                     _TataruModel.FFMemoryReader,
-                    () => _TataruModel.FFMemoryReader.GameWindowHandle);
+                    () => _TataruModel.FFMemoryReader.GameWindowHandle,
+                    _gameIcons);
                 _dialogueOverlay.Start();
             }
 

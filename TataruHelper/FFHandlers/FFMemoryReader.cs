@@ -123,6 +123,26 @@ namespace FFXIVTataruHelper.FFHandlers
 
         public string CurrentDialogueSpeaker => _gameMemoryGateway?.CurrentDialogueSpeaker ?? string.Empty;
 
+        /// <summary>
+        /// Where the attached game is installed. Asked of the process rather
+        /// than remembered from a setting, and quietly empty when the process
+        /// will not say - a game running as somebody else, or already gone.
+        /// </summary>
+        public string GameExecutablePath
+        {
+            get
+            {
+                try
+                {
+                    return _ffXivProcess?.MainModule?.FileName ?? string.Empty;
+                }
+                catch (Exception)
+                {
+                    return string.Empty;
+                }
+            }
+        }
+
         public bool IsGameWindowForeground
         {
             get;

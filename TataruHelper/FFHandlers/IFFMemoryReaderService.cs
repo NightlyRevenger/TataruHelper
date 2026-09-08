@@ -38,6 +38,13 @@ namespace FFXIVTataruHelper.FFHandlers
 
         string CurrentDialogueSpeaker { get; }
 
+        /// <summary>
+        /// Where the game being read is installed, by its executable, or empty
+        /// when nothing is attached. Wanted so the game's own art can be read
+        /// out of its folder rather than shipped alongside this application.
+        /// </summary>
+        string GameExecutablePath { get; }
+
         /// <summary>The game's own window, for putting something over it.</summary>
         IntPtr GameWindowHandle { get; }
 

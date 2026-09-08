@@ -20,6 +20,10 @@
     <PackageVersion Include="NHotkey.Wpf" Version="4.0.0" />
     <PackageVersion Include="Hardcodet.NotifyIcon.Wpf" Version="2.0.1" />
     <PackageVersion Include="Sharlayan" Version="9.0.34" />
+    <!-- Reads the game's own data files. Already in the tree as a Sharlayan
+         dependency; named here so the icons in a line of dialogue can be
+         fetched out of the player's installation rather than shipped. -->
+    <PackageVersion Include="Lumina" Version="7.4.0" />
     <PackageVersion Include="Extended.Wpf.Toolkit" Version="5.0.0" />
     <PackageVersion Include="WPF-UI" Version="4.0.3" />
     <PackageVersion Include="Velopack" Version="0.0.1298" />

@@ -26,6 +26,7 @@
     <PackageReference Include="NGettext" />
     <PackageReference Include="NHotkey.Wpf" />
     <PackageReference Include="Hardcodet.NotifyIcon.Wpf" />
+    <PackageReference Include="Lumina" />
     <PackageReference Include="Sharlayan" />
     <PackageReference Include="Extended.Wpf.Toolkit" />
     <PackageReference Include="Velopack"/>
