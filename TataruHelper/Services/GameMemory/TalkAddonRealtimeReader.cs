@@ -1766,12 +1766,29 @@ namespace FFXIVTataruHelper.Services.GameMemory
             return target <= 0 ? IntPtr.Zero : new IntPtr(target);
         }
 
+        /// <summary>
+        /// Gives up on reading the screen, and says why.
+        ///
+        /// The layout of the game's structures is read by reflection off the
+        /// FFXIVClientStructs types compiled into Sharlayan, by field name. A
+        /// field this reader asks for by a name that project has since changed
+        /// takes the whole road down - and silently, because the chat log goes
+        /// on carrying the conversation. The name of what went missing is the
+        /// difference between a day's work and a five-minute edit.
+        /// </summary>
+        private static UiDirectDialogOffsets NothingToReadWith(string why)
+        {
+            Logger.WriteLog("Dialogue cannot be read off the screen: " + why +
+                            ". The chat log will still be read, a line behind.");
+            return UiDirectDialogOffsets.Empty;
+        }
+
         private static UiDirectDialogOffsets ResolveUiDirectDialogOffsets()
         {
             var uiModuleType = Type.GetType("FFXIVClientStructs.FFXIV.Client.UI.UIModule, Sharlayan");
             if (uiModuleType == null)
             {
-                return UiDirectDialogOffsets.Empty;
+                return NothingToReadWith("the UIModule type is not in the Sharlayan build in use");
             }
 
             var raptureLogModuleOffset = ResolveFieldOffset(uiModuleType, "RaptureLogModule");
@@ -1787,14 +1804,20 @@ namespace FFXIVTataruHelper.Services.GameMemory
             var atkTextNodeType = Type.GetType("FFXIVClientStructs.FFXIV.Component.GUI.AtkTextNode, Sharlayan");
             var atkResNodeType = Type.GetType("FFXIVClientStructs.FFXIV.Component.GUI.AtkResNode, Sharlayan");
 
-            if (raptureAtkModuleType == null ||
-                atkUnitManagerType == null ||
-                atkUnitListType == null ||
-                atkUnitBaseType == null ||
-                addonTalkType == null ||
-                atkTextNodeType == null)
+            var missingTypes = new[]
             {
-                return UiDirectDialogOffsets.Empty;
+                raptureAtkModuleType == null ? "RaptureAtkModule" : null,
+                atkUnitManagerType == null ? "AtkUnitManager" : null,
+                atkUnitListType == null ? "AtkUnitList" : null,
+                atkUnitBaseType == null ? "AtkUnitBase" : null,
+                addonTalkType == null ? "AddonTalk" : null,
+                atkTextNodeType == null ? "AtkTextNode" : null
+            }.Where(name => name != null).ToArray();
+
+            if (missingTypes.Length > 0)
+            {
+                return NothingToReadWith("these types are not in the Sharlayan build in use: " +
+                                         string.Join(", ", missingTypes));
             }
 
             var atkUnitManagerOffset = ResolveFieldOffset(raptureAtkModuleType, "AtkUnitManager");
@@ -1806,20 +1829,26 @@ namespace FFXIVTataruHelper.Services.GameMemory
             var atkTextNodeNodeTextOffset = ResolveFieldOffset(atkTextNodeType, "NodeText");
             var addonSpecs = ResolveAddonSpecs(addonTalkType);
 
-            if (raptureLogModuleOffset < 0 ||
-                raptureAtkModuleOffset < 0 ||
-                lastTalkNameOffset < 0 ||
-                lastTalkTextOffset < 0 ||
-                atkUnitManagerOffset < 0 ||
-                allLoadedUnitsListOffset < 0 ||
-                atkUnitListEntriesOffset < 0 ||
-                atkUnitListCountOffset < 0 ||
-                atkUnitBaseNameOffset < 0 ||
-                atkUnitBaseNameLength <= 0 ||
-                atkTextNodeNodeTextOffset < 0 ||
-                addonSpecs.Length == 0)
+            var missingFields = new[]
             {
-                return UiDirectDialogOffsets.Empty;
+                raptureLogModuleOffset < 0 ? "UIModule.RaptureLogModule" : null,
+                raptureAtkModuleOffset < 0 ? "UIModule.RaptureAtkModule" : null,
+                lastTalkNameOffset < 0 ? "UIModule.LastTalkName" : null,
+                lastTalkTextOffset < 0 ? "UIModule.LastTalkText" : null,
+                atkUnitManagerOffset < 0 ? "RaptureAtkModule.AtkUnitManager" : null,
+                allLoadedUnitsListOffset < 0 ? "AtkUnitManager.AllLoadedUnitsList" : null,
+                atkUnitListEntriesOffset < 0 ? "AtkUnitList._entries" : null,
+                atkUnitListCountOffset < 0 ? "AtkUnitList.Count" : null,
+                atkUnitBaseNameOffset < 0 ? "AtkUnitBase._name" : null,
+                atkUnitBaseNameLength <= 0 ? "AtkUnitBase._name (length)" : null,
+                atkTextNodeNodeTextOffset < 0 ? "AtkTextNode.NodeText" : null,
+                addonSpecs.Length == 0 ? "AddonTalk text nodes" : null
+            }.Where(name => name != null).ToArray();
+
+            if (missingFields.Length > 0)
+            {
+                return NothingToReadWith("these fields are not in the Sharlayan build in use: " +
+                                         string.Join(", ", missingFields));
             }
 
             // Patch 7.56 grew UIModule past what the FFXIVClientStructs bundled
