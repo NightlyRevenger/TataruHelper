@@ -137,5 +137,16 @@ namespace TataruHelper.Tests.Services.UI
         {
             Assert.That(Place(surface: DialogueSurface.None), Is.False);
         }
+
+        /// <summary>
+        /// A notice - "The New Adventurer status is applied..." - is drawn in
+        /// the dialogue window's place and is covered like one. What differs is
+        /// the dress, not the placing.
+        /// </summary>
+        [Test]
+        public void ANotice_IsCovered()
+        {
+            Assert.That(Place(surface: DialogueSurface.Notice), Is.True);
+        }
     }
 }

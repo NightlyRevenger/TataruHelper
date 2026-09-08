@@ -604,6 +604,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
             // with any text: the Talk addon holds its line forever, so first-wins
             // let a finished conversation hide a subtitle that is on screen.
             var candidates = new List<(string Key, TalkAddonRealtimeDialogSnapshot Snapshot, string Text)>();
+            var framedByCandidate = new Dictionary<string, bool>(StringComparer.Ordinal);
 
             foreach (var addonSpec in _uiDirectDialogOffsets.Value.AddonSpecs)
             {
@@ -663,6 +664,13 @@ namespace FFXIVTataruHelper.Services.GameMemory
                             ? known
                             : AddonBounds.Unknown;
 
+                    // Only the dialogue window has two designs to tell apart,
+                    // and only it pays for the extra walk of its node list.
+                    if (string.Equals(addonSpec.AddonName, TalkAddonName, StringComparison.OrdinalIgnoreCase))
+                    {
+                        framedByCandidate[candidateKey] = DrawsAFrame(loadedAddon.AddonAddress);
+                    }
+
                     candidates.Add((candidateKey, addonSnapshot, addonText));
                 }
             }
@@ -683,7 +691,15 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 boundsByCandidate.TryGetValue(_stickyCandidateKey, out var speaking))
             {
                 DialogueBounds = speaking;
-                DialogueSurface = SurfaceOf(_stickyCandidateKey);
+
+                var surface = SurfaceOf(_stickyCandidateKey);
+                if (surface == DialogueSurface.Window &&
+                    framedByCandidate.TryGetValue(_stickyCandidateKey, out var framed) && !framed)
+                {
+                    surface = DialogueSurface.Notice;
+                }
+
+                DialogueSurface = surface;
             }
             else
             {
@@ -692,6 +708,65 @@ namespace FFXIVTataruHelper.Services.GameMemory
             }
 
             return announced || matchedEmptySource;
+        }
+
+        /// <summary>
+        /// Whether the dialogue window is drawing its frame.
+        ///
+        /// The game uses the same window for two designs: the wooden box a
+        /// character speaks from, and a dark frameless panel it puts notices
+        /// in - "The New Adventurer status is applied...". Read off a running
+        /// client, the difference is not in the text nodes, which are the same
+        /// in both, but in the frame: the wooden design draws a nine-grid node
+        /// and the dark one draws none at all.
+        ///
+        /// A nine-grid is how a panel that must stretch to any size is drawn,
+        /// so asking for one by type rather than by node id survives the layout
+        /// being renumbered.
+        /// </summary>
+        private bool DrawsAFrame(IntPtr addonAddress)
+        {
+            var walk = _uiDirectDialogOffsets.Value.NodeWalk;
+            if (!walk.IsValid || addonAddress == IntPtr.Zero)
+            {
+                // Unknown, and the wooden frame is the answer to fall back on:
+                // it is what nearly every line is drawn in.
+                return true;
+            }
+
+            var uldManagerAddress = AddAddress(addonAddress, walk.UldManagerOffset);
+            if (uldManagerAddress == IntPtr.Zero)
+            {
+                return true;
+            }
+
+            var nodeCount = _memoryHandler.GetUInt16(uldManagerAddress, walk.NodeListCountOffset);
+            var nodeListAddress = _memoryHandler.ReadPointer(uldManagerAddress, walk.NodeListOffset);
+            if (nodeCount <= 0 || nodeCount > MaxNodeListEntries || nodeListAddress == IntPtr.Zero)
+            {
+                return true;
+            }
+
+            for (var index = 0; index < nodeCount; index++)
+            {
+                var nodeAddress = _memoryHandler.ReadPointer(nodeListAddress, index * IntPtr.Size);
+                if (nodeAddress == IntPtr.Zero)
+                {
+                    continue;
+                }
+
+                if (_memoryHandler.GetUInt16(nodeAddress, walk.NodeTypeOffset) != NineGridNodeType)
+                {
+                    continue;
+                }
+
+                if ((_memoryHandler.GetUInt16(nodeAddress, walk.NodeFlagsOffset) & VisibleNodeFlag) != 0)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

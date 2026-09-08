@@ -46,6 +46,13 @@ namespace FFXIVTataruHelper
         private readonly Brush _subtitleGround;
 
         /// <summary>
+        /// The dark ground a notice is laid on. The game draws these in the
+        /// dialogue window's place without its frame, so the copy cannot wear
+        /// the frame either - it would be a wooden box over a dark panel.
+        /// </summary>
+        private readonly Brush _noticeGround;
+
+        /// <summary>
         /// Whether the copy is on screen and what it is dressed as. Kept out of
         /// the window's own fields so the deciding can be checked without the
         /// window, the way the placement and the hold are.
@@ -136,6 +143,10 @@ namespace FFXIVTataruHelper
             subtitleGround.GradientStops.Add(new GradientStop(Color.FromArgb(0xD0, 0x08, 0x08, 0x0A), 0.90));
             subtitleGround.GradientStops.Add(new GradientStop(Color.FromArgb(0x00, 0x08, 0x08, 0x0A), 1));
             _subtitleGround = subtitleGround;
+
+            // A panel rather than a wash: the notice has edges of its own where
+            // a subtitle has none, and it has to bury what is under it whole.
+            _noticeGround = new SolidColorBrush(Color.FromArgb(0xDE, 0x0B, 0x0B, 0x0F));
 
             var box = new Border
             {
@@ -267,16 +278,6 @@ namespace FFXIVTataruHelper
                 return;
             }
 
-            // The translation is a touch behind the game, and in that touch the
-            // game moves on: another box, another line. The line read off the
-            // screen is the only judge of which conversation the copy is in,
-            // so when the game has drawn another one, the copy comes off.
-            if (!DialogueOverlayLineCheck.IsCurrent(_shownLineKey, _memoryReader.CurrentDialogueLine))
-            {
-                HideCopy("stale: the game has moved on to another line");
-                return;
-            }
-
             // The game closes its window by shrinking it, and a copy that
             // follows it down is a box that jumps smaller and then vanishes.
             // Growing is the other way about: that is the window opening, and
@@ -285,6 +286,16 @@ namespace FFXIVTataruHelper
             if (!_motion.ShouldDraw(drawnSurface, rect.Width, now))
             {
                 HideCopy("the box is closing");
+                return;
+            }
+
+            // The translation is a touch behind the game, and in that touch the
+            // game moves on: another box, another line. The line read off the
+            // screen is the only judge of which conversation the copy is in,
+            // so when the game has drawn another one, the copy comes off.
+            if (!DialogueOverlayLineCheck.IsCurrent(_shownLineKey, _memoryReader.CurrentDialogueLine))
+            {
+                HideCopy("stale: the game has moved on to another line");
                 return;
             }
 
@@ -298,13 +309,17 @@ namespace FFXIVTataruHelper
             Width = rect.Width;
             Height = rect.Height;
 
-            if (drawnSurface == DialogueSurface.Subtitle)
+            switch (drawnSurface)
             {
-                LayOutSubtitle(rect);
-            }
-            else
-            {
-                LayOutWindow(rect);
+                case DialogueSurface.Subtitle:
+                    LayOutSubtitle(rect);
+                    break;
+                case DialogueSurface.Notice:
+                    LayOutNotice(rect);
+                    break;
+                default:
+                    LayOutWindow(rect);
+                    break;
             }
         }
 
@@ -335,6 +350,18 @@ namespace FFXIVTataruHelper
             _plate.MinWidth = rect.Width * 0.30;
             _line.Margin = new Thickness(
                 rect.Width * 0.088, rect.Height * 0.225, rect.Width * 0.075, rect.Height * 0.06);
+        }
+
+        /// <summary>
+        /// A notice sits where the dialogue box would, at the same size, but
+        /// with nobody speaking it - so its line starts where the speaker's
+        /// name would have been rather than below it.
+        /// </summary>
+        private void LayOutNotice(Rect rect)
+        {
+            _line.FontSize = Math.Max(10, rect.Height * 0.098);
+            _line.Margin = new Thickness(
+                rect.Width * 0.06, rect.Height * 0.10, rect.Width * 0.06, rect.Height * 0.08);
         }
 
         /// <summary>
@@ -375,22 +402,30 @@ namespace FFXIVTataruHelper
             if (restyled)
             {
                 var subtitle = surface == DialogueSurface.Subtitle;
+                var notice = surface == DialogueSurface.Notice;
 
                 // The dark ground is the whole reason a subtitle can be covered
                 // at all. Left bare, as it was, the copy was pale text laid over
                 // the game's own pale text: two lines in two languages in the
                 // same place, and neither of them readable.
-                _box.Background = subtitle ? _subtitleGround : _frame;
-                _plate.Visibility = subtitle ? Visibility.Collapsed : Visibility.Visible;
+                _box.Background = subtitle ? _subtitleGround : notice ? _noticeGround : _frame;
+                _box.CornerRadius = notice ? new CornerRadius(4) : new CornerRadius(0);
+
+                // Nobody is speaking a notice, and a cutscene subtitle names
+                // nobody either.
+                _plate.Visibility = subtitle || notice ? Visibility.Collapsed : Visibility.Visible;
 
                 _line.TextAlignment = subtitle ? TextAlignment.Center : TextAlignment.Left;
                 _line.VerticalAlignment = subtitle ? VerticalAlignment.Center : VerticalAlignment.Top;
-                _line.Foreground = subtitle
+
+                // Dark ink on the wooden frame, pale on anything dark.
+                _line.Foreground = subtitle || notice
                     ? Brushes.White
                     : new SolidColorBrush(Color.FromRgb(0x2A, 0x24, 0x1C));
 
                 // The game outlines its subtitles rather than shadowing them, and
-                // over a bright sky an unoutlined white line is unreadable.
+                // over a bright sky an unoutlined white line is unreadable. A
+                // notice has its own ground and needs none of that.
                 _line.Effect = subtitle
                     ? new DropShadowEffect
                     {

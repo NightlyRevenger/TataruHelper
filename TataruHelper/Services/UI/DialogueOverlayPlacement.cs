@@ -45,7 +45,9 @@ namespace FFXIVTataruHelper.Services.UI
             // the corner of the screen, the size of a postage stamp, and the
             // bubble it was meant to cover is untouched. The line still goes to
             // the chat window like any other.
-            if (surface != DialogueSurface.Window && surface != DialogueSurface.Subtitle)
+            if (surface != DialogueSurface.Window &&
+                surface != DialogueSurface.Subtitle &&
+                surface != DialogueSurface.Notice)
             {
                 return false;
             }

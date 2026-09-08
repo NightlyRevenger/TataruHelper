@@ -30,6 +30,19 @@ namespace FFXIVTataruHelper.Services.GameMemory
         Subtitle,
 
         /// <summary>
+        /// A notice the game puts in the dialogue window's place: "The New
+        /// Adventurer status is applied to all players who have recently begun
+        /// their adventure", and the like.
+        ///
+        /// Same window, same place, no wooden frame and nobody speaking - the
+        /// game lays these on a dark ground instead. Told apart by the frame
+        /// itself: the window draws its nine-grid when there is one and does
+        /// not when there is not, which is the one thing about the two designs
+        /// that a reader outside the game can see.
+        /// </summary>
+        Notice,
+
+        /// <summary>
         /// A speech bubble over a character's head.
         ///
         /// No copy is placed over one. The bubbles all live in a single addon
