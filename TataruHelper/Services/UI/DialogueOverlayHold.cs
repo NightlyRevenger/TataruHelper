@@ -1,5 +1,7 @@
-using System;
+﻿using System;
 using System.Windows;
+
+using FFXIVTataruHelper.Services.GameMemory;
 
 namespace FFXIVTataruHelper.Services.UI
 {
@@ -20,32 +22,44 @@ namespace FFXIVTataruHelper.Services.UI
         public static readonly TimeSpan Grace = TimeSpan.FromMilliseconds(250);
 
         private Rect _last = Rect.Empty;
+        private DialogueSurface _lastSurface = DialogueSurface.None;
         private DateTime _lastSeenUtc = DateTime.MinValue;
         private bool _has;
 
         /// <summary>
-        /// What to draw now, given what was found this moment. False when the
-        /// copy should be off screen.
+        /// What to draw now, and what it is a copy of, given what was found
+        /// this moment. False when the copy should be off screen.
+        ///
+        /// The surface is held along with the rectangle, and that is not a
+        /// detail. Held without it, the last moment of a cutscene subtitle was
+        /// drawn on the rectangle of the subtitle and in the dress of a
+        /// dialogue box - the game's wooden frame stretched the width of the
+        /// screen, flashing up after every line Hydaelyn spoke.
         /// </summary>
-        public bool Decide(bool found, Rect rect, DateTime nowUtc, out Rect drawn)
+        public bool Decide(bool found, Rect rect, DialogueSurface surface, DateTime nowUtc,
+            out Rect drawn, out DialogueSurface drawnSurface)
         {
             if (found)
             {
                 _last = rect;
+                _lastSurface = surface;
                 _lastSeenUtc = nowUtc;
                 _has = true;
                 drawn = rect;
+                drawnSurface = surface;
                 return true;
             }
 
             if (_has && nowUtc - _lastSeenUtc < Grace)
             {
                 drawn = _last;
+                drawnSurface = _lastSurface;
                 return true;
             }
 
             _has = false;
             drawn = Rect.Empty;
+            drawnSurface = DialogueSurface.None;
             return false;
         }
 
@@ -58,6 +72,7 @@ namespace FFXIVTataruHelper.Services.UI
         {
             _has = false;
             _last = Rect.Empty;
+            _lastSurface = DialogueSurface.None;
             _lastSeenUtc = DateTime.MinValue;
         }
     }

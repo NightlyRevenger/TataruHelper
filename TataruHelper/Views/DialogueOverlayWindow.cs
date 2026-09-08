@@ -54,18 +54,14 @@ namespace FFXIVTataruHelper
 
         private readonly DialogueOverlayHold _hold = new DialogueOverlayHold();
 
+        /// <summary>
+        /// Whether the game's box is opening, sitting still or closing, which
+        /// decides whether the copy follows it or comes off.
+        /// </summary>
+        private readonly DialogueOverlayMotion _motion = new DialogueOverlayMotion();
+
         private string _speakerText = string.Empty;
         private string _lineText = string.Empty;
-
-        /// <summary>
-        /// The widest the box has been seen. The game draws its window at one
-        /// size and only grows into it while opening, so anything narrower is
-        /// a frame of that animation rather than a box worth covering.
-        /// </summary>
-        private double _widestSeen;
-
-        /// <summary>Which surface that width was measured on.</summary>
-        private DialogueSurface _widestSeenOn = DialogueSurface.None;
 
         /// <summary>
         /// The line this copy was put out for, reduced to its words - what it
@@ -256,7 +252,8 @@ namespace FFXIVTataruHelper
                 _lineText,
                 out var rect);
 
-            if (!_hold.Decide(placed, rect, DateTime.UtcNow, out rect))
+            var now = DateTime.UtcNow;
+            if (!_hold.Decide(placed, rect, surface, now, out rect, out var drawnSurface))
             {
                 HideCopy(FormattableString.Invariant(
                     $"hidden: foreground={foreground} boundsKnown={bounds.IsKnown} box={bounds.Width}x{bounds.Height} lineChars={_lineText.Length}"));
@@ -280,40 +277,28 @@ namespace FFXIVTataruHelper
                 return;
             }
 
-            // The widest is remembered per surface. A cutscene subtitle is the
-            // width of the screen and a dialogue box is not, so measured
-            // against one another the box always looks like a window still
-            // opening - and a conversation that follows a subtitle would go
-            // uncovered from beginning to end.
-            if (surface != _widestSeenOn)
+            // The game closes its window by shrinking it, and a copy that
+            // follows it down is a box that jumps smaller and then vanishes.
+            // Growing is the other way about: that is the window opening, and
+            // following it covers the original from the first frame rather than
+            // leaving it readable for the length of the animation.
+            if (!_motion.ShouldDraw(drawnSurface, rect.Width, now))
             {
-                _widestSeenOn = surface;
-                _widestSeen = 0;
-            }
-
-            // The game opens its window by growing it, and the copy used to
-            // follow every frame of that - resizing and re-wrapping the text a
-            // dozen times a line. The full size is the one that means anything,
-            // so the copy waits for the growing to stop instead of racing it.
-            if (rect.Width < _widestSeen * 0.98)
-            {
-                HideCopy("waiting for the box to finish opening");
+                HideCopy("the box is closing");
                 return;
             }
 
-            _widestSeen = Math.Max(_widestSeen, rect.Width);
-
-            Dress(surface, rect);
+            Dress(drawnSurface, rect);
 
             Report(FormattableString.Invariant(
-                $"shown on {surface} at {rect.Left},{rect.Top} {rect.Width}x{rect.Height}"));
+                $"shown on {drawnSurface} at {rect.Left},{rect.Top} {rect.Width}x{rect.Height}"));
 
             Left = rect.Left;
             Top = rect.Top;
             Width = rect.Width;
             Height = rect.Height;
 
-            if (surface == DialogueSurface.Subtitle)
+            if (drawnSurface == DialogueSurface.Subtitle)
             {
                 LayOutSubtitle(rect);
             }
@@ -448,8 +433,7 @@ namespace FFXIVTataruHelper
             _speakerText = string.Empty;
             _line.Text = string.Empty;
             _speaker.Text = string.Empty;
-            _widestSeen = 0;
-            _widestSeenOn = DialogueSurface.None;
+            _motion.Forget();
             _shownLineKey = string.Empty;
         }
 
