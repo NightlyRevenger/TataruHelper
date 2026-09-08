@@ -1,7 +1,7 @@
 <:1_1:594308396778389515> **Tataru Helper 1.0.10** <:1_1:594308396778389515>
 
 Patch 7.56 stopped the application from reading dialogue off the screen. This puts it back.
-Патч 7.56 сломал чтение реплик с экрана. Это возвращено.
+Патч 7.56 сломал чтение реплик с экрана. Починили.
 
 The patch moved two fields the reader depends on, so the list of open windows was never reached. From the outside it did not look like "nothing works": the chat log carried the conversation on its own, so the translation arrived a line behind, or every other line, and only once you clicked through.
 Патч сдвинул два поля, на которые опирается читалка, и список открытых окон стал недостижим. Со стороны это выглядело не как «ничего не работает»: разговор тянул на себе чат-лог игры, поэтому перевод приходил на реплику позже, или через раз, и только когда прокликаешь.
