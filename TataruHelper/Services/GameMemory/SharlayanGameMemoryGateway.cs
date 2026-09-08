@@ -366,6 +366,15 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 // Nothing is being drawn. Forgetting that matters: a copy of the last line,
                 // still on its way, would arrive into a matching state and be
                 // shown as though it were still on screen.
+                //
+                // The held signature goes with it, exactly as it does when no
+                // window is loaded at all. A window that is still there but
+                // blank says as much about the conversation as no window: it
+                // is over. Keeping the signature through it meant an NPC whose
+                // first line is the same both times - a greeting, most of them
+                // - had that line swallowed on the second telling, because it
+                // still matched what was held from the first.
+                _lastRealtimeDialogSignature = string.Empty;
                 _currentDialogueLine = string.Empty;
                 return fallbackDirectDialog;
             }

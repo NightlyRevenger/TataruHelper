@@ -690,12 +690,28 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 }
             }
 
-            var fallbackText = SharlayanGameMemoryGateway.NormalizeDialogToken(lastTalkText);
-            if (fallbackText.Length > 0)
-            {
-                return TalkAddonRealtimeDialogSnapshot.Available(DirectDialogCode, normalizedSpeakerName, fallbackText);
-            }
-
+            // No window is showing anything, and that is the answer.
+            //
+            // The game's LastTalk pair used to answer here instead, from back
+            // when it was the only thing this reader could read. It is not a
+            // record of what is on screen: it is the last line said, and the
+            // game keeps it long after the conversation is over - a line read
+            // out of it twenty minutes later measured the same as one being
+            // spoken now.
+            //
+            // Answering from it cost far more than the odd stale line. Because
+            // it always had something to say, the screen never once looked
+            // empty, and everything downstream that waits for the screen to
+            // clear - the held signature, the copy drawn over the game's own
+            // window - waited forever. An NPC greeted twice running was taken
+            // for the first greeting still standing there and swallowed, and a
+            // line the pair had not caught up to yet was announced a second
+            // time when the window closed.
+            //
+            // The words are not lost by refusing them here: the game writes
+            // every one of them to its chat log, and the log is read too. What
+            // is given up is a second or two of latency on a line no window
+            // was showing, which is the correct price.
             return hasEmptyAddonSnapshot ? firstEmptyAddonSnapshot : TalkAddonRealtimeDialogSnapshot.Unavailable();
         }
 

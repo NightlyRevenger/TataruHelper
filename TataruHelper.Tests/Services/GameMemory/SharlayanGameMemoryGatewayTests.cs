@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -282,17 +282,36 @@ namespace TataruHelper.Tests
             Assert.That(snapshot.TalkText, Is.EqualTo("RealtimeBubbleText"));
         }
 
+        /// <summary>
+        /// The game keeps its LastTalk pair long after the conversation is
+        /// over, so it says nothing about what is on screen now. A blank
+        /// window is reported blank.
+        /// </summary>
         [Test]
-        public void SelectRealtimeSnapshot_FallsBackToLastTalkText_WhenAddonTextIsEmpty()
+        public void SelectRealtimeSnapshot_DoesNotAnswerFromLastTalk_WhenAddonTextIsEmpty()
         {
             var snapshot = TalkAddonRealtimeReader.SelectRealtimeSnapshot(
                 "FallbackNpc",
                 "FallbackLastTalkText",
                 new[] { TalkAddonRealtimeDialogSnapshot.Available("0044", string.Empty, "   ") });
 
-            Assert.That(snapshot.ChatCode, Is.EqualTo("003D"));
-            Assert.That(snapshot.SpeakerName, Is.EqualTo("FallbackNpc"));
-            Assert.That(snapshot.TalkText, Is.EqualTo("FallbackLastTalkText"));
+            Assert.That(snapshot.SourceAvailable, Is.True, "the window is loaded");
+            Assert.That(SharlayanGameMemoryGateway.NormalizeDialogToken(snapshot.TalkText), Is.Empty);
+        }
+
+        /// <summary>
+        /// And with no window loaded at all there is nothing to report, rather
+        /// than the last thing anybody said.
+        /// </summary>
+        [Test]
+        public void SelectRealtimeSnapshot_DoesNotAnswerFromLastTalk_WhenNoAddonIsLoaded()
+        {
+            var snapshot = TalkAddonRealtimeReader.SelectRealtimeSnapshot(
+                "FallbackNpc",
+                "FallbackLastTalkText",
+                Array.Empty<TalkAddonRealtimeDialogSnapshot>());
+
+            Assert.That(snapshot.SourceAvailable, Is.False);
         }
 
         [Test]
@@ -583,6 +602,94 @@ namespace TataruHelper.Tests
             now = now.AddSeconds(34);
 
             Assert.That(gateway.GetDirectDialog().ChatLogItems.Single().Line, Is.EqualTo("Cassard:" + said));
+        }
+
+        /// <summary>
+        /// Replayed from the Drowning Wench on 8 September: the barkeep is
+        /// spoken to, greets you, is spoken to again and greets you the same
+        /// way. Between the two the dialogue window is gone, and the greeting
+        /// is a line of its own both times.
+        /// </summary>
+        [Test]
+        public void Gateway_GreetsAgain_WhenTheWindowClosedInBetween()
+        {
+            const string greeting = "Welcome to the Drowning Wench, a place to leave your cares and troubles behind.";
+
+            var directDialogReader = new FakeDirectDialogReader();
+            var current = TalkAddonRealtimeDialogSnapshot.Available("003D", "I'tolwann", greeting);
+            var now = new DateTime(2026, 9, 8, 20, 30, 34, DateTimeKind.Utc);
+            var gateway = CreateGateway(directDialogReader, () => current, () => now);
+
+            Assert.That(gateway.GetDirectDialog().ChatLogItems.Single().Line,
+                Is.EqualTo("I'tolwann:" + greeting));
+
+            // The conversation ends: no window is loaded to read.
+            now = now.AddSeconds(3);
+            current = TalkAddonRealtimeDialogSnapshot.Unavailable();
+            gateway.GetDirectDialog();
+
+            now = now.AddSeconds(3);
+            current = TalkAddonRealtimeDialogSnapshot.Available("003D", "I'tolwann", greeting);
+
+            Assert.That(gateway.GetDirectDialog().ChatLogItems.Single().Line,
+                Is.EqualTo("I'tolwann:" + greeting),
+                "the same greeting a second time is the barkeep greeting you a second time");
+        }
+
+        /// <summary>
+        /// The same again where the window stays loaded and merely goes blank,
+        /// which is what a cutscene's subtitle slots do. A window that is
+        /// there but showing nothing says the conversation is over just as
+        /// plainly as no window at all.
+        /// </summary>
+        [Test]
+        public void Gateway_GreetsAgain_WhenTheWindowWentBlankInBetween()
+        {
+            const string greeting = "Welcome to the Drowning Wench, a place to leave your cares and troubles behind.";
+
+            var directDialogReader = new FakeDirectDialogReader();
+            var current = TalkAddonRealtimeDialogSnapshot.Available("003D", "I'tolwann", greeting);
+            var now = new DateTime(2026, 9, 8, 20, 30, 34, DateTimeKind.Utc);
+            var gateway = CreateGateway(directDialogReader, () => current, () => now);
+
+            Assert.That(gateway.GetDirectDialog().ChatLogItems, Has.Count.EqualTo(1));
+
+            now = now.AddSeconds(3);
+            current = TalkAddonRealtimeDialogSnapshot.Available("003D", string.Empty, string.Empty);
+            gateway.GetDirectDialog();
+
+            now = now.AddSeconds(3);
+            current = TalkAddonRealtimeDialogSnapshot.Available("003D", "I'tolwann", greeting);
+
+            Assert.That(gateway.GetDirectDialog().ChatLogItems.Single().Line,
+                Is.EqualTo("I'tolwann:" + greeting));
+        }
+
+        /// <summary>
+        /// The window blinking for a sweep in the middle of one line is not
+        /// the line being said again: the breath the two arrival roads share
+        /// covers it.
+        /// </summary>
+        [Test]
+        public void Gateway_SaysNothingTwice_WhenTheWindowBlinksMidLine()
+        {
+            const string said = "Time is of the essence, so I shall speak plain.";
+
+            var directDialogReader = new FakeDirectDialogReader();
+            var current = TalkAddonRealtimeDialogSnapshot.Available("003D", "Mother Miounne", said);
+            var now = new DateTime(2026, 9, 8, 20, 29, 14, DateTimeKind.Utc);
+            var gateway = CreateGateway(directDialogReader, () => current, () => now);
+
+            Assert.That(gateway.GetDirectDialog().ChatLogItems, Has.Count.EqualTo(1));
+
+            now = now.AddMilliseconds(40);
+            current = TalkAddonRealtimeDialogSnapshot.Unavailable();
+            gateway.GetDirectDialog();
+
+            now = now.AddMilliseconds(40);
+            current = TalkAddonRealtimeDialogSnapshot.Available("003D", "Mother Miounne", said);
+
+            Assert.That(gateway.GetDirectDialog().ChatLogItems, Is.Empty);
         }
 
         /// <summary>
