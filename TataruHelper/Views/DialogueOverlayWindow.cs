@@ -65,6 +65,9 @@ namespace FFXIVTataruHelper
         /// <summary>The dark ground a subtitle is laid on, which the game gives it none of.</summary>
         private readonly Brush _subtitleGround;
 
+        /// <summary>And the one a cutscene's question is laid on, which buries the game's own.</summary>
+        private readonly Brush _choiceGround;
+
         /// <summary>
         /// The dark panel the game lays a notice on, in place of the wooden
         /// frame. Drawn to measurements taken off a running client rather than
@@ -191,6 +194,21 @@ namespace FFXIVTataruHelper
             subtitleGround.GradientStops.Add(new GradientStop(Color.FromArgb(0xF4, 0x08, 0x08, 0x0A), 0.90));
             subtitleGround.GradientStops.Add(new GradientStop(Color.FromArgb(0x00, 0x08, 0x08, 0x0A), 1));
             _subtitleGround = subtitleGround;
+
+            // What a cutscene's question is laid on. The game gives it a dark
+            // ground of its own, so this one has only to bury it - and at
+            // anything less than opaque the English read faintly through the
+            // Russian, which is how the question first came out.
+            var choiceGround = new LinearGradientBrush
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(1, 0)
+            };
+            choiceGround.GradientStops.Add(new GradientStop(Color.FromArgb(0x00, 0x06, 0x06, 0x08), 0));
+            choiceGround.GradientStops.Add(new GradientStop(Color.FromArgb(0xFF, 0x06, 0x06, 0x08), 0.06));
+            choiceGround.GradientStops.Add(new GradientStop(Color.FromArgb(0xFF, 0x06, 0x06, 0x08), 0.94));
+            choiceGround.GradientStops.Add(new GradientStop(Color.FromArgb(0x00, 0x06, 0x06, 0x08), 1));
+            _choiceGround = choiceGround;
 
             _noticeFrame = new ImageBrush(
                 new BitmapImage(new Uri("pack://application:,,,/Resources/NoticeFrame.png")))
@@ -482,11 +500,23 @@ namespace FFXIVTataruHelper
 
             if (drawnSurface == DialogueSurface.Choice)
             {
+                // Whether the translation in hand is of this question, which
+                // is not the same question as whether it is of the line the
+                // Talk window is showing. Asked of the line the copy was put
+                // out for and the question on screen, and of nothing else: a
+                // conversation that leaves its last line up behind the
+                // question would otherwise make the copy flicker on and off,
+                // once for every sweep the line was there.
+                var haveThisQuestion = string.Equals(
+                    _shownLineKey,
+                    DialogueOverlayLineCheck.KeyOf(asked.AsBlock()),
+                    StringComparison.Ordinal);
+
                 // A question the player has to answer is not shown in the
                 // game's own words while a translation is on its way: that
                 // would cover the game's mark of which answer the cursor is on
                 // and put nothing at all in its place.
-                if (!translated || !LayOutChoice(asked, whole, rect, projection))
+                if (!haveThisQuestion || !LayOutChoice(asked, _wholeText, rect, projection))
                 {
                     HideCopy("a question, with no translation of it yet");
                     return;
@@ -561,7 +591,7 @@ namespace FFXIVTataruHelper
 
                 if (question.Length > 0 && Place(asked.QuestionBounds, rect, projection, out var where))
                 {
-                    _choices.Children.Add(Row(question, where, size, QuestionInk, false));
+                    _choices.Children.Add(Row(question, RoomToTheRight(where, rect), size, QuestionInk, false));
                 }
 
                 for (var i = 0; i < answers.Length; i++)
@@ -572,7 +602,7 @@ namespace FFXIVTataruHelper
                         return false;
                     }
 
-                    var drawn = Row(answers[i], row, size, AnswerInk, true);
+                    var drawn = Row(answers[i], RoomToTheRight(row, rect), size, AnswerInk, true);
                     _choices.Children.Add(drawn);
                     _answers.Add(drawn);
                 }
@@ -583,6 +613,22 @@ namespace FFXIVTataruHelper
             _choices.Visibility = Visibility.Visible;
             MarkTheAnswerUnderTheCursor(asked, projection);
             return true;
+        }
+
+        /// <summary>
+        /// The same row, given the rest of the strip to be long in.
+        ///
+        /// The game sizes each of its rows to the English in it, and the
+        /// Russian is longer - "What will you say?" came out as "Что ты
+        /// ска...", cut off inside a strip with nine hundred empty pixels to
+        /// its right. Where a row starts is what matters, because that is what
+        /// lines it up with the answer beneath it; where it ends is only the
+        /// English having been shorter.
+        /// </summary>
+        private static Rect RoomToTheRight(Rect row, Rect strip)
+        {
+            var room = Math.Max(row.Width, strip.Width - row.Left - strip.Width * 0.03);
+            return new Rect(row.Left, row.Top, room, row.Height);
         }
 
         private void ForgetTheChoice()
@@ -792,23 +838,21 @@ namespace FFXIVTataruHelper
                 var subtitle = surface == DialogueSurface.Subtitle;
                 var notice = surface == DialogueSurface.Notice;
 
-                // A cutscene's question is drawn the way its subtitles are -
-                // across the width of the screen, over the picture - so it is
-                // given the same dark ground.
-                if (surface == DialogueSurface.Choice)
-                {
-                    subtitle = true;
-                }
 
                 // The dark ground is the whole reason a subtitle can be covered
                 // at all. Left bare, as it was, the copy was pale text laid over
                 // the game's own pale text: two lines in two languages in the
                 // same place, and neither of them readable.
-                _box.Background = subtitle ? _subtitleGround : notice ? _noticeFrame : _frame;
+                var choice = surface == DialogueSurface.Choice;
+
+                _box.Background = choice ? _choiceGround
+                    : subtitle ? _subtitleGround
+                    : notice ? _noticeFrame
+                    : _frame;
 
                 // Nobody is speaking a notice, and a cutscene subtitle names
                 // nobody either.
-                _plate.Visibility = subtitle || notice ? Visibility.Collapsed : Visibility.Visible;
+                _plate.Visibility = subtitle || notice || choice ? Visibility.Collapsed : Visibility.Visible;
 
                 _line.TextAlignment = subtitle ? TextAlignment.Center : TextAlignment.Left;
                 _line.VerticalAlignment = subtitle ? VerticalAlignment.Center : VerticalAlignment.Top;

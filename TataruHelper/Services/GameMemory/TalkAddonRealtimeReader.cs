@@ -250,37 +250,44 @@ namespace FFXIVTataruHelper.Services.GameMemory
         /// </param>
         public TalkAddonRealtimeDialogSnapshot TryReadSnapshot(string lastEmittedText = null)
         {
-            // Settled afresh every sweep. A question that is no longer on
-            // screen is not a question, and a copy of one left standing over a
-            // cutscene is the thing a player would notice first.
-            Choice = GameChoice.None;
-            ChoiceBounds = AddonBounds.Unknown;
+            _choiceThisSweep = GameChoice.None;
+            _choiceBoundsThisSweep = AddonBounds.Unknown;
+
+            // Every way out of this sweep settles the question, including the
+            // ways out that read nothing at all: a game that cannot be read is
+            // not a game asking something, and a copy of a question left over a
+            // finished cutscene is the thing a player would notice first.
 
             if (_memoryHandler == null)
             {
+                SettleTheQuestion();
                 return TalkAddonRealtimeDialogSnapshot.Unavailable();
             }
 
             var locations = _memoryHandler.Scanner?.Locations;
             if (locations == null || !_uiDirectDialogOffsets.Value.IsValid)
             {
+                SettleTheQuestion();
                 return TalkAddonRealtimeDialogSnapshot.Unavailable();
             }
 
             if (!locations.TryGetValue(Signatures.CHATLOG_KEY, out var chatLogLocation) || chatLogLocation == null)
             {
+                SettleTheQuestion();
                 return TalkAddonRealtimeDialogSnapshot.Unavailable();
             }
 
             var chatLogAddress = chatLogLocation.GetAddress();
             if (chatLogAddress == IntPtr.Zero)
             {
+                SettleTheQuestion();
                 return TalkAddonRealtimeDialogSnapshot.Unavailable();
             }
 
             var uiModuleAddress = SubtractAddress(chatLogAddress, _uiDirectDialogOffsets.Value.RaptureLogModuleOffset);
             if (uiModuleAddress == IntPtr.Zero)
             {
+                SettleTheQuestion();
                 return TalkAddonRealtimeDialogSnapshot.Unavailable();
             }
 
@@ -288,6 +295,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
 
             if (!TryFindWindowList(uiModuleAddress, out var atkUnitManagerAddress))
             {
+                SettleTheQuestion();
                 return SelectRealtimeSnapshot(lastTalkName, lastTalkText,
                     Array.Empty<TalkAddonRealtimeDialogSnapshot>());
             }
@@ -295,6 +303,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
             if (!TryReadLoadedAddonSnapshot(atkUnitManagerAddress, lastTalkName, lastTalkText, lastEmittedText,
                     out var snapshot))
             {
+                SettleTheQuestion();
                 return SelectRealtimeSnapshot(lastTalkName, lastTalkText,
                     Array.Empty<TalkAddonRealtimeDialogSnapshot>());
             }
@@ -604,8 +613,8 @@ namespace FFXIVTataruHelper.Services.GameMemory
                             var asked = ReadChoice(addonAddress);
                             if (asked.IsBeingAsked)
                             {
-                                Choice = asked;
-                                ChoiceBounds = TryReadAddonBounds(addonAddress, out var where)
+                                _choiceThisSweep = asked;
+                                _choiceBoundsThisSweep = TryReadAddonBounds(addonAddress, out var where)
                                     ? where
                                     : AddonBounds.Unknown;
                             }
@@ -753,6 +762,8 @@ namespace FFXIVTataruHelper.Services.GameMemory
             // cutscene subtitle is not drawn in a window at all - it is bare
             // text over the picture, so anything covering it has to be bare
             // too.
+            SettleTheQuestion();
+
             // A question the player has to answer comes before anything being
             // said: it is the thing they have to act on, and the line that led
             // up to it has had its moment.
@@ -1725,6 +1736,48 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 _memoryHandler.GetUInt16(nodeAddress, bounds.NodeHeightOffset),
                 ReadSingle(nodeAddress, bounds.NodeScaleXOffset));
         }
+
+        /// <summary>
+        /// Keeps a question through a sweep that failed to read it.
+        ///
+        /// The words are gathered afresh every fiftieth of a second by walking
+        /// into the window's components, and a single sweep that comes back
+        /// with fewer than it should - a node hidden for a frame while the
+        /// window settles - would otherwise say the question is gone. The copy
+        /// would come off, land back on whatever line the dialogue box still
+        /// held, and go back a moment later: a flicker, twenty times a second.
+        ///
+        /// The same short wait the copy already gives a dialogue box between
+        /// lines, and for the same reason.
+        /// </summary>
+        private void SettleTheQuestion()
+        {
+            var now = DateTime.UtcNow;
+
+            if (_choiceThisSweep.IsBeingAsked)
+            {
+                Choice = _choiceThisSweep;
+                ChoiceBounds = _choiceBoundsThisSweep;
+                _questionLastSeen = now;
+                return;
+            }
+
+            if (Choice.IsBeingAsked && now - _questionLastSeen < QuestionGrace)
+            {
+                return;
+            }
+
+            Choice = GameChoice.None;
+            ChoiceBounds = AddonBounds.Unknown;
+        }
+
+        private static readonly TimeSpan QuestionGrace = TimeSpan.FromMilliseconds(250);
+
+        private GameChoice _choiceThisSweep = GameChoice.None;
+
+        private AddonBounds _choiceBoundsThisSweep;
+
+        private DateTime _questionLastSeen = DateTime.MinValue;
 
         /// <summary>
         /// The question a cutscene is asking and the answers it offers, or none
