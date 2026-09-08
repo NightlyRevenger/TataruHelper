@@ -217,6 +217,10 @@ namespace TataruHelper.Tests
 
             public DialogueSurface DialogueSurface { get; set; }
 
+            public GameChoice CurrentChoice { get; set; } = GameChoice.None;
+
+            public AddonBounds ChoiceBounds { get; set; }
+
             public string CurrentDialogueLine { get; set; } = string.Empty;
 
             public string CurrentDialogueSpeaker { get; set; } = string.Empty;

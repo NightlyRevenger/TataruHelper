@@ -28,6 +28,10 @@ namespace FFXIVTataruHelper.FFHandlers
         /// <summary>Whether that line is a cutscene subtitle, drawn without a window.</summary>
         DialogueSurface DialogueSurface { get; }
 
+        GameChoice CurrentChoice { get; }
+
+        AddonBounds ChoiceBounds { get; }
+
         /// <summary>
         /// The line the game is drawing in its dialogue window right now, in the
         /// form it reaches the translation pipeline - or empty when it is

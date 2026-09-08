@@ -17,6 +17,13 @@ namespace FFXIVTataruHelper.Services.GameMemory
         private const string TalkSubtitleAddonName = "TalkSubtitle";
 
         /// <summary>
+        /// The strip a cutscene puts a question and its answers in. Not read as
+        /// dialogue - nobody is speaking it - but read, because it is the only
+        /// thing in the game the player has to answer.
+        /// </summary>
+        private const string CutSceneChoiceAddonName = "CutSceneSelectString";
+
+        /// <summary>
         /// Offset of the subtitle Utf8String inside AddonTalkSubtitle.
         ///
         /// FFXIVClientStructs has no AddonTalkSubtitle type, so unlike every other
@@ -205,6 +212,16 @@ namespace FFXIVTataruHelper.Services.GameMemory
         /// </summary>
         public DialogueSurface DialogueSurface { get; private set; }
 
+        /// <summary>
+        /// The question a cutscene is asking and the answers it offers, as of
+        /// the last sweep. None when it is asking nothing, which is nearly
+        /// always.
+        /// </summary>
+        public GameChoice Choice { get; private set; } = GameChoice.None;
+
+        /// <summary>Where the window asking it is drawn.</summary>
+        public AddonBounds ChoiceBounds { get; private set; }
+
         public TalkAddonRealtimeReader(MemoryHandler memoryHandler)
         {
             _memoryHandler = memoryHandler;
@@ -233,6 +250,12 @@ namespace FFXIVTataruHelper.Services.GameMemory
         /// </param>
         public TalkAddonRealtimeDialogSnapshot TryReadSnapshot(string lastEmittedText = null)
         {
+            // Settled afresh every sweep. A question that is no longer on
+            // screen is not a question, and a copy of one left standing over a
+            // cutscene is the thing a player would notice first.
+            Choice = GameChoice.None;
+            ChoiceBounds = AddonBounds.Unknown;
+
             if (_memoryHandler == null)
             {
                 return TalkAddonRealtimeDialogSnapshot.Unavailable();
@@ -568,13 +591,25 @@ namespace FFXIVTataruHelper.Services.GameMemory
 
                 if (!IsWantedAddonName(addonName))
                 {
-                    // Not read, only looked at: the windows a conversation
-                    // offers a choice in. Nothing is done with them yet, and
-                    // whether anything can be is a question about what their
-                    // nodes hold - which is what this writes down.
-                    if (Logger.RawDialogLogEnabled && IsChoiceAddonName(addonName))
+                    if (IsChoiceAddonName(addonName))
                     {
-                        LogChoiceTexts(addonName, addonAddress);
+                        if (Logger.RawDialogLogEnabled)
+                        {
+                            LogChoiceTexts(addonName, addonAddress);
+                        }
+
+                        if (string.Equals(addonName, CutSceneChoiceAddonName, StringComparison.OrdinalIgnoreCase) &&
+                            !IsAddonOffScreen(addonAddress))
+                        {
+                            var asked = ReadChoice(addonAddress);
+                            if (asked.IsBeingAsked)
+                            {
+                                Choice = asked;
+                                ChoiceBounds = TryReadAddonBounds(addonAddress, out var where)
+                                    ? where
+                                    : AddonBounds.Unknown;
+                            }
+                        }
                     }
 
                     continue;
@@ -1649,7 +1684,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 return;
             }
 
-            var found = new List<string>();
+            var found = new List<(string Text, AddonBounds Where)>();
             GatherTexts(AddAddress(addonAddress, walk.UldManagerOffset), walk, found, 0);
 
             if (found.Count == 0)
@@ -1658,10 +1693,71 @@ namespace FFXIVTataruHelper.Services.GameMemory
             }
 
             WriteDistinctRawDialogLog(ref _lastLoggedChoice,
-                $"Choice addon=[{addonName}] text={{ {string.Join(" | ", found)} }}");
+                $"Choice addon=[{addonName}] text={{ {string.Join(" | ", found.Select(f => "[" + f.Text + "]"))} }}");
         }
 
-        private void GatherTexts(IntPtr uldManagerAddress, AtkNodeWalkOffsets walk, List<string> found, int depth)
+        /// <summary>
+        /// Where a node is drawn, in the coordinates the client draws in - the
+        /// same as a whole window's rectangle is taken in, and for the same
+        /// reason: what is wanted is where it lands, not where it would land
+        /// unscaled.
+        /// </summary>
+        private AddonBounds NodeBounds(IntPtr nodeAddress)
+        {
+            var bounds = _uiDirectDialogOffsets.Value.Bounds;
+            if (nodeAddress == IntPtr.Zero || !bounds.IsValid)
+            {
+                return AddonBounds.Unknown;
+            }
+
+            return AddonBounds.From(
+                ReadSingle(nodeAddress, bounds.NodeScreenXOffset),
+                ReadSingle(nodeAddress, bounds.NodeScreenYOffset),
+                _memoryHandler.GetUInt16(nodeAddress, bounds.NodeWidthOffset),
+                _memoryHandler.GetUInt16(nodeAddress, bounds.NodeHeightOffset),
+                ReadSingle(nodeAddress, bounds.NodeScaleXOffset));
+        }
+
+        /// <summary>
+        /// The question a cutscene is asking and the answers it offers, or none
+        /// when it is asking nothing.
+        ///
+        /// Which of the words is the question is settled by where they are
+        /// drawn rather than by the order the node list happens to give: the
+        /// question is above the rule the window draws under it, and the
+        /// answers are below, in the order they are listed down the screen.
+        /// </summary>
+        private GameChoice ReadChoice(IntPtr addonAddress)
+        {
+            var walk = _uiDirectDialogOffsets.Value.NodeWalk;
+            if (!walk.IsValid || !walk.CanGoInsideComponents || addonAddress == IntPtr.Zero)
+            {
+                return GameChoice.None;
+            }
+
+            var found = new List<(string Text, AddonBounds Where)>();
+            GatherTexts(AddAddress(addonAddress, walk.UldManagerOffset), walk, found, 0);
+
+            var drawn = found
+                .Where(f => f.Text.Length > 0 && f.Where.IsKnown)
+                .OrderBy(f => f.Where.Y)
+                .ToArray();
+
+            if (drawn.Length < 2)
+            {
+                // A question with nothing to answer it is a window being built
+                // or torn down, not a choice.
+                return GameChoice.None;
+            }
+
+            return new GameChoice(
+                drawn[0].Text,
+                drawn.Skip(1).Select(f => f.Text).ToArray(),
+                drawn.Skip(1).Select(f => f.Where).ToArray());
+        }
+
+        private void GatherTexts(IntPtr uldManagerAddress, AtkNodeWalkOffsets walk,
+            List<(string Text, AddonBounds Where)> found, int depth)
         {
             if (uldManagerAddress == IntPtr.Zero || depth > 4 || found.Count > 32)
             {
@@ -1693,7 +1789,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
                             out var text) &&
                         text.Length > 0)
                     {
-                        found.Add("[" + text + "]");
+                        found.Add((SharlayanGameMemoryGateway.NormalizeDialogToken(text), NodeBounds(nodeAddress)));
                     }
 
                     continue;

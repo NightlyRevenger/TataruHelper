@@ -119,6 +119,10 @@ namespace FFXIVTataruHelper.FFHandlers
         public DialogueSurface DialogueSurface =>
             _gameMemoryGateway?.DialogueSurface ?? DialogueSurface.None;
 
+        public GameChoice CurrentChoice => _gameMemoryGateway?.CurrentChoice ?? GameChoice.None;
+
+        public AddonBounds ChoiceBounds => _gameMemoryGateway?.ChoiceBounds ?? AddonBounds.Unknown;
+
         public string CurrentDialogueLine => _gameMemoryGateway?.CurrentDialogueLine ?? string.Empty;
 
         public string CurrentDialogueSpeaker => _gameMemoryGateway?.CurrentDialogueSpeaker ?? string.Empty;

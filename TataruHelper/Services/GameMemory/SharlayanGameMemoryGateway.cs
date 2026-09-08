@@ -79,6 +79,12 @@ namespace FFXIVTataruHelper.Services.GameMemory
         /// </summary>
         private string _currentDialogueSpeaker = string.Empty;
 
+        /// <summary>
+        /// The question last sent out, so it is sent once rather than twenty
+        /// times a second for as long as the player is thinking about it.
+        /// </summary>
+        private string _lastChoiceSignature = string.Empty;
+
         public SharlayanGameMemoryGateway(IDirectDialogReader directDialogReader, IAppLogger logger)
             : this(directDialogReader, logger, null, null)
         {
@@ -132,6 +138,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
             _linesReadLive = 0;
             _currentDialogueLine = string.Empty;
             _currentDialogueSpeaker = string.Empty;
+            _lastChoiceSignature = string.Empty;
         }
 
         /// <summary>
@@ -341,12 +348,18 @@ namespace FFXIVTataruHelper.Services.GameMemory
         public DialogueSurface DialogueSurface =>
             _talkAddonRealtimeReader?.DialogueSurface ?? DialogueSurface.None;
 
+        public GameChoice CurrentChoice => _talkAddonRealtimeReader?.Choice ?? GameChoice.None;
+
+        public AddonBounds ChoiceBounds => _talkAddonRealtimeReader?.ChoiceBounds ?? AddonBounds.Unknown;
+
         public string CurrentDialogueLine => _currentDialogueLine;
 
         public string CurrentDialogueSpeaker => _currentDialogueSpeaker;
 
         public ChatLogResult GetDirectDialog()
         {
+            var asked = SendOutAQuestionOnce();
+
             var fallbackDirectDialog =
                 _directDialogReader.ExtractDirectDialog(_lastChatLogResult) ?? new ChatLogResult();
             var realtimeSnapshot = _realtimeDialogSnapshotOverride != null
@@ -373,7 +386,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 // shown. What the memory is for is exactly that gap. An NPC
                 // repeating a bubble as you walk past is handled by the two
                 // seconds, not by wiping the slate.
-                return fallbackDirectDialog;
+                return WithQuestion(fallbackDirectDialog, asked);
             }
 
             var result = new ChatLogResult();
@@ -394,7 +407,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 _lastRealtimeDialogSignature = string.Empty;
                 _currentDialogueLine = string.Empty;
             _currentDialogueSpeaker = string.Empty;
-                return fallbackDirectDialog;
+                return WithQuestion(fallbackDirectDialog, asked);
             }
 
             var chatCode = NormalizeDialogToken(realtimeSnapshot.ChatCode);
@@ -449,7 +462,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
 
             if (fallbackDirectDialog.ChatLogItems == null || fallbackDirectDialog.ChatLogItems.Count == 0)
             {
-                return result;
+                return WithQuestion(result, asked);
             }
 
             foreach (var chatLogItem in fallbackDirectDialog.ChatLogItems.ToArray())
@@ -460,7 +473,64 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 }
             }
 
-            return result;
+            return WithQuestion(result, asked);
+        }
+
+        /// <summary>
+        /// The question a cutscene is asking, as one message, the first time it
+        /// is seen.
+        ///
+        /// One message and not one per answer: the answers are answers to that
+        /// question, and an engine that can see them together translates them
+        /// better than three engines each shown a fragment. Numbered, because
+        /// the answer has to be found again in the translation and a number is
+        /// the one part of a sentence no engine rewrites.
+        ///
+        /// The game does not write these to its chat log, so nothing else will
+        /// carry them and there is nothing to be a duplicate of.
+        /// </summary>
+        private static ChatLogResult WithQuestion(ChatLogResult result, ChatLogItem asked)
+        {
+            if (asked == null)
+            {
+                return result;
+            }
+
+            var carried = result ?? new ChatLogResult();
+            carried.ChatLogItems.Enqueue(asked);
+            return carried;
+        }
+
+        private ChatLogItem SendOutAQuestionOnce()
+        {
+            var choice = _talkAddonRealtimeReader?.Choice ?? GameChoice.None;
+            if (!choice.IsBeingAsked)
+            {
+                _lastChoiceSignature = string.Empty;
+                return null;
+            }
+
+            var signature = choice.Signature();
+            if (string.Equals(_lastChoiceSignature, signature, StringComparison.Ordinal))
+            {
+                return null;
+            }
+
+            _lastChoiceSignature = signature;
+
+            var block = choice.AsBlock();
+            if (Logger.RawDialogLogEnabled)
+            {
+                Logger.WriteRawDialogLog($"ChoiceAsked answers=[{choice.Answers.Count}] block=[{block}]");
+            }
+
+            _codesReadLive.Add(CutsceneDialogCode);
+            _linesReadLive++;
+
+            return new ChatLogItem
+            {
+                Code = CutsceneDialogCode, Line = block, TimeStamp = _timestampProvider()
+            };
         }
 
         public bool CheckChatEquality(ChatLogItem item1, ChatLogItem item2)
