@@ -1,0 +1,19 @@
+<:1_1:594308396778389515> **Tataru Helper 1.0.10** <:1_1:594308396778389515>
+
+Patch 7.56 stopped the application from reading dialogue off the screen. This puts it back.
+Патч 7.56 сломал чтение реплик с экрана. Это возвращено.
+
+The patch moved two fields the reader depends on, so the list of open windows was never reached. From the outside it did not look like "nothing works": the chat log carried the conversation on its own, so the translation arrived a line behind, or every other line, and only once you clicked through.
+Патч сдвинул два поля, на которые опирается читалка, и список открытых окон стал недостижим. Со стороны это выглядело не как «ничего не работает»: разговор тянул на себе чат-лог игры, поэтому перевод приходил на реплику позже, или через раз, и только когда прокликаешь.
+
+**Along the way**
+The reader used to fall back to the game's *last line said* when nothing on screen had anything to say. The game keeps that long after the conversation is over — a line has been read out of it twenty minutes late. And because it always had an answer, the screen never looked empty: an NPC greeted twice running had the second greeting swallowed. It is no longer a source of dialogue, and nothing is lost — the game writes them all to its chat log, which is read too.
+
+**Заодно**
+Читалка добирала из памяти игры «последнюю сказанную реплику», когда на экране ничего нет. Игра держит её долго после конца разговора — оттуда однажды прочиталась реплика двадцатиминутной давности. И раз ответ был всегда, экран никогда не выглядел пустым: у NPC, с которым здороваешься второй раз подряд, второе приветствие пропадало. Больше это не источник реплик, и ничего не потеряно — игра пишет их все в чат-лог, а он тоже читается.
+
+Известное: если прокликивать одного NPC быстрее двух секунд, повтор считается тем же самым и переводится один раз.
+
+Если у вас что-то не работает или работает не так, как вам кажется — пишите, будем фиксить.
+
+https://github.com/NightlyRevenger/TataruHelper/releases/latest
