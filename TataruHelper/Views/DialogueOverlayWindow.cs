@@ -64,6 +64,9 @@ namespace FFXIVTataruHelper
         /// </summary>
         private double _widestSeen;
 
+        /// <summary>Which surface that width was measured on.</summary>
+        private DialogueSurface _widestSeenOn = DialogueSurface.None;
+
         /// <summary>
         /// The line this copy was put out for, reduced to its words - what it
         /// is checked against while the game keeps talking. Empty until the
@@ -277,6 +280,17 @@ namespace FFXIVTataruHelper
                 return;
             }
 
+            // The widest is remembered per surface. A cutscene subtitle is the
+            // width of the screen and a dialogue box is not, so measured
+            // against one another the box always looks like a window still
+            // opening - and a conversation that follows a subtitle would go
+            // uncovered from beginning to end.
+            if (surface != _widestSeenOn)
+            {
+                _widestSeenOn = surface;
+                _widestSeen = 0;
+            }
+
             // The game opens its window by growing it, and the copy used to
             // follow every frame of that - resizing and re-wrapping the text a
             // dozen times a line. The full size is the one that means anything,
@@ -435,6 +449,7 @@ namespace FFXIVTataruHelper
             _line.Text = string.Empty;
             _speaker.Text = string.Empty;
             _widestSeen = 0;
+            _widestSeenOn = DialogueSurface.None;
             _shownLineKey = string.Empty;
         }
 
