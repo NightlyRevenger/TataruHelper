@@ -63,6 +63,15 @@ namespace FFXIVTataruHelper.Services.GameMemory
 
         private string _lastLoggedNodeGeometry = string.Empty;
 
+        private string _lastLoggedNodeParts = string.Empty;
+
+        // AtkResNode.Type for the two node kinds that draw a picture. The
+        // dialogue window's frame is a nine-grid, which is how a panel that
+        // stretches to any size is drawn.
+        private const int ImageNodeType = 2;
+
+        private const int NineGridNodeType = 4;
+
         // The client works out where every node lands and keeps the answer, so
         // the drawn place is read rather than accumulated from the tree.
         private const long NodeScreenXOffset = 0x70;
@@ -1540,6 +1549,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
 
             var described = new List<string>(nodeCount);
             var geometry = new List<string>(nodeCount);
+            var parts = new List<string>(nodeCount);
             for (int index = 0; index < nodeCount; index++)
             {
                 var nodeAddress = _memoryHandler.ReadPointer(nodeListAddress, index * IntPtr.Size);
@@ -1559,6 +1569,13 @@ namespace FFXIVTataruHelper.Services.GameMemory
                         $"id={id} t={type} sxy={ReadSingle(nodeAddress, NodeScreenXOffset)},{ReadSingle(nodeAddress, NodeScreenYOffset)} wh={_memoryHandler.GetUInt16(nodeAddress, bounds.NodeWidthOffset)}x{_memoryHandler.GetUInt16(nodeAddress, bounds.NodeHeightOffset)} sc={ReadSingle(nodeAddress, bounds.NodeScaleXOffset)}"));
                 }
 
+                if (visible && (type == ImageNodeType || type == NineGridNodeType) &&
+                    offsets.PartIdOffset >= 0)
+                {
+                    parts.Add(FormattableString.Invariant(
+                        $"id={id} t={type} part={_memoryHandler.GetUInt16(nodeAddress, offsets.PartIdOffset)} sheet={_memoryHandler.ReadPointer(nodeAddress, offsets.PartsListOffset).ToInt64():X}"));
+                }
+
                 if (type != TextNodeType)
                 {
                     continue;
@@ -1573,6 +1590,16 @@ namespace FFXIVTataruHelper.Services.GameMemory
 
             WriteDistinctRawDialogLog(ref _lastLoggedNodeGeometry,
                 $"NodeGeometry addon=[{addonName}] { string.Join(" | ", geometry) }");
+
+            // Which picture each drawn node is showing. The game has more than
+            // one design of dialogue window - there is a dark one as well as
+            // the wooden one - and if they differ anywhere a copy can see, it
+            // is here: same nodes, different part of the same sheet.
+            if (parts.Count > 0)
+            {
+                WriteDistinctRawDialogLog(ref _lastLoggedNodeParts,
+                    $"NodeParts addon=[{addonName}] {string.Join(" | ", parts)}");
+            }
         }
 
         private static string DecodeUtf8(byte[] data, int start, int count)
@@ -1839,6 +1866,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
             var addonTalkType = Type.GetType("FFXIVClientStructs.FFXIV.Client.UI.AddonTalk, Sharlayan");
             var atkTextNodeType = Type.GetType("FFXIVClientStructs.FFXIV.Component.GUI.AtkTextNode, Sharlayan");
             var atkResNodeType = Type.GetType("FFXIVClientStructs.FFXIV.Component.GUI.AtkResNode, Sharlayan");
+            var atkImageNodeType = Type.GetType("FFXIVClientStructs.FFXIV.Component.GUI.AtkImageNode, Sharlayan");
 
             var missingTypes = new[]
             {
@@ -1918,6 +1946,8 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 atkTextNodeNodeTextOffset,
                 ResolveFieldOffset(atkUnitBaseType, "VisibilityFlags"),
                 ResolveFieldOffset(atkUnitBaseType, "RootNode"),
+                ResolveFieldOffset(atkImageNodeType, "PartId"),
+                ResolveFieldOffset(atkImageNodeType, "PartsList"),
                 ResolveNodeWalkOffsets(atkUnitBaseType),
                 new AddonBoundsOffsets(
                     ResolveFieldOffset(atkResNodeType, "ScreenX"),
@@ -2157,7 +2187,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
         private readonly struct UiDirectDialogOffsets
         {
             public static UiDirectDialogOffsets Empty =>
-                new UiDirectDialogOffsets(-1, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1,
+                new UiDirectDialogOffsets(-1, -1, -1, -1, -1, -1, -1, -1, -1, 0, -1, -1, -1, -1, -1,
                     AtkNodeWalkOffsets.Empty, AddonBoundsOffsets.Empty,
                     Array.Empty<AddonRealtimeTextSpec>());
 
@@ -2173,6 +2203,15 @@ namespace FFXIVTataruHelper.Services.GameMemory
             public int AtkUnitBaseNameLength { get; }
 
             public long AtkTextNodeNodeTextOffset { get; }
+
+            /// <summary>
+            /// Which picture a drawn node is showing, and off which sheet.
+            /// Negative when the metadata does not describe them; used only for
+            /// the raw-dialog log, so nothing depends on them being there.
+            /// </summary>
+            public long PartIdOffset { get; }
+
+            public long PartsListOffset { get; }
 
             public long AtkUnitBaseVisibilityFlagsOffset { get; }
 
@@ -2216,6 +2255,8 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 long atkTextNodeNodeTextOffset,
                 long atkUnitBaseVisibilityFlagsOffset,
                 long atkUnitBaseRootNodeOffset,
+                long partIdOffset,
+                long partsListOffset,
                 AtkNodeWalkOffsets nodeWalk,
                 AddonBoundsOffsets bounds,
                 AddonRealtimeTextSpec[] addonSpecs)
@@ -2235,6 +2276,8 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 AtkTextNodeNodeTextOffset = atkTextNodeNodeTextOffset;
                 AtkUnitBaseVisibilityFlagsOffset = atkUnitBaseVisibilityFlagsOffset;
                 AtkUnitBaseRootNodeOffset = atkUnitBaseRootNodeOffset;
+                PartIdOffset = partIdOffset;
+                PartsListOffset = partsListOffset;
 
                 AddonSpecs = addonSpecs ?? Array.Empty<AddonRealtimeTextSpec>();
             }
