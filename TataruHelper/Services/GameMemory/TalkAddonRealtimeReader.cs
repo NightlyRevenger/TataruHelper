@@ -81,6 +81,31 @@ namespace FFXIVTataruHelper.Services.GameMemory
 
         private DateTime _lastInlineDiscovery = DateTime.MinValue;
 
+        /// <summary>
+        /// Where RaptureAtkModule sits inside UIModule, once a candidate has
+        /// been shown to lead to the game's list of open windows. Negative
+        /// until one has.
+        /// </summary>
+        private long _windowListOffset = -1;
+
+        private DateTime _lastWindowListSearch = DateTime.MinValue;
+
+        private static readonly TimeSpan WindowListSearchInterval = TimeSpan.FromSeconds(2);
+
+        /// <summary>
+        /// How far either side of the described offset to look. Patch 7.56
+        /// moved the field 0x20; this allows for a great deal more than that
+        /// while staying inside the module the field belongs to.
+        /// </summary>
+        private const long WindowListSearchReach = 0x2000;
+
+        /// <summary>
+        /// How many windows in a candidate list are examined. Half of them
+        /// must carry a name the game could have given an addon for the list
+        /// to be believed.
+        /// </summary>
+        private const int WindowsExamined = 32;
+
         private string _lastDiscoveredInlineText = string.Empty;
 
         private bool _knownInlineOffsetHasWorked;
@@ -207,17 +232,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
 
             TryReadLastTalk(uiModuleAddress, out var lastTalkName, out var lastTalkText);
 
-            var raptureAtkModuleAddress =
-                AddAddress(uiModuleAddress, _uiDirectDialogOffsets.Value.RaptureAtkModuleOffset);
-            if (raptureAtkModuleAddress == IntPtr.Zero)
-            {
-                return SelectRealtimeSnapshot(lastTalkName, lastTalkText,
-                    Array.Empty<TalkAddonRealtimeDialogSnapshot>());
-            }
-
-            var atkUnitManagerAddress = _memoryHandler.ReadPointer(raptureAtkModuleAddress,
-                _uiDirectDialogOffsets.Value.AtkUnitManagerOffset);
-            if (atkUnitManagerAddress == IntPtr.Zero)
+            if (!TryFindWindowList(uiModuleAddress, out var atkUnitManagerAddress))
             {
                 return SelectRealtimeSnapshot(lastTalkName, lastTalkText,
                     Array.Empty<TalkAddonRealtimeDialogSnapshot>());
@@ -231,6 +246,195 @@ namespace FFXIVTataruHelper.Services.GameMemory
             }
 
             return SelectRealtimeSnapshot(lastTalkName, lastTalkText, new[] { snapshot });
+        }
+
+        /// <summary>
+        /// Finds the game's list of open windows, which everything read off the
+        /// screen hangs from.
+        ///
+        /// The offset of RaptureAtkModule inside UIModule comes from the
+        /// FFXIVClientStructs metadata bundled with Sharlayan, and that
+        /// metadata lags the live client by however long it takes that project
+        /// to publish. Patch 7.56 moved the field twenty bytes on: at the old
+        /// offset the list was simply never reached, and with it went every
+        /// road but the chat log - which is not a failure that announces
+        /// itself, since the chat log carries the conversation on its own, a
+        /// line behind.
+        ///
+        /// So the described offset is a starting point rather than an answer.
+        /// When it does not lead to a list, nearby offsets are tried until one
+        /// does, nearest first, and the one that works is kept for the rest of
+        /// the session. A Sharlayan carrying current offsets is answered on the
+        /// first try and never searches at all.
+        /// </summary>
+        private bool TryFindWindowList(IntPtr uiModuleAddress, out IntPtr atkUnitManagerAddress)
+        {
+            if (_windowListOffset >= 0 &&
+                TryReachWindowList(uiModuleAddress, _windowListOffset, out atkUnitManagerAddress))
+            {
+                return true;
+            }
+
+            var described = _uiDirectDialogOffsets.Value.RaptureAtkModuleOffset;
+            if (_windowListOffset != described &&
+                TryReachWindowList(uiModuleAddress, described, out atkUnitManagerAddress))
+            {
+                _windowListOffset = described;
+                return true;
+            }
+
+            atkUnitManagerAddress = IntPtr.Zero;
+
+            // Searching is rate-limited because the ordinary reason to be here
+            // is not a moved field at all: it is the game still starting up or
+            // shutting down, where no offset leads anywhere.
+            var now = DateTime.UtcNow;
+            if (now - _lastWindowListSearch < WindowListSearchInterval)
+            {
+                return false;
+            }
+
+            _lastWindowListSearch = now;
+
+            for (long distance = 8; distance <= WindowListSearchReach; distance += 8)
+            {
+                if (TryReachWindowList(uiModuleAddress, described + distance, out atkUnitManagerAddress))
+                {
+                    SettleOnWindowList(described + distance, described);
+                    return true;
+                }
+
+                if (described - distance >= 0 &&
+                    TryReachWindowList(uiModuleAddress, described - distance, out atkUnitManagerAddress))
+                {
+                    SettleOnWindowList(described - distance, described);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private void SettleOnWindowList(long found, long described)
+        {
+            _windowListOffset = found;
+
+            Logger.WriteLog(FormattableString.Invariant(
+                $"The game's window list is not where the bundled offsets say. RaptureAtkModule found at UIModule+0x{found:X}, 0x{Math.Abs(found - described):X} bytes from the described 0x{described:X}."));
+            Logger.WriteRawDialogLog(FormattableString.Invariant(
+                $"WindowList settled at UIModule+0x{found:X} (described 0x{described:X})"));
+        }
+
+        private bool TryReachWindowList(IntPtr uiModuleAddress, long raptureAtkModuleOffset,
+            out IntPtr atkUnitManagerAddress)
+        {
+            atkUnitManagerAddress = IntPtr.Zero;
+
+            try
+            {
+                var raptureAtkModuleAddress = AddAddress(uiModuleAddress, raptureAtkModuleOffset);
+                if (raptureAtkModuleAddress == IntPtr.Zero)
+                {
+                    return false;
+                }
+
+                var candidate = _memoryHandler.ReadPointer(raptureAtkModuleAddress,
+                    _uiDirectDialogOffsets.Value.AtkUnitManagerOffset);
+                if (candidate == IntPtr.Zero || !LooksLikeTheWindowList(candidate))
+                {
+                    return false;
+                }
+
+                atkUnitManagerAddress = candidate;
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Whether what a candidate offset leads to is the list of open windows
+        /// rather than whatever else was lying there.
+        ///
+        /// A stray pointer can pass a null check and can pass a plausible
+        /// count. What it cannot do is hold pointer after pointer to a
+        /// structure carrying a name the game could have given an addon, so
+        /// that is what is asked of it.
+        /// </summary>
+        private bool LooksLikeTheWindowList(IntPtr atkUnitManagerAddress)
+        {
+            var listAddress = AddAddress(atkUnitManagerAddress,
+                _uiDirectDialogOffsets.Value.AllLoadedUnitsListOffset);
+            if (listAddress == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            var count = _memoryHandler.GetUInt16(listAddress, _uiDirectDialogOffsets.Value.AtkUnitListCountOffset);
+            if (count <= 0 || count > MaxAtkUnitListEntries)
+            {
+                return false;
+            }
+
+            var entriesAddress = AddAddress(listAddress, _uiDirectDialogOffsets.Value.AtkUnitListEntriesOffset);
+            if (entriesAddress == IntPtr.Zero)
+            {
+                return false;
+            }
+
+            var examined = Math.Min((int)count, WindowsExamined);
+            var entryBytes = _memoryHandler.GetByteArray(entriesAddress, examined * IntPtr.Size);
+            if (entryBytes == null || entryBytes.Length < examined * IntPtr.Size)
+            {
+                return false;
+            }
+
+            var named = 0;
+            for (var i = 0; i < examined; i++)
+            {
+                var addonAddress = new IntPtr(BitConverter.ToInt64(entryBytes, i * IntPtr.Size));
+                if (addonAddress == IntPtr.Zero)
+                {
+                    continue;
+                }
+
+                if (TryReadAddonName(addonAddress, out var addonName) && LooksLikeAnAddonName(addonName))
+                {
+                    named++;
+                }
+            }
+
+            return named * 2 >= examined;
+        }
+
+        /// <summary>
+        /// The shape of a name the game gives an addon: "Talk", "_MiniTalk",
+        /// "ChatLog". Letters, digits and underscores, starting with a letter
+        /// or an underscore.
+        /// </summary>
+        internal static bool LooksLikeAnAddonName(string addonName)
+        {
+            if (string.IsNullOrEmpty(addonName) || addonName.Length < 3 || addonName.Length > 32)
+            {
+                return false;
+            }
+
+            if (addonName[0] != '_' && !char.IsLetter(addonName[0]))
+            {
+                return false;
+            }
+
+            foreach (var c in addonName)
+            {
+                if (c != '_' && !char.IsLetterOrDigit(c))
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private bool TryReadLastTalk(IntPtr uiModuleAddress, out string speakerName, out string talkText)
@@ -1619,20 +1823,18 @@ namespace FFXIVTataruHelper.Services.GameMemory
             }
 
             // Patch 7.56 grew UIModule past what the FFXIVClientStructs bundled
-            // with Sharlayan still describes: RaptureAtkModule moved on twenty
-            // bytes and the LastTalk pair on ninety-six. Read at the old
-            // offsets, AtkUnitManager comes back as a null pointer and nothing
-            // on screen can be reached at all - which is how the patch day
-            // looked to everyone using the application.
+            // with Sharlayan still describes, moving the LastTalk pair on
+            // ninety-six bytes. The correction below only applies to the exact
+            // layout the stale metadata describes, so the day Sharlayan ships a
+            // 7.56 build it steps aside on its own rather than shifting correct
+            // offsets out from under themselves.
             //
-            // The correction only applies to the exact layout the stale
-            // metadata describes, so the day Sharlayan ships a 7.56 build it
-            // steps aside on its own rather than shifting correct offsets.
-            if (raptureAtkModuleOffset == 0xD2670 &&
-                lastTalkNameOffset == 0xFEF00 &&
-                lastTalkTextOffset == 0xFEF68)
+            // RaptureAtkModule moved too, and is not corrected here: the reader
+            // finds the window list for itself when the described offset does
+            // not lead to one. That is worth the code because it is the field
+            // nothing at all can be read without, and it will move again.
+            if (lastTalkNameOffset == 0xFEF00 && lastTalkTextOffset == 0xFEF68)
             {
-                raptureAtkModuleOffset = 0xD2690;
                 lastTalkNameOffset = 0xFEF60;
                 lastTalkTextOffset = 0xFEFC8;
             }

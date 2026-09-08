@@ -128,5 +128,32 @@ namespace TataruHelper.Tests.Services.GameMemory
         {
             Assert.That(TalkAddonRealtimeReader.LooksLikeDialogueText(text), Is.False);
         }
+
+        // Every one of these was read off a running client's window list.
+        [TestCase("Talk")]
+        [TestCase("TalkSubtitle")]
+        [TestCase("_MiniTalk")]
+        [TestCase("ChatLog")]
+        [TestCase("_ActionBar01")]
+        [TestCase("NamePlate")]
+        public void AddonName_IsAccepted(string addonName)
+        {
+            Assert.That(TalkAddonRealtimeReader.LooksLikeAnAddonName(addonName), Is.True);
+        }
+
+        // What a stray pointer produces when its bytes are read as a name:
+        // nothing, punctuation, the middle of a sentence, a run of high bytes.
+        [TestCase("")]
+        [TestCase(null)]
+        [TestCase("Ta")]
+        [TestCase("Talk window")]
+        [TestCase("1Talk")]
+        [TestCase("Talk-Subtitle")]
+        [TestCase("")]
+        [TestCase("a name far longer than any addon the game has ever had")]
+        public void NonAddonName_IsRejected(string addonName)
+        {
+            Assert.That(TalkAddonRealtimeReader.LooksLikeAnAddonName(addonName), Is.False);
+        }
     }
 }
