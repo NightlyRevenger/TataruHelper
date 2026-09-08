@@ -380,6 +380,94 @@ namespace Translation
             return reference.TryGetTranslation(sentence, out translation);
         }
 
+        /// <summary>
+        /// The hand-made translation of every line of a piece of text, when
+        /// there is one for every line of it.
+        ///
+        /// All or none. A piece half by hand and half by a service reads as two
+        /// different translations stacked on top of each other, and there is no
+        /// telling from the outside which half is which - so where any line is
+        /// unknown the whole piece goes to a service, as it did before.
+        ///
+        /// A line may carry a list marker - "1. " - which this application puts
+        /// there itself so an answer can be found again after a service has
+        /// rewritten the words around it. The marker is not part of what the
+        /// game said, so it is set aside for the lookup and put back after.
+        /// </summary>
+        private bool TryTranslateLinesFromReference(string sentence, TranslatorLanguage fromLang,
+            TranslatorLanguage toLang, out string translation)
+        {
+            translation = string.Empty;
+
+            if (string.IsNullOrEmpty(sentence))
+            {
+                return false;
+            }
+
+            var lines = sentence.Split('\n');
+            if (lines.Length < 2)
+            {
+                return false;
+            }
+
+            var translated = new string[lines.Length];
+
+            for (var i = 0; i < lines.Length; i++)
+            {
+                var line = lines[i].Trim();
+                if (line.Length == 0)
+                {
+                    translated[i] = string.Empty;
+                    continue;
+                }
+
+                var marker = ListMarker(line);
+                if (!TryTranslateFromReference(line.Substring(marker.Length), fromLang, toLang, out var known))
+                {
+                    return false;
+                }
+
+                translated[i] = marker + known;
+            }
+
+            translation = string.Join("\n", translated);
+            return true;
+        }
+
+        /// <summary>
+        /// The "1. " at the front of a line, or nothing when there is none.
+        /// </summary>
+        private static string ListMarker(string line)
+        {
+            var at = 0;
+            while (at < line.Length && char.IsDigit(line[at]))
+            {
+                at++;
+            }
+
+            if (at == 0 || at > 2 || at >= line.Length)
+            {
+                return string.Empty;
+            }
+
+            // A dot or a bracket after the number, and nothing else will do.
+            // The game writes lines that begin with a number and a space - "10
+            // gil for that?" - and reading that as a marker looks the line up
+            // without its first two words, which finds nothing.
+            if (line[at] != '.' && line[at] != ')')
+            {
+                return string.Empty;
+            }
+
+            var after = at + 1;
+            while (after < line.Length && line[after] == ' ')
+            {
+                after++;
+            }
+
+            return after < line.Length ? line.Substring(0, after) : string.Empty;
+        }
+
         private async Task<TranslationResult> TranslateCoreAsync(string inSentence,
             TranslationEngine translationEngine, TranslatorLanguage fromLang, TranslatorLanguage toLang,
             CancellationToken cancellationToken)
@@ -425,6 +513,18 @@ namespace Translation
             if (TryTranslateFromReference(inSentence, declaredFrom, toLang, out var referenceText))
             {
                 return TranslationResult.Literary(translationEngine.EngineName, referenceText);
+            }
+
+            // And a second time, a line at a time, for text that arrives as
+            // several lines at once. The question a cutscene asks comes that
+            // way - the question and every answer under it, in one piece so
+            // they stay together - and the index knows each of those lines
+            // while knowing nothing of the piece they arrived in. Without this
+            // a choice went to a service in full, and every answer to it read
+            // as a machine had put it.
+            if (TryTranslateLinesFromReference(inSentence, declaredFrom, toLang, out var lineByLine))
+            {
+                return TranslationResult.Literary(translationEngine.EngineName, lineByLine);
             }
 
             var normalizedSentence = PreprocessSentence(inSentence);
