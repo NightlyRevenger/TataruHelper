@@ -1,10 +1,12 @@
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 
 using FFXIVTataruHelper.ViewModel;
+
+using FFXIVTataruHelper.Services.GameMemory;
 
 namespace FFXIVTataruHelper.Services.UI
 {
@@ -20,6 +22,12 @@ namespace FFXIVTataruHelper.Services.UI
         public Paragraph BuildMessageParagraph(
             string translatedMsg, Color color, string speaker, DateTime timeStamp)
         {
+            // The game's icons are carried through the application as
+            // characters out of the private-use area, and they are for the copy
+            // drawn over the game's own dialogue box, which can draw pictures.
+            // Here they would be empty boxes, so here they come out.
+            translatedMsg = GameIcons.Strip(translatedMsg);
+
             string leadingSpaces = _viewModel.SpacingCount > 0
                 ? new string(' ', _viewModel.SpacingCount)
                 : string.Empty;

@@ -1709,6 +1709,40 @@ namespace FFXIVTataruHelper.Services.GameMemory
         /// creation!...H".
         /// </summary>
         /// <summary>
+        /// The icon a payload stands for, or zero when the payload is not one.
+        ///
+        /// Shaped <c>02 12 LL &lt;id&gt; 03</c>, where 0x12 is the icon macro.
+        /// The id is a SeString integer: a byte under 0xD0 is the value plus
+        /// one, which covers every icon the game actually uses, and 0xF0 says
+        /// the value is the byte after it. Anything longer than that is not an
+        /// icon this application has ever seen, and is dropped as before rather
+        /// than guessed at.
+        /// </summary>
+        internal static int IconIn(byte[] data, int start, int end)
+        {
+            const byte iconMacro = 0x12;
+            const byte oneByteFollows = 0xF0;
+
+            if (end - start < 4 || data[start + 1] != iconMacro)
+            {
+                return 0;
+            }
+
+            var value = data[start + 3];
+            if (value < 0xD0)
+            {
+                return end - start == 4 ? value - 1 : 0;
+            }
+
+            if (value == oneByteFollows && end - start == 5)
+            {
+                return data[start + 4];
+            }
+
+            return 0;
+        }
+
+        /// <summary>
         /// Writes a payload this reader is dropping to the raw-dialog log, once
         /// for each kind of payload seen.
         ///
@@ -1750,7 +1784,11 @@ namespace FFXIVTataruHelper.Services.GameMemory
             }
 
             var end = Math.Min(start + count, data.Length);
-            var cleaned = new byte[end - start];
+
+            // An icon payload is five bytes and the mark that replaces it is
+            // three, so the line never grows; the extra room is for a mark that
+            // lands at the very end.
+            var cleaned = new byte[end - start + 4];
             var written = 0;
 
             for (int i = start; i < end; i++)
@@ -1770,6 +1808,19 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 }
 
                 LogPayloadOnce(data, i, payloadEnd);
+
+                var icon = IconIn(data, i, payloadEnd);
+                if (icon > 0)
+                {
+                    var mark = GameIcons.Mark(icon);
+                    foreach (var b in Encoding.UTF8.GetBytes(mark))
+                    {
+                        if (written < cleaned.Length)
+                        {
+                            cleaned[written++] = b;
+                        }
+                    }
+                }
 
                 i = payloadEnd;
             }

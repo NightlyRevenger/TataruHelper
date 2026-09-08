@@ -279,7 +279,10 @@ namespace FFXIVTataruHelper.Services.GameMemory
 
         internal static string BuildDuplicateKey(string line)
         {
-            var normalized = NormalizeDialogToken(line);
+            // Without the icons. The screen carries them and the chat log does
+            // not, so a line with a mentor crown in it would look like two
+            // different lines and go out twice.
+            var normalized = GameIcons.Strip(NormalizeDialogToken(line));
             if (normalized.Length == 0)
             {
                 return string.Empty;

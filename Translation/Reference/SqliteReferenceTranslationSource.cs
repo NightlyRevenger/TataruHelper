@@ -560,6 +560,15 @@ namespace Translation.Reference
 
             foreach (var character in sentence)
             {
+                // The game's own icons, carried through the application as
+                // characters out of the private-use area. Nothing written by
+                // hand has them, so a line matches whether it carries them or
+                // not - which is how it was before they were carried at all.
+                if (character >= '' && character <= '')
+                {
+                    continue;
+                }
+
                 if (char.IsWhiteSpace(character))
                 {
                     pendingSpace = builder.Length > 0;
