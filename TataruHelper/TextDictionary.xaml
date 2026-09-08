@@ -211,6 +211,8 @@
     <system:String x:Key="TranslateSpeakerNamesDescription">Show who is speaking in the reading language, using the XIV Rus Translation spelling where there is one.</system:String>
     <system:String x:Key="TranslatePlayerNicknamesCB">Translate player nicknames</system:String>
     <system:String x:Key="TranslatePlayerNicknamesDescription">Show player names in the reading language. Turn this off to keep their original spelling.</system:String>
+    <system:String x:Key="DialogueOverlayCB">Translate over the game's dialogue box</system:String>
+    <system:String x:Key="DialogueOverlayDescription">Put the translation where the line is, in a copy of the game's own box, as well as in the chat window. Covers the dialogue box, cutscene subtitles and the narration strip; speech bubbles over characters' heads stay in the chat window.</system:String>
 
     <system:String x:Key="ReferenceIndexTitle">XIV Rus Translation</system:String>
     <system:String x:Key="ReferenceIndexHint">XIV Rus Translation gains lines every week. Rebuilding fetches its current work; around a gigabyte is read as it downloads and only the index is kept.</system:String>

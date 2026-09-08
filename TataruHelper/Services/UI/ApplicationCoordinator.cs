@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,6 +21,7 @@ namespace FFXIVTataruHelper.Services.UI
         private readonly IChatWindowsEventCoordinator _chatWindowsEventCoordinator;
         private readonly ISettingsMigrationService _settingsMigrationService;
         private readonly ISettingsSyncService _settingsSyncService;
+        private readonly DialogueOverlayHost _dialogueOverlayHost;
         private readonly IAppLogger _logger;
 
         public ApplicationCoordinator(
@@ -29,6 +30,7 @@ namespace FFXIVTataruHelper.Services.UI
             IChatWindowsEventCoordinator chatWindowsEventCoordinator,
             ISettingsMigrationService settingsMigrationService,
             ISettingsSyncService settingsSyncService,
+            DialogueOverlayHost dialogueOverlayHost,
             IAppLogger logger)
         {
             _ffMemoryReader = ffMemoryReader;
@@ -36,6 +38,7 @@ namespace FFXIVTataruHelper.Services.UI
             _chatWindowsEventCoordinator = chatWindowsEventCoordinator;
             _settingsMigrationService = settingsMigrationService;
             _settingsSyncService = settingsSyncService;
+            _dialogueOverlayHost = dialogueOverlayHost;
             _logger = logger;
         }
 
@@ -59,6 +62,7 @@ namespace FFXIVTataruHelper.Services.UI
             tataruModel.ChatProcessor.MarkMachineTranslation = uiModel.IsMachineTranslationMarked;
             tataruModel.ChatProcessor.TranslateSpeakerNames = uiModel.IsSpeakerNameTranslated;
             tataruModel.ChatProcessor.TranslatePlayerNicknames = uiModel.IsPlayerNicknameTranslated;
+            _dialogueOverlayHost.IsWanted = uiModel.IsDialogueOverlayShown;
             _ffMemoryReader.PlayerNameResolved = (name, isFeminine) =>
             {
                 tataruModel.WebTranslator.PlayerName = name;
@@ -88,6 +92,10 @@ namespace FFXIVTataruHelper.Services.UI
                 else if (e.PropertyName == nameof(TataruUIModel.IsPlayerNicknameTranslated))
                 {
                     tataruModel.ChatProcessor.TranslatePlayerNicknames = uiModel.IsPlayerNicknameTranslated;
+                }
+                else if (e.PropertyName == nameof(TataruUIModel.IsDialogueOverlayShown))
+                {
+                    _dialogueOverlayHost.IsWanted = uiModel.IsDialogueOverlayShown;
                 }
             };
 

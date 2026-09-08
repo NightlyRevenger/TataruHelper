@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -349,6 +349,22 @@ public sealed class SettingsShellViewModel : INotifyPropertyChanged, IDisposable
             }
 
             _uiModel.IsPlayerNicknameTranslated = value;
+            OnPropertyChanged();
+        }
+    }
+
+    /// <summary>Draw the translation over the game's own dialogue box as well.</summary>
+    public bool IsDialogueOverlayShown
+    {
+        get => _uiModel.IsDialogueOverlayShown;
+        set
+        {
+            if (_uiModel.IsDialogueOverlayShown == value)
+            {
+                return;
+            }
+
+            _uiModel.IsDialogueOverlayShown = value;
             OnPropertyChanged();
         }
     }
@@ -1069,6 +1085,12 @@ public sealed class SettingsShellViewModel : INotifyPropertyChanged, IDisposable
         if (e.PropertyName == nameof(TataruUIModel.IsPlayerNicknameTranslated))
         {
             OnPropertyChanged(nameof(IsPlayerNicknameTranslated));
+            return;
+        }
+
+        if (e.PropertyName == nameof(TataruUIModel.IsDialogueOverlayShown))
+        {
+            OnPropertyChanged(nameof(IsDialogueOverlayShown));
             return;
         }
 

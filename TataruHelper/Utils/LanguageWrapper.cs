@@ -241,6 +241,8 @@ namespace FFXIVTataruHelper
             _SettingsWindow.Resources["MarkMachineTranslationCB"] = catalog.GetString("Mark machine translation");
             _SettingsWindow.Resources["TranslateSpeakerNamesCB"] = catalog.GetString("Translate speaker names");
             _SettingsWindow.Resources["TranslatePlayerNicknamesCB"] = catalog.GetString("Translate player nicknames");
+            _SettingsWindow.Resources["DialogueOverlayCB"] =
+                catalog.GetString("Translate over the game's dialogue box");
             _SettingsWindow.Resources["ShowTimestampsCb"] = catalog.GetString("Show Timestamps");
 
             _SettingsWindow.Resources["StreamerWindowCB"] = catalog.GetString("Streamer Window");
@@ -388,6 +390,9 @@ namespace FFXIVTataruHelper
             _SettingsWindow.Resources["TranslatePlayerNicknamesDescription"] =
                 catalog.GetString(
                     "Show player names in the reading language. Turn this off to keep their original spelling.");
+            _SettingsWindow.Resources["DialogueOverlayDescription"] =
+                catalog.GetString(
+                    "Put the translation where the line is, in a copy of the game's own box, as well as in the chat window. Covers the dialogue box, cutscene subtitles and the narration strip; speech bubbles over characters' heads stay in the chat window.");
             _SettingsWindow.Resources["LanguageGroupHint"] =
                 catalog.GetString("Interface language for the settings window and overlays.");
 

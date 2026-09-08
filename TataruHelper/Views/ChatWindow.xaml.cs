@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -66,6 +66,7 @@ namespace FFXIVTataruHelper
         readonly IAppLogger _Logger;
         readonly ISettingsStore _SettingsStore;
         readonly IUiDispatcher _UiDispatcher;
+        readonly DialogueOverlayHost _dialogueOverlayHost;
 
         public ChatWindow(
             TataruModel tataruModel,
@@ -73,7 +74,8 @@ namespace FFXIVTataruHelper
             MainWindow mainWindow,
             IAppLogger logger,
             ISettingsStore settingsStore,
-            IUiDispatcher uiDispatcher)
+            IUiDispatcher uiDispatcher,
+            DialogueOverlayHost dialogueOverlayHost)
         {
             InitializeComponent();
 
@@ -86,6 +88,7 @@ namespace FFXIVTataruHelper
                 _Logger = logger;
                 _SettingsStore = settingsStore;
                 _UiDispatcher = uiDispatcher;
+                _dialogueOverlayHost = dialogueOverlayHost;
 
                 this.DataContext = _ChatWindowViewModel;
 
@@ -146,6 +149,8 @@ namespace FFXIVTataruHelper
 
             _TataruModel.ChatProcessor.TextArrived += OnTextArrived;
             _TataruModel.FFMemoryReader.FFWindowStateChanged += OnFFWindowStateChange;
+
+            _dialogueOverlayHost.WantedChanged += OnDialogueOverlayWantedChanged;
         }
 
         private void Window_Closing(object sender, CancelEventArgs e)
@@ -440,12 +445,14 @@ namespace FFXIVTataruHelper
 
         /// <summary>
         /// The copy of the game's dialogue box, made the first time there is
-        /// something to put in it. Nothing is created when the draft is off, so
-        /// the switch costs a comparison and not a window.
+        /// something to put in it. Nothing is created while the setting is off,
+        /// so it costs a comparison and not a window - and nothing is created
+        /// by a window that does not hold the claim, so several chat windows
+        /// do not stack several copies over the one box.
         /// </summary>
         private DialogueOverlayWindow EnsureDialogueOverlay()
         {
-            if (!Logger.DialogueOverlayEnabled)
+            if (!_dialogueOverlayHost.IsWanted || !_dialogueOverlayHost.BelongsTo(this))
             {
                 return null;
             }
@@ -459,6 +466,41 @@ namespace FFXIVTataruHelper
             }
 
             return _dialogueOverlay;
+        }
+
+        /// <summary>
+        /// Takes the copy down and lets it go. Called when the setting is
+        /// turned off and when this window closes; the claim is a separate
+        /// matter, since a window that is merely not wanted right now is still
+        /// the one that would fill the copy if it were.
+        /// </summary>
+        private void CloseDialogueOverlay()
+        {
+            if (_dialogueOverlay == null)
+            {
+                return;
+            }
+
+            _dialogueOverlay.Stop();
+            _dialogueOverlay.Close();
+            _dialogueOverlay = null;
+        }
+
+        /// <summary>
+        /// The setting was turned on or off. Turned off, the copy comes down
+        /// there and then rather than staying over the game until whatever is
+        /// said next - which, in a quiet moment, is a long time to look at
+        /// something you have just switched off.
+        /// </summary>
+        private void OnDialogueOverlayWantedChanged(object sender, EventArgs e)
+        {
+            _UiDispatcher.Invoke(() =>
+            {
+                if (!_dialogueOverlayHost.IsWanted)
+                {
+                    CloseDialogueOverlay();
+                }
+            });
         }
 
         void ShowTranslatedText(
@@ -738,12 +780,9 @@ namespace FFXIVTataruHelper
             // The copy is its own window, not part of this one: stopping it
             // here is the only thing that takes its timer and its frame off
             // screen when this window goes.
-            if (_dialogueOverlay != null)
-            {
-                _dialogueOverlay.Stop();
-                _dialogueOverlay.Close();
-                _dialogueOverlay = null;
-            }
+            CloseDialogueOverlay();
+            _dialogueOverlayHost.WantedChanged -= OnDialogueOverlayWantedChanged;
+            _dialogueOverlayHost.Release(this);
 
             _ChatWindowViewModel.AsyncPropertyChanged -= OnSettingsWindowPropertyChange;
             _ChatWindowViewModel.RequestChatClear -= OnChatClearRequest;

@@ -14,13 +14,6 @@ namespace FFXIVTataruHelper
 
         public static volatile bool RawDialogLogEnabled;
 
-        /// <summary>
-        /// Draft: put the translation in a copy of the game's own dialogue box
-        /// instead of only in the panel. Behind a switch until it has been
-        /// looked at in the game, at which point it becomes a setting.
-        /// </summary>
-        public static volatile bool DialogueOverlayEnabled;
-
         internal static readonly AutoResetEvent QueueSignal = new AutoResetEvent(false);
 
 

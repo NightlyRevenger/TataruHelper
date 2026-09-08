@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -48,6 +48,18 @@ namespace FFXIVTataruHelper
         /// <summary>Translate player-chat sender prefixes into the reading language.</summary>
 
         public bool IsPlayerNicknameTranslated { get; set; }
+
+
+        /// <summary>
+        /// Put the translation over the game's own dialogue box, in a copy of
+        /// it, as well as in the chat window.
+        ///
+        /// Off by default. It reads well and it is the reason several people
+        /// asked for this application, but it draws over the game, and a thing
+        /// that draws over the game is a thing somebody has to have chosen.
+        /// </summary>
+
+        public bool IsDialogueOverlayShown { get; set; }
 
 
         /// <summary>
@@ -203,6 +215,8 @@ namespace FFXIVTataruHelper
             IsSpeakerNameTranslated = userSettings.IsSpeakerNameTranslated;
 
             IsPlayerNicknameTranslated = userSettings.IsPlayerNicknameTranslated;
+
+            IsDialogueOverlayShown = userSettings.IsDialogueOverlayShown;
 
             IsReferenceIndexAutoInstall = userSettings.IsReferenceIndexAutoInstall;
 

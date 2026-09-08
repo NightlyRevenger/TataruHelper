@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 using FFXIVTataruHelper.Factories;
 using FFXIVTataruHelper.FFHandlers;
@@ -60,6 +60,7 @@ namespace FFXIVTataruHelper
 
             services.AddSingleton<IHotKeyBindingService, HotKeyBindingService>();
             services.AddSingleton<IHotkeyCaptureService, HotkeyCaptureService>();
+            services.AddSingleton<DialogueOverlayHost>();
             services.AddSingleton<IChatWindowFactory, ChatWindowFactory>();
             services.AddTransient<IChatWindowCoordinator, ChatWindowCoordinator>();
             services.AddTransient<IChatWindowsEventCoordinator, ChatWindowsEventCoordinator>();

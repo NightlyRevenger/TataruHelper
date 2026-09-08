@@ -78,7 +78,6 @@ namespace FFXIVTataruHelper
             base.OnStartup(e);
 
             Logger.RawDialogLogEnabled = ShouldEnableRawDialogLog(e.Args);
-            Logger.DialogueOverlayEnabled = HasSwitch(e.Args, "dialogue-overlay");
 
             ShutdownMode = ShutdownMode.OnMainWindowClose;
 
@@ -138,25 +137,6 @@ namespace FFXIVTataruHelper
 
                 var normalized = arg.Trim().TrimStart('-', '/');
                 if (string.Equals(normalized, "log-raw-dialog", StringComparison.OrdinalIgnoreCase))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private static bool HasSwitch(string[] args, string name)
-        {
-            if (args == null)
-            {
-                return false;
-            }
-
-            foreach (var arg in args)
-            {
-                if (!string.IsNullOrWhiteSpace(arg) &&
-                    string.Equals(arg.Trim().TrimStart('-', '/'), name, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }

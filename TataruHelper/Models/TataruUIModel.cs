@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -192,6 +192,17 @@ namespace FFXIVTataruHelper
             }
         }
 
+        /// <summary>Whether the translation is also drawn over the game's own dialogue box.</summary>
+        public bool IsDialogueOverlayShown
+        {
+            get { return _IsDialogueOverlayShown; }
+            set
+            {
+                _IsDialogueOverlayShown = value;
+                NotifyPropertyChanged();
+            }
+        }
+
         /// <summary>
         /// Whether new hand-made translations are fetched as they appear.
         ///
@@ -290,6 +301,8 @@ namespace FFXIVTataruHelper
 
         bool _IsPlayerNicknameTranslated;
 
+        bool _IsDialogueOverlayShown;
+
         bool _IsReferenceIndexAutoInstall;
 
         PointD _SettingsWindowSize = new PointD(0.0, 0.0);
@@ -361,6 +374,8 @@ namespace FFXIVTataruHelper
 
             IsPlayerNicknameTranslated = userSettings.IsPlayerNicknameTranslated;
 
+            IsDialogueOverlayShown = userSettings.IsDialogueOverlayShown;
+
             IsReferenceIndexAutoInstall = userSettings.IsReferenceIndexAutoInstall;
 
             SettingsWindowSize = userSettings.SettingsWindowSize;
@@ -403,6 +418,8 @@ namespace FFXIVTataruHelper
             userSettings.IsSpeakerNameTranslated = this.IsSpeakerNameTranslated;
 
             userSettings.IsPlayerNicknameTranslated = this.IsPlayerNicknameTranslated;
+
+            userSettings.IsDialogueOverlayShown = this.IsDialogueOverlayShown;
 
             userSettings.IsReferenceIndexAutoInstall = this.IsReferenceIndexAutoInstall;
 
