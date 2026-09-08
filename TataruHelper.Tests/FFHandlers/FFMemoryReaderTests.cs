@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -215,7 +215,7 @@ namespace TataruHelper.Tests
             public FFXIVTataruHelper.Services.GameMemory.AddonBounds DialogueBounds { get; set; } =
                 FFXIVTataruHelper.Services.GameMemory.AddonBounds.Unknown;
 
-            public bool DialogueIsSubtitle { get; set; }
+            public DialogueSurface DialogueSurface { get; set; }
 
             public string CurrentDialogueLine { get; set; } = string.Empty;
 

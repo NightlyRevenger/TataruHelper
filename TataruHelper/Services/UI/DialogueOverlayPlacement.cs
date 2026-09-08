@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 
 using FFXIVTataruHelper.Services.GameMemory;
 
@@ -25,6 +25,7 @@ namespace FFXIVTataruHelper.Services.UI
         public static bool TryPlace(
             bool enabled,
             bool gameInForeground,
+            DialogueSurface surface,
             AddonBounds bounds,
             GameWindowProjection projection,
             string translatedText,
@@ -33,6 +34,18 @@ namespace FFXIVTataruHelper.Services.UI
             rect = Rect.Empty;
 
             if (!enabled || !gameInForeground || string.IsNullOrWhiteSpace(translatedText))
+            {
+                return false;
+            }
+
+            // A bubble over a character's head is not covered. All of them live
+            // in one addon, and it reports its corner at the top-left of the
+            // screen and a size of sixty by forty-five whoever is speaking and
+            // wherever they stand - so a copy placed on what it says lands in
+            // the corner of the screen, the size of a postage stamp, and the
+            // bubble it was meant to cover is untouched. The line still goes to
+            // the chat window like any other.
+            if (surface != DialogueSurface.Window && surface != DialogueSurface.Subtitle)
             {
                 return false;
             }

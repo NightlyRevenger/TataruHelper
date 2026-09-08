@@ -169,10 +169,10 @@ namespace FFXIVTataruHelper.Services.GameMemory
         public AddonBounds DialogueBounds { get; private set; }
 
         /// <summary>
-        /// Whether what is being shown is a cutscene subtitle, which the game
-        /// draws as bare text over the picture rather than inside a window.
+        /// What the game is drawing the line in, as of the last sweep, which
+        /// decides what a copy of it has to look like.
         /// </summary>
-        public bool DialogueIsSubtitle { get; private set; }
+        public DialogueSurface DialogueSurface { get; private set; }
 
         public TalkAddonRealtimeReader(MemoryHandler memoryHandler)
         {
@@ -674,16 +674,52 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 boundsByCandidate.TryGetValue(_stickyCandidateKey, out var speaking))
             {
                 DialogueBounds = speaking;
-                DialogueIsSubtitle =
-                    _stickyCandidateKey.StartsWith(TalkSubtitleAddonName, StringComparison.Ordinal);
+                DialogueSurface = SurfaceOf(_stickyCandidateKey);
             }
             else
             {
                 DialogueBounds = AddonBounds.Unknown;
-                DialogueIsSubtitle = false;
+                DialogueSurface = DialogueSurface.None;
             }
 
             return announced || matchedEmptySource;
+        }
+
+        /// <summary>
+        /// What the addon behind a candidate draws its line in.
+        ///
+        /// Matched on the whole name rather than on a prefix: "Talk" is the
+        /// start of "TalkSubtitle", and a prefix test made every cutscene
+        /// subtitle a dialogue box - which is a wooden frame hung in the middle
+        /// of a cutscene.
+        /// </summary>
+        internal static DialogueSurface SurfaceOf(string candidateKey)
+        {
+            if (string.IsNullOrEmpty(candidateKey))
+            {
+                return DialogueSurface.None;
+            }
+
+            var at = candidateKey.IndexOf('@');
+            var addonName = at > 0 ? candidateKey.Substring(0, at) : candidateKey;
+
+            if (string.Equals(addonName, TalkAddonName, StringComparison.OrdinalIgnoreCase))
+            {
+                return DialogueSurface.Window;
+            }
+
+            if (string.Equals(addonName, TalkSubtitleAddonName, StringComparison.OrdinalIgnoreCase))
+            {
+                return DialogueSurface.Subtitle;
+            }
+
+            if (string.Equals(addonName, MiniTalkAddonName, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(addonName, AlternateMiniTalkAddonName, StringComparison.OrdinalIgnoreCase))
+            {
+                return DialogueSurface.Bubble;
+            }
+
+            return DialogueSurface.None;
         }
 
         /// <summary>

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -41,6 +41,9 @@ namespace FFXIVTataruHelper
         private readonly Border _box;
         private readonly Border _plate;
         private readonly ImageBrush _frame;
+
+        /// <summary>The dark ground a subtitle is laid on, which the game gives it none of.</summary>
+        private readonly Brush _subtitleGround;
 
         /// <summary>
         /// Whether the copy is on screen and what it is dressed as. Kept out of
@@ -113,6 +116,27 @@ namespace FFXIVTataruHelper
             {
                 Stretch = Stretch.Fill
             };
+
+            // What a subtitle is laid on. The game gives its subtitles no
+            // ground at all, so the copy has to bring one: without it the
+            // translation sits on top of the original and the two read through
+            // each other.
+            //
+            // Dark across the middle and fading out at both ends, rather than a
+            // bar with edges. The strip is the full width of the screen and the
+            // line is centred in it, so the fade happens well clear of any
+            // letters, and what the player sees is a shadow gathering behind
+            // the words instead of a black band drawn over the cutscene.
+            var subtitleGround = new LinearGradientBrush
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(1, 0)
+            };
+            subtitleGround.GradientStops.Add(new GradientStop(Color.FromArgb(0x00, 0x08, 0x08, 0x0A), 0));
+            subtitleGround.GradientStops.Add(new GradientStop(Color.FromArgb(0xD0, 0x08, 0x08, 0x0A), 0.10));
+            subtitleGround.GradientStops.Add(new GradientStop(Color.FromArgb(0xD0, 0x08, 0x08, 0x0A), 0.90));
+            subtitleGround.GradientStops.Add(new GradientStop(Color.FromArgb(0x00, 0x08, 0x08, 0x0A), 1));
+            _subtitleGround = subtitleGround;
 
             var box = new Border
             {
@@ -218,9 +242,12 @@ namespace FFXIVTataruHelper
                 return;
             }
 
+            var surface = _memoryReader.DialogueSurface;
+
             var placed = DialogueOverlayPlacement.TryPlace(
                 true,
                 true,
+                surface,
                 bounds,
                 projection,
                 _lineText,
@@ -262,23 +289,37 @@ namespace FFXIVTataruHelper
 
             _widestSeen = Math.Max(_widestSeen, rect.Width);
 
-            Dress(_memoryReader.DialogueIsSubtitle, rect);
+            Dress(surface, rect);
 
             Report(FormattableString.Invariant(
-                $"shown at {rect.Left},{rect.Top} {rect.Width}x{rect.Height}"));
+                $"shown on {surface} at {rect.Left},{rect.Top} {rect.Width}x{rect.Height}"));
 
             Left = rect.Left;
             Top = rect.Top;
             Width = rect.Width;
             Height = rect.Height;
 
-            // Everything is set in the box's own proportions rather than at a
-            // fixed size: the player's interface scale is already in the
-            // rectangle, and text that ignored it would not fit the frame.
-            // The figures are the game's frame measured off a screenshot.
-            // Fractions of the box, measured off the game's own frame at an
-            // interface scale of 150%: the name sits at 0.083 across and 0.04
-            // down, the line starts at 0.088 across and 0.225 down.
+            if (surface == DialogueSurface.Subtitle)
+            {
+                LayOutSubtitle(rect);
+            }
+            else
+            {
+                LayOutWindow(rect);
+            }
+        }
+
+        /// <summary>
+        /// Everything is set in the box's own proportions rather than at a
+        /// fixed size: the player's interface scale is already in the
+        /// rectangle, and text that ignored it would not fit the frame.
+        ///
+        /// The fractions are the game's own frame measured off a screenshot at
+        /// an interface scale of 150%: the name sits at 0.083 across and 0.04
+        /// down, the line starts at 0.088 across and 0.225 down.
+        /// </summary>
+        private void LayOutWindow(Rect rect)
+        {
             _line.FontSize = Math.Max(10, rect.Height * 0.098);
             _speaker.FontSize = Math.Max(10, rect.Height * 0.092);
 
@@ -298,6 +339,23 @@ namespace FFXIVTataruHelper
         }
 
         /// <summary>
+        /// A subtitle is a strip the width of the screen, about a hundred tall,
+        /// with the line centred in it. The window's proportions are no use
+        /// here: a tenth of a hundred-pixel strip is ten-point text, where the
+        /// game draws something a good deal larger, and read against the
+        /// fractions meant for the dialogue box the copy came out as a caption
+        /// nobody could read.
+        ///
+        /// Measured off the strip's height rather than its width, which is the
+        /// whole screen and says nothing about how big the line is drawn.
+        /// </summary>
+        private void LayOutSubtitle(Rect rect)
+        {
+            _line.FontSize = Math.Max(12, rect.Height * 0.26);
+            _line.Margin = new Thickness(rect.Width * 0.10, 0, rect.Width * 0.10, 0);
+        }
+
+        /// <summary>
         /// Dresses the copy for what it is covering, and puts it on screen.
         ///
         /// A cutscene subtitle is not in a window at all - Hydaelyn's lines are
@@ -311,13 +369,19 @@ namespace FFXIVTataruHelper
         /// question, and the first line's answer to it was "already dressed, so
         /// change nothing".
         /// </summary>
-        private void Dress(bool subtitle, Rect rect)
+        private void Dress(DialogueSurface surface, Rect rect)
         {
-            var mustShow = _presentation.Present(subtitle, out var restyled);
+            var mustShow = _presentation.Present(surface, out var restyled);
 
             if (restyled)
             {
-                _box.Background = subtitle ? null : _frame;
+                var subtitle = surface == DialogueSurface.Subtitle;
+
+                // The dark ground is the whole reason a subtitle can be covered
+                // at all. Left bare, as it was, the copy was pale text laid over
+                // the game's own pale text: two lines in two languages in the
+                // same place, and neither of them readable.
+                _box.Background = subtitle ? _subtitleGround : _frame;
                 _plate.Visibility = subtitle ? Visibility.Collapsed : Visibility.Visible;
 
                 _line.TextAlignment = subtitle ? TextAlignment.Center : TextAlignment.Left;

@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
 
 using FFXIVTataruHelper.EventArguments;
+using FFXIVTataruHelper.Services.GameMemory;
 using FFXIVTataruHelper.TataruComponentModel;
 
 namespace FFXIVTataruHelper.FFHandlers
@@ -25,7 +26,7 @@ namespace FFXIVTataruHelper.FFHandlers
         Services.GameMemory.AddonBounds DialogueBounds { get; }
 
         /// <summary>Whether that line is a cutscene subtitle, drawn without a window.</summary>
-        bool DialogueIsSubtitle { get; }
+        DialogueSurface DialogueSurface { get; }
 
         /// <summary>
         /// The line the game is drawing in its dialogue window right now, in the

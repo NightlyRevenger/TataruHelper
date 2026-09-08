@@ -1,4 +1,4 @@
-using Sharlayan.Core;
+﻿using Sharlayan.Core;
 using Sharlayan.Models;
 using Sharlayan.Models.ReadResults;
 
@@ -22,7 +22,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
         AddonBounds DialogueBounds { get; }
 
         /// <summary>Whether that line is a cutscene subtitle, drawn without a window.</summary>
-        bool DialogueIsSubtitle { get; }
+        DialogueSurface DialogueSurface { get; }
 
         /// <summary>
         /// The line the game is drawing in its dialogue window right now, in the

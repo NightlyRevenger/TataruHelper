@@ -1,3 +1,4 @@
+﻿using FFXIVTataruHelper.Services.GameMemory;
 using FFXIVTataruHelper.Services.UI;
 
 using NUnit.Framework;
@@ -19,7 +20,7 @@ namespace TataruHelper.Tests.Services.UI
             var presentation = new DialogueOverlayPresentation();
 
             Assert.That(
-                presentation.Present(subtitle: false, out _),
+                presentation.Present(DialogueSurface.Window, out _),
                 Is.True,
                 "the first dialogue line must be put on screen, not merely dressed");
         }
@@ -28,28 +29,28 @@ namespace TataruHelper.Tests.Services.UI
         public void ASecondLineInTheSameDress_IsNotShownAgain()
         {
             var presentation = new DialogueOverlayPresentation();
-            presentation.Present(subtitle: false, out _);
+            presentation.Present(DialogueSurface.Window, out _);
 
-            Assert.That(presentation.Present(subtitle: false, out _), Is.False);
+            Assert.That(presentation.Present(DialogueSurface.Window, out _), Is.False);
         }
 
         [Test]
         public void ALineAfterAHide_IsShownAgain()
         {
             var presentation = new DialogueOverlayPresentation();
-            presentation.Present(subtitle: false, out _);
+            presentation.Present(DialogueSurface.Window, out _);
             presentation.Hide();
 
-            Assert.That(presentation.Present(subtitle: false, out _), Is.True);
+            Assert.That(presentation.Present(DialogueSurface.Window, out _), Is.True);
         }
 
         [Test]
         public void ASubtitleLine_ChangesTheDress()
         {
             var presentation = new DialogueOverlayPresentation();
-            presentation.Present(subtitle: false, out _);
+            presentation.Present(DialogueSurface.Window, out _);
 
-            var shown = presentation.Present(subtitle: true, out var restyled);
+            var shown = presentation.Present(DialogueSurface.Subtitle, out var restyled);
 
             Assert.That(shown, Is.False, "the copy is already on screen");
             Assert.That(restyled, Is.True);
@@ -59,9 +60,9 @@ namespace TataruHelper.Tests.Services.UI
         public void ADialogueLineAfterASubtitle_ChangesTheDressBack()
         {
             var presentation = new DialogueOverlayPresentation();
-            presentation.Present(subtitle: true, out _);
+            presentation.Present(DialogueSurface.Subtitle, out _);
 
-            var shown = presentation.Present(subtitle: false, out var restyled);
+            var shown = presentation.Present(DialogueSurface.Window, out var restyled);
 
             Assert.That(shown, Is.False, "the copy is already on screen");
             Assert.That(restyled, Is.True);
@@ -71,10 +72,10 @@ namespace TataruHelper.Tests.Services.UI
         public void HidingKeepsTheDress()
         {
             var presentation = new DialogueOverlayPresentation();
-            presentation.Present(subtitle: true, out _);
+            presentation.Present(DialogueSurface.Subtitle, out _);
             presentation.Hide();
 
-            var mustShow = presentation.Present(subtitle: true, out var restyled);
+            var mustShow = presentation.Present(DialogueSurface.Subtitle, out var restyled);
 
             Assert.That(mustShow, Is.True, "coming back to the screen is showing");
             Assert.That(
@@ -90,7 +91,7 @@ namespace TataruHelper.Tests.Services.UI
 
             // Fresh out of the door the copy is dressed as a dialogue line, so
             // the first line only asks to be shown, not restyled over.
-            var mustShow = presentation.Present(subtitle: false, out var restyled);
+            var mustShow = presentation.Present(DialogueSurface.Window, out var restyled);
 
             Assert.That(mustShow, Is.True, "the first line goes on screen");
             Assert.That(restyled, Is.False);

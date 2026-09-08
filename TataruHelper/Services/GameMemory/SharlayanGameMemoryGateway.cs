@@ -325,7 +325,8 @@ namespace FFXIVTataruHelper.Services.GameMemory
         public AddonBounds DialogueBounds =>
             _talkAddonRealtimeReader?.DialogueBounds ?? AddonBounds.Unknown;
 
-        public bool DialogueIsSubtitle => _talkAddonRealtimeReader?.DialogueIsSubtitle ?? false;
+        public DialogueSurface DialogueSurface =>
+            _talkAddonRealtimeReader?.DialogueSurface ?? DialogueSurface.None;
 
         public string CurrentDialogueLine => _currentDialogueLine;
 

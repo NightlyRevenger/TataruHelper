@@ -1,4 +1,4 @@
-using FFXIVTataruHelper.Services.GameMemory;
+﻿using FFXIVTataruHelper.Services.GameMemory;
 using FFXIVTataruHelper.Services.UI;
 
 using NUnit.Framework;
@@ -22,19 +22,20 @@ namespace TataruHelper.Tests.Services.UI
         private static bool Place(
             bool enabled = true,
             bool foreground = true,
+            DialogueSurface surface = DialogueSurface.Window,
             AddonBounds? bounds = null,
             GameWindowProjection? projection = null,
             string text = "Пусть духи стихий будут благосклонны к тебе.")
         {
             return DialogueOverlayPlacement.TryPlace(
-                enabled, foreground, bounds ?? Box, projection ?? FullScreen, text, out _);
+                enabled, foreground, surface, bounds ?? Box, projection ?? FullScreen, text, out _);
         }
 
         [Test]
         public void ALineOnScreenWithTheGameInFront_IsCovered()
         {
             var placed = DialogueOverlayPlacement.TryPlace(
-                true, true, Box, FullScreen, "Пусть духи стихий будут благосклонны.", out var rect);
+                true, true, DialogueSurface.Window, Box, FullScreen, "Пусть духи стихий будут благосклонны.", out var rect);
 
             Assert.That(placed, Is.True);
             Assert.That(rect.Left, Is.EqualTo(1210));
@@ -101,6 +102,40 @@ namespace TataruHelper.Tests.Services.UI
         public void BeforeTheGameWindowIsFound_NothingIsDrawn()
         {
             Assert.That(Place(projection: GameWindowProjection.None), Is.False);
+        }
+
+        /// <summary>
+        /// A cutscene subtitle is covered like anything else. It is drawn in no
+        /// window, but it is drawn somewhere the client will say, and that is
+        /// all the placing needs; what it looks like is the copy's business.
+        /// </summary>
+        [Test]
+        public void ACutsceneSubtitle_IsCovered()
+        {
+            // The strip as the client reports it: the full width of the screen,
+            // a hundred tall, low down.
+            var strip = AddonBounds.From(0f, 562f, 1280, 100, 1f);
+
+            Assert.That(Place(surface: DialogueSurface.Subtitle, bounds: strip), Is.True);
+        }
+
+        /// <summary>
+        /// A bubble over a character's head is not covered, however good the
+        /// rectangle looks. Every bubble on screen lives in one addon, and it
+        /// reports the same corner and the same size whoever is speaking, so
+        /// the rectangle is not the bubble's and covering it would put a box in
+        /// the corner of the screen over nothing at all.
+        /// </summary>
+        [Test]
+        public void ASpeechBubble_IsNotCovered()
+        {
+            Assert.That(Place(surface: DialogueSurface.Bubble), Is.False);
+        }
+
+        [Test]
+        public void WithNothingBeingDrawn_NothingIsCovered()
+        {
+            Assert.That(Place(surface: DialogueSurface.None), Is.False);
         }
     }
 }

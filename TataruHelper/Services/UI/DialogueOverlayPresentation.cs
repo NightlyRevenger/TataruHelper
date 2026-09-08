@@ -1,3 +1,5 @@
+﻿using FFXIVTataruHelper.Services.GameMemory;
+
 namespace FFXIVTataruHelper.Services.UI
 {
     /// <summary>
@@ -13,22 +15,23 @@ namespace FFXIVTataruHelper.Services.UI
     internal sealed class DialogueOverlayPresentation
     {
         private bool _shown;
-        private bool _dressedAsSubtitle;
+        private DialogueSurface _dressedFor = DialogueSurface.Window;
 
         /// <summary>
-        /// Puts the copy on screen dressed for a line of the given kind.
+        /// Puts the copy on screen dressed for a line drawn on the given
+        /// surface.
         ///
         /// Reports whether it was off the screen and must be shown now, and
         /// separately whether its dress changed. A line already on screen in
         /// the right dress asks for neither.
         /// </summary>
-        public bool Present(bool subtitle, out bool restyled)
+        public bool Present(DialogueSurface surface, out bool restyled)
         {
-            restyled = subtitle != _dressedAsSubtitle;
+            restyled = surface != _dressedFor;
 
             if (restyled)
             {
-                _dressedAsSubtitle = subtitle;
+                _dressedFor = surface;
             }
 
             var mustShow = !_shown;
