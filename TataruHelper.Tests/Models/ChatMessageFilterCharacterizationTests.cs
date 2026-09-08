@@ -1,4 +1,8 @@
+using System.IO;
+
 using FFXIVTataruHelper;
+
+using Newtonsoft.Json;
 
 using NUnit.Framework;
 
@@ -89,28 +93,41 @@ namespace TataruHelper.Tests
             });
         }
 
-        [TestCase("0048")]
-        [TestCase("000A")]
-        [TestCase("000B")]
-        [TestCase("000C")]
-        [TestCase("000E")]
-        [TestCase("000D")]
-        [TestCase("0018")]
-        [TestCase("0019")]
-        [TestCase("001E")]
-        [TestCase("000F")]
-        [TestCase("0010")]
-        [TestCase("0017")]
-        [TestCase("0025")]
-        [TestCase("006B")]
-        [TestCase("001B")]
-        [TestCase("001D")]
-        [TestCase("001C")]
-        public void IsPlayerChatCode_RecognizesEveryPlayerChatCategory(string chatCode)
+        /// <summary>
+        /// Built from the shipped list rather than from a roster written out
+        /// here, so that a channel added to the file is covered by this test
+        /// without anybody remembering to add it twice.
+        /// </summary>
+        private static ChatMessageFilter FilterWithShippedNicknameCodes()
         {
-            Assert.That(ChatMessageFilter.IsPlayerChatCode(chatCode), Is.True);
+            var codes = JsonConvert.DeserializeObject<string[]>(
+                File.ReadAllText(Path.Combine(
+                    TestContext.CurrentContext.TestDirectory,
+                    "Resources", "IgnoreNickNameChatCodes.json")));
+
+            return new ChatMessageFilter(new string[0], codes);
         }
 
+        [Test]
+        public void IsPlayerChatCode_RecognizesEveryChannelThatCarriesAName()
+        {
+            var filter = FilterWithShippedNicknameCodes();
+
+            foreach (var chatCode in new[]
+                     {
+                         "0048", "000A", "000B", "000C", "000E", "000D", "0018", "0019",
+                         "001E", "000F", "0010", "0017", "0025", "006B", "001B", "001D", "001C"
+                     })
+            {
+                Assert.That(filter.IsPlayerChatCode(chatCode), Is.True, chatCode);
+            }
+        }
+
+        /// <summary>
+        /// The two story codes carry a name too - an NPC's - and they belong to
+        /// the other switch. Everything else is either player chat or carries
+        /// no name at all.
+        /// </summary>
         [TestCase("003D")]
         [TestCase("0044")]
         [TestCase("2AB9")]
@@ -118,7 +135,28 @@ namespace TataruHelper.Tests
         [TestCase("0003")]
         public void IsPlayerChatCode_ExcludesStoryAndSystemCodes(string chatCode)
         {
-            Assert.That(ChatMessageFilter.IsPlayerChatCode(chatCode), Is.False);
+            Assert.That(FilterWithShippedNicknameCodes().IsPlayerChatCode(chatCode), Is.False);
+        }
+
+        /// <summary>
+        /// The guard the derivation rests on: the shipped list is the story
+        /// codes plus player chat and nothing else, so subtracting the two
+        /// leaves exactly the player channels.
+        /// </summary>
+        [Test]
+        public void EveryShippedNicknameCode_IsEitherPlayerChatOrStory()
+        {
+            var codes = JsonConvert.DeserializeObject<string[]>(
+                File.ReadAllText(Path.Combine(
+                    TestContext.CurrentContext.TestDirectory,
+                    "Resources", "IgnoreNickNameChatCodes.json")));
+            var filter = new ChatMessageFilter(new string[0], codes);
+
+            foreach (var chatCode in codes)
+            {
+                var isStory = chatCode == "003D" || chatCode == "0044";
+                Assert.That(filter.IsPlayerChatCode(chatCode), Is.EqualTo(!isStory), chatCode);
+            }
         }
     }
 }

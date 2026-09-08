@@ -21,4 +21,13 @@
   <ItemGroup>
     <ProjectReference Include="..\TataruHelper\TataruHelper.csproj" />
   </ItemGroup>
+
+  <!-- The shipped list of channels that carry a name, so a test can assert
+       against what actually ships rather than a copy of it written out here. -->
+  <ItemGroup>
+    <None Include="..\TataruHelper\Resources\IgnoreNickNameChatCodes.json"
+          Link="Resources\IgnoreNickNameChatCodes.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>

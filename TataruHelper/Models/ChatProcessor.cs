@@ -132,8 +132,11 @@ namespace FFXIVTataruHelper
             ChatMsgType msgType = new ChatMsgType();
             var shouldTranslate = _ChatMessageFilter.ShouldTranslate(ea.ChatMessage.Text);
 
-            Logger.WriteRawDialogLog(
-                $"ChatReceive code=[{ea.ChatMessage.Code}] text=[{ea.ChatMessage.Text}] shouldTranslate=[{shouldTranslate}]");
+            if (Logger.RawDialogLogEnabled)
+            {
+                Logger.WriteRawDialogLog(
+                    $"ChatReceive code=[{ea.ChatMessage.Code}] text=[{ea.ChatMessage.Text}] shouldTranslate=[{shouldTranslate}]");
+            }
 
             if (shouldTranslate)
                 await ProcessChatMsg(ea, msgType);
@@ -184,14 +187,17 @@ namespace FFXIVTataruHelper
             string sentenceToTranslate;
             var nicknameWasSplit =
                 _ChatMessageFilter.TrySplitNickname(chatCode, inSentence, out nickName, out sentenceToTranslate);
-            var isPlayerChat = ChatMessageFilter.IsPlayerChatCode(chatCode);
+            var isPlayerChat = _ChatMessageFilter.IsPlayerChatCode(chatCode);
 
-            Logger.WriteRawDialogLog(
-                $"ChatTranslateStart code=[{chatCode}] input=[{inSentence}] split=[{nicknameWasSplit}] " +
-                $"playerChat=[{isPlayerChat}] nickname=[{nickName}] body=[{sentenceToTranslate}] " +
-                $"translatePlayerNicknames=[{TranslatePlayerNicknames}] " +
-                $"translateSpeakerNames=[{TranslateSpeakerNames}] engine=[{translationEngine?.EngineName}] " +
-                $"from=[{fromLang?.LanguageCode}] to=[{toLang?.LanguageCode}]");
+            if (Logger.RawDialogLogEnabled)
+            {
+                Logger.WriteRawDialogLog(
+                    $"ChatTranslateStart code=[{chatCode}] input=[{inSentence}] split=[{nicknameWasSplit}] " +
+                    $"playerChat=[{isPlayerChat}] nickname=[{nickName}] body=[{sentenceToTranslate}] " +
+                    $"translatePlayerNicknames=[{TranslatePlayerNicknames}] " +
+                    $"translateSpeakerNames=[{TranslateSpeakerNames}] engine=[{translationEngine?.EngineName}] " +
+                    $"from=[{fromLang?.LanguageCode}] to=[{toLang?.LanguageCode}]");
+            }
 
             var batchKey = BuildTranslationBatchKey(chatCode, nickName, translationEngine, fromLang, toLang);
             var result = await QueueForBatchedTranslation(
@@ -204,9 +210,12 @@ namespace FFXIVTataruHelper
 
             if (!result.IsSuccess || result.Text.Length == 0)
             {
-                Logger.WriteRawDialogLog(
-                    $"ChatTranslateBodyResult success=[{result.IsSuccess}] engine=[{result.Engine}] " +
-                    $"failure=[{result.FailureKind}] reason=[{result.FailureReason}] text=[{result.Text}]");
+                if (Logger.RawDialogLogEnabled)
+                {
+                    Logger.WriteRawDialogLog(
+                        $"ChatTranslateBodyResult success=[{result.IsSuccess}] engine=[{result.Engine}] " +
+                        $"failure=[{result.FailureKind}] reason=[{result.FailureReason}] text=[{result.Text}]");
+                }
                 return result;
             }
 
@@ -227,9 +236,12 @@ namespace FFXIVTataruHelper
             }
 
             var rendered = result.WithText(line).WithSpeaker(nickName);
-            Logger.WriteRawDialogLog(
-                $"ChatTranslateResult success=[{rendered.IsSuccess}] engine=[{rendered.Engine}] " +
-                $"literary=[{rendered.IsLiterary}] speaker=[{rendered.SpeakerName}] text=[{rendered.Text}]");
+            if (Logger.RawDialogLogEnabled)
+            {
+                Logger.WriteRawDialogLog(
+                    $"ChatTranslateResult success=[{rendered.IsSuccess}] engine=[{rendered.Engine}] " +
+                    $"literary=[{rendered.IsLiterary}] speaker=[{rendered.SpeakerName}] text=[{rendered.Text}]");
+            }
             return rendered;
         }
 
@@ -263,13 +275,19 @@ namespace FFXIVTataruHelper
 
             if (_WebTranslator.TryGetReferenceSpeakerName(name, fromLang, toLang, out var known))
             {
-                Logger.WriteRawDialogLog($"ChatSpeakerReference name=[{name}] translated=[{known}]");
+                if (Logger.RawDialogLogEnabled)
+                {
+                    Logger.WriteRawDialogLog($"ChatSpeakerReference name=[{name}] translated=[{known}]");
+                }
                 return known + trailing;
             }
 
-            Logger.WriteRawDialogLog(
-                $"ChatSpeakerTranslateStart name=[{name}] engine=[{translationEngine?.EngineName}] " +
-                $"from=[{fromLang?.LanguageCode}] to=[{toLang?.LanguageCode}]");
+            if (Logger.RawDialogLogEnabled)
+            {
+                Logger.WriteRawDialogLog(
+                    $"ChatSpeakerTranslateStart name=[{name}] engine=[{translationEngine?.EngineName}] " +
+                    $"from=[{fromLang?.LanguageCode}] to=[{toLang?.LanguageCode}]");
+            }
             var translated = await _WebTranslator
                 .TranslateAsync(name, translationEngine, fromLang, toLang, cancellationToken)
                 .ConfigureAwait(false);
@@ -277,10 +295,13 @@ namespace FFXIVTataruHelper
             var resolved = translated.IsSuccess && translated.Text.Length > 0
                 ? translated.Text.Trim() + trailing
                 : nickName;
-            Logger.WriteRawDialogLog(
-                $"ChatSpeakerTranslateResult success=[{translated.IsSuccess}] engine=[{translated.Engine}] " +
-                $"failure=[{translated.FailureKind}] reason=[{translated.FailureReason}] " +
-                $"text=[{translated.Text}] rendered=[{resolved}]");
+            if (Logger.RawDialogLogEnabled)
+            {
+                Logger.WriteRawDialogLog(
+                    $"ChatSpeakerTranslateResult success=[{translated.IsSuccess}] engine=[{translated.Engine}] " +
+                    $"failure=[{translated.FailureKind}] reason=[{translated.FailureReason}] " +
+                    $"text=[{translated.Text}] rendered=[{resolved}]");
+            }
             return resolved;
         }
 

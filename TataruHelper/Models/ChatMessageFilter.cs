@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -6,24 +6,12 @@ namespace FFXIVTataruHelper
 {
     public class ChatMessageFilter
     {
-        private static readonly HashSet<string> PlayerChatCodes = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
-        {
-            "0048", // Recruitment
-            "000A", // Say
-            "000B", // Shout
-            "000C", // Outgoing tell
-            "000E", // Party
-            "000D", // Tell
-            "0018", // Free Company
-            "0019", // PvP team
-            "001E", // Yell
-            "000F", // Alliance
-            "0010", "0011", "0012", "0013", "0014", "0015", "0016", "0017", // Linkshells
-            "0025", "0065", "0066", "0067", "0068", "0069", "006A", "006B", // Cross-world Linkshells
-            "001B", // Novice Network
-            "001D", // Emotes
-            "001C"  // Custom emotes
-        };
+        /// <summary>
+        /// The two codes story dialogue arrives under. Every other code that
+        /// carries a name in front of the line carries a player's.
+        /// </summary>
+        private static readonly HashSet<string> StoryDialogueCodes =
+            new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "003D", "0044" };
 
         private readonly HashSet<string> _blackList;
         private readonly HashSet<string> _chatCodesWithNickNames;
@@ -72,10 +60,21 @@ namespace FFXIVTataruHelper
             return true;
         }
 
-        /// <summary>Whether a code belongs to player-created chat rather than story dialogue.</summary>
-        internal static bool IsPlayerChatCode(string chatCode)
+        /// <summary>
+        /// Whether a code belongs to player-created chat rather than story
+        /// dialogue.
+        ///
+        /// Worked out from the codes that carry a name in front of the line
+        /// rather than from a roster of its own. There was such a roster, and
+        /// it held the same codes as IgnoreNickNameChatCodes.json less the two
+        /// story ones - a second list to remember to edit every time a channel
+        /// is added, and nothing to notice when somebody forgot.
+        /// </summary>
+        internal bool IsPlayerChatCode(string chatCode)
         {
-            return !string.IsNullOrEmpty(chatCode) && PlayerChatCodes.Contains(chatCode);
+            return !string.IsNullOrEmpty(chatCode) &&
+                   _chatCodesWithNickNames.Contains(chatCode) &&
+                   !StoryDialogueCodes.Contains(chatCode);
         }
 
         /// <summary>
