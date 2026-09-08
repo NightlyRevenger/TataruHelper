@@ -95,6 +95,19 @@ namespace FFXIVTataruHelper
         /// </summary>
         private string _shownWords;
 
+        /// <summary>
+        /// The line with the name still in it.
+        ///
+        /// Whoever is speaking is taken out of the line and put on the plate,
+        /// which is right for a dialogue box and wrong everywhere the plate is
+        /// not drawn - and what stands before a colon is not always a name. The
+        /// game's notice about mentors begins "Mentor symbols are as follows:",
+        /// which was read as a speaker, put on a plate nobody draws, and lost:
+        /// the copy showed the three lines under it and not the line that says
+        /// what they are.
+        /// </summary>
+        private string _wholeText = string.Empty;
+
         public DialogueOverlayWindow(IFFMemoryReaderService memoryReader, Func<IntPtr> gameWindow,
             GameIconReader icons)
         {
@@ -227,6 +240,7 @@ namespace FFXIVTataruHelper
             var named = (speaker ?? string.Empty).Trim();
             _speakerText = named.TrimEnd(':');
             _lineText = text ?? string.Empty;
+            _wholeText = _lineText;
 
             // Taken out wherever it stands rather than only at the front: the
             // marker for a machine translation is put before it, and testing
@@ -395,6 +409,7 @@ namespace FFXIVTataruHelper
 
             var shownSpeaker = translated ? _speakerText : _memoryReader.CurrentDialogueSpeaker;
             var shownLine = translated ? _lineText : WordsOf(gameLine, _memoryReader.CurrentDialogueSpeaker);
+            var whole = translated ? _wholeText : gameLine;
 
             var placed = DialogueOverlayPlacement.TryPlace(
                 true,
@@ -402,7 +417,12 @@ namespace FFXIVTataruHelper
                 surface,
                 bounds,
                 projection,
-                shownLine,
+
+                // The whole line, name and all: whether there is anything to
+                // show does not depend on which part of it goes where, and a
+                // notice whose every word was read as a name would otherwise
+                // count as nothing to show.
+                whole,
                 out var rect);
 
             var now = DateTime.UtcNow;
@@ -429,6 +449,15 @@ namespace FFXIVTataruHelper
             {
                 HideCopy("the box is closing");
                 return;
+            }
+
+            // Only the dialogue box has a plate to put a name on. Without one
+            // the name belongs back in the line it came out of, or it is simply
+            // gone from the copy.
+            if (drawnSurface != DialogueSurface.Window)
+            {
+                shownSpeaker = string.Empty;
+                shownLine = whole;
             }
 
             ShowWords(shownSpeaker, shownLine);
@@ -589,6 +618,7 @@ namespace FFXIVTataruHelper
             _speakerText = string.Empty;
             _line.Inlines.Clear();
             _shownWords = null;
+            _wholeText = string.Empty;
             _speaker.Text = string.Empty;
             _motion.Forget();
             _shownLineKey = string.Empty;
