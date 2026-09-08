@@ -1602,6 +1602,25 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 return UiDirectDialogOffsets.Empty;
             }
 
+            // Patch 7.56 grew UIModule past what the FFXIVClientStructs bundled
+            // with Sharlayan still describes: RaptureAtkModule moved on twenty
+            // bytes and the LastTalk pair on ninety-six. Read at the old
+            // offsets, AtkUnitManager comes back as a null pointer and nothing
+            // on screen can be reached at all - which is how the patch day
+            // looked to everyone using the application.
+            //
+            // The correction only applies to the exact layout the stale
+            // metadata describes, so the day Sharlayan ships a 7.56 build it
+            // steps aside on its own rather than shifting correct offsets.
+            if (raptureAtkModuleOffset == 0xD2670 &&
+                lastTalkNameOffset == 0xFEF00 &&
+                lastTalkTextOffset == 0xFEF68)
+            {
+                raptureAtkModuleOffset = 0xD2690;
+                lastTalkNameOffset = 0xFEF60;
+                lastTalkTextOffset = 0xFEFC8;
+            }
+
             return new UiDirectDialogOffsets(
                 raptureLogModuleOffset,
                 raptureAtkModuleOffset,
