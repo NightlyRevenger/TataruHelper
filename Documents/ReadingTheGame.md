@@ -26,6 +26,25 @@ Which road wins is not fixed. Anything that assumes one of them arrives first
 will be wrong half the time; that assumption is the single most common cause
 of a line appearing twice.
 
+**And a third road that is not one.** `UIModule` carries a `LastTalk` pair -
+the name and text of the last line said - and it is tempting, because it is a
+single pair of reads and always has something in it. That is exactly what is
+wrong with it: it is not a record of what is on screen, and the game keeps it
+long after the conversation is over. A line has been read out of it twenty
+minutes late.
+
+It was the reader's fallback until 2026-09-08 and it cost more than the stale
+lines it produced. Because it always answered, the screen never once looked
+empty, so everything waiting for the screen to clear waited forever: an NPC
+greeted twice running was taken for the first greeting still standing there
+and swallowed, and a line the pair had not caught up to was announced again
+when the window closed. It survived as long as it did because it only becomes
+load-bearing when the addon road fails - which is what patch 7.56 did to it.
+
+`LastTalk` is now read for one purpose only: naming the speaker of a bubble or
+a subtitle, neither of which names one itself, and then only when its text is
+the very line the addon is showing.
+
 ## Choosing what is being said
 
 `Talk` keeps the speaker in the first text node and the line in the second.
@@ -53,6 +72,24 @@ value in the reader derived by hand from a running client (`0x238`, checked
 against 2026.07.16). If cutscene subtitles stop appearing after a game patch,
 check that first.
 
+## When a patch moves the ground
+
+If **nothing at all** is read off the screen after a game patch, the offsets
+into `UIModule` are the place to look, not the addons. `ResolveUiDirectDialogOffsets`
+takes them from the FFXIVClientStructs metadata bundled with Sharlayan, which
+lags the live client by however long it takes that project to publish.
+
+Patch 7.56 (client 2026.09.01) moved `RaptureAtkModule` on 0x20 and the
+`LastTalk` pair on 0x60. Read at the stale offsets, `AtkUnitManager` comes back
+a null pointer, the list of loaded windows is never reached, and every road but
+the chat log goes quiet. The correction in the reader is pinned to the exact
+stale layout, so a Sharlayan carrying 7.56 offsets steps past it rather than
+having correct values shifted out from under it.
+
+The symptom to recognise, because it does not look like "nothing works": the
+translation appears one line behind, or every other line. That is the chat log
+carrying the conversation on its own.
+
 ## Not saying it twice
 
 `RecentUtterance` is the memory both roads report to and both consult. A second
@@ -74,6 +111,14 @@ Do **not** clear this memory when the screen goes empty. That was tried; the
 chat log records its copy while nothing is on screen yet and the screen's copy
 follows 40 ms later, so the clearing landed exactly between them, every time.
 The two seconds are what handles an NPC repeating a bubble as you walk past.
+
+The two seconds have a price, and it is the right one to pay. Clicking through
+the same NPC faster than that - the same words, the same name, twice inside a
+breath - is counted once and translated once. It cannot be told apart from the
+window blinking mid-line, which is a thing that happens on its own and would
+otherwise double every line. The game's own log does know the difference,
+because it writes a record per utterance; building the guard on that was tried
+on 2026-09-08 and made the common case fragile to fix the rare one.
 
 ## Three guards, not one
 
