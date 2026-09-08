@@ -121,6 +121,8 @@ namespace FFXIVTataruHelper.FFHandlers
 
         public string CurrentDialogueLine => _gameMemoryGateway?.CurrentDialogueLine ?? string.Empty;
 
+        public string CurrentDialogueSpeaker => _gameMemoryGateway?.CurrentDialogueSpeaker ?? string.Empty;
+
         public bool IsGameWindowForeground
         {
             get;

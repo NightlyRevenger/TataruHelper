@@ -219,6 +219,8 @@ namespace TataruHelper.Tests
 
             public string CurrentDialogueLine { get; set; } = string.Empty;
 
+            public string CurrentDialogueSpeaker { get; set; } = string.Empty;
+
             /// <summary>Codes this gateway claims to have read off the screen.</summary>
             public HashSet<string> CodesReadLive { get; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 

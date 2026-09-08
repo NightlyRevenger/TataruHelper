@@ -36,6 +36,8 @@ namespace FFXIVTataruHelper.Services.GameMemory
         /// </summary>
         string CurrentDialogueLine { get; }
 
+        string CurrentDialogueSpeaker { get; }
+
         /// <summary>
         /// Whether dialogue under this code has been read off the screen at least
         /// once since attaching, and so whether the chat log's later copy of it

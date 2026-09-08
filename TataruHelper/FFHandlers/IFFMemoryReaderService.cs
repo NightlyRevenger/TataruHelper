@@ -36,6 +36,8 @@ namespace FFXIVTataruHelper.FFHandlers
         /// </summary>
         string CurrentDialogueLine { get; }
 
+        string CurrentDialogueSpeaker { get; }
+
         /// <summary>The game's own window, for putting something over it.</summary>
         IntPtr GameWindowHandle { get; }
 

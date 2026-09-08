@@ -70,6 +70,15 @@ namespace FFXIVTataruHelper.Services.GameMemory
         /// </summary>
         private string _currentDialogueLine = string.Empty;
 
+        /// <summary>
+        /// Who the game says is speaking that line, kept apart from it rather
+        /// than split back out of it. A line carries the name before a colon
+        /// and plenty of lines have a colon of their own - "I'll say that
+        /// again: your cares and your troubles" - so splitting is guesswork
+        /// where keeping is not.
+        /// </summary>
+        private string _currentDialogueSpeaker = string.Empty;
+
         public SharlayanGameMemoryGateway(IDirectDialogReader directDialogReader, IAppLogger logger)
             : this(directDialogReader, logger, null, null)
         {
@@ -122,6 +131,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
             _codesReadLive.Clear();
             _linesReadLive = 0;
             _currentDialogueLine = string.Empty;
+            _currentDialogueSpeaker = string.Empty;
         }
 
         /// <summary>
@@ -330,6 +340,8 @@ namespace FFXIVTataruHelper.Services.GameMemory
 
         public string CurrentDialogueLine => _currentDialogueLine;
 
+        public string CurrentDialogueSpeaker => _currentDialogueSpeaker;
+
         public ChatLogResult GetDirectDialog()
         {
             var fallbackDirectDialog =
@@ -348,6 +360,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 // else has spoken in between.
                 _lastRealtimeDialogSignature = string.Empty;
                 _currentDialogueLine = string.Empty;
+            _currentDialogueSpeaker = string.Empty;
 
                 // Deliberately not forgetting what was just said. Clearing it
                 // here looked tidy and cost the whole guard: the chat log's
@@ -377,6 +390,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 // still matched what was held from the first.
                 _lastRealtimeDialogSignature = string.Empty;
                 _currentDialogueLine = string.Empty;
+            _currentDialogueSpeaker = string.Empty;
                 return fallbackDirectDialog;
             }
 
@@ -389,6 +403,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
             var speakerName = NormalizeDialogToken(realtimeSnapshot.SpeakerName);
             var line = BuildRealtimeDialogLine(speakerName, talkText);
             _currentDialogueLine = line;
+            _currentDialogueSpeaker = speakerName;
             var signature = BuildRealtimeSignature(speakerName, talkText);
             if (!string.Equals(_lastRealtimeDialogSignature, signature, StringComparison.Ordinal))
             {
@@ -473,6 +488,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 _lastChatLogResult = new ChatLogResult();
                 _lastRealtimeDialogSignature = string.Empty;
                 _currentDialogueLine = string.Empty;
+            _currentDialogueSpeaker = string.Empty;
             }
         }
 

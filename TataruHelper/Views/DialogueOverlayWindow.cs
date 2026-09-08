@@ -215,9 +215,49 @@ namespace FFXIVTataruHelper
                 }
             }
 
-            _speaker.Text = _speakerText;
-            _speaker.Visibility = _speakerText.Length > 0 ? Visibility.Visible : Visibility.Collapsed;
-            _line.Text = _lineText;
+        }
+
+        /// <summary>
+        /// Puts a name and a line in front of the reader, if they are not
+        /// already there. Asked on every sweep, so it has to be cheap when
+        /// nothing has changed: setting the same text again re-measures and
+        /// re-wraps it twenty times a second.
+        /// </summary>
+        private void ShowWords(string speaker, string line)
+        {
+            if (!string.Equals(_speaker.Text, speaker, StringComparison.Ordinal))
+            {
+                _speaker.Text = speaker;
+                _speaker.Visibility = speaker.Length > 0 ? Visibility.Visible : Visibility.Collapsed;
+            }
+
+            if (!string.Equals(_line.Text, line, StringComparison.Ordinal))
+            {
+                _line.Text = line;
+            }
+        }
+
+        /// <summary>
+        /// The words of a line without the name in front of them.
+        ///
+        /// Taken off the front by length rather than found by looking for a
+        /// colon: the line is the name, a colon and the words, and plenty of
+        /// lines have a colon of their own - "I'll say that again: your cares
+        /// and your troubles" - which a search would cut at instead.
+        /// </summary>
+        internal static string WordsOf(string line, string speaker)
+        {
+            line = line ?? string.Empty;
+            speaker = speaker ?? string.Empty;
+
+            if (speaker.Length == 0 || line.Length <= speaker.Length + 1 ||
+                !line.StartsWith(speaker, StringComparison.Ordinal) ||
+                line[speaker.Length] != ':')
+            {
+                return line;
+            }
+
+            return line.Substring(speaker.Length + 1);
         }
 
         public void Start()
@@ -254,13 +294,30 @@ namespace FFXIVTataruHelper
 
             var surface = _memoryReader.DialogueSurface;
 
+            // What the copy is to say. The translation, when the one that has
+            // come back is for the line the game is drawing now - and the
+            // game's own words until then.
+            //
+            // Waiting instead meant the original stayed readable underneath
+            // for as long as the translator took, which on a line the index
+            // does not have is around half a second. Showing the game's words
+            // in the copy means the box goes up at once and the words change
+            // in place when the translation lands; and if it never lands, the
+            // reader is left with the line rather than with an empty box.
+            var gameLine = _memoryReader.CurrentDialogueLine;
+            var translated = gameLine.Length == 0 ||
+                             DialogueOverlayLineCheck.IsCurrent(_shownLineKey, gameLine);
+
+            var shownSpeaker = translated ? _speakerText : _memoryReader.CurrentDialogueSpeaker;
+            var shownLine = translated ? _lineText : WordsOf(gameLine, _memoryReader.CurrentDialogueSpeaker);
+
             var placed = DialogueOverlayPlacement.TryPlace(
                 true,
                 true,
                 surface,
                 bounds,
                 projection,
-                _lineText,
+                shownLine,
                 out var rect);
 
             var now = DateTime.UtcNow;
@@ -289,16 +346,7 @@ namespace FFXIVTataruHelper
                 return;
             }
 
-            // The translation is a touch behind the game, and in that touch the
-            // game moves on: another box, another line. The line read off the
-            // screen is the only judge of which conversation the copy is in,
-            // so when the game has drawn another one, the copy comes off.
-            if (!DialogueOverlayLineCheck.IsCurrent(_shownLineKey, _memoryReader.CurrentDialogueLine))
-            {
-                HideCopy("stale: the game has moved on to another line");
-                return;
-            }
-
+            ShowWords(shownSpeaker, shownLine);
             Dress(drawnSurface, rect);
 
             Report(FormattableString.Invariant(
