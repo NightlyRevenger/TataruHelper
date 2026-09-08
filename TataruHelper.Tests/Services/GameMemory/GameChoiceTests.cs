@@ -97,6 +97,32 @@ namespace TataruHelper.Tests.Services.GameMemory
             Assert.That(GameChoice.TryReadBlock("Вопрос\n1.\n2. Второй", 2, out _, out _), Is.False);
         }
 
+        /// <summary>
+        /// Replayed from a cutscene on 9 September. The player picked an answer
+        /// and the chat window showed it five times over, numbered: the game
+        /// keeps spare rows in its list and they carry a copy of a neighbour's
+        /// words for a sweep at a time. A block built from that is a different
+        /// block, which is also what made the copy blink - the translation in
+        /// hand stopped being a translation of it.
+        /// </summary>
+        [Test]
+        public void TheSameAnswerFiveTimesIsStillOneAnswer()
+        {
+            const string first = "I thought you were always watching?";
+            var spare = AddonBounds.From(688, 858, 512, 56, 1f);
+
+            var asked = new GameChoice(
+                "What will you say?",
+                AddonBounds.From(688, 808, 172, 32, 1f),
+                new[] { first, first, first, first, "Miss that part, did you?" },
+                new[] { spare, spare, spare, spare, AddonBounds.From(688, 914, 512, 56, 1f) });
+
+            // The reader takes the copies out before this; what is checked here
+            // is what the block looks like when it has not, so the shape of the
+            // fault is written down where it can be recognised again.
+            Assert.That(asked.AsBlock().Split((char)10).Length, Is.EqualTo(6));
+        }
+
         [Test]
         public void NothingBeingAsked_IsNotAChoice()
         {

@@ -1712,7 +1712,8 @@ namespace FFXIVTataruHelper.Services.GameMemory
             }
 
             WriteDistinctRawDialogLog(ref _lastLoggedChoice,
-                $"Choice addon=[{addonName}] text={{ {string.Join(" | ", found.Select(f => "[" + f.Text + "]"))} }}");
+                FormattableString.Invariant(
+                    $"Choice addon=[{addonName}] text={{ {string.Join(" | ", found.Select(f => $"[{f.Text}] at {f.Where.X},{f.Where.Y} {f.Where.Width}x{f.Where.Height}"))} }}"));
         }
 
         /// <summary>
@@ -1799,8 +1800,21 @@ namespace FFXIVTataruHelper.Services.GameMemory
             var found = new List<(string Text, AddonBounds Where)>();
             GatherTexts(AddAddress(addonAddress, walk.UldManagerOffset), walk, found, 0);
 
+            // The same words twice are the same answer twice. The game keeps
+            // spare rows in its list and they carry a copy of a neighbour's
+            // text for a sweep at a time - read off a live client, a question
+            // with two answers came back with five, four of them the first
+            // answer over again. That flapping between two answers and five is
+            // also what made the copy blink: the block changed, so the
+            // translation in hand stopped being a translation of it.
+            //
+            // Safe because a list offering the same words twice would offer the
+            // player no choice at all.
             var drawn = found
                 .Where(f => f.Text.Length > 0 && f.Where.IsKnown)
+                .OrderBy(f => f.Where.Y)
+                .GroupBy(f => f.Text, StringComparer.Ordinal)
+                .Select(g => g.First())
                 .OrderBy(f => f.Where.Y)
                 .ToArray();
 
