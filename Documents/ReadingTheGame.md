@@ -74,21 +74,37 @@ check that first.
 
 ## When a patch moves the ground
 
-If **nothing at all** is read off the screen after a game patch, the offsets
-into `UIModule` are the place to look, not the addons. `ResolveUiDirectDialogOffsets`
-takes them from the FFXIVClientStructs metadata bundled with Sharlayan, which
-lags the live client by however long it takes that project to publish.
+The offsets into `UIModule` come from the FFXIVClientStructs types compiled
+into Sharlayan, read by reflection off their `[FieldOffset]` attributes
+(`ResolveUiDirectDialogOffsets`). Nothing is fetched at runtime, so those
+offsets are exactly as old as the Sharlayan package pinned in
+`Directory.Packages.props`, and the live client moves without them.
+
+**The symptom to recognise**, because it does not look like "nothing works":
+the translation appears one line behind, or every other line, and only once the
+player clicks through. That is the chat log carrying the conversation on its
+own while the screen is unreadable.
 
 Patch 7.56 (client 2026.09.01) moved `RaptureAtkModule` on 0x20 and the
-`LastTalk` pair on 0x60. Read at the stale offsets, `AtkUnitManager` comes back
-a null pointer, the list of loaded windows is never reached, and every road but
-the chat log goes quiet. The correction in the reader is pinned to the exact
-stale layout, so a Sharlayan carrying 7.56 offsets steps past it rather than
-having correct values shifted out from under it.
+`LastTalk` pair on 0x60. Two different answers to that, for two different
+stakes:
 
-The symptom to recognise, because it does not look like "nothing works": the
-translation appears one line behind, or every other line. That is the chat log
-carrying the conversation on its own.
+- **`RaptureAtkModule` is searched for.** Nothing on screen can be read without
+  it, so `TryFindWindowList` tries the described offset first and, when that
+  does not lead to a list of open windows, nearby offsets until one does. A
+  candidate is believed only when half of the first thirty-two windows it
+  claims are pointers to something carrying a plausible addon name. Run against
+  a live 7.56 client it settles on `UIModule+0xD2690` by itself, and says so in
+  `Log.txt`.
+- **The `LastTalk` pair is corrected by hand**, guarded by the exact stale
+  layout so a Sharlayan carrying 7.56 offsets steps past it. Getting this wrong
+  costs the speaker's name on bubbles and subtitles and nothing else, which is
+  why it does not get a search of its own. If it needs one, the way is to match
+  a `Utf8String` in the window against a line the `Talk` addon has just shown.
+
+If a field is missing altogether - FFXIVClientStructs renames one - the road
+goes down and the log says which name could not be found. That message is the
+first thing to look for.
 
 ## Not saying it twice
 
