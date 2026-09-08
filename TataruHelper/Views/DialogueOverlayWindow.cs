@@ -146,7 +146,10 @@ namespace FFXIVTataruHelper
             _speaker = new TextBlock
             {
                 Foreground = Brushes.White,
-                FontWeight = FontWeights.Bold,
+
+                // Not bold. The game draws the name in the same weight as the
+                // line under it, and a bold copy over a plain original is one
+                // of the ways the two stop looking like one thing.
                 TextTrimming = TextTrimming.CharacterEllipsis
             };
 
@@ -264,8 +267,11 @@ namespace FFXIVTataruHelper
                 StartPoint = new Point(0, 0),
                 EndPoint = new Point(1, 0)
             };
-            plateWash.GradientStops.Add(new GradientStop(Color.FromArgb(0xE6, 0x14, 0x12, 0x10), 0));
-            plateWash.GradientStops.Add(new GradientStop(Color.FromArgb(0xE0, 0x14, 0x12, 0x10), 0.62));
+            // Opaque as far as the fade, not nearly-opaque: at 0xE6 the English
+            // name read through the Russian one laid over it, which is the one
+            // thing this strip exists to prevent.
+            plateWash.GradientStops.Add(new GradientStop(Color.FromArgb(0xFF, 0x14, 0x12, 0x10), 0));
+            plateWash.GradientStops.Add(new GradientStop(Color.FromArgb(0xFF, 0x14, 0x12, 0x10), 0.85));
             plateWash.GradientStops.Add(new GradientStop(Color.FromArgb(0x00, 0x14, 0x12, 0x10), 1));
 
             _plate = new Border
@@ -816,19 +822,29 @@ namespace FFXIVTataruHelper
         private void LayOutWindow(Rect rect)
         {
             _line.FontSize = Math.Max(10, rect.Height * 0.098);
-            _speaker.FontSize = Math.Max(10, rect.Height * 0.092);
+
+            // The name, at the size and in the place the game draws its own.
+            // Measured off a live client on 9 September, from a box 680 by 180
+            // with "Crystal Exarch" on it: the name starts 0.094 across and
+            // 0.076 down, and stands about a tenth of the box's height.
+            //
+            // It was drawn a thirtieth of the box higher than that, which is
+            // six pixels - enough for the English name to show underneath the
+            // Russian one rather than behind it.
+            _speaker.FontSize = Math.Max(10, rect.Height * 0.098);
 
             // The strip is given room past the name for the fade to happen in.
             // Sized to the name alone it ended in a hard edge a few pixels
             // after the last letter - a dark tab, where the game has a wash.
-            _plate.Margin = new Thickness(rect.Width * 0.083, rect.Height * 0.035, 0, 0);
-            _plate.Padding = new Thickness(rect.Width * 0.012, rect.Height * 0.005, rect.Width * 0.14, 0);
+            _plate.Margin = new Thickness(rect.Width * 0.083, rect.Height * 0.030, 0, 0);
+            _plate.Padding = new Thickness(rect.Width * 0.011, rect.Height * 0.046, rect.Width * 0.14, 0);
 
             // Wide enough to bury the game's own name underneath, whatever it
             // says. A strip cut to the translated name left the English one
             // showing past it - two names side by side, which is worse than
-            // either alone.
-            _plate.MinWidth = rect.Width * 0.30;
+            // either alone. Two thirds of the box, which is as far as the
+            // game's own strip runs before it fades away.
+            _plate.MinWidth = rect.Width * 0.62;
             _line.Margin = new Thickness(
                 rect.Width * 0.088, rect.Height * 0.225, rect.Width * 0.075, rect.Height * 0.06);
         }
