@@ -46,11 +46,13 @@ namespace FFXIVTataruHelper
         private readonly Brush _subtitleGround;
 
         /// <summary>
-        /// The dark ground a notice is laid on. The game draws these in the
-        /// dialogue window's place without its frame, so the copy cannot wear
-        /// the frame either - it would be a wooden box over a dark panel.
+        /// The dark panel the game lays a notice on, in place of the wooden
+        /// frame. Drawn to measurements taken off a running client rather than
+        /// cut out of it: the game's panel is translucent, and a translucent
+        /// copy would let the original read through it - so this one is a
+        /// solid shape in the panel's own outline and colour.
         /// </summary>
-        private readonly Brush _noticeGround;
+        private readonly ImageBrush _noticeFrame;
 
         /// <summary>
         /// Whether the copy is on screen and what it is dressed as. Kept out of
@@ -133,20 +135,26 @@ namespace FFXIVTataruHelper
             // line is centred in it, so the fade happens well clear of any
             // letters, and what the player sees is a shadow gathering behind
             // the words instead of a black band drawn over the cutscene.
+            //
+            // All but opaque where the words are. The copy sits on top of the
+            // game's own line, and anything the ground lets through is that
+            // line reading back out from under the translation.
             var subtitleGround = new LinearGradientBrush
             {
                 StartPoint = new Point(0, 0),
                 EndPoint = new Point(1, 0)
             };
             subtitleGround.GradientStops.Add(new GradientStop(Color.FromArgb(0x00, 0x08, 0x08, 0x0A), 0));
-            subtitleGround.GradientStops.Add(new GradientStop(Color.FromArgb(0xD0, 0x08, 0x08, 0x0A), 0.10));
-            subtitleGround.GradientStops.Add(new GradientStop(Color.FromArgb(0xD0, 0x08, 0x08, 0x0A), 0.90));
+            subtitleGround.GradientStops.Add(new GradientStop(Color.FromArgb(0xF4, 0x08, 0x08, 0x0A), 0.10));
+            subtitleGround.GradientStops.Add(new GradientStop(Color.FromArgb(0xF4, 0x08, 0x08, 0x0A), 0.90));
             subtitleGround.GradientStops.Add(new GradientStop(Color.FromArgb(0x00, 0x08, 0x08, 0x0A), 1));
             _subtitleGround = subtitleGround;
 
-            // A panel rather than a wash: the notice has edges of its own where
-            // a subtitle has none, and it has to bury what is under it whole.
-            _noticeGround = new SolidColorBrush(Color.FromArgb(0xDE, 0x0B, 0x0B, 0x0F));
+            _noticeFrame = new ImageBrush(
+                new BitmapImage(new Uri("pack://application:,,,/Resources/NoticeFrame.png")))
+            {
+                Stretch = Stretch.Fill
+            };
 
             var box = new Border
             {
@@ -357,17 +365,18 @@ namespace FFXIVTataruHelper
             Width = rect.Width;
             Height = rect.Height;
 
-            switch (drawnSurface)
+            if (drawnSurface == DialogueSurface.Subtitle)
             {
-                case DialogueSurface.Subtitle:
-                    LayOutSubtitle(rect);
-                    break;
-                case DialogueSurface.Notice:
-                    LayOutNotice(rect);
-                    break;
-                default:
-                    LayOutWindow(rect);
-                    break;
+                LayOutSubtitle(rect);
+            }
+            else
+            {
+                // A notice is laid out like a dialogue box and not like
+                // something of its own. Measured off the game: its text starts
+                // at 0.094 across and 0.248 down, which is where a spoken line
+                // starts too. The game draws both with the same node, and the
+                // missing name above it moves nothing.
+                LayOutWindow(rect);
             }
         }
 
@@ -398,18 +407,6 @@ namespace FFXIVTataruHelper
             _plate.MinWidth = rect.Width * 0.30;
             _line.Margin = new Thickness(
                 rect.Width * 0.088, rect.Height * 0.225, rect.Width * 0.075, rect.Height * 0.06);
-        }
-
-        /// <summary>
-        /// A notice sits where the dialogue box would, at the same size, but
-        /// with nobody speaking it - so its line starts where the speaker's
-        /// name would have been rather than below it.
-        /// </summary>
-        private void LayOutNotice(Rect rect)
-        {
-            _line.FontSize = Math.Max(10, rect.Height * 0.098);
-            _line.Margin = new Thickness(
-                rect.Width * 0.06, rect.Height * 0.10, rect.Width * 0.06, rect.Height * 0.08);
         }
 
         /// <summary>
@@ -456,8 +453,7 @@ namespace FFXIVTataruHelper
                 // at all. Left bare, as it was, the copy was pale text laid over
                 // the game's own pale text: two lines in two languages in the
                 // same place, and neither of them readable.
-                _box.Background = subtitle ? _subtitleGround : notice ? _noticeGround : _frame;
-                _box.CornerRadius = notice ? new CornerRadius(4) : new CornerRadius(0);
+                _box.Background = subtitle ? _subtitleGround : notice ? _noticeFrame : _frame;
 
                 // Nobody is speaking a notice, and a cutscene subtitle names
                 // nobody either.
