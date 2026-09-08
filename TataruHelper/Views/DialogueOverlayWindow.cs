@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
@@ -48,6 +49,17 @@ namespace FFXIVTataruHelper
         private readonly TextBlock _line;
         private readonly Border _box;
         private readonly Border _plate;
+        private readonly Canvas _choices;
+
+        /// <summary>
+        /// The answers as they are on screen now, in the order the game lists
+        /// them, so the one under the cursor can be marked.
+        /// </summary>
+        private readonly List<TextBlock> _answers = new List<TextBlock>();
+
+        private string _shownChoice = string.Empty;
+
+        private int _markedAnswer = -1;
         private readonly ImageBrush _frame;
 
         /// <summary>The dark ground a subtitle is laid on, which the game gives it none of.</summary>
@@ -219,9 +231,16 @@ namespace FFXIVTataruHelper
                 Child = _speaker
             };
 
+            // Where a question and its answers are laid out, each at the very
+            // place the game draws its own. Kept apart from the box because
+            // they are not one line but several, and each has to be found
+            // again by the cursor.
+            _choices = new Canvas { Visibility = Visibility.Collapsed };
+
             var layout = new Grid();
             layout.Children.Add(box);
             layout.Children.Add(_plate);
+            layout.Children.Add(_choices);
 
             Content = layout;
 
@@ -403,6 +422,7 @@ namespace FFXIVTataruHelper
             // reader is left with the line rather than with an empty box.
             _icons?.Follow(_memoryReader.GameExecutablePath);
 
+            var asked = _memoryReader.CurrentChoice;
             var gameLine = _memoryReader.CurrentDialogueLine;
             var translated = gameLine.Length == 0 ||
                              DialogueOverlayLineCheck.IsCurrent(_shownLineKey, gameLine);
@@ -460,7 +480,28 @@ namespace FFXIVTataruHelper
                 shownLine = whole;
             }
 
-            ShowWords(shownSpeaker, shownLine);
+            if (drawnSurface == DialogueSurface.Choice)
+            {
+                // A question the player has to answer is not shown in the
+                // game's own words while a translation is on its way: that
+                // would cover the game's mark of which answer the cursor is on
+                // and put nothing at all in its place.
+                if (!translated || !LayOutChoice(asked, whole, rect, projection))
+                {
+                    HideCopy("a question, with no translation of it yet");
+                    return;
+                }
+
+                // The one line the box would otherwise still be showing is
+                // whatever was said before the question was put.
+                ShowWords(string.Empty, string.Empty);
+            }
+            else
+            {
+                ForgetTheChoice();
+                ShowWords(shownSpeaker, shownLine);
+            }
+
             Dress(drawnSurface, rect);
 
             Report(FormattableString.Invariant(
@@ -485,6 +526,202 @@ namespace FFXIVTataruHelper
                 LayOutWindow(rect);
             }
         }
+
+        /// <summary>
+        /// Lays a translated question and its answers over the game's own, each
+        /// at the very place the game draws it.
+        ///
+        /// At the game's own places rather than in a list of this copy's own
+        /// making, because the player is about to click one of them: an answer
+        /// drawn anywhere but on the row it belongs to is an answer they would
+        /// pick by mistake.
+        ///
+        /// False when the translation cannot be taken apart into as many
+        /// answers as the game is offering. Then nothing is drawn and the
+        /// question stays readable in the game's own words, which is the right
+        /// way to be wrong here.
+        /// </summary>
+        private bool LayOutChoice(GameChoice asked, string translated, Rect rect, GameWindowProjection projection)
+        {
+            if (!asked.IsBeingAsked ||
+                asked.AnswerBounds.Count != asked.Answers.Count ||
+                !GameChoice.TryReadBlock(translated, asked.Answers.Count, out var question, out var answers))
+            {
+                return false;
+            }
+
+            var settled = string.Join("\n", answers) + "\n" + question + "\n" + rect;
+            if (!string.Equals(_shownChoice, settled, StringComparison.Ordinal))
+            {
+                _choices.Children.Clear();
+                _answers.Clear();
+                _markedAnswer = -1;
+
+                var size = Math.Max(12, rect.Height * 0.115);
+
+                if (question.Length > 0 && Place(asked.QuestionBounds, rect, projection, out var where))
+                {
+                    _choices.Children.Add(Row(question, where, size, QuestionInk, false));
+                }
+
+                for (var i = 0; i < answers.Length; i++)
+                {
+                    if (!Place(asked.AnswerBounds[i], rect, projection, out var row))
+                    {
+                        ForgetTheChoice();
+                        return false;
+                    }
+
+                    var drawn = Row(answers[i], row, size, AnswerInk, true);
+                    _choices.Children.Add(drawn);
+                    _answers.Add(drawn);
+                }
+
+                _shownChoice = settled;
+            }
+
+            _choices.Visibility = Visibility.Visible;
+            MarkTheAnswerUnderTheCursor(asked, projection);
+            return true;
+        }
+
+        private void ForgetTheChoice()
+        {
+            if (_shownChoice.Length == 0 && _choices.Visibility == Visibility.Collapsed)
+            {
+                return;
+            }
+
+            _choices.Visibility = Visibility.Collapsed;
+            _choices.Children.Clear();
+            _answers.Clear();
+            _shownChoice = string.Empty;
+            _markedAnswer = -1;
+        }
+
+        /// <summary>
+        /// Where one of the game's own rows lands inside the copy, which is
+        /// placed over the whole strip.
+        /// </summary>
+        private static bool Place(AddonBounds bounds, Rect strip, GameWindowProjection projection, out Rect placed)
+        {
+            placed = Rect.Empty;
+            if (!projection.TryProject(bounds, out var onScreen))
+            {
+                return false;
+            }
+
+            placed = new Rect(
+                onScreen.Left - strip.Left, onScreen.Top - strip.Top, onScreen.Width, onScreen.Height);
+            return true;
+        }
+
+        private static TextBlock Row(string words, Rect where, double fontSize, Brush ink, bool isAnswer)
+        {
+            var block = new TextBlock
+            {
+                Text = words,
+                FontSize = fontSize,
+                Foreground = ink,
+                TextWrapping = TextWrapping.NoWrap,
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                Width = Math.Max(where.Width, 1),
+                Effect = new DropShadowEffect
+                {
+                    Color = Colors.Black, BlurRadius = 5, ShadowDepth = 0, Opacity = 1
+                }
+            };
+
+            if (isAnswer)
+            {
+                block.FontWeight = FontWeights.SemiBold;
+            }
+
+            Canvas.SetLeft(block, where.Left);
+            Canvas.SetTop(block, where.Top + Math.Max(0, (where.Height - fontSize * 1.35) / 2));
+            return block;
+        }
+
+        /// <summary>
+        /// Marks the answer the cursor is over, the way the game marks its own.
+        ///
+        /// Worked out from where the cursor is rather than read out of the
+        /// game: the rows are known, the cursor is known, and the game marks
+        /// whatever is under it - so the same answer comes out without reading
+        /// anything more. Somebody choosing with a controller moves the game's
+        /// mark without moving the cursor, and this does not follow that.
+        /// </summary>
+        private void MarkTheAnswerUnderTheCursor(GameChoice asked, GameWindowProjection projection)
+        {
+            var under = -1;
+            if (TryFindTheCursor(out var cursor))
+            {
+                for (var i = 0; i < _answers.Count && i < asked.AnswerBounds.Count; i++)
+                {
+                    if (projection.TryProject(asked.AnswerBounds[i], out var row) &&
+                        cursor.X >= row.Left && cursor.X <= row.Right &&
+                        cursor.Y >= row.Top && cursor.Y <= row.Bottom)
+                    {
+                        under = i;
+                        break;
+                    }
+                }
+            }
+
+            if (under == _markedAnswer)
+            {
+                return;
+            }
+
+            _markedAnswer = under;
+            for (var i = 0; i < _answers.Count; i++)
+            {
+                _answers[i].Foreground = i == under ? MarkedInk : AnswerInk;
+            }
+        }
+
+        /// <summary>
+        /// Where the cursor is, in the units the copy is placed in. The system
+        /// answers in real pixels and everything here counts in units that are
+        /// pixels only at 100%, which is the same division the rest of the
+        /// placing makes.
+        /// </summary>
+        private static bool TryFindTheCursor(out Point position)
+        {
+            position = default;
+            if (!GetCursorPos(out var point))
+            {
+                return false;
+            }
+
+            var source = PresentationSource.FromVisual(Application.Current?.MainWindow);
+            var scale = source?.CompositionTarget?.TransformToDevice.M11 ?? 1.0;
+            if (!(scale > 0))
+            {
+                scale = 1.0;
+            }
+
+            position = new Point(point.X / scale, point.Y / scale);
+            return true;
+        }
+
+        private static readonly Brush QuestionInk = new SolidColorBrush(Color.FromRgb(0xC9, 0xC2, 0xB0));
+
+        private static readonly Brush AnswerInk = Brushes.White;
+
+        /// <summary>What the game turns an answer when the cursor is on it.</summary>
+        private static readonly Brush MarkedInk = new SolidColorBrush(Color.FromRgb(0xFF, 0xE0, 0x7A));
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct NativePoint
+        {
+            public int X;
+            public int Y;
+        }
+
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        private static extern bool GetCursorPos(out NativePoint point);
 
         /// <summary>
         /// Everything is set in the box's own proportions rather than at a
@@ -554,6 +791,14 @@ namespace FFXIVTataruHelper
             {
                 var subtitle = surface == DialogueSurface.Subtitle;
                 var notice = surface == DialogueSurface.Notice;
+
+                // A cutscene's question is drawn the way its subtitles are -
+                // across the width of the screen, over the picture - so it is
+                // given the same dark ground.
+                if (surface == DialogueSurface.Choice)
+                {
+                    subtitle = true;
+                }
 
                 // The dark ground is the whole reason a subtitle can be covered
                 // at all. Left bare, as it was, the copy was pale text laid over

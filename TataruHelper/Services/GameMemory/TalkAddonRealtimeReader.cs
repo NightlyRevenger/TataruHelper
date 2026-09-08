@@ -753,7 +753,15 @@ namespace FFXIVTataruHelper.Services.GameMemory
             // cutscene subtitle is not drawn in a window at all - it is bare
             // text over the picture, so anything covering it has to be bare
             // too.
-            if (_stickyCandidateKey != null &&
+            // A question the player has to answer comes before anything being
+            // said: it is the thing they have to act on, and the line that led
+            // up to it has had its moment.
+            if (Choice.IsBeingAsked && ChoiceBounds.IsKnown)
+            {
+                DialogueBounds = ChoiceBounds;
+                DialogueSurface = DialogueSurface.Choice;
+            }
+            else if (_stickyCandidateKey != null &&
                 boundsByCandidate.TryGetValue(_stickyCandidateKey, out var speaking))
             {
                 DialogueBounds = speaking;
@@ -1752,6 +1760,7 @@ namespace FFXIVTataruHelper.Services.GameMemory
 
             return new GameChoice(
                 drawn[0].Text,
+                drawn[0].Where,
                 drawn.Skip(1).Select(f => f.Text).ToArray(),
                 drawn.Skip(1).Select(f => f.Where).ToArray());
         }

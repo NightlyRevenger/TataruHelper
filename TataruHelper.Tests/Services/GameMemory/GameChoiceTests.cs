@@ -16,6 +16,7 @@ namespace TataruHelper.Tests.Services.GameMemory
     {
         private static GameChoice Asked() => new GameChoice(
             "What will you say?",
+            AddonBounds.From(688, 808, 172, 32, 1f),
             new[] { "I thought you were always watching?", "Miss that part, did you?" },
             new[] { AddonBounds.From(688, 858, 512, 56, 1f), AddonBounds.From(688, 914, 512, 56, 1f) });
 

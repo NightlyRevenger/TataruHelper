@@ -43,6 +43,15 @@ namespace FFXIVTataruHelper.Services.GameMemory
         Notice,
 
         /// <summary>
+        /// The strip a cutscene puts a question and its answers in.
+        ///
+        /// Alone among everything here, the player has to click it. A copy over
+        /// it has to keep saying which answer the cursor is on, or they choose
+        /// blind - which is worse than reading the question in English.
+        /// </summary>
+        Choice,
+
+        /// <summary>
         /// A speech bubble over a character's head.
         ///
         /// No copy is placed over one. The bubbles all live in a single addon

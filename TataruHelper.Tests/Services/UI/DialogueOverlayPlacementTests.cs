@@ -148,5 +148,17 @@ namespace TataruHelper.Tests.Services.UI
         {
             Assert.That(Place(surface: DialogueSurface.Notice), Is.True);
         }
+
+        /// <summary>
+        /// A cutscene's question is covered like anything else. That the player
+        /// has to click it is the copy's business, not the placing's.
+        /// </summary>
+        [Test]
+        public void AQuestionInACutscene_IsCovered()
+        {
+            var strip = AddonBounds.From(0f, 778f, 1722, 240, 1f);
+
+            Assert.That(Place(surface: DialogueSurface.Choice, bounds: strip), Is.True);
+        }
     }
 }

@@ -47,7 +47,8 @@ namespace FFXIVTataruHelper.Services.UI
             // the chat window like any other.
             if (surface != DialogueSurface.Window &&
                 surface != DialogueSurface.Subtitle &&
-                surface != DialogueSurface.Notice)
+                surface != DialogueSurface.Notice &&
+                surface != DialogueSurface.Choice)
             {
                 return false;
             }
