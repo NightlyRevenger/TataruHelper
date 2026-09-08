@@ -68,6 +68,9 @@ namespace FFXIVTataruHelper
         /// <summary>And the one a cutscene's question is laid on, which buries the game's own.</summary>
         private readonly Brush _choiceGround;
 
+        /// <summary>Which takes the ends off that ground, so the band has no edges.</summary>
+        private readonly Brush _choiceEdges;
+
         /// <summary>
         /// The dark panel the game lays a notice on, in place of the wooden
         /// frame. Drawn to measurements taken off a running client rather than
@@ -195,20 +198,44 @@ namespace FFXIVTataruHelper
             subtitleGround.GradientStops.Add(new GradientStop(Color.FromArgb(0x00, 0x08, 0x08, 0x0A), 1));
             _subtitleGround = subtitleGround;
 
-            // What a cutscene's question is laid on. The game gives it a dark
-            // ground of its own, so this one has only to bury it - and at
-            // anything less than opaque the English read faintly through the
-            // Russian, which is how the question first came out.
+            // What a cutscene's question is laid on.
+            //
+            // The game does not put a black bar there. It darkens the picture
+            // softly across the middle of the strip and draws a thin rule under
+            // the question; a bar the full height of the strip, which is what
+            // this was, reads as something far larger than the game's own.
+            //
+            // So: opaque only where the words are - the question at an eighth
+            // of the way down, the last answer by four fifths - and fading out
+            // above and below. Opaque where the words are because the copy sits
+            // on top of the original, and anything it lets through is the
+            // English reading back out from under the Russian.
             var choiceGround = new LinearGradientBrush
+            {
+                StartPoint = new Point(0, 0),
+                EndPoint = new Point(0, 1)
+            };
+            choiceGround.GradientStops.Add(new GradientStop(Color.FromArgb(0x00, 0x06, 0x06, 0x08), 0));
+            choiceGround.GradientStops.Add(new GradientStop(Color.FromArgb(0xFF, 0x06, 0x06, 0x08), 0.09));
+            choiceGround.GradientStops.Add(new GradientStop(Color.FromArgb(0xFF, 0x06, 0x06, 0x08), 0.84));
+            choiceGround.GradientStops.Add(new GradientStop(Color.FromArgb(0x00, 0x06, 0x06, 0x08), 1));
+            _choiceGround = choiceGround;
+
+            // And the ends of the strip taken off with it. The strip is as wide
+            // as the game's picture, so in a full screen its edges are the
+            // screen's own and never show - but in a window they do, and a band
+            // that stops dead against the desktop is not something the game
+            // would draw.
+            var choiceEdges = new LinearGradientBrush
             {
                 StartPoint = new Point(0, 0),
                 EndPoint = new Point(1, 0)
             };
-            choiceGround.GradientStops.Add(new GradientStop(Color.FromArgb(0x00, 0x06, 0x06, 0x08), 0));
-            choiceGround.GradientStops.Add(new GradientStop(Color.FromArgb(0xFF, 0x06, 0x06, 0x08), 0.06));
-            choiceGround.GradientStops.Add(new GradientStop(Color.FromArgb(0xFF, 0x06, 0x06, 0x08), 0.94));
-            choiceGround.GradientStops.Add(new GradientStop(Color.FromArgb(0x00, 0x06, 0x06, 0x08), 1));
-            _choiceGround = choiceGround;
+            choiceEdges.GradientStops.Add(new GradientStop(Colors.Transparent, 0));
+            choiceEdges.GradientStops.Add(new GradientStop(Colors.Black, 0.05));
+            choiceEdges.GradientStops.Add(new GradientStop(Colors.Black, 0.95));
+            choiceEdges.GradientStops.Add(new GradientStop(Colors.Transparent, 1));
+            _choiceEdges = choiceEdges;
 
             _noticeFrame = new ImageBrush(
                 new BitmapImage(new Uri("pack://application:,,,/Resources/NoticeFrame.png")))
@@ -498,6 +525,16 @@ namespace FFXIVTataruHelper
                 shownLine = whole;
             }
 
+            // Put where it goes before it is dressed or filled. The other way
+            // about, a sweep that changes both showed the new dress at the old
+            // place for a frame: the wooden box, stretched the width of a
+            // cutscene's question strip, flashing up and flying off as the copy
+            // caught up with itself.
+            Left = rect.Left;
+            Top = rect.Top;
+            Width = rect.Width;
+            Height = rect.Height;
+
             if (drawnSurface == DialogueSurface.Choice)
             {
                 // Whether the translation in hand is of this question, which
@@ -536,11 +573,6 @@ namespace FFXIVTataruHelper
 
             Report(FormattableString.Invariant(
                 $"shown on {drawnSurface} at {rect.Left},{rect.Top} {rect.Width}x{rect.Height}"));
-
-            Left = rect.Left;
-            Top = rect.Top;
-            Width = rect.Width;
-            Height = rect.Height;
 
             if (drawnSurface == DialogueSurface.Subtitle)
             {
@@ -587,7 +619,10 @@ namespace FFXIVTataruHelper
                 _answers.Clear();
                 _markedAnswer = -1;
 
-                var size = Math.Max(12, rect.Height * 0.115);
+                // Measured off the game's own: about twenty-two pixels in a
+                // strip two hundred and forty tall. It was a ninth larger than
+                // that, which on a strip this wide is plainly wrong.
+                var size = Math.Max(12, rect.Height * 0.092);
 
                 if (question.Length > 0 && Place(asked.QuestionBounds, rect, projection, out var where))
                 {
@@ -849,6 +884,7 @@ namespace FFXIVTataruHelper
                     : subtitle ? _subtitleGround
                     : notice ? _noticeFrame
                     : _frame;
+                _box.OpacityMask = choice ? _choiceEdges : null;
 
                 // Nobody is speaking a notice, and a cutscene subtitle names
                 // nobody either.
