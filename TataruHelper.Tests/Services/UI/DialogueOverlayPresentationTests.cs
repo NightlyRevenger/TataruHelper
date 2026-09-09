@@ -84,6 +84,32 @@ namespace TataruHelper.Tests.Services.UI
                 "coming back to the screen is not a change of what is covered");
         }
 
+        /// <summary>
+        /// Asked before the copy is moved, so it can be taken off the screen
+        /// for the one sweep in which it changes what it covers. Windows moves
+        /// a window at once and repaints it later, and the gap between the two
+        /// is the wooden dialogue box stretched across a cutscene.
+        /// </summary>
+        [Test]
+        public void ACopyKnowsWhetherItIsAlreadyDressedForThis()
+        {
+            var presentation = new DialogueOverlayPresentation();
+            presentation.Present(DialogueSurface.Window, out _);
+
+            Assert.That(presentation.IsDressedFor(DialogueSurface.Window), Is.True);
+            Assert.That(presentation.IsDressedFor(DialogueSurface.Subtitle), Is.False);
+        }
+
+        [Test]
+        public void LeavingTheScreenDoesNotUndress()
+        {
+            var presentation = new DialogueOverlayPresentation();
+            presentation.Present(DialogueSurface.Subtitle, out _);
+            presentation.Hide();
+
+            Assert.That(presentation.IsDressedFor(DialogueSurface.Subtitle), Is.True);
+        }
+
         [Test]
         public void TheFirstLine_AsksForNoRestyle()
         {

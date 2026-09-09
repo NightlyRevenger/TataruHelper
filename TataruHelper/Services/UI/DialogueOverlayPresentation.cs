@@ -40,6 +40,20 @@ namespace FFXIVTataruHelper.Services.UI
         }
 
         /// <summary>
+        /// Whether the copy is already wearing what this surface calls for.
+        ///
+        /// Asked before the copy is moved. Windows moves a window the instant
+        /// it is told to, while what the window draws waits for the next frame
+        /// - so a copy moved and restyled in one breath is briefly the old
+        /// dress at the new place, and that is what the wooden box does when a
+        /// cutscene turns to subtitles.
+        /// </summary>
+        public bool IsDressedFor(DialogueSurface surface)
+        {
+            return surface == _dressedFor;
+        }
+
+        /// <summary>
         /// The copy leaves the screen. It keeps its dress: coming back is not
         /// a change of what it covers, only of whether it is on screen.
         /// </summary>

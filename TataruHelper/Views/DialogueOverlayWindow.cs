@@ -546,11 +546,25 @@ namespace FFXIVTataruHelper
                 shownLine = whole;
             }
 
+            // A copy about to change what it is a copy of goes off the screen
+            // first, and comes back at the end of this same sweep already
+            // dressed for what it now covers.
+            //
+            // Windows moves a window the instant it is told to; what the window
+            // draws waits for the next frame. So moving and restyling in one
+            // breath shows the old dress at the new place until that frame
+            // arrives - the wooden dialogue box, stretched across a cutscene,
+            // where a subtitle belongs. Taking it off the screen for the
+            // length of one sweep is the only way to have neither.
+            if (!_presentation.IsDressedFor(drawnSurface))
+            {
+                Visibility = Visibility.Hidden;
+                _presentation.Hide();
+            }
+
             // Put where it goes before it is dressed or filled. The other way
             // about, a sweep that changes both showed the new dress at the old
-            // place for a frame: the wooden box, stretched the width of a
-            // cutscene's question strip, flashing up and flying off as the copy
-            // caught up with itself.
+            // place for a frame.
             Left = rect.Left;
             Top = rect.Top;
             Width = rect.Width;
