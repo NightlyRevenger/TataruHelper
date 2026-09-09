@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using System.Windows;
 
@@ -26,6 +26,39 @@ namespace TataruHelper.Tests.Models.Settings
             // agreed to.
             Assert.That(new UserSettings().IsReferenceIndexAutoInstall, Is.False);
             Assert.That(CreateUiModel().IsReferenceIndexAutoInstall, Is.False);
+        }
+
+        /// <summary>
+        /// The copy of the game's dialogue box draws over the game, which is
+        /// not something to do to somebody who has not asked for it - and it
+        /// arrived in an update, so most people who get it never chose it.
+        /// </summary>
+        [Test]
+        public void TheCopyOfTheDialogueBoxIsOffUntilItIsChosen()
+        {
+            Assert.That(new UserSettings().IsDialogueOverlayShown, Is.False);
+            Assert.That(CreateUiModel().IsDialogueOverlayShown, Is.False);
+
+            // And an installation that predates the setting has nothing to say
+            // about it, which has to read as off rather than as unset.
+            var model = CreateUiModel();
+            model.SetSettings(new UserSettings());
+
+            Assert.That(model.IsDialogueOverlayShown, Is.False);
+            Assert.That(model.GetSettings().IsDialogueOverlayShown, Is.False);
+        }
+
+        [Test]
+        public void TheCopyOfTheDialogueBoxIsRememberedOnceItIsChosen()
+        {
+            var model = CreateUiModel();
+
+            model.SetSettings(new UserSettings { IsDialogueOverlayShown = true });
+            Assert.That(model.IsDialogueOverlayShown, Is.True);
+            Assert.That(model.GetSettings().IsDialogueOverlayShown, Is.True);
+
+            model.IsDialogueOverlayShown = false;
+            Assert.That(model.GetSettings().IsDialogueOverlayShown, Is.False);
         }
 
         [Test]
