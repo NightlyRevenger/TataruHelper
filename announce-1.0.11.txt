@@ -1,0 +1,24 @@
+<:1_1:594308396778389515> **Tataru Helper 1.0.11** <:1_1:594308396778389515>
+
+The translation can now be put where the line is: in a copy of the game's own dialogue box.
+Перевод теперь можно положить туда, где сама реплика — в копию игровой плашки.
+
+A new switch on the General page, **off by default**: it reads well, and it draws over the game, which is a thing somebody has to have chosen.
+Новый переключатель на странице General, **по умолчанию выключен**: читается хорошо, но рисует поверх игры, а такое человек должен выбрать сам.
+
+It covers the dialogue box, cutscene subtitles and the dark notice panel, each drawn the way the game draws it, measured off a running client. The copy holds the game's own words until the translation arrives, and the icons the game puts mid-sentence are drawn too, read out of your own installation.
+Накрывает окно диалога, субтитры катсцен и тёмную плашку уведомлений — каждое так, как рисует игра, по замерам с живого клиента. Копия держит слова самой игры, пока идёт перевод, а иконки посреди фразы читаются из вашей же установки.
+
+**Choices in cutscenes**
+The question and every answer reach the chat window as one numbered message, and the copy lays the translated answers on the game's own rows, marking the one under the cursor. Several lines arriving at once are now looked up a line at a time, so a whole choice no longer goes to a service.
+
+**Выбор реплик в катсценах**
+Вопрос и все ответы приходят в чат одним пронумерованным сообщением, а копия кладёт перевод на игровые строки и подсвечивает ту, где курсор. Текст из нескольких строк ищется в ручном переводе построчно, и весь выбор больше не уезжает машине.
+
+**Fixes / Починено**
+Your character's name is no longer shown to a translation service.
+Имя вашего персонажа больше не показывается переводчику.
+
+Если у вас что-то не работает или работает не так, как вам кажется — пишите, будем фиксить.
+
+https://github.com/NightlyRevenger/TataruHelper/releases/latest
