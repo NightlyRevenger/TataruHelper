@@ -34,6 +34,9 @@ namespace FFXIVTataruHelper
         /// </summary>
         private static readonly TimeSpan FollowInterval = TimeSpan.FromMilliseconds(50);
 
+        /// <summary>As good as gone, and still drawing itself.</summary>
+        private const double Invisible = 0.01;
+
         private readonly IFFMemoryReaderService _memoryReader;
         private readonly Func<IntPtr> _gameWindow;
 
@@ -141,7 +144,20 @@ namespace FFXIVTataruHelper
             Topmost = true;
             IsHitTestVisible = false;
             ShowActivated = false;
-            Visibility = Visibility.Hidden;
+
+            // Out of sight by being see-through, never by being hidden.
+            //
+            // A hidden window draws nothing at all, so the picture Windows puts
+            // up the moment it is shown again is the one from before whatever
+            // changed - caught on camera as a frame of the wooden dialogue box,
+            // clipped to a subtitle's shape, between the English line and the
+            // Russian one. Left on screen and made transparent it goes on
+            // drawing itself, and by the time it is turned up there is a
+            // picture of what it now is.
+            //
+            // Not quite nothing: a hundredth is below anything an eye can find
+            // and above what a renderer is entitled to skip.
+            Opacity = Invisible;
 
             _speaker = new TextBlock
             {
@@ -444,12 +460,16 @@ namespace FFXIVTataruHelper
 
         public void Start()
         {
+            // Put up at once and left up, see-through, for as long as this copy
+            // lives. What decides whether the reader sees it is its opacity.
+            Show();
             _timer.Start();
         }
 
         public void Stop()
         {
             _timer.Stop();
+            Opacity = Invisible;
             Visibility = Visibility.Hidden;
         }
 
@@ -558,7 +578,7 @@ namespace FFXIVTataruHelper
             // length of one sweep is the only way to have neither.
             if (!_presentation.IsDressedFor(drawnSurface))
             {
-                Visibility = Visibility.Hidden;
+                Opacity = Invisible;
                 _presentation.Hide();
             }
 
@@ -978,8 +998,7 @@ namespace FFXIVTataruHelper
 
             if (mustShow)
             {
-                Show();
-                Visibility = Visibility.Visible;
+                Opacity = 1;
                 MakeClickThrough();
             }
         }
@@ -992,7 +1011,7 @@ namespace FFXIVTataruHelper
         {
             Report(reason);
             _presentation.Hide();
-            Visibility = Visibility.Hidden;
+            Opacity = Invisible;
         }
 
         /// <summary>
