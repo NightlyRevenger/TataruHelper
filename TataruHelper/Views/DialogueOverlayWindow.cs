@@ -297,6 +297,21 @@ namespace FFXIVTataruHelper
 
             _timer = new DispatcherTimer(DispatcherPriority.Render) { Interval = FollowInterval };
             _timer.Tick += (_, __) => Follow();
+
+            // Built now, while nothing is on screen, rather than at the first
+            // showing.
+            //
+            // A window with no handle keeps the place and size it is given and
+            // hands them to Windows only when it is first shown, so the first
+            // line of a session went up for a frame wherever Windows had put
+            // it, at whatever size it had chosen, and jumped to the game's box
+            // afterwards - once per session, and only ever the first time.
+            //
+            // The mouse is let through here too, for the same reason: it was
+            // done just after the first showing, so that one frame took the
+            // clicks meant for the game.
+            new WindowInteropHelper(this).EnsureHandle();
+            MakeClickThrough();
         }
 
         /// <summary>
