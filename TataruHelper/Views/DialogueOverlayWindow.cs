@@ -957,6 +957,25 @@ namespace FFXIVTataruHelper
                     : null;
             }
 
+            // Shown on the sweep after the one that dressed it, never on the
+            // same one.
+            //
+            // A see-through window keeps a picture of itself, and Windows puts
+            // that picture up the moment it is shown - the one from before the
+            // dress changed. Taking it off the screen first does not help;
+            // there is nothing else to show yet. So the change is made while it
+            // is away and it comes back fifty milliseconds later, by which time
+            // there is a picture of what it now is. That is one sweep of
+            // nothing, in place of a frame of the wrong thing.
+            if (restyled)
+            {
+                // Still off the screen, and still owed a showing: asked again
+                // on the next sweep, when there is a picture of the new dress
+                // to put up.
+                _presentation.Hide();
+                return;
+            }
+
             if (mustShow)
             {
                 Show();
