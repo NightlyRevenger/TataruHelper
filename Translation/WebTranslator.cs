@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -527,7 +528,7 @@ namespace Translation
                 return TranslationResult.Literary(translationEngine.EngineName, lineByLine);
             }
 
-            var normalizedSentence = PreprocessSentence(inSentence);
+            var normalizedSentence = HidePlayerName(PreprocessSentence(inSentence));
             var fromLangCode = fromLang.LanguageCode;
             var toLangCode = toLang.LanguageCode;
 
@@ -541,7 +542,8 @@ namespace Translation
 
             if (!cachedResult.Equals(defaultCachedResult))
             {
-                return TranslationResult.Success(translationEngine.EngineName, cachedResult.Value);
+                return TranslationResult.Success(
+                    translationEngine.EngineName, ShowPlayerName(cachedResult.Value));
             }
 
             var result = await InvokeSelectedProviderAsync(translationEngine.EngineName, normalizedSentence,
@@ -569,7 +571,106 @@ namespace Translation
                 }
             }
 
-            return result;
+            // Kept in the cache as it came back, with the name still standing
+            // aside: what is cached is what the service said, and whose name
+            // goes back into it is decided when it is read out.
+            return result.IsSuccess ? result.WithText(ShowPlayerName(result.Text)) : result;
+        }
+
+        /// <summary>
+        /// The character's own name is nobody's to translate.
+        ///
+        /// A service asked to translate "D'ark One..." hands back "Д'Арк
+        /// Один..." - it has no way of knowing that those are not two English
+        /// words. The hand-made translations know: they keep the name as a hole
+        /// in the line and fill it afterwards. A service cannot be told that,
+        /// so the name is taken out before it is asked and put back after.
+        ///
+        /// Taken out as a single character from the private-use area, which is
+        /// what a service is likeliest to hand back untouched and in place -
+        /// measured on the icons the game puts in its own lines, which come
+        /// through Yandex unharmed.
+        ///
+        /// Both the name and the half of it people are called by: the game
+        /// writes "Go swiftly, D'ark." as readily as it writes the whole thing.
+        /// </summary>
+        private const char PlayerNameMark = '\uE800';
+
+        private const char PlayerForenameMark = '\uE801';
+
+        private string HidePlayerName(string sentence)
+        {
+            var name = PlayerName;
+            if (string.IsNullOrEmpty(sentence) || string.IsNullOrEmpty(name))
+            {
+                return sentence;
+            }
+
+            var hidden = ReplaceWholeWord(sentence, name, PlayerNameMark.ToString());
+
+            var forename = Forename(name);
+            if (forename.Length > 0 && forename.Length != name.Length)
+            {
+                hidden = ReplaceWholeWord(hidden, forename, PlayerForenameMark.ToString());
+            }
+
+            return hidden;
+        }
+
+        private string ShowPlayerName(string text)
+        {
+            var name = PlayerName;
+            if (string.IsNullOrEmpty(text) || string.IsNullOrEmpty(name))
+            {
+                return text;
+            }
+
+            return text
+                .Replace(PlayerNameMark.ToString(), name)
+                .Replace(PlayerForenameMark.ToString(), Forename(name));
+        }
+
+        private static string Forename(string playerName)
+        {
+            var space = playerName.IndexOf(' ');
+            return space > 0 ? playerName.Substring(0, space) : playerName;
+        }
+
+        /// <summary>
+        /// Only where the word stands on its own. A forename can be a few
+        /// letters long and live inside other words - a character called Al
+        /// would otherwise turn every "Also" in the game into a piece of
+        /// somebody's name.
+        /// </summary>
+        private static string ReplaceWholeWord(string sentence, string word, string with)
+        {
+            if (word.Length == 0)
+            {
+                return sentence;
+            }
+
+            var built = new StringBuilder(sentence.Length);
+            var at = 0;
+
+            while (at < sentence.Length)
+            {
+                var found = sentence.IndexOf(word, at, StringComparison.Ordinal);
+                if (found < 0)
+                {
+                    built.Append(sentence, at, sentence.Length - at);
+                    break;
+                }
+
+                var before = found == 0 || !char.IsLetterOrDigit(sentence[found - 1]);
+                var afterAt = found + word.Length;
+                var after = afterAt >= sentence.Length || !char.IsLetterOrDigit(sentence[afterAt]);
+
+                built.Append(sentence, at, found - at);
+                built.Append(before && after ? with : word);
+                at = afterAt;
+            }
+
+            return built.ToString();
         }
 
         /// <summary>
