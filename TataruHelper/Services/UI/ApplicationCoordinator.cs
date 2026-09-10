@@ -23,6 +23,7 @@ namespace FFXIVTataruHelper.Services.UI
         private readonly ISettingsSyncService _settingsSyncService;
         private readonly DialogueOverlayHost _dialogueOverlayHost;
         private readonly GameWorldReader _gameWorlds;
+        private readonly GameIconReader _gameIcons;
         private readonly IAppLogger _logger;
 
         public ApplicationCoordinator(
@@ -33,6 +34,7 @@ namespace FFXIVTataruHelper.Services.UI
             ISettingsSyncService settingsSyncService,
             DialogueOverlayHost dialogueOverlayHost,
             GameWorldReader gameWorlds,
+            GameIconReader gameIcons,
             IAppLogger logger)
         {
             _ffMemoryReader = ffMemoryReader;
@@ -42,6 +44,7 @@ namespace FFXIVTataruHelper.Services.UI
             _settingsSyncService = settingsSyncService;
             _dialogueOverlayHost = dialogueOverlayHost;
             _gameWorlds = gameWorlds;
+            _gameIcons = gameIcons;
             _logger = logger;
         }
 
@@ -77,6 +80,12 @@ namespace FFXIVTataruHelper.Services.UI
                 // that world written onto the end of their name.
                 _gameWorlds.Follow(_ffMemoryReader.GameExecutablePath);
                 tataruModel.ChatProcessor.KnownWorlds = _gameWorlds.Worlds;
+
+                // And the pictures come out of the same folder. The chat
+                // window draws one of them - the flower between a name and its
+                // world - and it should not have to wait for a dialogue
+                // overlay to be opened before it can.
+                _gameIcons.Follow(_ffMemoryReader.GameExecutablePath);
             };
             uiModel.PropertyChanged += (_, e) =>
             {
