@@ -901,8 +901,17 @@ namespace FFXIVTataruHelper
             // either alone. Two thirds of the box, which is as far as the
             // game's own strip runs before it fades away.
             _plate.MinWidth = rect.Width * 0.62;
+
+            // The parchment inside the frame, and not a pixel past it.
+            //
+            // Measured off the frame the game draws: the light part of it runs
+            // from 0.196 to 0.793 down the box, and the game starts its own
+            // line at 0.091 across and 0.233 down. The line used to be allowed
+            // to run to 0.94 - onto the wooden rim and past it - which is where
+            // the tail of a long reply was reported to be, out of the box and
+            // unreadable.
             _line.Margin = new Thickness(
-                rect.Width * 0.088, rect.Height * 0.225, rect.Width * 0.075, rect.Height * 0.06);
+                rect.Width * 0.091, rect.Height * 0.233, rect.Width * 0.091, rect.Height * 0.207);
             _line.FontSize = FitToTheBox(rect, Math.Max(10, rect.Height * 0.098));
         }
 

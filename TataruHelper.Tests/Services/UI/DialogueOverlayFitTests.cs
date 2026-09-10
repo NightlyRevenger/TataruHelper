@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
 
 using FFXIVTataruHelper.Services.UI;
@@ -18,11 +18,11 @@ namespace TataruHelper.Tests.Services.UI
     public class DialogueOverlayFitTests
     {
         /// <summary>
-        /// The dialogue box at an interface scale of 150%, less the margins
-        /// the game leaves round its line: 0.088 and 0.075 across, 0.225 and
-        /// 0.06 down.
+        /// The parchment inside the dialogue box at an interface scale of
+        /// 150%: the light part of the game's own frame, 0.196 to 0.793 down
+        /// the box, with the line starting 0.091 across and 0.233 down.
         /// </summary>
-        private static readonly Size Room = new Size(1020 * 0.837, 270 * 0.715);
+        private static readonly Size Room = new Size(1020 * (1 - 0.091 - 0.091), 270 * (1 - 0.233 - 0.207));
 
         private const double GameSize = 270 * 0.098;
 
@@ -44,8 +44,10 @@ namespace TataruHelper.Tests.Services.UI
         }
 
         /// <summary>
-        /// Reported on 10 September: this came out with its last sentence
-        /// hanging below the box, unreadable.
+        /// Reported on 10 September, and found in the reporter's own chat log:
+        /// Nicia on what becomes of the dead. It came out with its last
+        /// sentence hanging below the parchment, unreadable. At the game's own
+        /// size it overflows by a single line.
         /// </summary>
         [Test]
         public void TheLineThatWouldNotFit_IsBroughtDownUntilItDoes()
@@ -54,7 +56,7 @@ namespace TataruHelper.Tests.Services.UI
                 "Считается, что когда мы умираем, шок отделяет наш дух от телесной оболочки. " +
                 "Затем наши тела распадаются и поглощаются эфирной рекой, в то время как душа " +
                 "отправляется в путешествие к своему конечному пункту назначения в загробной жизни. " +
-                "И лишь немногие из нас когда-либо задумываются о том, что ждёт нас в конце этого пути.";
+                "Некоторые называют это «возвращением в Поток жизни».";
 
             var size = Fit(said);
 
