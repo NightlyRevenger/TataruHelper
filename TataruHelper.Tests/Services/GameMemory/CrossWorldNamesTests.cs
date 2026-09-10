@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 using FFXIVTataruHelper.Services.GameMemory;
 
@@ -111,6 +111,28 @@ namespace TataruHelper.Tests.Services.GameMemory
             CrossWorldNames.Hide("Y'shtola RhulPhoenix nods.", Worlds, out var hidden);
 
             Assert.That(hidden[0], Is.EqualTo("Y'shtola Rhul" + Flower + "Phoenix"));
+        }
+
+        /// <summary>
+        /// Yandex sets its own words hard against the mark. From a live client
+        /// on 2026-09-11, an emote in Novice Network came back as
+        ///
+        ///   Y'zoe ThorgrimsdottirOdin(нежно похлопывает)Ayu AkiniOdin.
+        ///
+        /// with the spaces on either side of both marks gone. The names were
+        /// kept whole, and then glued to the verb.
+        /// </summary>
+        [Test]
+        public void AServiceThatEatsTheSpacesAroundTheMark_GetsThemBack()
+        {
+            const string said = "Cova RaeLouisoix gently pats Sakuga VanhellsingRaiden.";
+
+            var asked = CrossWorldNames.Hide(said, Worlds, out var hidden);
+            var answered = asked.Replace(" gently pats ", "нежно похлопывает");
+
+            Assert.That(
+                CrossWorldNames.Show(answered, hidden),
+                Is.EqualTo("Cova Rae" + Flower + "Louisoix нежно похлопывает Sakuga Vanhellsing" + Flower + "Raiden."));
         }
 
         [Test]

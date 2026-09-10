@@ -87,16 +87,31 @@ namespace FFXIVTataruHelper.Services.GameMemory
 
             var built = new StringBuilder(line.Length);
 
-            foreach (var c in line)
+            for (var at = 0; at < line.Length; at++)
             {
+                var c = line[at];
                 var which = c - FirstMark;
-                if (which >= 0 && which < hidden.Count)
+                if (which < 0 || which >= hidden.Count)
                 {
-                    built.Append(hidden[which]);
+                    built.Append(c);
                     continue;
                 }
 
-                built.Append(c);
+                // A service is free to set its own words hard against the mark,
+                // and Yandex does: it answered the emote above with
+                // "...Odinнежно" - the world and the verb in one word. The
+                // mark stood for a name, and a name is a word of its own.
+                if (built.Length > 0 && char.IsLetterOrDigit(built[built.Length - 1]))
+                {
+                    built.Append(' ');
+                }
+
+                built.Append(hidden[which]);
+
+                if (at + 1 < line.Length && char.IsLetterOrDigit(line[at + 1]))
+                {
+                    built.Append(' ');
+                }
             }
 
             return built.ToString();
