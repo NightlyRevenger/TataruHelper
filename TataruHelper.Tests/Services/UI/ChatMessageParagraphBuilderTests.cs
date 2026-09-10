@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -7,6 +7,7 @@ using System.Windows.Media;
 
 using FFXIVTataruHelper;
 using FFXIVTataruHelper.Compatibility.HotKeys;
+using FFXIVTataruHelper.Services.GameMemory;
 using FFXIVTataruHelper.Services.HotKeys;
 using FFXIVTataruHelper.Services.Logging;
 using FFXIVTataruHelper.Services.UI;
@@ -74,7 +75,9 @@ namespace TataruHelper.Tests.Services.UI
             viewModel.SpacingCount = 0;
             viewModel.MessagesInContainer = false;
 
-            return new ChatMessageParagraphBuilder(viewModel);
+            // No game to read pictures out of here, which is the ordinary case
+            // for a line that carries none.
+            return new ChatMessageParagraphBuilder(viewModel, null);
         }
 
         [Test]
@@ -180,6 +183,26 @@ namespace TataruHelper.Tests.Services.UI
             public void WriteChatLog(string input)
             {
             }
+        }
+
+        /// <summary>
+        /// The flower between a player's name and the world they are from is a
+        /// piece of the name, and it reaches the chat window as a character out
+        /// of the private-use area.
+        ///
+        /// With no game to read the picture out of, the character comes out and
+        /// the words close over it - a hole reads better than an empty box, and
+        /// it is where this application was before it drew any pictures at all.
+        /// </summary>
+        [Test]
+        public void WithNoPictureToBeHad_TheMarkComesOutAndTheWordsRemain()
+        {
+            var said = "Cova Rae" + GameIcons.Mark(CrossWorldNames.CrossWorldIcon) + "Louisoix машет рукой.";
+
+            var runs = RunsOf(CreateBuilder(out _).BuildMessageParagraph(said, White, string.Empty, default));
+
+            Assert.That(string.Concat(runs.Select(r => r.Text)),
+                Is.EqualTo("Cova RaeLouisoix машет рукой."));
         }
     }
 }

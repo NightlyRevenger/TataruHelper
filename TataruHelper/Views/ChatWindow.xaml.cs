@@ -112,7 +112,7 @@ namespace FFXIVTataruHelper
                 _AutoHidden = false;
                 _WindowResizer = new WindowResizer(this, _Logger);
                 _clickThroughBehavior = new WindowClickThroughBehavior(this, _Logger);
-                _paragraphBuilder = new ChatMessageParagraphBuilder(_ChatWindowViewModel);
+                _paragraphBuilder = new ChatMessageParagraphBuilder(_ChatWindowViewModel, _gameIcons);
             }
             catch (Exception e)
             {

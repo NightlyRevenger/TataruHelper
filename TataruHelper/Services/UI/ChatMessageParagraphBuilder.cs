@@ -4,9 +4,8 @@ using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
 
-using FFXIVTataruHelper.ViewModel;
-
 using FFXIVTataruHelper.Services.GameMemory;
+using FFXIVTataruHelper.ViewModel;
 
 namespace FFXIVTataruHelper.Services.UI
 {
@@ -14,20 +13,23 @@ namespace FFXIVTataruHelper.Services.UI
     {
         private readonly ChatWindowViewModel _viewModel;
 
-        public ChatMessageParagraphBuilder(ChatWindowViewModel viewModel)
+        /// <summary>
+        /// The little pictures the game puts in a line, read out of the
+        /// player's own game. Only one of them reaches the chat window: the
+        /// flower the game draws between a player's name and the world they
+        /// are from, which is a piece of the name and not decoration.
+        /// </summary>
+        private readonly GameIconReader _icons;
+
+        public ChatMessageParagraphBuilder(ChatWindowViewModel viewModel, GameIconReader icons)
         {
             _viewModel = viewModel;
+            _icons = icons;
         }
 
         public Paragraph BuildMessageParagraph(
             string translatedMsg, Color color, string speaker, DateTime timeStamp)
         {
-            // The game's icons are carried through the application as
-            // characters out of the private-use area, and they are for the copy
-            // drawn over the game's own dialogue box, which can draw pictures.
-            // Here they would be empty boxes, so here they come out.
-            translatedMsg = GameIcons.Strip(translatedMsg);
-
             string leadingSpaces = _viewModel.SpacingCount > 0
                 ? new string(' ', _viewModel.SpacingCount)
                 : string.Empty;
@@ -125,22 +127,10 @@ namespace FFXIVTataruHelper.Services.UI
                 Margin = new Thickness(0, _viewModel.LineBreakHeight, 0, 0), TextAlignment = TextAlignment.Left
             };
 
-            if (!string.IsNullOrEmpty(leadingSpaces))
-            {
-                paragraph.Inlines.Add(CreateRun(leadingSpaces, color, FontWeights.Normal));
-            }
-
-            if (!string.IsNullOrEmpty(prefix))
-            {
-                paragraph.Inlines.Add(CreateRun(prefix, color, FontWeights.Normal));
-            }
-
-            if (!string.IsNullOrEmpty(name))
-            {
-                paragraph.Inlines.Add(CreateRun(name, color, FontWeights.Bold));
-            }
-
-            paragraph.Inlines.Add(CreateRun(text, color, FontWeights.Normal));
+            AddWords(paragraph.Inlines, leadingSpaces, words => CreateRun(words, color, FontWeights.Normal));
+            AddWords(paragraph.Inlines, prefix, words => CreateRun(words, color, FontWeights.Normal));
+            AddWords(paragraph.Inlines, name, words => CreateRun(words, color, FontWeights.Bold));
+            AddWords(paragraph.Inlines, text, words => CreateRun(words, color, FontWeights.Normal));
             return paragraph;
         }
 
@@ -155,22 +145,10 @@ namespace FFXIVTataruHelper.Services.UI
                 Foreground = new SolidColorBrush(color)
             };
 
-            if (!string.IsNullOrEmpty(leadingSpaces))
-            {
-                messageText.Inlines.Add(new Run(leadingSpaces));
-            }
-
-            if (!string.IsNullOrEmpty(prefix))
-            {
-                messageText.Inlines.Add(new Run(prefix));
-            }
-
-            if (!string.IsNullOrEmpty(name))
-            {
-                messageText.Inlines.Add(new Run(name) { FontWeight = FontWeights.Bold });
-            }
-
-            messageText.Inlines.Add(new Run(text));
+            AddWords(messageText.Inlines, leadingSpaces, words => new Run(words));
+            AddWords(messageText.Inlines, prefix, words => new Run(words));
+            AddWords(messageText.Inlines, name, words => new Run(words) { FontWeight = FontWeights.Bold });
+            AddWords(messageText.Inlines, text, words => new Run(words));
 
             var messageBorder = new Border { CornerRadius = new CornerRadius(6), Tag = color, Child = messageText };
             ApplyMessageContainerVisual(messageBorder);
@@ -182,6 +160,73 @@ namespace FFXIVTataruHelper.Services.UI
 
             paragraph.Inlines.Add(new InlineUIContainer(messageBorder));
             return paragraph;
+        }
+
+        /// <summary>
+        /// Puts a piece of a line into the paragraph, drawing the game's own
+        /// pictures where the line carries them rather than leaving a hole.
+        ///
+        /// Only the flower between a name and a world turns up here, and it is
+        /// part of a name: without it "Cova Rae" and "Louisoix" run together
+        /// into one word that is neither. A picture that cannot be had is left
+        /// out, and the line reads on as it did before any were drawn.
+        /// </summary>
+        private void AddWords(InlineCollection into, string words, Func<string, Inline> asText)
+        {
+            if (string.IsNullOrEmpty(words))
+            {
+                return;
+            }
+
+            var from = 0;
+
+            for (var at = 0; at < words.Length; at++)
+            {
+                if (!GameIcons.IsMark(words[at]))
+                {
+                    continue;
+                }
+
+                var picture = _icons?.Icon(GameIcons.IdOf(words[at]));
+                if (picture == null)
+                {
+                    continue;
+                }
+
+                if (at > from)
+                {
+                    into.Add(asText(GameIcons.Strip(words.Substring(from, at - from))));
+                }
+
+                into.Add(Draw(picture));
+                from = at + 1;
+            }
+
+            if (from < words.Length)
+            {
+                into.Add(asText(GameIcons.Strip(words.Substring(from))));
+            }
+        }
+
+        /// <summary>
+        /// One of the game's pictures set among the words, sized off the text
+        /// rather than drawn at the twenty pixels it is stored at.
+        /// </summary>
+        private InlineUIContainer Draw(ImageSource picture)
+        {
+            var height = Math.Max(8, _viewModel.ChatFontSize * 1.05);
+
+            return new InlineUIContainer(new Image
+            {
+                Source = picture,
+                Height = height,
+                Width = height * (picture.Width / Math.Max(picture.Height, 1)),
+                Stretch = Stretch.Uniform,
+                Margin = new Thickness(1, 0, 1, -height * 0.15)
+            })
+            {
+                BaselineAlignment = BaselineAlignment.Baseline
+            };
         }
 
         private Run CreateRun(string text, Color color, FontWeight fontWeight)
