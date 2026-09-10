@@ -34,8 +34,17 @@ namespace FFXIVTataruHelper
         /// </summary>
         private static readonly TimeSpan FollowInterval = TimeSpan.FromMilliseconds(50);
 
-        /// <summary>As good as gone, and still drawing itself.</summary>
-        private const double Invisible = 0.01;
+        /// <summary>
+        /// As good as gone, and still drawing itself.
+        ///
+        /// One step of alpha out of two hundred and fifty-five, which is the
+        /// least a window can be turned down to and still be composed. A
+        /// hundredth was tried first and is not gone at all: a reader watching
+        /// a bright scene saw the dark strip the speaker's name sits on,
+        /// faintly, for the whole of every conversation - and took it for a
+        /// monitor burning in.
+        /// </summary>
+        private const double Invisible = 1.0 / 255.0;
 
         private readonly IFFMemoryReaderService _memoryReader;
         private readonly Func<IntPtr> _gameWindow;
