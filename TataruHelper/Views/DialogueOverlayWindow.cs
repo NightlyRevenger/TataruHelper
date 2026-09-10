@@ -870,8 +870,6 @@ namespace FFXIVTataruHelper
         /// </summary>
         private void LayOutWindow(Rect rect)
         {
-            _line.FontSize = Math.Max(10, rect.Height * 0.098);
-
             // The name, at the size and in the place the game draws its own.
             // Measured off a live client on 9 September, from a box 680 by 180
             // with "Crystal Exarch" on it: the name starts 0.094 across and
@@ -896,6 +894,7 @@ namespace FFXIVTataruHelper
             _plate.MinWidth = rect.Width * 0.62;
             _line.Margin = new Thickness(
                 rect.Width * 0.088, rect.Height * 0.225, rect.Width * 0.075, rect.Height * 0.06);
+            _line.FontSize = FitToTheBox(rect, Math.Max(10, rect.Height * 0.098));
         }
 
         /// <summary>
@@ -911,9 +910,28 @@ namespace FFXIVTataruHelper
         /// </summary>
         private void LayOutSubtitle(Rect rect)
         {
-            _line.FontSize = Math.Max(12, rect.Height * 0.26);
             _line.Margin = new Thickness(rect.Width * 0.10, 0, rect.Width * 0.10, 0);
+            _line.FontSize = FitToTheBox(rect, Math.Max(12, rect.Height * 0.26));
         }
+
+        /// <summary>
+        /// The line at the largest size that still fits the box, worked out
+        /// against what is actually going to be drawn.
+        /// </summary>
+        private double FitToTheBox(Rect rect, double wanted)
+        {
+            var room = new Size(
+                rect.Width - _line.Margin.Left - _line.Margin.Right,
+                rect.Height - _line.Margin.Top - _line.Margin.Bottom);
+
+            return DialogueOverlayFit.LargestThatFits(
+                GameIcons.Strip(_shownWords ?? string.Empty),
+                room,
+                new Typeface(_line.FontFamily, _line.FontStyle, _line.FontWeight, _line.FontStretch),
+                VisualTreeHelper.GetDpi(this).PixelsPerDip,
+                wanted);
+        }
+
 
         /// <summary>
         /// Dresses the copy for what it is covering, and puts it on screen.
