@@ -22,6 +22,7 @@ namespace FFXIVTataruHelper.Services.UI
         private readonly ISettingsMigrationService _settingsMigrationService;
         private readonly ISettingsSyncService _settingsSyncService;
         private readonly DialogueOverlayHost _dialogueOverlayHost;
+        private readonly GameWorldReader _gameWorlds;
         private readonly IAppLogger _logger;
 
         public ApplicationCoordinator(
@@ -31,6 +32,7 @@ namespace FFXIVTataruHelper.Services.UI
             ISettingsMigrationService settingsMigrationService,
             ISettingsSyncService settingsSyncService,
             DialogueOverlayHost dialogueOverlayHost,
+            GameWorldReader gameWorlds,
             IAppLogger logger)
         {
             _ffMemoryReader = ffMemoryReader;
@@ -39,6 +41,7 @@ namespace FFXIVTataruHelper.Services.UI
             _settingsMigrationService = settingsMigrationService;
             _settingsSyncService = settingsSyncService;
             _dialogueOverlayHost = dialogueOverlayHost;
+            _gameWorlds = gameWorlds;
             _logger = logger;
         }
 
@@ -67,6 +70,13 @@ namespace FFXIVTataruHelper.Services.UI
             {
                 tataruModel.WebTranslator.PlayerName = name;
                 tataruModel.WebTranslator.PlayerIsFeminine = isFeminine;
+
+                // The same moment tells us which game is being read, and the
+                // list of its worlds is in that game's own files. Wanted so a
+                // player from another world is not handed to a service with
+                // that world written onto the end of their name.
+                _gameWorlds.Follow(_ffMemoryReader.GameExecutablePath);
+                tataruModel.ChatProcessor.KnownWorlds = _gameWorlds.Worlds;
             };
             uiModel.PropertyChanged += (_, e) =>
             {

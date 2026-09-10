@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FFXIVTataruHelper.EventArguments;
+using FFXIVTataruHelper.Services.GameMemory;
 using FFXIVTataruHelper.Services.Logging;
 using FFXIVTataruHelper.Services.Settings;
 
@@ -199,9 +200,14 @@ namespace FFXIVTataruHelper
                     $"from=[{fromLang?.LanguageCode}] to=[{toLang?.LanguageCode}]");
             }
 
+            // A player from another world has that world written straight onto
+            // the end of their name, and both halves go to a service as one
+            // word unless they are taken out of the line first.
+            var asked = CrossWorldNames.Hide(sentenceToTranslate, KnownWorlds, out var crossWorldNames);
+
             var batchKey = BuildTranslationBatchKey(chatCode, nickName, translationEngine, fromLang, toLang);
             var result = await QueueForBatchedTranslation(
-                sentenceToTranslate,
+                asked,
                 batchKey,
                 translationEngine,
                 fromLang,
@@ -225,7 +231,8 @@ namespace FFXIVTataruHelper
                 nickName = await ResolveSpeakerName(nickName, translationEngine, fromLang, toLang, cancellationToken);
             }
 
-            var line = nickName.Length > 0 ? nickName + " " + result.Text : result.Text;
+            var said = CrossWorldNames.Show(result.Text, crossWorldNames);
+            var line = nickName.Length > 0 ? nickName + " " + said : said;
 
             // The marker goes on the machine translation rather than the
             // hand-made one: in story dialogue the hand-made answer is the
@@ -314,6 +321,15 @@ namespace FFXIVTataruHelper
 
         /// <summary>Whether player-chat sender prefixes are translated into the reading language.</summary>
         public bool TranslatePlayerNicknames { get; set; }
+
+        /// <summary>
+        /// The names of the game's worlds, so a player from another one can be
+        /// recognised: their world is written straight onto the end of their
+        /// name, and a service makes one Russian word of the two. Empty until
+        /// the game has been read, which costs nothing but the old behaviour.
+        /// </summary>
+        public IReadOnlyCollection<string> KnownWorlds { get; set; } =
+            System.Array.Empty<string>();
 
         /// <summary>Prefix shown on lines an engine translated, when asked for.</summary>
         internal const string MachineTranslationMarker = "• ";
