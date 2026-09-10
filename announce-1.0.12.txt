@@ -1,0 +1,23 @@
+:1_1: Tataru Helper 1.0.12 :1_1:
+
+Player names from other worlds are no longer glued to their world.
+"Cova RaeLouisoix" now reads as "Cova Rae ✿ Louisoix" — with the game's own cross-world icon between the two, read out of your installation. Neither half is sent to a translation service any more, so "Кова Раэлуисуа" is gone.
+
+Fixes
+A long line no longer spills out of the dialogue box — it is brought down to the size that fits.
+The faint dark strip over the speaker's name is gone for good.
+
+If something isn't working, or isn't working the way you think it should — tell us and we'll fix it.
+
+-----------
+
+Ники игроков с других миров больше не слипаются с названием мира.
+"Cova RaeLouisoix" теперь читается как "Cova Rae ✿ Louisoix" — со значком, который рисует сама игра, взятым из вашей же установки. Ни имя, ни мир больше не уходят переводчику, так что "Кова Раэлуисуа" больше не будет.
+
+Исправлено
+Длинная реплика больше не вылезает за пределы плашки — шрифт подбирается под неё.
+Еле заметная тёмная полоса на месте имени говорящего убрана окончательно.
+
+Если у вас что-то не работает или работает не так, как вам кажется — пишите, будем фиксить.
+
+https://github.com/NightlyRevenger/TataruHelper/releases/latest
