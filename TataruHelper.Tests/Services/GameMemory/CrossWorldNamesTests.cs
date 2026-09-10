@@ -135,6 +135,27 @@ namespace TataruHelper.Tests.Services.GameMemory
                 Is.EqualTo("Cova Rae" + Flower + "Louisoix нежно похлопывает Sakuga Vanhellsing" + Flower + "Raiden."));
         }
 
+        /// <summary>
+        /// The speaker's own name is cut off the front of a line before any of
+        /// this and put back afterwards, so nothing about it needs hiding - and
+        /// it arrives glued all the same.
+        /// </summary>
+        [Test]
+        public void ASpeakersOwnNameGetsTheFlowerWithoutBeingHidden()
+        {
+            Assert.That(
+                CrossWorldNames.Mark("Y'zoe ThorgrimsdottirOdin:", Worlds),
+                Is.EqualTo("Y'zoe Thorgrimsdottir" + Flower + "Odin:"));
+        }
+
+        [TestCase("Naoh Gamduhla:")]
+        [TestCase("")]
+        [TestCase(null)]
+        public void ANameWithNoWorldInIt_IsLeftExactlyAsItIs(string name)
+        {
+            Assert.That(CrossWorldNames.Mark(name, Worlds), Is.EqualTo(name ?? string.Empty));
+        }
+
         [Test]
         public void WithNoWorldsKnown_NothingIsTouched()
         {

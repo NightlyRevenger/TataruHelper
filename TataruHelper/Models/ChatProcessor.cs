@@ -231,6 +231,12 @@ namespace FFXIVTataruHelper
                 nickName = await ResolveSpeakerName(nickName, translationEngine, fromLang, toLang, cancellationToken);
             }
 
+            // The speaker is cut off the front of the line and never goes to a
+            // service at all, so nothing there needs hiding - but it reaches
+            // the reader glued all the same: "Y'zoe ThorgrimsdottirOdin:". The
+            // flower is what stands between a name and its world in the game.
+            nickName = CrossWorldNames.Mark(nickName, KnownWorlds);
+
             var said = CrossWorldNames.Show(result.Text, crossWorldNames);
             var line = nickName.Length > 0 ? nickName + " " + said : said;
 

@@ -118,6 +118,21 @@ namespace FFXIVTataruHelper.Services.GameMemory
         }
 
         /// <summary>
+        /// The same line with the flower drawn into every cross-world name, and
+        /// nothing hidden from anybody.
+        ///
+        /// For the part of a line that never goes to a service at all - the
+        /// speaker's own name, which is cut off the front and put back
+        /// afterwards - and which reaches the reader glued all the same:
+        /// "Y'zoe ThorgrimsdottirOdin:".
+        /// </summary>
+        public static string Mark(string line, IReadOnlyCollection<string> worlds)
+        {
+            var without = Hide(line, worlds, out var hidden);
+            return hidden.Count == 0 ? line ?? string.Empty : Show(without, hidden);
+        }
+
+        /// <summary>
         /// Where the next world is written onto the end of a name, and how much
         /// of what comes before it is the name.
         ///
