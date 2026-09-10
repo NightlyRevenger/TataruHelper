@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
@@ -119,7 +119,18 @@ namespace FFXIVTataruHelper.Services.GameMemory
                 Open();
 
                 var drawn = Cut(iconId);
-                _drawn[iconId] = drawn;
+
+                // A miss is only worth remembering once there is a sheet to
+                // have missed on. Asked before the game is known - and the
+                // chat window does ask, the moment somebody from another world
+                // speaks - every icon comes back empty, and remembering that
+                // leaves the line without its flower for as long as the
+                // application runs.
+                if (drawn != null || (_sheet != null && _places != null))
+                {
+                    _drawn[iconId] = drawn;
+                }
+
                 return drawn;
             }
         }
