@@ -38,8 +38,24 @@ namespace FFXIVTataruHelper
                 return;
             }
 
-            if (ShouldElevateAfterVelopackInstall() && !TryRelaunchAsAdministrator(e))
+            if (StartupElevation.IsWanted(e.Args, IsRunningAsAdministrator()))
             {
+                if (!TryRelaunchAsAdministrator(e))
+                {
+                    // Either the person said no, or the machine cannot raise a
+                    // prompt at all - a disabled Application Information
+                    // service does that, and says so with a hard error rather
+                    // than anything a person could read.
+                    MessageBox.Show(
+                        "TataruHelper needs administrator rights to read the game, and Windows would not grant them."
+                        + Environment.NewLine + Environment.NewLine
+                        + "Right-click TataruHelper and choose \"Run as administrator\". If that does nothing, check that"
+                        + " the \"Application Information\" service is running: Win+R, services.msc.",
+                        "TataruHelper",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                }
+
                 Shutdown();
                 return;
             }
@@ -143,16 +159,6 @@ namespace FFXIVTataruHelper
             }
 
             return false;
-        }
-
-        private static bool ShouldElevateAfterVelopackInstall()
-        {
-            var isFirstRun = string.Equals(
-                Environment.GetEnvironmentVariable("VELOPACK_FIRSTRUN"),
-                "true",
-                StringComparison.OrdinalIgnoreCase);
-
-            return isFirstRun && OperatingSystem.IsWindows() && !IsRunningAsAdministrator();
         }
 
         private static bool ShouldSkipVelopackFirstRunLaunch()
