@@ -12,6 +12,25 @@
     <NoWarn>$(NoWarn);1591;CA1416</NoWarn>
     <ApplicationIcon>Resources\app_icon2.ico</ApplicationIcon>
     <ApplicationManifest>app.manifest</ApplicationManifest>
+    <!--
+      Not marked CET-compatible. Since .NET 9 the executable is, by default,
+      and Windows then runs it with a hardware shadow stack. A Windows 10 that
+      has not had the update fixing its CET support - and a good many players
+      keep updates off - cannot do that properly, and the runtime kills the
+      process before a line of ours has run. From a reporter on 22H2 build
+      19045.2728, with the runtime's own words captured off stderr:
+
+        Fatal error.
+        Your Windows doesn't fully support CET. Please install all available Windows updates.
+
+      With Windows Error Reporting off, all they ever saw was an empty
+      "Unknown Hard Error" box and exit code 0x80131506.
+
+      What is given up is the shadow stack's guard against return-oriented
+      exploits, in a process that reads a game's memory and talks to
+      translation services. Everything else about the build is unchanged.
+    -->
+    <CetCompat>false</CetCompat>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
     <Platforms>AnyCPU</Platforms>
