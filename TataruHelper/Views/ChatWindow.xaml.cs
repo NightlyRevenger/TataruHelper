@@ -262,7 +262,7 @@ namespace FFXIVTataruHelper
                     var failedEngineName = _ChatWindowViewModel.SelectedEngine?.Name ?? result.Engine.ToString();
                     if (_reportedFailureEngines.Add(failedEngineName))
                     {
-                        _UiDispatcher.Invoke(() => ShowFailureNotice(failedEngineName, textColor));
+                        _UiDispatcher.Invoke(() => ShowFailureNotice(failedEngineName, result.FailureReason, textColor));
                     }
 
                     return;
@@ -602,10 +602,18 @@ namespace FFXIVTataruHelper
             return string.Format(template ?? "[{0} → {1}]", failedEngineName, newEngineName);
         }
 
-        void ShowFailureNotice(string engineName, Color textColor)
+        /// <summary>
+        /// Says that an engine failed, and why when the engine said. Without
+        /// the why, every refusal read the same - "Translation failed: OpenAI"
+        /// for a model that does not exist, a key with no access to it and a
+        /// setting the model does not take alike.
+        /// </summary>
+        void ShowFailureNotice(string engineName, string reason, Color textColor)
         {
             var prefix = (string)Application.Current.Resources["TranslationEngineError"];
             var text = (prefix ?? "Translation failed:") + " " + engineName;
+            if (!string.IsNullOrWhiteSpace(reason))
+                text += " - " + reason;
 
             ShowWindow();
 

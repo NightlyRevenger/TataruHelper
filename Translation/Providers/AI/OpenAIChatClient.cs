@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -121,7 +121,7 @@ namespace Translation.Providers.AI
                             continue;
                         }
 
-                        return string.Empty;
+                        throw new ServiceRefusedException(_engine, status, DescribeRefusal(status, body));
                     }
 
                     var parsed = ParseContent(body);
@@ -141,6 +141,7 @@ namespace Translation.Providers.AI
                 }
                 catch (QuotaExceededException) { throw; }
                 catch (MissingApiKeyException) { throw; }
+                catch (ServiceRefusedException) { throw; }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
                 catch (Exception ex)
                 {
@@ -183,6 +184,51 @@ namespace Translation.Providers.AI
                 return value + "/chat/completions";
 
             return value + "/v1/chat/completions";
+        }
+
+        private const int LongestReason = 300;
+
+        /// <summary>
+        /// What to tell the player when the service said no: the status, and
+        /// the service's own explanation when it gave one.
+        /// </summary>
+        internal static string DescribeRefusal(int status, string body)
+        {
+            var reason = ReadServiceError(body);
+            return reason.Length == 0 ? "HTTP " + status : "HTTP " + status + ": " + reason;
+        }
+
+        /// <summary>
+        /// The service's own words for a refusal. OpenAI and the services
+        /// that copy it say it as {"error": {"message": ...}}; Ollama says
+        /// {"error": "..."}; anything else is shown as it came, cut short,
+        /// since an HTML error page is no explanation but its first line
+        /// may be.
+        /// </summary>
+        internal static string ReadServiceError(string body)
+        {
+            var text = (body ?? string.Empty).Trim();
+            if (text.Length == 0)
+                return string.Empty;
+
+            try
+            {
+                var json = JToken.Parse(text);
+                var error = json["error"];
+                var said = error?.Type == JTokenType.Object
+                    ? error["message"]?.ToString()
+                    : error?.ToString() ?? json["message"]?.ToString();
+
+                if (!string.IsNullOrWhiteSpace(said))
+                    text = said.Trim();
+            }
+            catch (JsonException)
+            {
+                // Not JSON; the body itself is the best there is.
+            }
+
+            text = text.Replace("\r", " ").Replace("\n", " ");
+            return text.Length <= LongestReason ? text : text.Substring(0, LongestReason) + "...";
         }
 
         internal static string ParseContent(string body)
