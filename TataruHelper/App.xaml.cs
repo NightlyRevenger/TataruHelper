@@ -107,6 +107,15 @@ namespace FFXIVTataruHelper
             }
 
             _serviceProvider = AppCompositionRoot.BuildServiceProvider();
+
+            // Said once, at the top of every log, so a report from Linux reads
+            // as one from the first line rather than after a round of questions.
+            if (WineEnvironment.IsRunning)
+            {
+                _serviceProvider.GetService<IAppLogger>()?.WriteLog(
+                    "Running under Wine " + WineEnvironment.Version + ".");
+            }
+
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
             MainWindow = mainWindow;
             mainWindow.Show();
