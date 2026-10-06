@@ -112,8 +112,9 @@ namespace FFXIVTataruHelper
             // as one from the first line rather than after a round of questions.
             if (WineEnvironment.IsRunning)
             {
-                _serviceProvider.GetService<IAppLogger>()?.WriteLog(
-                    "Running under Wine " + WineEnvironment.Version + ".");
+                _serviceProvider.GetService<IAppLogger>()?.WriteLog(WineEnvironment.Version != null
+                    ? "Running under Wine " + WineEnvironment.Version + "."
+                    : "Running under Wine, which keeps its version to itself (HideWineExports).");
             }
 
             var mainWindow = _serviceProvider.GetRequiredService<MainWindow>();
