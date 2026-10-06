@@ -83,17 +83,27 @@ namespace FFXIVTataruHelper.Services.Settings
 
         private static string Key(TranslationEngineName engine, string field) => engine + ":" + field;
 
+        /// <summary>
+        /// Every value here - a key, a model, an address, a region - is one
+        /// word with nothing around it, and whatever was around it when it
+        /// was pasted in is not part of it. A trailing space after a model
+        /// name made OpenAI answer that the model did not exist, for every
+        /// model typed, while the default one worked. Trimmed on the way in,
+        /// and on the way out for what was saved before.
+        /// </summary>
         private string Get(string key)
         {
             lock (_gate)
             {
                 string value;
-                return _entries.TryGetValue(key, out value) ? value ?? string.Empty : string.Empty;
+                return _entries.TryGetValue(key, out value) ? (value ?? string.Empty).Trim() : string.Empty;
             }
         }
 
         private void Set(string key, string value)
         {
+            value = value?.Trim();
+
             lock (_gate)
             {
                 if (string.IsNullOrEmpty(value))
