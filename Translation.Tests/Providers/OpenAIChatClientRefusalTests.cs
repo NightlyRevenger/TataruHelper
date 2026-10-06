@@ -69,6 +69,7 @@ namespace Translation.Tests.Providers
         public void JsonThatIsNotAnObject_IsShownAsItCame(string body)
         {
             Assert.That(OpenAIChatClient.ReadServiceError(body), Is.EqualTo(body));
+            Assert.That(OpenAIChatClient.RejectsTemperature(400, body), Is.False);
         }
 
         [TestCase(null)]

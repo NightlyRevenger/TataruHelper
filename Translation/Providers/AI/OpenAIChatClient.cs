@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
@@ -69,16 +70,9 @@ namespace Translation.Providers.AI
 
             var systemPrompt = FfxivTranslationPrompt.BuildSystemPrompt(inLang, outLang);
 
-            var payloadText = new JObject
-            {
-                ["model"] = model,
-                ["temperature"] = 0.2,
-                ["messages"] = new JArray
-                {
-                    new JObject { ["role"] = "system", ["content"] = systemPrompt },
-                    new JObject { ["role"] = "user", ["content"] = sentence },
-                },
-            }.ToString(Formatting.None);
+            var modelKey = _engine + "/" + model;
+            var withTemperature = !ModelsWithoutTemperature.ContainsKey(modelKey);
+            var payloadText = BuildPayload(model, systemPrompt, sentence, withTemperature);
 
             Exception lastException = null;
 
@@ -115,6 +109,20 @@ namespace Translation.Providers.AI
                     {
                         _logger?.LogInformation("{Message}",
                             "[" + _engine + "_HTTP_" + status + "_ATTEMPT_" + attempt + "] " + body);
+
+                        // Not a failed attempt: the same request again, without
+                        // the one setting the model said it does not take. Once
+                        // per model, and remembered, so the next line goes out
+                        // without it in the first place.
+                        if (withTemperature && RejectsTemperature(status, body))
+                        {
+                            ModelsWithoutTemperature[modelKey] = 0;
+                            withTemperature = false;
+                            payloadText = BuildPayload(model, systemPrompt, sentence, false);
+                            attempt--;
+                            continue;
+                        }
+
                         if (AiRetryPolicy.IsTransientStatus(status) && attempt < AiRetryPolicy.MaxAttempts)
                         {
                             await AiRetryPolicy.DelayAsync(attempt, cancellationToken).ConfigureAwait(false);
@@ -184,6 +192,64 @@ namespace Translation.Providers.AI
                 return value + "/chat/completions";
 
             return value + "/v1/chat/completions";
+        }
+
+        /// <summary>
+        /// Models that said they do not take a temperature, by engine and name.
+        ///
+        /// A low temperature keeps a translation from wandering, and every
+        /// model used to take one. OpenAI's reasoning models do not: they take
+        /// only their own default and refuse a request that names any other -
+        /// "Unsupported value: 'temperature' does not support 0.2 with this
+        /// model" - and so does each newer family a player is likely to type in.
+        /// No list of which ones would stay right for long, so the model is
+        /// asked, by being sent the setting once.
+        /// </summary>
+        private static readonly ConcurrentDictionary<string, byte> ModelsWithoutTemperature =
+            new ConcurrentDictionary<string, byte>(StringComparer.Ordinal);
+
+        internal static string BuildPayload(string model, string systemPrompt, string sentence, bool withTemperature)
+        {
+            var payload = new JObject
+            {
+                ["model"] = model,
+                ["messages"] = new JArray
+                {
+                    new JObject { ["role"] = "system", ["content"] = systemPrompt },
+                    new JObject { ["role"] = "user", ["content"] = sentence },
+                },
+            };
+
+            if (withTemperature)
+                payload["temperature"] = 0.2;
+
+            return payload.ToString(Formatting.None);
+        }
+
+        /// <summary>
+        /// Whether a refusal is the model declining the temperature - which is
+        /// a request to send again without it, not a failure. OpenAI names the
+        /// parameter it objects to; a service that copies the shape loosely may
+        /// only mention it, which is taken too.
+        /// </summary>
+        internal static bool RejectsTemperature(int status, string body)
+        {
+            if (status != 400 || string.IsNullOrWhiteSpace(body))
+                return false;
+
+            try
+            {
+                var param = JToken.Parse(body) is JObject json && json["error"] is JObject error
+                    ? error["param"]
+                    : null;
+                if (param != null && param.Type == JTokenType.String)
+                    return string.Equals(param.ToString(), "temperature", StringComparison.OrdinalIgnoreCase);
+            }
+            catch (JsonException)
+            {
+            }
+
+            return ReadServiceError(body).IndexOf("temperature", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         private const int LongestReason = 300;
