@@ -60,6 +60,17 @@ namespace Translation.Tests.Providers
             Assert.That(reason, Does.EndWith("..."));
         }
 
+        /// <summary>
+        /// JSON, but not an object - nothing to look an "error" up in. Shown
+        /// as it came rather than tripping over the lookup.
+        /// </summary>
+        [TestCase("[1,2,3]")]
+        [TestCase("\"overloaded\"")]
+        public void JsonThatIsNotAnObject_IsShownAsItCame(string body)
+        {
+            Assert.That(OpenAIChatClient.ReadServiceError(body), Is.EqualTo(body));
+        }
+
         [TestCase(null)]
         [TestCase("")]
         [TestCase("   ")]

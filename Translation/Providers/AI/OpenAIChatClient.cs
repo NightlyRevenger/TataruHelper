@@ -213,14 +213,18 @@ namespace Translation.Providers.AI
 
             try
             {
-                var json = JToken.Parse(text);
-                var error = json["error"];
-                var said = error?.Type == JTokenType.Object
-                    ? error["message"]?.ToString()
-                    : error?.ToString() ?? json["message"]?.ToString();
+                // Only an object has an "error" to look in: a body that is a
+                // bare JSON string or array is shown as it came.
+                if (JToken.Parse(text) is JObject json)
+                {
+                    var error = json["error"];
+                    var said = error?.Type == JTokenType.Object
+                        ? error["message"]?.ToString()
+                        : error?.ToString() ?? json["message"]?.ToString();
 
-                if (!string.IsNullOrWhiteSpace(said))
-                    text = said.Trim();
+                    if (!string.IsNullOrWhiteSpace(said))
+                        text = said.Trim();
+                }
             }
             catch (JsonException)
             {
