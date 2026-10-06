@@ -1,10 +1,13 @@
 ﻿using FFXIVTataruHelper.Services.Logging;
+using FFXIVTataruHelper.Utils;
 using System;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace FFXIVTataruHelper.WinUtils
 {
@@ -23,6 +26,15 @@ namespace FFXIVTataruHelper.WinUtils
                 _logger = logger;
 
                 activeWin.SourceInitialized += new EventHandler(InitializeWindowSource);
+
+                if (WineEnvironment.IsRunning)
+                {
+                    _trackTimer = new DispatcherTimer(DispatcherPriority.Render, activeWin.Dispatcher)
+                    {
+                        Interval = TimeSpan.FromMilliseconds(15)
+                    };
+                    _trackTimer.Tick += (_, _) => TrackByHand();
+                }
             }
             catch (Exception e)
             {
@@ -64,6 +76,12 @@ namespace FFXIVTataruHelper.WinUtils
 
                     activeWin.Top = point.Y - (((FrameworkElement)sender).ActualHeight / 2);
                     activeWin.WindowState = WindowState.Normal;
+                }
+
+                if (WineEnvironment.IsRunning)
+                {
+                    StartTrackingByHand(null);
+                    return;
                 }
 
                 activeWin.DragMove();
@@ -116,10 +134,151 @@ namespace FFXIVTataruHelper.WinUtils
             BottomRight = 8,
         }
 
+        // Moving and resizing by hand, for Wine.
+        //
+        // On Windows both are the system's own loops, entered with
+        // WM_SYSCOMMAND. Under Wine the chat window is kept out of the Linux
+        // desktop's window manager so it can stay above the game, and that
+        // costs it both loops: resizing wants the frame Wine reads as "managed
+        // window", and a window that is activated - which the system move loop
+        // may do - is handed to the manager for good and sinks under the game.
+        // So the mouse is followed here instead.
+        //
+        // Not by its events. Under Wine a window gets no mouse events from
+        // beyond its own edges - they go to whatever is under the cursor,
+        // which here is the game - so a window being made larger lost the
+        // cursor the moment it ran ahead of the edge, and grew by a few pixels
+        // a pull. Tried on 2026-10-06; the player called it stiff. The cursor
+        // and the button are asked for instead, a frame at a time, for as long
+        // as the button is down. Wine knows both for the whole screen, since
+        // the game's input and this window's go through the same wineserver.
+
+        private DispatcherTimer _trackTimer;
+        private ResizeDirection? _trackedEdge;
+        private Point _trackStart;
+        private HandTrackedBounds.Bounds _trackBounds;
+
+        private const double SmallestSide = 60;
+
+        private void StartTrackingByHand(ResizeDirection? edge)
+        {
+            if (_trackTimer == null)
+            {
+                return;
+            }
+
+            _trackedEdge = edge;
+            _trackStart = CursorInDips();
+            _trackBounds = new HandTrackedBounds.Bounds(activeWin.Left, activeWin.Top, activeWin.ActualWidth, activeWin.ActualHeight);
+            _trackTimer.Start();
+        }
+
+        private void StopTrackingByHand()
+        {
+            _trackTimer.Stop();
+            _trackedEdge = null;
+            resetCursor();
+        }
+
+        private void TrackByHand()
+        {
+            if ((GetAsyncKeyState(VK_LBUTTON) & 0x8000) == 0)
+            {
+                StopTrackingByHand();
+                return;
+            }
+
+            var now = CursorInDips();
+            var dx = now.X - _trackStart.X;
+            var dy = now.Y - _trackStart.Y;
+
+            var bounds = _trackedEdge == null
+                ? HandTrackedBounds.Moved(_trackBounds, dx, dy)
+                : HandTrackedBounds.Resized(_trackBounds,
+                    HorizontalSideOf(_trackedEdge.Value), VerticalSideOf(_trackedEdge.Value), dx, dy,
+                    Math.Max(activeWin.MinWidth, SmallestSide), Math.Max(activeWin.MinHeight, SmallestSide));
+
+            activeWin.Left = bounds.Left;
+            activeWin.Top = bounds.Top;
+
+            if (_trackedEdge != null)
+            {
+                activeWin.Width = bounds.Width;
+                activeWin.Height = bounds.Height;
+            }
+        }
+
+        private static int HorizontalSideOf(ResizeDirection edge)
+        {
+            switch (edge)
+            {
+                case ResizeDirection.Left:
+                case ResizeDirection.TopLeft:
+                case ResizeDirection.BottomLeft:
+                    return -1;
+                case ResizeDirection.Right:
+                case ResizeDirection.TopRight:
+                case ResizeDirection.BottomRight:
+                    return 1;
+                default:
+                    return 0;
+            }
+        }
+
+        private static int VerticalSideOf(ResizeDirection edge)
+        {
+            switch (edge)
+            {
+                case ResizeDirection.Top:
+                case ResizeDirection.TopLeft:
+                case ResizeDirection.TopRight:
+                    return -1;
+                case ResizeDirection.Bottom:
+                case ResizeDirection.BottomLeft:
+                case ResizeDirection.BottomRight:
+                    return 1;
+                default:
+                    return 0;
+            }
+        }
+
+        private const int VK_LBUTTON = 0x01;
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct CursorPoint
+        {
+            public int X;
+            public int Y;
+        }
+
+        [DllImport("user32.dll")]
+        private static extern bool GetCursorPos(out CursorPoint point);
+
+        [DllImport("user32.dll")]
+        private static extern short GetAsyncKeyState(int virtualKey);
+
+        /// <summary>
+        /// Where the cursor is on the screen, in the units Left and Top are
+        /// in - device pixels turned back into the window's own.
+        /// </summary>
+        private Point CursorInDips()
+        {
+            GetCursorPos(out var cursor);
+            var onScreen = new Point(cursor.X, cursor.Y);
+            var fromDevice = hwndSource?.CompositionTarget?.TransformFromDevice ?? Matrix.Identity;
+            return fromDevice.Transform(onScreen);
+        }
+
         private void ResizeWindow(ResizeDirection direction)
         {
             try
             {
+                if (WineEnvironment.IsRunning)
+                {
+                    StartTrackingByHand(direction);
+                    return;
+                }
+
                 Win32Interfaces.SendMessage(hwndSource.Handle, WM_SYSCOMMAND, (IntPtr)(61440 + direction), IntPtr.Zero);
             }
             catch (Exception e)
