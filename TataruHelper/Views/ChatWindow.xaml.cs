@@ -18,6 +18,7 @@ using FFXIVTataruHelper.Services.GameMemory;
 using FFXIVTataruHelper.Services.UI;
 using FFXIVTataruHelper.TataruComponentModel;
 using FFXIVTataruHelper.ViewModel;
+using FFXIVTataruHelper.Utils;
 using FFXIVTataruHelper.WinUtils;
 
 using Translation.Models;
@@ -81,6 +82,18 @@ namespace FFXIVTataruHelper
             GameIconReader gameIcons)
         {
             InitializeComponent();
+
+            // Under Wine a window that takes the focus as it appears takes it
+            // from the game, and the game is a window of the same wineserver
+            // stacked by the Linux desktop's own manager. Tried on 2026-10-06:
+            // this window came up focused and above a fullscreen game, and the
+            // player found the left button acting as if pressed by itself and
+            // could not use this window at all. It is a window to read, not to
+            // type into, so it appears without the focus.
+            if (WineEnvironment.IsRunning)
+            {
+                ShowActivated = false;
+            }
 
             try
             {
@@ -678,6 +691,16 @@ namespace FFXIVTataruHelper
                     bool isAlwaysOnTop = _ChatWindowViewModel.IsAlwaysOnTop ||
                                          _TataruModel.FFMemoryReader.IsGameWindowForeground;
                     this.Topmost = isAlwaysOnTop;
+
+                    // Not under Wine. Restacking this window and its hidden
+                    // owner by hand on every change of the game's focus is the
+                    // Windows way of keeping it above the game, a shuffle the
+                    // player never sees. Under Wine it is two windows moving
+                    // under the cursor while the game is being clicked, and on
+                    // 2026-10-06 it left the player's left button acting as if
+                    // pressed by itself.
+                    if (WineEnvironment.IsRunning)
+                        return;
 
                     var thisHandle = new WindowInteropHelper(this).Handle;
                     if (thisHandle == IntPtr.Zero)
