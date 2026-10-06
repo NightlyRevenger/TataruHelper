@@ -93,6 +93,12 @@ namespace FFXIVTataruHelper
             if (WineEnvironment.IsRunning)
             {
                 ShowActivated = false;
+                SourceInitialized += (_, _) => StayOutOfTheWindowManagersWay();
+
+                // A click on the text would focus it, and focusing a control
+                // activates its window - which is all Wine needs to hand the
+                // window to the manager for good. The text is there to be read.
+                ChatRtb.Focusable = false;
             }
 
             try
@@ -698,7 +704,9 @@ namespace FFXIVTataruHelper
                     // player never sees. Under Wine it is two windows moving
                     // under the cursor while the game is being clicked, and on
                     // 2026-10-06 it left the player's left button acting as if
-                    // pressed by itself.
+                    // pressed by itself. There the window stays above the game
+                    // by being kept out of the window manager instead - see
+                    // StayOutOfTheWindowManagersWay.
                     if (WineEnvironment.IsRunning)
                         return;
 
@@ -721,6 +729,66 @@ namespace FFXIVTataruHelper
             {
                 _Logger.WriteLog(Convert.ToString(e));
             }
+        }
+
+        private const int GWL_STYLE = -16;
+        private const int WS_THICKFRAME = 0x00040000;
+        private const int WS_SYSMENU = 0x00080000;
+        private const int WS_MINIMIZEBOX = 0x00020000;
+        private const int WS_MAXIMIZEBOX = 0x00010000;
+        private const int WM_MOUSEACTIVATE = 0x0021;
+        private const int MA_NOACTIVATE = 3;
+        private const int WS_EX_NOACTIVATE = 0x08000000;
+
+        /// <summary>
+        /// Under Wine, keeps this window out of the Linux desktop's window
+        /// manager, so it can stay above a game the manager treats as
+        /// fullscreen.
+        ///
+        /// KWin puts an active fullscreen window above every window that asks
+        /// to be kept above, and Wine reports the game as fullscreen even in
+        /// borderless mode, because it covers the screen. The Windows way of
+        /// winning that - raising this window again on every change of the
+        /// game's focus - is what left the player's left button acting as if
+        /// pressed by itself. A window Wine does not hand to the manager at
+        /// all is stacked by Wine above everything, the way it stacks a
+        /// menu, and nobody fights over it.
+        ///
+        /// Wine decides that when the window is first shown, from its style:
+        /// a frame to resize by, a system menu or a box to maximise with each
+        /// make it a managed window, and so does being activated. So those
+        /// come off here, before it is shown, and a click is not allowed to
+        /// activate it - it is a window to read.
+        /// </summary>
+        private void StayOutOfTheWindowManagersWay()
+        {
+            try
+            {
+                var hwnd = new WindowInteropHelper(this).Handle;
+                var style = Win32Interfaces.GetWindowLong(hwnd, GWL_STYLE);
+                Win32Interfaces.SetWindowLong(hwnd, GWL_STYLE,
+                    style & ~(WS_THICKFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_MAXIMIZEBOX));
+
+                var exStyle = Win32Interfaces.GetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE);
+                Win32Interfaces.SetWindowLong(hwnd, Win32Interfaces.GWL_EXSTYLE, exStyle | WS_EX_NOACTIVATE);
+
+                HwndSource.FromHwnd(hwnd)?.AddHook(KeepFromActivating);
+            }
+            catch (Exception e)
+            {
+                _Logger?.WriteLog(Convert.ToString(e));
+            }
+        }
+
+        private static IntPtr KeepFromActivating(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
+        {
+            if (msg == WM_MOUSEACTIVATE)
+            {
+                handled = true;
+                return (IntPtr)MA_NOACTIVATE;
+            }
+
+            return IntPtr.Zero;
         }
 
         private static void ApplyTopMostToHandle(IntPtr handle, bool isAlwaysOnTop)
