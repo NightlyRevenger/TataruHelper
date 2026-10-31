@@ -27,6 +27,10 @@ namespace Translation
         private ReadOnlyCollection<TranslationEngine> _translationEngines;
 
         private readonly List<KeyValuePair<TranslationRequest, string>> _translationCache;
+
+        private readonly System.Collections.Concurrent.ConcurrentDictionary<TranslationRequest, Task<TranslationResult>>
+            _translationsInFlight =
+                new System.Collections.Concurrent.ConcurrentDictionary<TranslationRequest, Task<TranslationResult>>();
         private readonly object _cacheSync = new object();
 
         private readonly KeyValuePair<TranslationRequest, string> defaultCachedResult =
@@ -546,14 +550,8 @@ namespace Translation
                     translationEngine.EngineName, ShowPlayerName(cachedResult.Value));
             }
 
-            var result = await InvokeSelectedProviderAsync(translationEngine.EngineName, normalizedSentence,
-                fromLangCode, toLangCode, cancellationToken).ConfigureAwait(false);
-
-            if (!result.IsSuccess)
-            {
-                result = await TryFallbackProvidersAsync(translationEngine, normalizedSentence, toLang,
-                    fromLangCode, toLangCode, result, cancellationToken).ConfigureAwait(false);
-            }
+            var result = await TranslateSharedAsync(translationRequest, translationEngine, toLang,
+                normalizedSentence, fromLangCode, toLangCode, cancellationToken).ConfigureAwait(false);
 
             if (result.IsSuccess && !string.IsNullOrEmpty(result.Text))
             {
@@ -575,6 +573,96 @@ namespace Translation
             // aside: what is cached is what the service said, and whose name
             // goes back into it is decided when it is read out.
             return result.IsSuccess ? result.WithText(ShowPlayerName(result.Text)) : result;
+        }
+
+        /// <summary>
+        /// Asks the selected engine, and another one if it fails - once for all
+        /// the callers who want the same line at the same moment.
+        ///
+        /// A cutscene repeats itself: the same line arrives from the chat log
+        /// and from the dialogue window, or twice in quick succession, and the
+        /// cache above only knows lines that have already finished. Each of
+        /// those went to the service separately, which is the rate a free
+        /// endpoint objects to. The work runs without the first caller's token,
+        /// since that caller giving up must not take the others' answer with
+        /// it; each caller stops waiting on its own token instead.
+        /// </summary>
+        private async Task<TranslationResult> TranslateSharedAsync(
+            TranslationRequest request,
+            TranslationEngine translationEngine,
+            TranslatorLanguage toLang,
+            string sentence,
+            string fromLangCode,
+            string toLangCode,
+            CancellationToken cancellationToken)
+        {
+            var completion = new TaskCompletionSource<TranslationResult>(
+                TaskCreationOptions.RunContinuationsAsynchronously);
+            var shared = _translationsInFlight.GetOrAdd(request, completion.Task);
+
+            if (!ReferenceEquals(shared, completion.Task))
+            {
+                return await shared.WaitAsync(cancellationToken).ConfigureAwait(false);
+            }
+
+            try
+            {
+                var result = await InvokeSelectedProviderAsync(translationEngine.EngineName, sentence,
+                    fromLangCode, toLangCode, CancellationToken.None).ConfigureAwait(false);
+
+                // An engine that cannot do the job will sometimes say so by handing
+                // the sentence back as it came. Another engine gets to try; if none
+                // does better, the sentence stands - some lines really are the same
+                // in both languages.
+                TranslationResult? echoed = null;
+                if (result.IsSuccess && ComesBackUnchanged(sentence, result.Text, fromLangCode, toLangCode))
+                {
+                    echoed = result;
+                    result = TranslationResult.Failure(translationEngine.EngineName,
+                        TranslationFailureKind.EmptyResponse, "Provider returned the sentence unchanged.");
+                }
+
+                if (!result.IsSuccess)
+                {
+                    var stoodIn = await TryFallbackProvidersAsync(translationEngine, sentence, toLang,
+                        fromLangCode, toLangCode, result, CancellationToken.None).ConfigureAwait(false);
+                    result = stoodIn.IsSuccess ? stoodIn : (echoed ?? stoodIn);
+                }
+
+                completion.SetResult(result);
+            }
+            catch (Exception ex)
+            {
+                completion.SetException(ex);
+            }
+            finally
+            {
+                _translationsInFlight.TryRemove(
+                    new KeyValuePair<TranslationRequest, Task<TranslationResult>>(request, completion.Task));
+            }
+
+            return await completion.Task.WaitAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Long enough to be a sentence and made of words: "...", a number or a
+        /// name on its own is the same in any language and says nothing about
+        /// whether the engine did its job.
+        /// </summary>
+        internal static bool ComesBackUnchanged(string sentence, string translated, string fromLangCode,
+            string toLangCode)
+        {
+            if (string.IsNullOrWhiteSpace(sentence) || string.IsNullOrWhiteSpace(translated))
+                return false;
+
+            if (string.Equals(fromLangCode, toLangCode, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            var trimmed = sentence.Trim();
+            if (trimmed.Length < 8 || !trimmed.Any(char.IsLetter))
+                return false;
+
+            return string.Equals(trimmed, translated.Trim(), StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
