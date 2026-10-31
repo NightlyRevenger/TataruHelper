@@ -96,12 +96,26 @@ namespace Translation.Providers.LibreTranslate
                 {
                     _logger?.LogInformation("{Message}",
                         "[LIBRETRANSLATE_HTTP_" + (int)response.StatusCode + "] " + body);
+
+                    // The public instance answers a request without a key with a 400
+                    // that says where to get one; the line used to come back empty and
+                    // was asked for a second time, with the same result.
+                    var reason = ParseError(body);
+                    if (reason != null && (response.StatusCode == HttpStatusCode.BadRequest ||
+                                           response.StatusCode == HttpStatusCode.Unauthorized ||
+                                           response.StatusCode == HttpStatusCode.Forbidden))
+                    {
+                        throw new ServiceRefusedException(EngineName, (int)response.StatusCode,
+                            EngineName + " refused the request: " + reason);
+                    }
+
                     return string.Empty;
                 }
 
                 return ParseContent(body);
             }
             catch (QuotaExceededException) { throw; }
+            catch (ServiceRefusedException) { throw; }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
             catch (Exception e)
             {
@@ -125,6 +139,23 @@ namespace Translation.Providers.LibreTranslate
             return value.EndsWith("/translate", StringComparison.OrdinalIgnoreCase)
                 ? value
                 : value + "/translate";
+        }
+
+        /// <summary>The sentence a LibreTranslate server gives for a refusal, or null if it gave none.</summary>
+        internal static string ParseError(string body)
+        {
+            if (string.IsNullOrWhiteSpace(body))
+                return null;
+
+            try
+            {
+                var text = SafeJson.DeserializeExternal<JObject>(body)?["error"]?.ToString();
+                return string.IsNullOrWhiteSpace(text) ? null : text.Trim();
+            }
+            catch (JsonException)
+            {
+                return null;
+            }
         }
 
         /// <summary>

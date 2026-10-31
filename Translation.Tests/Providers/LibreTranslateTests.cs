@@ -54,6 +54,22 @@ namespace Translation.Tests.Providers
         }
 
         [Test]
+        public void TheReasonGiven_IsRead()
+        {
+            Assert.That(
+                LibreTranslateTranslator.ParseError("""{"error":"Visit https://portal.libretranslate.com to get an API key"}"""),
+                Is.EqualTo("Visit https://portal.libretranslate.com to get an API key"));
+        }
+
+        [Test]
+        public void NoReasonGiven_IsNull()
+        {
+            Assert.That(LibreTranslateTranslator.ParseError(null), Is.Null);
+            Assert.That(LibreTranslateTranslator.ParseError("<html>not json</html>"), Is.Null);
+            Assert.That(LibreTranslateTranslator.ParseError("""{"translatedText":"x"}"""), Is.Null);
+        }
+
+        [Test]
         public void AnythingThatIsNotATranslation_IsEmpty()
         {
             Assert.That(LibreTranslateTranslator.ParseContent("""{"error":"Invalid API key"}"""), Is.Empty);
