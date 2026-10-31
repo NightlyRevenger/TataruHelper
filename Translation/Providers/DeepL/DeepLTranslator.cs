@@ -85,6 +85,10 @@ namespace Translation.Providers.DeepL
             {
                 throw;
             }
+            catch (ServiceRefusedException)
+            {
+                throw;
+            }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
                 throw;
@@ -134,6 +138,19 @@ namespace Translation.Providers.DeepL
                         throw new QuotaExceededException(TranslationEngineName.DeepL,
                             "DeepL is receiving requests faster than it allows. It clears on its own; " +
                             "translation continues on another engine in the meantime.");
+                    }
+
+                    if (response.StatusCode == HttpStatusCode.UnavailableForLegalReasons)
+                    {
+                        // A region block does not clear by waiting, but the player may
+                        // change the route, so the pause is the same short one.
+                        _cooldown.Record(DateTime.UtcNow);
+                        _logger?.LogInformation("{Message}",
+                            "[DEEPL_HTTP_451] " + DescribeRefusal(responseBody));
+
+                        throw new ServiceRefusedException(TranslationEngineName.DeepL, 451,
+                            "DeepL does not serve this network (HTTP 451, unavailable in your region). " +
+                            "Use a VPN, or another engine.");
                     }
 
                     if (!response.IsSuccessStatusCode)
