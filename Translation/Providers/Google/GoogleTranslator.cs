@@ -142,6 +142,27 @@ namespace Translation.Providers.Google
 
         private const string WidgetUrl = "https://translate-pa.googleapis.com/v1/translateHtml";
 
+        // Lines that arrive within this window travel in one request. Chat
+        // often delivers several at once, and each separate request is another
+        // chance for Google to decide the address is a bot.
+        private static readonly TimeSpan BatchWindow = TimeSpan.FromMilliseconds(50);
+        private const int MaxBatchLines = 20;
+        private const int MaxBatchChars = 4000;
+
+        private sealed class PendingLine
+        {
+            public PendingLine(string text) => Text = text;
+
+            public string Text { get; }
+
+            public TaskCompletionSource<string> Result { get; } =
+                new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+        }
+
+        private readonly object _batchSync = new object();
+        private readonly System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<PendingLine>>
+            _pending = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<PendingLine>>();
+
         /// <summary>
         /// The service Chrome's page translation and Google's website widget
         /// use, which runs the current model; the older routes keep answering
@@ -151,13 +172,140 @@ namespace Translation.Providers.Google
         private async Task<string> TryTranslateUsingWidgetEndpointAsync(string sentence, string inLang,
             string outLang, CancellationToken cancellationToken)
         {
-            var body = new JArray(
-                new JArray(new JArray(EscapeForHtml(sentence)), inLang, outLang),
-                "te_lib").ToString(Newtonsoft.Json.Formatting.None);
+            var line = new PendingLine(sentence);
+            var key = inLang + "\n" + outLang;
+            System.Collections.Generic.List<PendingLine> full = null;
+            System.Collections.Generic.List<PendingLine> opened = null;
+
+            lock (_batchSync)
+            {
+                if (!_pending.TryGetValue(key, out var list))
+                {
+                    list = new System.Collections.Generic.List<PendingLine>();
+                    _pending[key] = list;
+                    opened = list;
+                }
+
+                list.Add(line);
+
+                var chars = 0;
+                foreach (var queued in list)
+                {
+                    chars += queued.Text.Length;
+                }
+
+                if (list.Count >= MaxBatchLines || chars >= MaxBatchChars)
+                {
+                    _pending.Remove(key);
+                    full = list;
+                }
+            }
+
+            if (full != null)
+            {
+                _ = FlushWidgetBatchAsync(full, inLang, outLang);
+            }
+            else if (opened != null)
+            {
+                _ = FlushAfterWindowAsync(key, opened, inLang, outLang);
+            }
+
+            // The batch is not the caller's to cancel: the other lines in it
+            // still want their answer.
+            return await line.Result.Task.WaitAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        private async Task FlushAfterWindowAsync(string key,
+            System.Collections.Generic.List<PendingLine> opened, string inLang, string outLang)
+        {
+            await Task.Delay(BatchWindow).ConfigureAwait(false);
+
+            lock (_batchSync)
+            {
+                if (!_pending.TryGetValue(key, out var current) || !ReferenceEquals(current, opened))
+                {
+                    return;
+                }
+
+                _pending.Remove(key);
+            }
+
+            await FlushWidgetBatchAsync(opened, inLang, outLang).ConfigureAwait(false);
+        }
+
+        private async Task FlushWidgetBatchAsync(System.Collections.Generic.List<PendingLine> lines,
+            string inLang, string outLang)
+        {
+            try
+            {
+                var texts = new string[lines.Count];
+                for (var i = 0; i < texts.Length; i++)
+                {
+                    texts[i] = lines[i].Text;
+                }
+
+                var results = await SendWidgetBatchAsync(texts, inLang, outLang).ConfigureAwait(false);
+                if (results != null)
+                {
+                    for (var i = 0; i < lines.Count; i++)
+                    {
+                        lines[i].Result.TrySetResult(results[i]);
+                    }
+
+                    return;
+                }
+
+                // The answer did not line up with the question. One by one is
+                // slower, but each line gets what it asked for.
+                _logger?.LogInformation("[GOOGLE_WIDGET_BATCH_SPLIT] {Count} lines", lines.Count);
+                foreach (var line in lines)
+                {
+                    try
+                    {
+                        var single = await SendWidgetBatchAsync(new[] { line.Text }, inLang, outLang)
+                            .ConfigureAwait(false);
+                        line.Result.TrySetResult(single[0]);
+                    }
+                    catch (Exception e)
+                    {
+                        line.Result.TrySetException(e);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                foreach (var line in lines)
+                {
+                    line.Result.TrySetException(e);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns one translation per line, empty where nothing came back, or
+        /// null when several lines were sent and the answer cannot be matched
+        /// to them.
+        /// </summary>
+        private async Task<string[]> SendWidgetBatchAsync(string[] sentences, string inLang, string outLang)
+        {
+            var escaped = new JArray();
+            foreach (var sentence in sentences)
+            {
+                escaped.Add(EscapeForHtml(sentence));
+            }
+
+            var body = new JArray(new JArray(escaped, inLang, outLang), "te_lib")
+                .ToString(Newtonsoft.Json.Formatting.None);
+
+            var empty = new string[sentences.Length];
+            for (var i = 0; i < empty.Length; i++)
+            {
+                empty[i] = string.Empty;
+            }
 
             for (var attempt = 0; attempt < 2; attempt++)
             {
-                var key = await _widgetKey.GetAsync(attempt > 0, cancellationToken).ConfigureAwait(false);
+                var key = await _widgetKey.GetAsync(attempt > 0, CancellationToken.None).ConfigureAwait(false);
 
                 using (var request = new HttpRequestMessage(HttpMethod.Post, WidgetUrl))
                 {
@@ -165,7 +313,7 @@ namespace Translation.Providers.Google
                     request.Headers.Add("X-Goog-Api-Key", key);
                     request.Content = new StringContent(body, Encoding.UTF8, "application/json+protobuf");
 
-                    using (var response = await ApiHttpClient.SendAsync(request, cancellationToken)
+                    using (var response = await ApiHttpClient.SendAsync(request, CancellationToken.None)
                                .ConfigureAwait(false))
                     {
                         if (response.StatusCode == (HttpStatusCode)429)
@@ -173,12 +321,14 @@ namespace Translation.Providers.Google
                             throw _rateLimit.Refused();
                         }
 
-                        var text = await response.Content.ReadAsStringAsync(cancellationToken)
+                        var text = await response.Content.ReadAsStringAsync(CancellationToken.None)
                             .ConfigureAwait(false);
 
                         if (response.IsSuccessStatusCode)
                         {
-                            return ParseWidgetTranslation(text);
+                            return sentences.Length == 1
+                                ? new[] { ParseWidgetTranslation(text) }
+                                : ParseWidgetBatch(text, sentences.Length);
                         }
 
                         _logger?.LogInformation("{Message}",
@@ -189,13 +339,48 @@ namespace Translation.Providers.Google
                                           response.StatusCode == HttpStatusCode.Forbidden;
                         if (!keyRejected)
                         {
-                            return string.Empty;
+                            return empty;
                         }
                     }
                 }
             }
 
-            return string.Empty;
+            return empty;
+        }
+
+        /// <summary>
+        /// Parses [["a","b","c"]] (a language list may follow when the source
+        /// was auto). Null when the count differs from what was sent.
+        /// </summary>
+        internal static string[] ParseWidgetBatch(string body, int expected)
+        {
+            if (string.IsNullOrWhiteSpace(body))
+            {
+                return null;
+            }
+
+            try
+            {
+                var translated = (JToken.Parse(body) as JArray)?[0] as JArray;
+                if (translated == null || translated.Count != expected)
+                {
+                    return null;
+                }
+
+                var result = new string[expected];
+                for (var i = 0; i < expected; i++)
+                {
+                    result[i] = translated[i].Type == JTokenType.String
+                        ? WebUtility.HtmlDecode((string)translated[i]).Trim()
+                        : string.Empty;
+                }
+
+                return result;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         private static string EscapeForHtml(string text)
