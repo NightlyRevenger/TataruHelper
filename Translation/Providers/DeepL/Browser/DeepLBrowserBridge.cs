@@ -59,9 +59,6 @@ namespace Translation.Providers.DeepL.Browser
 
         public static DeepLBrowserBridge Shared { get; } = new DeepLBrowserBridge();
 
-        /// <summary>Polls the page more often and does not wait after clearing it; the text may be caught half written.</summary>
-        public bool FastMode { get; set; }
-
         public DeepLBrowserState State { get; private set; } = DeepLBrowserState.Off;
 
         public string LastError { get; private set; }
@@ -250,7 +247,7 @@ namespace Translation.Providers.DeepL.Browser
 
             while (DateTime.UtcNow < deadline)
             {
-                await Task.Delay(FastMode ? 70 : 200, cancellationToken).ConfigureAwait(false);
+                await Task.Delay(200, cancellationToken).ConfigureAwait(false);
                 var current = (string)await page.EvaluateAsync(
                     $"(document.querySelector('{TargetInput}')?.innerText||'').trim()", cancellationToken)
                     .ConfigureAwait(false);
@@ -265,7 +262,7 @@ namespace Translation.Providers.DeepL.Browser
                 // The text grows while DeepL writes it, so it is taken once it stopped changing.
                 stable = current == last ? stable + 1 : 1;
                 last = current;
-                if (stable >= (FastMode ? 3 : 2))
+                if (stable >= 2)
                 {
                     return current;
                 }

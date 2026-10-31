@@ -42,9 +42,6 @@ namespace Translation.Providers.DeepL
         /// <summary>The value of the DeepL "model" setting that switches the browser route on.</summary>
         public const string BrowserModel = "browser";
 
-        /// <summary>The value of the DeepL "region" setting that switches the quick browser mode on.</summary>
-        public const string FastBrowserFlag = "fast";
-
         private const string ConnectHint = " Press \"Connect browser\" in the DeepL settings.";
 
         private readonly ITranslationCredentialStore _credentials;
@@ -82,7 +79,6 @@ namespace Translation.Providers.DeepL
             {
                 try
                 {
-                    DeepLBrowserBridge.Shared.FastMode = _credentials.GetRegion(TranslationEngineName.DeepL) == FastBrowserFlag;
                     return await DeepLBrowserBridge.Shared.TranslateAsync(sentence, source, target, cancellationToken)
                         .ConfigureAwait(false);
                 }

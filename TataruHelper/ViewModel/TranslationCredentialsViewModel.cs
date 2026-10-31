@@ -220,12 +220,6 @@ namespace FFXIVTataruHelper.ViewModel
             }
         }
 
-        public bool IsDeepLFastBrowser
-        {
-            get => _store.GetRegion(TranslationEngineName.DeepL) == "fast";
-            set => SetRegion(TranslationEngineName.DeepL, value ? "fast" : string.Empty, nameof(IsDeepLFastBrowser));
-        }
-
         public string DeepLXEndpoint
         {
             get => _store.GetEndpoint(TranslationEngineName.DeepL);

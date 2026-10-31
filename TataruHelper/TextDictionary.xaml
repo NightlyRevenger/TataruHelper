@@ -294,8 +294,6 @@
     <system:String x:Key="DeepLXTesting">Checking…</system:String>
     <system:String x:Key="DeepLXWorks">DeepLX answered ✓</system:String>
     <system:String x:Key="DeepLXBroken">DeepLX did not answer with a translation. Check the address.</system:String>
-    <system:String x:Key="DeepLFastLabel">Faster translation</system:String>
-    <system:String x:Key="DeepLFastHint">Reads the result sooner. Experimental: a line may sometimes come out cut short. Turn it off if that happens.</system:String>
     <system:String x:Key="LibreTranslateAddressLabel">Instance address (optional, e.g. http://localhost:5000)</system:String>
     <system:String x:Key="LibreTranslateKeyLabel">Instance key (only if your instance asks for one)</system:String>
     <system:String x:Key="ServerAddressLabel">Server address (optional, e.g. http://localhost:11434)</system:String>
