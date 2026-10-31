@@ -10,6 +10,7 @@ TataruHelper is a Windows program, and on Linux it runs under Wine, beside the g
 * Translation into the chat window, including the hand-made Russian translations.
 * The chat window stays above the game, and you can move it and resize it by its edges.
 * Settings, translation engines and API keys.
+* DeepL through your Linux browser: press **Connect browser** in the DeepL settings (Chromium, Chrome, Brave, Edge or Vivaldi from `/usr/bin`).
 
 ## Not yet
 
