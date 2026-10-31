@@ -209,9 +209,19 @@ namespace Translation.Providers.DeepL.Browser
                     "const s=h.querySelector('[contenteditable]')||h;s.focus();" +
                     "document.execCommand('selectAll');document.execCommand('delete');return true;})()",
                     cancellationToken).ConfigureAwait(false);
-                if (!FastMode)
+                // The old translation stays on the page until DeepL reacts to the empty field;
+                // reading before that would hand back the previous line.
+                for (var i = 0; i < 15; i++)
                 {
-                    await Task.Delay(80, cancellationToken).ConfigureAwait(false);
+                    var left = (string)await page.EvaluateAsync(
+                        $"(document.querySelector('{TargetInput}')?.innerText||'').trim()", cancellationToken)
+                        .ConfigureAwait(false);
+                    if (string.IsNullOrEmpty(left))
+                    {
+                        break;
+                    }
+
+                    await Task.Delay(60, cancellationToken).ConfigureAwait(false);
                 }
 
                 await page.SendAsync("Input.insertText", new JObject { ["text"] = text },
@@ -255,7 +265,7 @@ namespace Translation.Providers.DeepL.Browser
                 // The text grows while DeepL writes it, so it is taken once it stopped changing.
                 stable = current == last ? stable + 1 : 1;
                 last = current;
-                if (stable >= 2)
+                if (stable >= (FastMode ? 3 : 2))
                 {
                     return current;
                 }
