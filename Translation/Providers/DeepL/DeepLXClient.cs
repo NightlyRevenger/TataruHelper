@@ -14,7 +14,7 @@ namespace Translation.Providers.DeepL
     /// A DeepLX server: someone's own relay that speaks DeepL's web protocol and
     /// answers a plain JSON request. The address is the player's to give.
     /// </summary>
-    internal static class DeepLXClient
+    public static class DeepLXClient
     {
         internal static string BuildRequestBody(string text, string source, string target)
         {
