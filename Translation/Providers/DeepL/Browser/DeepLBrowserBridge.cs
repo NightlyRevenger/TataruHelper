@@ -59,6 +59,9 @@ namespace Translation.Providers.DeepL.Browser
 
         public static DeepLBrowserBridge Shared { get; } = new DeepLBrowserBridge();
 
+        /// <summary>Polls the page more often and does not wait after clearing it; the text may be caught half written.</summary>
+        public bool FastMode { get; set; }
+
         public DeepLBrowserState State { get; private set; } = DeepLBrowserState.Off;
 
         public string LastError { get; private set; }
@@ -206,7 +209,10 @@ namespace Translation.Providers.DeepL.Browser
                     "const s=h.querySelector('[contenteditable]')||h;s.focus();" +
                     "document.execCommand('selectAll');document.execCommand('delete');return true;})()",
                     cancellationToken).ConfigureAwait(false);
-                await Task.Delay(80, cancellationToken).ConfigureAwait(false);
+                if (!FastMode)
+                {
+                    await Task.Delay(80, cancellationToken).ConfigureAwait(false);
+                }
 
                 await page.SendAsync("Input.insertText", new JObject { ["text"] = text },
                     TimeSpan.FromSeconds(5), cancellationToken).ConfigureAwait(false);
@@ -234,7 +240,7 @@ namespace Translation.Providers.DeepL.Browser
 
             while (DateTime.UtcNow < deadline)
             {
-                await Task.Delay(200, cancellationToken).ConfigureAwait(false);
+                await Task.Delay(FastMode ? 70 : 200, cancellationToken).ConfigureAwait(false);
                 var current = (string)await page.EvaluateAsync(
                     $"(document.querySelector('{TargetInput}')?.innerText||'').trim()", cancellationToken)
                     .ConfigureAwait(false);

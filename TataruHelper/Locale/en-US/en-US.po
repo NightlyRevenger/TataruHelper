@@ -1031,3 +1031,9 @@ msgstr "DeepLX answered ✓"
 
 msgid "DeepLX did not answer with a translation. Check the address."
 msgstr "DeepLX did not answer with a translation. Check the address."
+
+msgid "Faster translation"
+msgstr "Faster translation"
+
+msgid "Reads the result sooner. Experimental: a line may sometimes come out cut short. Turn it off if that happens."
+msgstr "Reads the result sooner. Experimental: a line may sometimes come out cut short. Turn it off if that happens."

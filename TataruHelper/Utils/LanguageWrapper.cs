@@ -508,6 +508,8 @@ namespace FFXIVTataruHelper
             _SettingsWindow.Resources["DeepLXTesting"] = catalog.GetString("Checking…");
             _SettingsWindow.Resources["DeepLXWorks"] = catalog.GetString("DeepLX answered ✓");
             _SettingsWindow.Resources["DeepLXBroken"] = catalog.GetString("DeepLX did not answer with a translation. Check the address.");
+            _SettingsWindow.Resources["DeepLFastLabel"] = catalog.GetString("Faster translation");
+            _SettingsWindow.Resources["DeepLFastHint"] = catalog.GetString("Reads the result sooner. Experimental: a line may sometimes come out cut short. Turn it off if that happens.");
             _SettingsWindow.Resources["LibreTranslateAddressLabel"] =
                 catalog.GetString("Instance address (optional, e.g. http://localhost:5000)");
             _SettingsWindow.Resources["LibreTranslateKeyLabel"] =
