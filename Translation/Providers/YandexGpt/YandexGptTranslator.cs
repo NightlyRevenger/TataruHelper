@@ -104,6 +104,10 @@ internal sealed class YandexGptTranslator : ITranslationProvider
                         continue;
                     }
 
+                    if (status >= 400 && status < 500 && status != 408)
+                        throw new ServiceRefusedException(TranslationEngineName.YandexGPT, status,
+                            AI.OpenAIChatClient.DescribeRefusal(status, body));
+
                     return string.Empty;
                 }
 
@@ -123,6 +127,7 @@ internal sealed class YandexGptTranslator : ITranslationProvider
             }
             catch (QuotaExceededException) { throw; }
             catch (MissingApiKeyException) { throw; }
+            catch (ServiceRefusedException) { throw; }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
             catch (Exception ex)
             {

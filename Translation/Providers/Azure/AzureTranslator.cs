@@ -79,6 +79,14 @@ namespace Translation.Providers.Azure
                         {
                             _logger?.LogInformation("{Message}",
                                 "[AZURE_HTTP_" + (int)response.StatusCode + "] " + responseBody);
+
+                            // A client error is the service saying no to this key or request;
+                            // silence would only hide why nothing is translated.
+                            var status = (int)response.StatusCode;
+                            if (status >= 400 && status < 500 && status != 408)
+                                throw new ServiceRefusedException(TranslationEngineName.AzureTranslator, status,
+                                    AI.OpenAIChatClient.DescribeRefusal(status, responseBody));
+
                             return string.Empty;
                         }
 
@@ -90,6 +98,10 @@ namespace Translation.Providers.Azure
                     throw;
                 }
                 catch (MissingApiKeyException)
+                {
+                    throw;
+                }
+                catch (ServiceRefusedException)
                 {
                     throw;
                 }

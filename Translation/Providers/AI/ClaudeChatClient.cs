@@ -124,7 +124,8 @@ namespace Translation.Providers.AI
                             continue;
                         }
 
-                        return string.Empty;
+                        throw new ServiceRefusedException(_engine, status,
+                            OpenAIChatClient.DescribeRefusal(status, body));
                     }
 
                     var parsed = ParseContent(body);
@@ -152,6 +153,7 @@ namespace Translation.Providers.AI
                 }
                 catch (QuotaExceededException) { throw; }
                 catch (MissingApiKeyException) { throw; }
+                catch (ServiceRefusedException) { throw; }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
                 catch (Exception ex)
                 {

@@ -84,6 +84,11 @@ namespace Translation.Providers.YandexCloud
                 {
                     _logger?.LogInformation("{Message}",
                         "[YANDEX_HTTP_" + (int)response.StatusCode + "] " + responseBody);
+                    // A client error is the service saying no to this key or request;
+                    // retrying or silence would only hide why nothing is translated.
+                    if ((int)response.StatusCode >= 400 && (int)response.StatusCode < 500 && (int)response.StatusCode != 408)
+                        throw new ServiceRefusedException(TranslationEngineName.Yandex, (int)response.StatusCode,
+                            AI.OpenAIChatClient.DescribeRefusal((int)response.StatusCode, responseBody));
                     return string.Empty;
                 }
 
@@ -91,6 +96,7 @@ namespace Translation.Providers.YandexCloud
             }
             catch (QuotaExceededException) { throw; }
             catch (MissingApiKeyException) { throw; }
+            catch (ServiceRefusedException) { throw; }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) { throw; }
             catch (Exception ex)
             {
