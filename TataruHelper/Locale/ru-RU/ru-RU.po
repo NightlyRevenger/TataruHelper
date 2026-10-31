@@ -938,3 +938,45 @@ msgstr "Собрать не удалось — причина в логе."
 
 msgid "Not available in this build."
 msgstr "В этой сборке недоступно."
+
+msgid "DeepL opens in a small window of your own browser (Chrome, Edge or Brave); your normal browser and its data are not touched."
+msgstr "DeepL открывается в небольшом окне вашего браузера (Chrome, Edge или Brave); обычный браузер и его данные не затрагиваются."
+
+msgid "Connect browser"
+msgstr "Подключить браузер"
+
+msgid "Disconnect browser"
+msgstr "Отключить браузер"
+
+msgid "Not connected"
+msgstr "Отключено"
+
+msgid "Connecting…"
+msgstr "Подключаюсь…"
+
+msgid "Tick the check box in the DeepL window once; it will not ask again."
+msgstr "Один раз поставьте галочку проверки в окне DeepL — больше она не появится."
+
+msgid "Connected ✓"
+msgstr "Подключено ✓"
+
+msgid "Browser not found. Install Chrome or Edge and press the button again."
+msgstr "Браузер не найден. Установите Chrome или Edge и нажмите кнопку ещё раз."
+
+msgid "Could not connect. Press the button twice to try again."
+msgstr "Подключиться не удалось. Нажмите кнопку дважды, чтобы повторить."
+
+msgid "DeepLX server address (optional, e.g. http://localhost:1188/translate)"
+msgstr "Адрес сервера DeepLX (необязательно, например http://localhost:1188/translate)"
+
+msgid "Test"
+msgstr "Проверить"
+
+msgid "Checking…"
+msgstr "Проверяю…"
+
+msgid "DeepLX answered ✓"
+msgstr "DeepLX ответил ✓"
+
+msgid "DeepLX did not answer with a translation. Check the address."
+msgstr "DeepLX не вернул перевод. Проверьте адрес."

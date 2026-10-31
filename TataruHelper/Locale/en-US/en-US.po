@@ -989,3 +989,45 @@ msgstr "Could not be collected. The log will say why."
 
 msgid "Not available in this build."
 msgstr "Not available in this build."
+
+msgid "DeepL opens in a small window of your own browser (Chrome, Edge or Brave); your normal browser and its data are not touched."
+msgstr "DeepL opens in a small window of your own browser (Chrome, Edge or Brave); your normal browser and its data are not touched."
+
+msgid "Connect browser"
+msgstr "Connect browser"
+
+msgid "Disconnect browser"
+msgstr "Disconnect browser"
+
+msgid "Not connected"
+msgstr "Not connected"
+
+msgid "Connecting…"
+msgstr "Connecting…"
+
+msgid "Tick the check box in the DeepL window once; it will not ask again."
+msgstr "Tick the check box in the DeepL window once; it will not ask again."
+
+msgid "Connected ✓"
+msgstr "Connected ✓"
+
+msgid "Browser not found. Install Chrome or Edge and press the button again."
+msgstr "Browser not found. Install Chrome or Edge and press the button again."
+
+msgid "Could not connect. Press the button twice to try again."
+msgstr "Could not connect. Press the button twice to try again."
+
+msgid "DeepLX server address (optional, e.g. http://localhost:1188/translate)"
+msgstr "DeepLX server address (optional, e.g. http://localhost:1188/translate)"
+
+msgid "Test"
+msgstr "Test"
+
+msgid "Checking…"
+msgstr "Checking…"
+
+msgid "DeepLX answered ✓"
+msgstr "DeepLX answered ✓"
+
+msgid "DeepLX did not answer with a translation. Check the address."
+msgstr "DeepLX did not answer with a translation. Check the address."

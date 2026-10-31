@@ -383,11 +383,64 @@
                     </Border>
                     <Border Padding="12,10" Margin="0,0,0,14" CornerRadius="6"
                             Background="{DynamicResource Brush.SurfaceSubtle}">
-                        <DockPanel>
-                            <ui:ToggleSwitch DockPanel.Dock="Right" VerticalAlignment="Center"
-                                             IsChecked="{Binding Shell.TranslationCredentials.IsDeepLEnabled, Mode=TwoWay}" />
-                            <TextBlock Text="DeepL" VerticalAlignment="Center" />
-                        </DockPanel>
+                        <StackPanel>
+                            <DockPanel>
+                                <ui:ToggleSwitch DockPanel.Dock="Right" VerticalAlignment="Center"
+                                                 IsChecked="{Binding Shell.TranslationCredentials.IsDeepLEnabled, Mode=TwoWay}" />
+                                <TextBlock Text="DeepL" VerticalAlignment="Center" />
+                            </DockPanel>
+                            <StackPanel Margin="0,8,0,0"
+                                        Visibility="{Binding Shell.TranslationCredentials.ShowDeepLSettings, Converter={utils:BooleanToVisibilityConverterCollapse}}">
+                                <TextBlock TextWrapping="Wrap" Margin="0,0,0,8"
+                                           Style="{DynamicResource CaptionTextStyle}"
+                                           Text="{DynamicResource DeepLBrowserHint}" />
+                                <DockPanel>
+                                    <Button DockPanel.Dock="Left" MinWidth="170" Margin="0,0,12,0"
+                                            Command="{Binding Shell.TranslationCredentials.ToggleDeepLBrowserCommand}">
+                                        <Grid>
+                                            <TextBlock Text="{DynamicResource DeepLBrowserConnect}"
+                                                       Visibility="{Binding Shell.TranslationCredentials.IsDeepLBrowserNotWanted, Converter={utils:BooleanToVisibilityConverterCollapse}}" />
+                                            <TextBlock Text="{DynamicResource DeepLBrowserDisconnect}"
+                                                       Visibility="{Binding Shell.TranslationCredentials.IsDeepLBrowserWanted, Converter={utils:BooleanToVisibilityConverterCollapse}}" />
+                                        </Grid>
+                                    </Button>
+                                    <Grid VerticalAlignment="Center">
+                                        <TextBlock TextWrapping="Wrap" Text="{DynamicResource DeepLBrowserStatusOff}"
+                                                   Visibility="{Binding Shell.TranslationCredentials.IsDeepLBrowserOff, Converter={utils:BooleanToVisibilityConverterCollapse}}" />
+                                        <TextBlock TextWrapping="Wrap" Text="{DynamicResource DeepLBrowserStatusStarting}"
+                                                   Visibility="{Binding Shell.TranslationCredentials.IsDeepLBrowserStarting, Converter={utils:BooleanToVisibilityConverterCollapse}}" />
+                                        <TextBlock TextWrapping="Wrap" Text="{DynamicResource DeepLBrowserStatusCheck}"
+                                                   Visibility="{Binding Shell.TranslationCredentials.IsDeepLBrowserNeedsCheck, Converter={utils:BooleanToVisibilityConverterCollapse}}" />
+                                        <TextBlock TextWrapping="Wrap" Text="{DynamicResource DeepLBrowserStatusConnected}"
+                                                   Visibility="{Binding Shell.TranslationCredentials.IsDeepLBrowserConnected, Converter={utils:BooleanToVisibilityConverterCollapse}}" />
+                                        <TextBlock TextWrapping="Wrap" Text="{DynamicResource DeepLBrowserStatusNoBrowser}"
+                                                   Visibility="{Binding Shell.TranslationCredentials.IsDeepLBrowserNoBrowser, Converter={utils:BooleanToVisibilityConverterCollapse}}" />
+                                        <TextBlock TextWrapping="Wrap" Text="{DynamicResource DeepLBrowserStatusFailed}"
+                                                   Visibility="{Binding Shell.TranslationCredentials.IsDeepLBrowserFailed, Converter={utils:BooleanToVisibilityConverterCollapse}}" />
+                                    </Grid>
+                                </DockPanel>
+                                <Expander Margin="0,10,0,0" Header="{DynamicResource DeepLAdvancedLabel}">
+                                    <StackPanel Margin="0,6,0,0">
+                                        <Label Style="{DynamicResource BaseLabelStyle}"
+                                               Content="{DynamicResource DeepLXAddressLabel}" />
+                                        <DockPanel>
+                                            <Button DockPanel.Dock="Right" Margin="8,0,0,0"
+                                                    Content="{DynamicResource DeepLXTestButton}"
+                                                    Command="{Binding Shell.TranslationCredentials.TestDeepLXCommand}" />
+                                            <TextBox
+                                                Text="{Binding Shell.TranslationCredentials.DeepLXEndpoint, UpdateSourceTrigger=LostFocus}"
+                                                KeyDown="CredentialTextBox_KeyDown" />
+                                        </DockPanel>
+                                        <TextBlock Margin="0,4,0,0" Text="{DynamicResource DeepLXTesting}"
+                                                   Visibility="{Binding Shell.TranslationCredentials.IsDeepLXTesting, Converter={utils:BooleanToVisibilityConverterCollapse}}" />
+                                        <TextBlock Margin="0,4,0,0" TextWrapping="Wrap" Text="{DynamicResource DeepLXWorks}"
+                                                   Visibility="{Binding Shell.TranslationCredentials.IsDeepLXWorks, Converter={utils:BooleanToVisibilityConverterCollapse}}" />
+                                        <TextBlock Margin="0,4,0,0" TextWrapping="Wrap" Text="{DynamicResource DeepLXBroken}"
+                                                   Visibility="{Binding Shell.TranslationCredentials.IsDeepLXBroken, Converter={utils:BooleanToVisibilityConverterCollapse}}" />
+                                    </StackPanel>
+                                </Expander>
+                            </StackPanel>
+                        </StackPanel>
                     </Border>
 
                     <!-- Paid -->

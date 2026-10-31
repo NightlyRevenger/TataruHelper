@@ -4,7 +4,12 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Translation.Credentials;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Windows;
 using Translation.Models;
+using Translation.Providers.DeepL;
+using Translation.Providers.DeepL.Browser;
 
 namespace FFXIVTataruHelper.ViewModel
 {
@@ -34,6 +39,10 @@ namespace FFXIVTataruHelper.ViewModel
             _availableEngines = new ObservableCollection<TranslationEngineName>();
             AvailableEngines = new ReadOnlyObservableCollection<TranslationEngineName>(_availableEngines);
             RefreshAvailableEngines();
+
+            DeepLBrowserBridge.Shared.Changed += (_, __) => RunOnUi(NotifyDeepLBrowser);
+            ToggleDeepLBrowserCommand = new TataruUICommand(ToggleDeepLBrowser);
+            TestDeepLXCommand = new TataruUICommand(TestDeepLX);
         }
 
         public ReadOnlyObservableCollection<TranslationEngineName> AvailableEngines { get; }
@@ -148,6 +157,117 @@ namespace FFXIVTataruHelper.ViewModel
 
         public bool ShowAzureSettings => IsAzureEnabled;
         public bool ShowGoogleCloudSettings => IsGoogleCloudEnabled;
+        public bool ShowDeepLSettings => IsDeepLEnabled;
+
+        // ---- DeepL: the player's own browser, and an optional DeepLX server ----
+
+        public TataruUICommand ToggleDeepLBrowserCommand { get; }
+        public TataruUICommand TestDeepLXCommand { get; }
+
+        private static DeepLBrowserBridge Bridge => DeepLBrowserBridge.Shared;
+
+        public bool IsDeepLBrowserWanted => _store.GetModel(TranslationEngineName.DeepL) == "browser";
+        public bool IsDeepLBrowserNotWanted => !IsDeepLBrowserWanted;
+
+        public bool IsDeepLBrowserConnected => IsDeepLBrowserWanted && Bridge.State == DeepLBrowserState.Connected;
+        public bool IsDeepLBrowserNoBrowser => IsDeepLBrowserWanted && Bridge.State == DeepLBrowserState.NoBrowser;
+        public bool IsDeepLBrowserFailed => IsDeepLBrowserWanted && Bridge.State == DeepLBrowserState.Failed;
+        public bool IsDeepLBrowserNeedsCheck =>
+            IsDeepLBrowserWanted && Bridge.State == DeepLBrowserState.Starting && Bridge.LastError != null;
+        public bool IsDeepLBrowserStarting =>
+            IsDeepLBrowserWanted && Bridge.State == DeepLBrowserState.Starting && Bridge.LastError == null;
+        public bool IsDeepLBrowserOff => !IsDeepLBrowserWanted || Bridge.State == DeepLBrowserState.Off;
+
+        private void ToggleDeepLBrowser()
+        {
+            if (IsDeepLBrowserWanted)
+            {
+                SetModel(TranslationEngineName.DeepL, string.Empty, nameof(IsDeepLBrowserWanted));
+                _ = Bridge.DisconnectAsync();
+            }
+            else
+            {
+                SetModel(TranslationEngineName.DeepL, "browser", nameof(IsDeepLBrowserWanted));
+                _ = Bridge.EnsureConnectedAsync(CancellationToken.None);
+            }
+
+            NotifyDeepLBrowser();
+        }
+
+        private void NotifyDeepLBrowser()
+        {
+            foreach (var name in new[]
+            {
+                nameof(IsDeepLBrowserWanted), nameof(IsDeepLBrowserNotWanted), nameof(IsDeepLBrowserConnected),
+                nameof(IsDeepLBrowserNoBrowser), nameof(IsDeepLBrowserFailed), nameof(IsDeepLBrowserNeedsCheck),
+                nameof(IsDeepLBrowserStarting), nameof(IsDeepLBrowserOff),
+            })
+            {
+                OnPropertyChanged(name);
+            }
+        }
+
+        private static void RunOnUi(Action action)
+        {
+            var dispatcher = Application.Current?.Dispatcher;
+            if (dispatcher == null || dispatcher.CheckAccess())
+            {
+                action();
+            }
+            else
+            {
+                dispatcher.BeginInvoke(action);
+            }
+        }
+
+        public string DeepLXEndpoint
+        {
+            get => _store.GetEndpoint(TranslationEngineName.DeepL);
+            set => SetEndpoint(TranslationEngineName.DeepL, value, nameof(DeepLXEndpoint));
+        }
+
+        private bool? _deepLXWorks;
+        private bool _deepLXTesting;
+
+        public bool IsDeepLXTesting => _deepLXTesting;
+        public bool IsDeepLXWorks => _deepLXWorks == true;
+        public bool IsDeepLXBroken => _deepLXWorks == false;
+
+        private async void TestDeepLX()
+        {
+            var address = DeepLXEndpoint;
+            if (string.IsNullOrWhiteSpace(address) || _deepLXTesting)
+            {
+                return;
+            }
+
+            _deepLXTesting = true;
+            _deepLXWorks = null;
+            NotifyDeepLX();
+
+            try
+            {
+                using (var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(15)))
+                {
+                    var answer = await DeepLXClient.TranslateAsync(address, "Hello", "en", "ru", timeout.Token);
+                    _deepLXWorks = !string.IsNullOrEmpty(answer);
+                }
+            }
+            catch (Exception)
+            {
+                _deepLXWorks = false;
+            }
+
+            _deepLXTesting = false;
+            NotifyDeepLX();
+        }
+
+        private void NotifyDeepLX()
+        {
+            OnPropertyChanged(nameof(IsDeepLXTesting));
+            OnPropertyChanged(nameof(IsDeepLXWorks));
+            OnPropertyChanged(nameof(IsDeepLXBroken));
+        }
         public bool ShowDeepLApiSettings => IsDeepLApiEnabled;
         public bool ShowOpenAISettings => IsOpenAIEnabled;
         public bool ShowGeminiSettings => IsGeminiEnabled;
@@ -399,6 +519,7 @@ namespace FFXIVTataruHelper.ViewModel
         {
             TranslationEngineName.AzureTranslator => nameof(ShowAzureSettings),
             TranslationEngineName.GoogleCloudTranslate => nameof(ShowGoogleCloudSettings),
+            TranslationEngineName.DeepL => nameof(ShowDeepLSettings),
             TranslationEngineName.DeepLApi => nameof(ShowDeepLApiSettings),
             TranslationEngineName.OpenAI => nameof(ShowOpenAISettings),
             TranslationEngineName.Gemini => nameof(ShowGeminiSettings),

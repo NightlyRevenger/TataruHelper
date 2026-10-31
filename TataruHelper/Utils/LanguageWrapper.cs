@@ -493,6 +493,21 @@ namespace FFXIVTataruHelper
             _SettingsWindow.Resources["OpenRouterHint"] =
                 catalog.GetString("One key for models from many providers. Pick any model OpenRouter lists.");
             _SettingsWindow.Resources["LocalModelsLabel"] = catalog.GetString("Local Models");
+            _SettingsWindow.Resources["DeepLBrowserHint"] = catalog.GetString("DeepL opens in a small window of your own browser (Chrome, Edge or Brave); your normal browser and its data are not touched.");
+            _SettingsWindow.Resources["DeepLBrowserConnect"] = catalog.GetString("Connect browser");
+            _SettingsWindow.Resources["DeepLBrowserDisconnect"] = catalog.GetString("Disconnect browser");
+            _SettingsWindow.Resources["DeepLBrowserStatusOff"] = catalog.GetString("Not connected");
+            _SettingsWindow.Resources["DeepLBrowserStatusStarting"] = catalog.GetString("Connecting…");
+            _SettingsWindow.Resources["DeepLBrowserStatusCheck"] = catalog.GetString("Tick the check box in the DeepL window once; it will not ask again.");
+            _SettingsWindow.Resources["DeepLBrowserStatusConnected"] = catalog.GetString("Connected ✓");
+            _SettingsWindow.Resources["DeepLBrowserStatusNoBrowser"] = catalog.GetString("Browser not found. Install Chrome or Edge and press the button again.");
+            _SettingsWindow.Resources["DeepLBrowserStatusFailed"] = catalog.GetString("Could not connect. Press the button twice to try again.");
+            _SettingsWindow.Resources["DeepLAdvancedLabel"] = catalog.GetString("Advanced");
+            _SettingsWindow.Resources["DeepLXAddressLabel"] = catalog.GetString("DeepLX server address (optional, e.g. http://localhost:1188/translate)");
+            _SettingsWindow.Resources["DeepLXTestButton"] = catalog.GetString("Test");
+            _SettingsWindow.Resources["DeepLXTesting"] = catalog.GetString("Checking…");
+            _SettingsWindow.Resources["DeepLXWorks"] = catalog.GetString("DeepLX answered ✓");
+            _SettingsWindow.Resources["DeepLXBroken"] = catalog.GetString("DeepLX did not answer with a translation. Check the address.");
             _SettingsWindow.Resources["LibreTranslateAddressLabel"] =
                 catalog.GetString("Instance address (optional, e.g. http://localhost:5000)");
             _SettingsWindow.Resources["LibreTranslateKeyLabel"] =
