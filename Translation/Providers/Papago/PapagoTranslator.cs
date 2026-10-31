@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Translation.Exceptions;
 using Translation.Http;
 using Translation.Models;
 using Translation.Settings;
@@ -24,6 +26,9 @@ namespace Translation.Providers.Papago
         readonly ILogger _Logger;
         readonly TranslationSettings _Settings;
 
+        readonly EngineRateLimitGuard _RateLimit =
+            new EngineRateLimitGuard(TranslationEngineName.Papago, TimeSpan.FromSeconds(30));
+
         public PapagoTranslator(ILogger logger, TranslationSettings settings)
         {
             _Logger = logger;
@@ -33,6 +38,8 @@ namespace Translation.Providers.Papago
         public Task<string> TranslateAsync(string sentence, string inLang, string outLang,
             CancellationToken cancellationToken)
         {
+            _RateLimit.ThrowIfPaused();
+
             return TranslationHttpPolicy.ExecuteTranslationWithRetryAsync(
                 () => TranslateInternalAsync(sentence, inLang, outLang, cancellationToken),
                 _Settings,
@@ -85,11 +92,21 @@ namespace Translation.Providers.Papago
 
                         _Logger?.LogInformation("{Message}",
                             "[PAPAGO_HTTP_" + (int)response.StatusCode + "] " + body);
+
+                        if (response.StatusCode == (HttpStatusCode)429)
+                        {
+                            throw _RateLimit.Refused();
+                        }
+
                         return string.Empty;
                     }
                 }
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (QuotaExceededException)
             {
                 throw;
             }

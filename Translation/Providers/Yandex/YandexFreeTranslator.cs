@@ -1,4 +1,5 @@
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading;
@@ -8,6 +9,7 @@ using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json.Linq;
 
+using Translation.Exceptions;
 using Translation.Http;
 using Translation.Models;
 
@@ -32,7 +34,42 @@ namespace Translation.Providers.Yandex
 
         private readonly ILogger _logger;
 
-        private readonly string _sessionId = Guid.NewGuid().ToString("N");
+        /// <summary>
+        /// The id the app sends is per session, and the service tells sessions
+        /// apart: one id used for the whole time the application is open is the
+        /// easiest thing to recognise and refuse. A new one every few minutes is
+        /// what a real client looks like.
+        /// </summary>
+        private static readonly TimeSpan SessionLifetime = TimeSpan.FromMinutes(6);
+
+        private readonly EngineRateLimitGuard _rateLimit =
+            new EngineRateLimitGuard(TranslationEngineName.YandexFree, TimeSpan.FromSeconds(30));
+
+        private readonly object _sessionSync = new object();
+        private string _sessionId = Guid.NewGuid().ToString("N");
+        private DateTime _sessionStartedUtc = DateTime.UtcNow;
+
+        private string CurrentSessionId()
+        {
+            lock (_sessionSync)
+            {
+                if (DateTime.UtcNow - _sessionStartedUtc > SessionLifetime)
+                {
+                    StartNewSession();
+                }
+
+                return _sessionId;
+            }
+        }
+
+        private void StartNewSession()
+        {
+            lock (_sessionSync)
+            {
+                _sessionId = Guid.NewGuid().ToString("N");
+                _sessionStartedUtc = DateTime.UtcNow;
+            }
+        }
 
         public YandexFreeTranslator(ILogger logger)
         {
@@ -46,6 +83,8 @@ namespace Translation.Providers.Yandex
             {
                 return string.Empty;
             }
+
+            _rateLimit.ThrowIfPaused();
 
             // Yandex answers "Invalid parameter: lang" to anything but lowercase,
             // and other engines' language lists spell their codes in caps.
@@ -65,7 +104,7 @@ namespace Translation.Providers.Yandex
                     ? targetLang
                     : sourceLang + "-" + targetLang;
 
-                var url = string.Format(ApiUrl, _sessionId);
+                var url = string.Format(ApiUrl, CurrentSessionId());
 
                 using (var request = new HttpRequestMessage(HttpMethod.Post, url))
                 {
@@ -90,6 +129,16 @@ namespace Translation.Providers.Yandex
                             _logger?.LogInformation("{Message}",
                                 "[YANDEX_HTTP_" + (int)response.StatusCode + "] lang=" + langPair +
                                 " len=" + sentence.Length + " body=" + Truncate(error, 300));
+
+                            // Whatever was refused, the session is the one thing that
+                            // may have been recognised and costs nothing to replace.
+                            StartNewSession();
+
+                            if (response.StatusCode == (HttpStatusCode)429)
+                            {
+                                throw _rateLimit.Refused();
+                            }
+
                             return string.Empty;
                         }
 
@@ -99,6 +148,10 @@ namespace Translation.Providers.Yandex
                 }
             }
             catch (OperationCanceledException)
+            {
+                throw;
+            }
+            catch (QuotaExceededException)
             {
                 throw;
             }
