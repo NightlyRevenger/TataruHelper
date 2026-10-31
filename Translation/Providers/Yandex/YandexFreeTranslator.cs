@@ -30,6 +30,9 @@ namespace Translation.Providers.Yandex
 
         private const string ApiUrl = "https://translate.yandex.net/api/v1/tr.json/translate?id={0}-0-0&srv=android";
 
+        private const string BrowserApiUrl =
+            "https://browser.translate.yandex.net/api/v1/tr.json/translate?srv=browser_video_translation";
+
         private const string AppUserAgent = "Yandex Translate/21.11.2";
 
         private readonly ILogger _logger;
@@ -104,48 +107,39 @@ namespace Translation.Providers.Yandex
                     ? targetLang
                     : sourceLang + "-" + targetLang;
 
-                var url = string.Format(ApiUrl, CurrentSessionId());
-
-                using (var request = new HttpRequestMessage(HttpMethod.Post, url))
+                var primary = await PostAsync(string.Format(ApiUrl, CurrentSessionId()), AppUserAgent,
+                    sentence, langPair, cancellationToken).ConfigureAwait(false);
+                if (primary.Status == HttpStatusCode.OK)
                 {
-                    request.Headers.UserAgent.ParseAdd(AppUserAgent);
-                    request.Content = new FormUrlEncodedContent(new[]
-                    {
-                        new System.Collections.Generic.KeyValuePair<string, string>("text", sentence),
-                        new System.Collections.Generic.KeyValuePair<string, string>("lang", langPair),
-                        new System.Collections.Generic.KeyValuePair<string, string>("options", "4"),
-                    });
-
-                    using (var response = await ApiHttpClient.SendAsync(request, cancellationToken)
-                               .ConfigureAwait(false))
-                    {
-                        if (!response.IsSuccessStatusCode)
-                        {
-                            // The status alone says nothing about which of the
-                            // language pair, the text or the session was rejected.
-                            var error = await response.Content.ReadAsStringAsync(cancellationToken)
-                                .ConfigureAwait(false);
-
-                            _logger?.LogInformation("{Message}",
-                                "[YANDEX_HTTP_" + (int)response.StatusCode + "] lang=" + langPair +
-                                " len=" + sentence.Length + " body=" + Truncate(error, 300));
-
-                            // Whatever was refused, the session is the one thing that
-                            // may have been recognised and costs nothing to replace.
-                            StartNewSession();
-
-                            if (response.StatusCode == (HttpStatusCode)429)
-                            {
-                                throw _rateLimit.Refused();
-                            }
-
-                            return string.Empty;
-                        }
-
-                        var body = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-                        return ParseResponse(body);
-                    }
+                    return ParseResponse(primary.Body);
                 }
+
+                _logger?.LogInformation("{Message}",
+                    "[YANDEX_HTTP_" + (int)primary.Status + "] lang=" + langPair +
+                    " len=" + sentence.Length + " body=" + Truncate(primary.Body, 300));
+
+                // Whatever was refused, the session is the one thing that
+                // may have been recognised and costs nothing to replace.
+                StartNewSession();
+
+                // The browser's built-in translation talks to another host with
+                // its own limits, so it often answers when the app's is refusing.
+                var second = await PostAsync(BrowserApiUrl, null, sentence, langPair, cancellationToken)
+                    .ConfigureAwait(false);
+                if (second.Status == HttpStatusCode.OK)
+                {
+                    return ParseResponse(second.Body);
+                }
+
+                _logger?.LogInformation("{Message}",
+                    "[YANDEX_BROWSER_HTTP_" + (int)second.Status + "] body=" + Truncate(second.Body, 300));
+
+                if (primary.Status == (HttpStatusCode)429 || second.Status == (HttpStatusCode)429)
+                {
+                    throw _rateLimit.Refused();
+                }
+
+                return string.Empty;
             }
             catch (OperationCanceledException)
             {
@@ -159,6 +153,35 @@ namespace Translation.Providers.Yandex
             {
                 _logger?.LogInformation("{Message}", "[YANDEX] " + e.Message);
                 return string.Empty;
+            }
+        }
+
+        private static async Task<(HttpStatusCode Status, string Body)> PostAsync(string url, string userAgent,
+            string sentence, string langPair, CancellationToken cancellationToken)
+        {
+            using (var request = new HttpRequestMessage(HttpMethod.Post, url))
+            {
+                if (userAgent != null)
+                {
+                    request.Headers.UserAgent.ParseAdd(userAgent);
+                }
+
+                request.Content = new FormUrlEncodedContent(new[]
+                {
+                    new System.Collections.Generic.KeyValuePair<string, string>("text", sentence),
+                    new System.Collections.Generic.KeyValuePair<string, string>("lang", langPair),
+                    new System.Collections.Generic.KeyValuePair<string, string>("options", "4"),
+                });
+
+                using (var response = await ApiHttpClient.SendAsync(request, cancellationToken)
+                           .ConfigureAwait(false))
+                {
+                    // The status alone says nothing about which of the
+                    // language pair, the text or the session was rejected.
+                    var body = await response.Content.ReadAsStringAsync(cancellationToken)
+                        .ConfigureAwait(false);
+                    return (response.StatusCode, body);
+                }
             }
         }
 
