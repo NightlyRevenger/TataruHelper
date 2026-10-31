@@ -18,6 +18,8 @@
 
         public double MaxSameLanguagePercent { get; set; } = 0.40;
 
+        public bool UseGoogleTranslateHtmlEndpoint { get; set; } = true;
+
         public bool UseGoogleJsonEndpoint { get; set; } = true;
 
         public bool UseGoogleHtmlFallbackEndpoint { get; set; } = true;

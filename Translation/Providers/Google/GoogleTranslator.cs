@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json.Linq;
 
+using Translation.Exceptions;
 using Translation.Http;
 using Translation.Models;
 using Translation.Settings;
@@ -43,26 +44,65 @@ namespace Translation.Providers.Google
         private readonly ILogger _logger;
         private readonly TranslationSettings _settings;
 
+        private readonly EngineRateLimitGuard _rateLimit =
+            new EngineRateLimitGuard(TranslationEngineName.GoogleTranslate, TimeSpan.FromSeconds(30));
+
+        private readonly GoogleWidgetKey _widgetKey;
+
         public GoogleTranslator(ILogger logger, TranslationSettings settings)
         {
             _logger = logger;
             _settings = settings ?? new TranslationSettings();
+            _widgetKey = new GoogleWidgetKey(logger);
         }
 
 
         public async Task<string> TranslateAsync(string sentence, string inLang, string outLang,
             CancellationToken cancellationToken)
         {
+            _rateLimit.ThrowIfPaused();
+
             try
             {
                 var safeInput = sentence ?? string.Empty;
                 var sourceLang = string.IsNullOrWhiteSpace(inLang) ? "auto" : inLang;
                 var targetLang = string.IsNullOrWhiteSpace(outLang) ? "en" : outLang;
 
+                if (_settings.UseGoogleTranslateHtmlEndpoint)
+                {
+                    string widgetResult;
+                    try
+                    {
+                        widgetResult = await TryTranslateUsingWidgetEndpointAsync(safeInput, sourceLang, targetLang,
+                            cancellationToken).ConfigureAwait(false);
+                    }
+                    catch (QuotaExceededException) when (_settings.UseGoogleJsonEndpoint ||
+                                                         _settings.UseGoogleHtmlFallbackEndpoint)
+                    {
+                        // The older routes are other services and may still answer.
+                        widgetResult = string.Empty;
+                    }
+
+                    if (IsValidGoogleResult(widgetResult))
+                    {
+                        return widgetResult;
+                    }
+                }
+
                 if (_settings.UseGoogleJsonEndpoint)
                 {
-                    var jsonResult = await TryTranslateUsingJsonEndpointAsync(safeInput, sourceLang, targetLang,
-                        cancellationToken).ConfigureAwait(false);
+                    string jsonResult;
+                    try
+                    {
+                        jsonResult = await TryTranslateUsingJsonEndpointAsync(safeInput, sourceLang, targetLang,
+                            cancellationToken).ConfigureAwait(false);
+                    }
+                    catch (QuotaExceededException) when (_settings.UseGoogleHtmlFallbackEndpoint)
+                    {
+                        // The other route may still answer; if it is refused too, that one throws.
+                        jsonResult = string.Empty;
+                    }
+
                     if (IsValidGoogleResult(jsonResult))
                     {
                         return jsonResult;
@@ -83,12 +123,110 @@ namespace Translation.Providers.Google
             {
                 throw;
             }
+            catch (QuotaExceededException)
+            {
+                throw;
+            }
             catch (Exception exception)
             {
                 _logger?.LogInformation("{Message}", $"[GOOGLE_TRANSLATE_EXCEPTION] {exception}");
             }
 
             return string.Empty;
+        }
+
+        private const string WidgetUrl = "https://translate-pa.googleapis.com/v1/translateHtml";
+
+        /// <summary>
+        /// The service Chrome's page translation and Google's website widget
+        /// use, which runs the current model; the older routes keep answering
+        /// with a previous one. The text goes in as HTML, so what is escaped
+        /// going in is unescaped coming out.
+        /// </summary>
+        private async Task<string> TryTranslateUsingWidgetEndpointAsync(string sentence, string inLang,
+            string outLang, CancellationToken cancellationToken)
+        {
+            var body = new JArray(
+                new JArray(new JArray(EscapeForHtml(sentence)), inLang, outLang),
+                "te_lib").ToString(Newtonsoft.Json.Formatting.None);
+
+            for (var attempt = 0; attempt < 2; attempt++)
+            {
+                var key = await _widgetKey.GetAsync(attempt > 0, cancellationToken).ConfigureAwait(false);
+
+                using (var request = new HttpRequestMessage(HttpMethod.Post, WidgetUrl))
+                {
+                    request.Headers.UserAgent.ParseAdd(BrowserUserAgent);
+                    request.Headers.Add("X-Goog-Api-Key", key);
+                    request.Content = new StringContent(body, Encoding.UTF8, "application/json+protobuf");
+
+                    using (var response = await ApiHttpClient.SendAsync(request, cancellationToken)
+                               .ConfigureAwait(false))
+                    {
+                        if (response.StatusCode == (HttpStatusCode)429)
+                        {
+                            throw _rateLimit.Refused();
+                        }
+
+                        var text = await response.Content.ReadAsStringAsync(cancellationToken)
+                            .ConfigureAwait(false);
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            return ParseWidgetTranslation(text);
+                        }
+
+                        _logger?.LogInformation("{Message}",
+                            "[GOOGLE_WIDGET_HTTP_" + (int)response.StatusCode + "] " + text);
+
+                        // A key Google has since changed is read again, once.
+                        var keyRejected = response.StatusCode == HttpStatusCode.BadRequest ||
+                                          response.StatusCode == HttpStatusCode.Forbidden;
+                        if (!keyRejected)
+                        {
+                            return string.Empty;
+                        }
+                    }
+                }
+            }
+
+            return string.Empty;
+        }
+
+        private static string EscapeForHtml(string text)
+            => (text ?? string.Empty).Replace("&", "&amp;").Replace("<", "&lt;").Replace(">", "&gt;");
+
+        /// <summary>Parses [["translated"]] (more fragments may follow the first).</summary>
+        internal static string ParseWidgetTranslation(string body)
+        {
+            if (string.IsNullOrWhiteSpace(body))
+            {
+                return string.Empty;
+            }
+
+            try
+            {
+                var translated = (JToken.Parse(body) as JArray)?[0] as JArray;
+                if (translated == null || translated.Count == 0)
+                {
+                    return string.Empty;
+                }
+
+                var builder = new StringBuilder();
+                foreach (var part in translated)
+                {
+                    if (part.Type == JTokenType.String)
+                    {
+                        builder.Append((string)part);
+                    }
+                }
+
+                return WebUtility.HtmlDecode(builder.ToString()).Trim();
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
         }
 
         private async Task<string> TryTranslateUsingJsonEndpointAsync(string sentence, string inLang, string outLang,
@@ -167,6 +305,12 @@ namespace Translation.Providers.Google
                     {
                         _logger?.LogInformation("{Message}",
                             "[" + logTag + "_HTTP_" + (int)response.StatusCode + "] " + url);
+
+                        if (response.StatusCode == (HttpStatusCode)429)
+                        {
+                            throw _rateLimit.Refused();
+                        }
+
                         return null;
                     }
 
