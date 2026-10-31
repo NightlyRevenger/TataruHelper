@@ -47,6 +47,10 @@ namespace Translation.Providers.Google
         private readonly EngineRateLimitGuard _rateLimit =
             new EngineRateLimitGuard(TranslationEngineName.GoogleTranslate, TimeSpan.FromSeconds(30));
 
+        // A blocked address stays blocked far longer than a rate limit lasts.
+        private readonly EngineRateLimitGuard _sorryPause =
+            new EngineRateLimitGuard(TranslationEngineName.GoogleTranslate, TimeSpan.FromMinutes(5));
+
         private readonly GoogleWidgetKey _widgetKey;
 
         public GoogleTranslator(ILogger logger, TranslationSettings settings)
@@ -61,6 +65,7 @@ namespace Translation.Providers.Google
             CancellationToken cancellationToken)
         {
             _rateLimit.ThrowIfPaused();
+            _sorryPause.ThrowIfPaused();
 
             try
             {
@@ -314,9 +319,35 @@ namespace Translation.Providers.Google
                         return null;
                     }
 
-                    return await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+                    var text = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+
+                    if (IsSorryPage(response.RequestMessage?.RequestUri, text))
+                    {
+                        _logger?.LogInformation("{Message}", "[GOOGLE_SORRY] " + logTag + " got the unusual-traffic page");
+                        throw _sorryPause.Refused();
+                    }
+
+                    return text;
                 }
             }
+        }
+
+        /// <summary>
+        /// When Google decides an address sends too much it does not answer 429:
+        /// it redirects to a /sorry/ page, or serves it with a 200. Read as a
+        /// translation it is just an empty result, and every following line
+        /// would go straight back into the same wall.
+        /// </summary>
+        internal static bool IsSorryPage(Uri finalUri, string body)
+        {
+            if (finalUri != null && finalUri.AbsolutePath.StartsWith("/sorry/", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return !string.IsNullOrEmpty(body) &&
+                   body.IndexOf("systems have detected unusual traffic", StringComparison.OrdinalIgnoreCase) >= 0 &&
+                   body.IndexOf("<html", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         internal static string ParseGoogleJsonTranslation(string body, ILogger logger = null)
