@@ -34,7 +34,7 @@ namespace Translation.Providers
 
             var google = new GoogleTranslator(logger, settings);
             var papago = new PapagoTranslator(logger, settings);
-            var deepLF = new DeepLTranslator(logger, settings);
+            var deepLF = new DeepLTranslator(logger, settings, credentials);
             var azure = new AzureTranslator(logger, credentials);
             var googleCloud = new GoogleCloudTranslator(logger, credentials);
             var deepLApi = new DeepLApiTranslator(logger, credentials);

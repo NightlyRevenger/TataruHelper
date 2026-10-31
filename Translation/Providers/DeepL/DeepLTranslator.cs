@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Translation.Credentials;
 using Translation.Exceptions;
+using Translation.Providers.DeepL.Browser;
 using Translation.Http;
 using Translation.Models;
 using Translation.Settings;
@@ -37,10 +39,74 @@ namespace Translation.Providers.DeepL
 
         private readonly RefusalCooldown _cooldown = new RefusalCooldown(CooldownAfterRefusal);
 
-        public DeepLTranslator(ILogger logger, TranslationSettings settings)
+        /// <summary>The value of the DeepL "model" setting that switches the browser route on.</summary>
+        public const string BrowserModel = "browser";
+
+        private const string ConnectHint = " Press \"Connect browser\" in the DeepL settings.";
+
+        private readonly ITranslationCredentialStore _credentials;
+
+        public DeepLTranslator(ILogger logger, TranslationSettings settings,
+            ITranslationCredentialStore credentials = null)
         {
             _logger = logger;
             _settings = settings ?? new TranslationSettings();
+            _credentials = credentials;
+
+            // Opened ahead of the first line, so that line does not wait for the browser to start.
+            if (BrowserWanted)
+            {
+                _ = DeepLBrowserBridge.Shared.EnsureConnectedAsync(CancellationToken.None);
+            }
+        }
+
+        private bool BrowserWanted => _credentials?.GetModel(TranslationEngineName.DeepL) == BrowserModel;
+
+        private string DeepLXAddress => _credentials?.GetEndpoint(TranslationEngineName.DeepL);
+
+        /// <summary>
+        /// The routes in the order they are tried: the player's browser, then a
+        /// DeepLX server, then the plain web endpoint. Null when none of the first
+        /// two gave a translation.
+        /// </summary>
+        private async Task<string> TryConnectedRoutesAsync(string sentence, string inLang, string outLang,
+            CancellationToken cancellationToken)
+        {
+            var source = string.IsNullOrWhiteSpace(inLang) ? "auto" : inLang.ToLowerInvariant();
+            var target = string.IsNullOrWhiteSpace(outLang) ? "en" : outLang.ToLowerInvariant();
+
+            if (BrowserWanted)
+            {
+                try
+                {
+                    return await DeepLBrowserBridge.Shared.TranslateAsync(sentence, source, target, cancellationToken)
+                        .ConfigureAwait(false);
+                }
+                catch (Exception ex) when (!(ex is OperationCanceledException))
+                {
+                    _logger?.LogInformation("{Message}", "[DEEPL_BROWSER] " + ex.Message);
+                }
+            }
+
+            var deepLX = DeepLXAddress;
+            if (!string.IsNullOrWhiteSpace(deepLX))
+            {
+                try
+                {
+                    var translated = await DeepLXClient.TranslateAsync(deepLX, sentence, source, target,
+                        cancellationToken).ConfigureAwait(false);
+                    if (!string.IsNullOrEmpty(translated))
+                    {
+                        return translated;
+                    }
+                }
+                catch (Exception ex) when (!(ex is OperationCanceledException))
+                {
+                    _logger?.LogInformation("{Message}", "[DEEPL_DEEPLX] " + ex.Message);
+                }
+            }
+
+            return null;
         }
 
         public async Task<string> TranslateAsync(string sentence, string inLang, string outLang,
@@ -48,6 +114,13 @@ namespace Translation.Providers.DeepL
         {
             if (string.IsNullOrEmpty(sentence))
                 return string.Empty;
+
+            var connected = await TryConnectedRoutesAsync(sentence, inLang, outLang, cancellationToken)
+                .ConfigureAwait(false);
+            if (!string.IsNullOrEmpty(connected))
+            {
+                return connected;
+            }
 
             // Asked to slow down, so slow down. Every line used to go on
             // knocking after the first refusal, which kept the rate exactly
@@ -137,7 +210,7 @@ namespace Translation.Providers.DeepL
 
                         throw new QuotaExceededException(TranslationEngineName.DeepL,
                             "DeepL is receiving requests faster than it allows. It clears on its own; " +
-                            "translation continues on another engine in the meantime.");
+                            "translation continues on another engine in the meantime." + ConnectHint);
                     }
 
                     if (response.StatusCode == HttpStatusCode.UnavailableForLegalReasons)
@@ -150,7 +223,7 @@ namespace Translation.Providers.DeepL
 
                         throw new ServiceRefusedException(TranslationEngineName.DeepL, 451,
                             "DeepL does not serve this network (HTTP 451, unavailable in your region). " +
-                            "Use a VPN, or another engine.");
+                            "Use a VPN, another engine, or connect the browser." + ConnectHint);
                     }
 
                     if (!response.IsSuccessStatusCode)
