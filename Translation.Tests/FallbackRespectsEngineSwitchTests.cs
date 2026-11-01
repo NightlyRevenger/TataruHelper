@@ -52,6 +52,25 @@ namespace Translation.Tests
             Assert.That(result.Text, Is.EqualTo("translated by the local model"));
         }
 
+        [Test]
+        public async Task AnUnchangedFallbackAnswerDoesNotHideTheNextWorkingEngine()
+        {
+            const string sentence = "The Warrior of Light draws near.";
+            var selected = new FakeProvider(TranslationEngineName.GoogleTranslate, "");
+            var echoed = new FakeProvider(TranslationEngineName.YandexFree, sentence);
+            var translated = new FakeProvider(TranslationEngineName.Bing, "Приближается Воин Света.");
+            var translator = new WebTranslator(NullLogger.Instance,
+                new ITranslationProvider[] { selected, echoed, translated }, new TranslationSettings());
+            translator.LoadLanguages();
+            var result = await translator.TranslateAsync(sentence,
+                new TranslationEngine(TranslationEngineName.GoogleTranslate, new List<TranslatorLanguage>(), 9),
+                new TranslatorLanguage("English", "English", "en"),
+                new TranslatorLanguage("Russian", "Russian", "ru"));
+            Assert.That(echoed.CallCount, Is.EqualTo(1));
+            Assert.That(translated.CallCount, Is.EqualTo(1));
+            Assert.That(result.Text, Is.EqualTo("Приближается Воин Света."));
+        }
+
         private static async Task<TranslationResult> TranslateWith(
             FakeProvider selected, FakeProvider standIn, FakeCredentialStore credentials)
         {

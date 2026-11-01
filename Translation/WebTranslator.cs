@@ -788,6 +788,7 @@ namespace Translation
                 return originalFailure;
             }
 
+            TranslationResult? echoed = null;
             foreach (var candidate in engines.OrderByDescending(x => x.Quality))
             {
                 if (candidate.EngineName == selectedEngine.EngineName)
@@ -824,6 +825,11 @@ namespace Translation
 
                 if (result.IsSuccess && !string.IsNullOrEmpty(result.Text))
                 {
+                    if (ComesBackUnchanged(sentence, result.Text, candidateFromCode, candidateToCode))
+                    {
+                        echoed ??= result;
+                        continue;
+                    }
                     _Logger?.LogInformation("{Message}",
                         "[FALLBACK] " + selectedEngine.EngineName + " -> " + candidate.EngineName);
                     return result;
@@ -835,7 +841,7 @@ namespace Translation
                 }
             }
 
-            return originalFailure;
+            return echoed ?? originalFailure;
         }
 
         /// <summary>
