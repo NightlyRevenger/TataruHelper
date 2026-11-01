@@ -74,6 +74,9 @@ check that first.
 
 ## When a patch moves the ground
 
+What to do when one has: [After a game patch](AfterAPatch.md). What follows is what
+happened the last time, and why the reader is built as it is.
+
 The offsets into `UIModule` come from the FFXIVClientStructs types compiled
 into Sharlayan, read by reflection off their `[FieldOffset]` attributes
 (`ResolveUiDirectDialogOffsets`). Nothing is fetched at runtime, so those
