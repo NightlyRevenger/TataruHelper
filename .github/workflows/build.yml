@@ -31,6 +31,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.x'
+          cache-dependency-path: tools/deepl-relay/go.sum
+
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
@@ -44,6 +50,12 @@ jobs:
 
       - name: Test
         run: dotnet test TataruHelper.sln -c Release --no-build
+
+      - name: Test DeepL relay
+        working-directory: tools/deepl-relay
+        run: |
+          go test ./...
+          go vet ./...
 
       - name: Dependency vulnerabilities
         shell: pwsh
@@ -65,6 +77,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.x'
+          cache-dependency-path: tools/deepl-relay/go.sum
+
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4
         with:
@@ -82,6 +100,12 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           powershell -NoProfile -ExecutionPolicy Bypass -file .\scripts\Velopack_release.ps1 -Channel stable
+
+      - name: Test bundled relay lifecycle
+        shell: pwsh
+        run: |
+          $env:DEEPL_RELAY_PROCESS_PROBE = (Resolve-Path artifacts/publish/TataruHelper/win-x64/deepl-relay.exe).Path
+          dotnet test Translation.Tests/Translation.Tests.csproj -c Release --no-build --filter FullyQualifiedName~ManagedRelayProcessLiveTests
 
       - name: Upload Velopack stable artifacts
         uses: actions/upload-artifact@v4
@@ -103,6 +127,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.27.x'
+          cache-dependency-path: tools/deepl-relay/go.sum
 
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v4

@@ -67,7 +67,8 @@ function Invoke-Vpk {
         [switch]$Capture
     )
 
-    $all = @($script:Vpk.Prefix) + $Arguments
+    $platform = if ([Environment]::OSVersion.Platform -eq [PlatformID]::Win32NT) { @() } else { @("[win]") }
+    $all = @($script:Vpk.Prefix) + $platform + $Arguments
 
     $echoed = @($all)
     $tokenAt = [array]::IndexOf($echoed, "--token")
@@ -115,6 +116,12 @@ function Publish-Asset {
 
     $destination = Join-Path $OutputDir "$NewName$($match.Extension)"
     Move-Item $match.FullName $destination -Force
+    $manifest = Join-Path $OutputDir "assets.$Channel.json"
+    if (Test-Path $manifest) {
+        $json = [IO.File]::ReadAllText($manifest)
+        $json = $json.Replace(('"' + $match.Name + '"'), ('"' + [IO.Path]::GetFileName($destination) + '"'))
+        [IO.File]::WriteAllText($manifest, $json)
+    }
     Write-Host "[Velopack] Published as $(Split-Path $destination -Leaf)."
 }
 
@@ -257,7 +264,6 @@ if (-not $SkipReferenceIndex) {
 }
 
 $script:Vpk = Resolve-Vpk
-Invoke-Vpk -Arguments @("--version")
 
 $filesBeforeDownload = @(Get-OutputFiles | Select-Object -ExpandProperty FullName)
 if (-not $SkipDownloadLatest) {
@@ -267,6 +273,8 @@ $downloadedFiles = @(Get-OutputFiles | Where-Object { $filesBeforeDownload -notc
 
 $deltaBaseCount = @(Get-OutputFiles -Filter "*-full.nupkg").Count
 $deltaCountBeforePack = @(Get-OutputFiles -Filter "*-delta.nupkg").Count
+
+& (Join-Path $PSScriptRoot "Build-DeepLRelay.ps1") -PublishDir $PublishDir
 
 $releaseAlreadyPublished = Invoke-Pack
 
