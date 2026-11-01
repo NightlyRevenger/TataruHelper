@@ -87,6 +87,8 @@ Gdy silnik odmówi, przejmuje następny włączony. Jak skonfigurować każdy z 
 
 ![Tłumaczenie na żywo w grze](LiveTranslation.jpg)
 
+![Tłumaczenie na żywo w grze](LiveTranslation.gif)
+
 ## Współpraca
 
 - Pytania i pomysły: [Discord](https://discord.gg/bSrpbd9) lub [issues](https://github.com/NightlyRevenger/TataruHelper/issues/new/choose).

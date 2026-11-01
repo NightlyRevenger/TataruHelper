@@ -87,6 +87,8 @@ chmod +x tataru-linux.sh
 
 ![게임 속 실시간 번역](LiveTranslation.jpg)
 
+![게임 속 실시간 번역](LiveTranslation.gif)
+
 ## 기여하기
 
 - 질문과 아이디어: [Discord](https://discord.gg/bSrpbd9) 또는 [issues](https://github.com/NightlyRevenger/TataruHelper/issues/new/choose).

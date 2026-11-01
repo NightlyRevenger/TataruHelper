@@ -87,6 +87,8 @@ Quando um mecanismo recusa um pedido, o próximo ativado assume. Como configurar
 
 ![Tradução ao vivo dentro do jogo](LiveTranslation.jpg)
 
+![Tradução ao vivo dentro do jogo](LiveTranslation.gif)
+
 ## Contribuir
 
 - Perguntas e ideias: [Discord](https://discord.gg/bSrpbd9) ou [issues](https://github.com/NightlyRevenger/TataruHelper/issues/new/choose).

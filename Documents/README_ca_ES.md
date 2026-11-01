@@ -87,6 +87,8 @@ Quan un motor rebutja una petició, pren el relleu el següent d'activat. Com co
 
 ![Traducció en directe dins del joc](LiveTranslation.jpg)
 
+![Traducció en directe dins del joc](LiveTranslation.gif)
+
 ## Col·laborar
 
 - Preguntes i idees: [Discord](https://discord.gg/bSrpbd9) o [issues](https://github.com/NightlyRevenger/TataruHelper/issues/new/choose).

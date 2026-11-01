@@ -87,6 +87,8 @@ chmod +x tataru-linux.sh
 
 ![Перевод прямо в игре](LiveTranslation.jpg)
 
+![Перевод прямо в игре](LiveTranslation.gif)
+
 ## Участие
 
 - Вопросы и идеи: [Discord](https://discord.gg/bSrpbd9) или [issues](https://github.com/NightlyRevenger/TataruHelper/issues/new/choose).

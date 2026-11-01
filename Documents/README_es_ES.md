@@ -87,6 +87,8 @@ Cuando un motor rechaza una petición, el siguiente activado toma el relevo. Có
 
 ![Traducción en vivo dentro del juego](LiveTranslation.jpg)
 
+![Traducción en vivo dentro del juego](LiveTranslation.gif)
+
 ## Colaborar
 
 - Preguntas e ideas: [Discord](https://discord.gg/bSrpbd9) o [issues](https://github.com/NightlyRevenger/TataruHelper/issues/new/choose).

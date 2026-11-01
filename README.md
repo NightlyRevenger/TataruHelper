@@ -87,6 +87,8 @@ When an engine refuses a request, the next enabled one takes over. How to set ea
 
 ![Live translation in the game](Documents/LiveTranslation.jpg)
 
+![Live translation in the game](Documents/LiveTranslation.gif)
+
 ## Contributing
 
 - Questions and ideas: [Discord](https://discord.gg/bSrpbd9) or [issues](https://github.com/NightlyRevenger/TataruHelper/issues/new/choose).
