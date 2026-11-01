@@ -100,11 +100,13 @@ find_wine() {
 }
 
 # Wine's settings as the game has them. The sync mode in particular has to
-# match, or the new process cannot talk to the running wineserver. Three are
+# match, or the new process cannot talk to the running wineserver. Display
+# settings also come from the game, including when started outside a terminal
+# belonging to the desktop session. Three are
 # left out: they describe the game's own process, not the prefix.
 game_environment() {
     tr '\0' '\n' < "/proc/$1/environ" \
-        | grep -E '^(WINE[A-Z_]*|DXVK_[A-Z_]*|VKD3D_[A-Z_]*|LD_LIBRARY_PATH)=' \
+        | grep -E '^(WINE[A-Z_]*|DXVK_[A-Z_]*|VKD3D_[A-Z_]*|LD_LIBRARY_PATH|DISPLAY|WAYLAND_DISPLAY|XDG_RUNTIME_DIR|DBUS_SESSION_BUS_ADDRESS|XAUTHORITY)=' \
         | grep -Ev '^(WINESERVERSOCKET|WINELOADERNOEXEC|WINEPRELOADRESERVE|WINELOADER)=' \
         || true
 }
@@ -179,11 +181,75 @@ is_running() {
     pgrep -f 'current[\\/]TataruHelper\.exe' >/dev/null 2>&1
 }
 
+# A managed session owns only the helper it started. The desktop entry needs
+# no terminal, a second click shares the existing helper, and closing the app
+# stops its helper as well.
+relay_ready() {
+    [ "$(curl -fsS --noproxy '*' --connect-timeout 1 --max-time 1 \
+        http://127.0.0.1:2285/health 2>/dev/null || true)" = '{"service":"tataruhelper-deepl-relay"}' ]
+}
+
+session() {
+    local wine="$1" relay_endpoint="" attempt relay_binary="$DIR/deepl-relay"
+    if [ -f "$APP/current/deepl-relay" ]; then
+        relay_binary="$APP/current/deepl-relay"
+        chmod u+x "$relay_binary"
+    fi
+    SESSION_RELAY_PID=""
+    cleanup_session() {
+        if [ -n "${SESSION_RELAY_PID:-}" ]; then
+            kill "${SESSION_RELAY_PID:-}" 2>/dev/null || true
+            wait "${SESSION_RELAY_PID:-}" 2>/dev/null || true
+        fi
+    }
+    trap cleanup_session EXIT
+
+    if [ -x "$relay_binary" ] && command -v curl >/dev/null 2>&1; then
+        if ! relay_ready; then
+            "$relay_binary" -v > "$DIR/deepl-relay.log" 2>&1 &
+            SESSION_RELAY_PID=$!
+            for attempt in {1..30}; do
+                relay_ready && break
+                kill -0 "${SESSION_RELAY_PID:-}" 2>/dev/null || break
+                sleep 0.1
+            done
+        fi
+        if relay_ready; then
+            relay_endpoint="http://127.0.0.1:2285"
+        else
+            say "DeepL relay could not start. TataruHelper will use its remaining translation routes."
+        fi
+    fi
+
+    cd "$APP/current"
+    # Do not inherit a stale relay address when its helper failed to start.
+    unset TATARU_DEEPL_RELAY
+    if [ -n "$relay_endpoint" ]; then
+        export TATARU_DEEPL_RELAY="$relay_endpoint"
+    fi
+    if "$wine" "$EXE"; then
+        return 0
+    else
+        local code=$?
+        say "TataruHelper exited with an error. Details: $DIR/wine.log"
+        return "$code"
+    fi
+}
+
 run() {
     [ -f "$EXE" ] || fail "TataruHelper is not installed yet. Run: $0 install"
 
     if is_running; then
         say "TataruHelper is already running."
+        return 0
+    fi
+
+    # Keep the lock in the detached session as well; repeated clicks while
+    # waiting for the game must not create multiple launchers.
+    mkdir -p "$DIR"
+    exec 9> "$DIR/launch.lock"
+    if ! flock -n 9; then
+        say "TataruHelper is already running or waiting for the game."
         return 0
     fi
 
@@ -204,7 +270,8 @@ run() {
         fail "The game runs in Flatpak, which this script cannot reach yet. See Documents/Linux.md."
     fi
 
-    local wine
+    local wine launcher
+    launcher="$(readlink -f "$0")"
     wine="$(find_wine "$game")" || fail "Could not find the Wine the game is running on."
 
     local -a vars=()
@@ -215,7 +282,7 @@ run() {
     # process group, and a backgrounded start had not left it yet.
     (
         cd "$APP/current"
-        setsid -f env "${vars[@]}" "$wine" "$EXE" > "$DIR/wine.log" 2>&1 < /dev/null
+        setsid -f env "${vars[@]}" bash "$launcher" session "$wine" > "$DIR/wine.log" 2>&1 < /dev/null
     )
 
     say "TataruHelper started beside the game (Wine: $wine)."
@@ -250,6 +317,9 @@ case "${1:-run}" in
         ;;
     run)
         run
+        ;;
+    session)
+        session "$2"
         ;;
     uninstall)
         uninstall
