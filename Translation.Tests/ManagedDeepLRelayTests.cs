@@ -46,6 +46,32 @@ namespace Translation.Tests
             Assert.That(empty.Saved, Is.False);
         }
 
+        [Test]
+        public void ChangedIsRaisedOnlyWhenTheSettingsActuallyChange()
+        {
+            var raised = 0;
+            System.EventHandler count = (_, __) => raised++;
+            ManagedDeepLRelay.Changed += count;
+            try
+            {
+                var store = new Store();
+                Assert.That(ManagedDeepLRelay.Configure(store, "http://127.0.0.1:2285"), Is.True);
+                Assert.That(raised, Is.EqualTo(1));
+
+                Assert.That(ManagedDeepLRelay.Forget(store, "http://127.0.0.1:2285"), Is.True);
+                Assert.That(raised, Is.EqualTo(2));
+
+                var custom = new Store { Endpoint = "https://my-server.example/translate" };
+                Assert.That(ManagedDeepLRelay.Configure(custom, "http://127.0.0.1:2285"), Is.False);
+                Assert.That(ManagedDeepLRelay.Forget(custom, "http://127.0.0.1:2285"), Is.False);
+                Assert.That(raised, Is.EqualTo(2));
+            }
+            finally
+            {
+                ManagedDeepLRelay.Changed -= count;
+            }
+        }
+
         [TestCase(null)]
         [TestCase("")]
         [TestCase("not a URL")]

@@ -10,6 +10,14 @@ namespace Translation.Settings
     {
         public const string EnvironmentVariable = "TATARU_DEEPL_RELAY";
 
+        /// <summary>
+        /// Raised after the relay's address was written to, or taken out of, the
+        /// settings. The relay is connected in the background a moment after
+        /// start-up, so a settings page that already read the address has to
+        /// be told it changed.
+        /// </summary>
+        public static event EventHandler Changed;
+
         public static bool Configure(ITranslationCredentialStore store, string endpoint)
         {
             // The launcher may configure its own loopback relay, never a remote
@@ -26,6 +34,7 @@ namespace Translation.Settings
 
             store.SetEndpoint(TranslationEngineName.DeepL, endpoint);
             store.Save();
+            Changed?.Invoke(null, EventArgs.Empty);
             return true;
         }
 
@@ -43,6 +52,7 @@ namespace Translation.Settings
 
             store.SetEndpoint(TranslationEngineName.DeepL, string.Empty);
             store.Save();
+            Changed?.Invoke(null, EventArgs.Empty);
             return true;
         }
     }

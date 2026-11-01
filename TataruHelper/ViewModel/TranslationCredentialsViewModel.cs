@@ -10,6 +10,7 @@ using System.Windows;
 using Translation.Models;
 using Translation.Providers.DeepL;
 using Translation.Providers.DeepL.Browser;
+using Translation.Settings;
 
 namespace FFXIVTataruHelper.ViewModel
 {
@@ -42,6 +43,7 @@ namespace FFXIVTataruHelper.ViewModel
             RefreshAvailableEngines();
 
             DeepLBrowserBridge.Shared.Changed += (_, __) => RunOnUi(NotifyDeepLBrowser);
+            ManagedDeepLRelay.Changed += (_, __) => RunOnUi(() => OnPropertyChanged(nameof(DeepLXEndpoint)));
             ToggleDeepLBrowserCommand = new TataruUICommand(ToggleDeepLBrowser);
             TestDeepLXCommand = new TataruUICommand(TestDeepLX);
         }
