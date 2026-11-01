@@ -85,7 +85,7 @@ chmod +x tataru-linux.sh
 - [游戏读取原理](ReadingTheGame.md)：如何从游戏中读取对白，供要修改这部分的人参考（英文）。
 - 视频：[YouTube 演示](https://youtu.be/7HiQXzmkQuw)。
 
-![游戏内实时翻译](2020-08-18_21-12-52.gif)
+![游戏内实时翻译](LiveTranslation.jpg)
 
 ## 参与贡献
 

@@ -85,7 +85,7 @@ Cuando un motor rechaza una petición, el siguiente activado toma el relevo. Có
 - [Cómo se lee el juego](ReadingTheGame.md): cómo se extrae el diálogo del juego, para quien modifique esa parte (en inglés).
 - Vídeo: [demostración en YouTube](https://youtu.be/7HiQXzmkQuw).
 
-![Traducción en vivo dentro del juego](2020-08-18_21-12-52.gif)
+![Traducción en vivo dentro del juego](LiveTranslation.jpg)
 
 ## Colaborar
 

@@ -85,7 +85,7 @@ Quan un motor rebutja una petició, pren el relleu el següent d'activat. Com co
 - [Com es llegeix el joc](ReadingTheGame.md): com s'extreu el diàleg del joc, per a qui modifiqui aquesta part (en anglès).
 - Vídeo: [demostració a YouTube](https://youtu.be/7HiQXzmkQuw).
 
-![Traducció en directe dins del joc](2020-08-18_21-12-52.gif)
+![Traducció en directe dins del joc](LiveTranslation.jpg)
 
 ## Col·laborar
 

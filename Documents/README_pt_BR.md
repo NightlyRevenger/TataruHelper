@@ -85,7 +85,7 @@ Quando um mecanismo recusa um pedido, o próximo ativado assume. Como configurar
 - [Como o jogo é lido](ReadingTheGame.md): como o diálogo é extraído do jogo, para quem for alterar essa parte (em inglês).
 - Vídeo: [demonstração no YouTube](https://youtu.be/7HiQXzmkQuw).
 
-![Tradução ao vivo dentro do jogo](2020-08-18_21-12-52.gif)
+![Tradução ao vivo dentro do jogo](LiveTranslation.jpg)
 
 ## Contribuir
 

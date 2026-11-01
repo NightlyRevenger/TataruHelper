@@ -85,7 +85,7 @@ When an engine refuses a request, the next enabled one takes over. How to set ea
 - [Reading the game](Documents/ReadingTheGame.md): how dialogue is read out of the game, for anyone changing that part.
 - Video: [YouTube demonstration](https://youtu.be/7HiQXzmkQuw).
 
-![Live translation in the game](Documents/2020-08-18_21-12-52.gif)
+![Live translation in the game](Documents/LiveTranslation.jpg)
 
 ## Contributing
 

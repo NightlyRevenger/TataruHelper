@@ -85,7 +85,7 @@ chmod +x tataru-linux.sh
 - [ゲームの読み取り](ReadingTheGame.md)：ゲームからセリフを読み取る仕組み。この部分を変更する人向け（英語）。
 - 動画：[YouTube でのデモ](https://youtu.be/7HiQXzmkQuw)。
 
-![ゲーム内でのライブ翻訳](2020-08-18_21-12-52.gif)
+![ゲーム内でのライブ翻訳](LiveTranslation.jpg)
 
 ## コントリビュート
 

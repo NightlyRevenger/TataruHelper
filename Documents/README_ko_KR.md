@@ -85,7 +85,7 @@ chmod +x tataru-linux.sh
 - [게임 읽기](ReadingTheGame.md): 게임에서 대사를 읽어 오는 방법. 이 부분을 수정하려는 사람을 위한 문서(영어).
 - 동영상: [YouTube 시연](https://youtu.be/7HiQXzmkQuw).
 
-![게임 속 실시간 번역](2020-08-18_21-12-52.gif)
+![게임 속 실시간 번역](LiveTranslation.jpg)
 
 ## 기여하기
 

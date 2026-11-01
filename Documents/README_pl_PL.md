@@ -85,7 +85,7 @@ Gdy silnik odmówi, przejmuje następny włączony. Jak skonfigurować każdy z 
 - [Jak czytana jest gra](ReadingTheGame.md): jak dialogi są wydobywane z gry, dla osób zmieniających tę część (po angielsku).
 - Wideo: [pokaz na YouTube](https://youtu.be/7HiQXzmkQuw).
 
-![Tłumaczenie na żywo w grze](2020-08-18_21-12-52.gif)
+![Tłumaczenie na żywo w grze](LiveTranslation.jpg)
 
 ## Współpraca
 
