@@ -9,9 +9,15 @@ builds are kept so a claim can be checked against a client of that vintage.
 
 Ask before anything else. A game that updated overnight and an application that
 did not are the usual pair, but the same symptoms come from the game still
-starting up, from the wrong process being attached, and on Linux from the game
-not running at all - the application reads the game's memory and has nothing to
-read without it (`scripts/linux/tataru-linux.sh`, see [Linux](Linux.md)).
+starting up, from the wrong process being attached, and from the game not
+running at all - the application reads the game's memory and has nothing to
+read without it.
+
+The work can be done from either system. On Windows the application runs
+natively beside the game. On Linux it runs under the game's own Wine prefix, so
+the game has to be running there too (`scripts/linux/tataru-linux.sh`, see
+[Linux](Linux.md)). The offsets are the same on both; only the place to run
+the check and to find the logs differs.
 
 If the game has been in the world for a minute and the symptom stays, carry on.
 
@@ -35,8 +41,9 @@ that the screen has gone unreadable, because the chat log goes on working.
 1. **The diagnostics button** on the General page ("Collect diagnostics") puts a
    report on the clipboard and writes a copy beside the log. Ask a player who
    reports a problem for exactly this.
-2. **`Log.txt`**, in `%APPDATA%/TataruHelper` (on Linux, the same path inside
-   the game's prefix). Two lines matter:
+2. **`Log.txt`**, in `%APPDATA%/TataruHelper` on Windows; on Linux the same
+   folder inside the game's prefix
+   (`drive_c/users/<you>/AppData/Roaming/TataruHelper`). Two lines matter:
    - `Dialogue cannot be read off the screen: <why>. The chat log will still be
      read, a line behind.` - a field this reader asks for by name is gone from
      the FFXIVClientStructs types, and `<why>` names it. That is the whole
@@ -90,7 +97,10 @@ run time: the offsets are exactly as old as the Sharlayan package pinned in
 
 ## After it works
 
-- Run the tests and build the application on Linux, as for any change.
+- Build and run the tests (`dotnet build TataruHelper.sln`, `dotnet test` on the
+  test projects; see [CONTRIBUTING](../CONTRIBUTING.md)). It works the same on
+  Windows and Linux; on Linux `AnEnvironmentVariable_IsExpanded` is a known
+  failure. Then start the application against a live game and look.
 - Write the finding into "When a patch moves the ground" in
   [Reading the game](ReadingTheGame.md): the patch, the client build, what moved
   and by how much. The next person will start from there.
