@@ -29,7 +29,7 @@ The failures do not look alike, and the first one does not look like a failure.
 |---|---|---|
 | Translation arrives one line behind, or every other line, and only once the player clicks through. Chat is fine | the screen cannot be read; the chat log is carrying the conversation alone | `RaptureAtkModule` offset, `TryFindWindowList` |
 | Nothing at all, chat included | the `CHATLOG` signature - everything else is found relative to it | Sharlayan's signatures |
-| Dialogue works, cutscene subtitles do not | `TalkSubtitleTextOffset` (`0x238`, checked against 2026.07.16) | `TalkAddonRealtimeReader.cs` |
+| Dialogue works, cutscene subtitles do not | `AddonTalkSubtitle.SubtitleText` (`0x238` at 2026.07.16; the constant `TalkSubtitleTextOffset` is only a fallback) | `ResolveTalkSubtitleTextOffset` in `TalkAddonRealtimeReader.cs` |
 | Lines work, but bubbles and subtitles carry no speaker | the `LastTalk` pair in `UIModule` | `ResolveUiDirectDialogOffsets` |
 | Garbled or cut-off text | `AtkTextNode.NodeText` or the `Utf8String` layout | same |
 

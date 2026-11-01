@@ -26,11 +26,10 @@ namespace FFXIVTataruHelper.Services.GameMemory
         /// <summary>
         /// Offset of the subtitle Utf8String inside AddonTalkSubtitle.
         ///
-        /// FFXIVClientStructs has no AddonTalkSubtitle type, so unlike every other
-        /// addon here this offset cannot be resolved by reflection and was derived
-        /// from the running client (verified against 2026.07.16). If cutscene
-        /// subtitles stop appearing after a game patch, this is the value to
-        /// re-check.
+        /// Used only when the bundled FFXIVClientStructs has no AddonTalkSubtitle
+        /// type (Sharlayan before 9.2.5), where the offset was derived from the
+        /// running client (verified against 2026.07.16). With the type present
+        /// the offset is read from it, like every other addon here.
         /// </summary>
         private const long TalkSubtitleTextOffset = 0x238;
         private const string DirectDialogCode = "003D";
@@ -2497,9 +2496,19 @@ namespace FFXIVTataruHelper.Services.GameMemory
             addonSpecs.Add(AddonRealtimeTextSpec.InlineText(
                 TalkSubtitleAddonName,
                 CutsceneDialogCode,
-                TalkSubtitleTextOffset));
+                ResolveTalkSubtitleTextOffset()));
 
             return addonSpecs.ToArray();
+        }
+
+        private static long ResolveTalkSubtitleTextOffset()
+        {
+            var addonTalkSubtitleType = Type.GetType(UiNamespace + "AddonTalkSubtitle, Sharlayan");
+            var resolved = addonTalkSubtitleType == null
+                ? -1
+                : ResolveFieldOffset(addonTalkSubtitleType, "SubtitleText");
+
+            return resolved >= 0 ? resolved : TalkSubtitleTextOffset;
         }
 
         private static AddonRealtimeTextSpec ResolveMiniTalkAddonSpec(string addonName)
