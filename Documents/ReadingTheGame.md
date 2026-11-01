@@ -67,10 +67,12 @@ Two consequences worth knowing:
   the application started. It is announced anyway: losing a real line is worse
   than one stale line once.
 
-`TalkSubtitle` has no type in FFXIVClientStructs, so its text offset is the one
-value in the reader derived by hand from a running client (`0x238`, checked
-against 2026.07.16). If cutscene subtitles stop appearing after a game patch,
-check that first.
+`TalkSubtitle` had no type in FFXIVClientStructs when this was written, so its
+text offset is the one value in the reader derived by hand from a running client
+(`0x238`, checked against 2026.07.16). FFXIVClientStructs has an
+`AddonTalkSubtitle` since, with `SubtitleText` at the same `0x238` (Sharlayan
+9.2.5 carries it), but the reader still uses the constant. If cutscene subtitles
+stop appearing after a game patch, check that first.
 
 ## When a patch moves the ground
 
