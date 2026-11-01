@@ -377,6 +377,14 @@
                             Background="{DynamicResource Brush.SurfaceSubtle}">
                         <DockPanel>
                             <ui:ToggleSwitch DockPanel.Dock="Right" VerticalAlignment="Center"
+                                             IsChecked="{Binding Shell.TranslationCredentials.IsBingEnabled, Mode=TwoWay}" />
+                            <TextBlock Text="Bing" VerticalAlignment="Center" />
+                        </DockPanel>
+                    </Border>
+                    <Border Padding="12,10" Margin="0,0,0,6" CornerRadius="6"
+                            Background="{DynamicResource Brush.SurfaceSubtle}">
+                        <DockPanel>
+                            <ui:ToggleSwitch DockPanel.Dock="Right" VerticalAlignment="Center"
                                              IsChecked="{Binding Shell.TranslationCredentials.IsPapagoEnabled, Mode=TwoWay}" />
                             <TextBlock Text="Papago" VerticalAlignment="Center" />
                         </DockPanel>
@@ -446,6 +454,47 @@
                                                            Visibility="{Binding Shell.TranslationCredentials.IsDeepLBrowserNoBrowser, Converter={utils:BooleanToVisibilityConverterCollapse}}" />
                                                 <TextBlock TextWrapping="Wrap" Text="{DynamicResource DeepLBrowserStatusFailed}"
                                                            Visibility="{Binding Shell.TranslationCredentials.IsDeepLBrowserFailed, Converter={utils:BooleanToVisibilityConverterCollapse}}" />
+                    <Border Padding="12,10" Margin="0,0,0,6" CornerRadius="6"
+                            Background="{DynamicResource Brush.SurfaceSubtle}">
+                        <DockPanel>
+                            <ui:ToggleSwitch DockPanel.Dock="Right" VerticalAlignment="Center"
+                                IsChecked="{Binding Shell.TranslationCredentials.IsTranslateComEnabled, Mode=TwoWay}" />
+                            <TextBlock Text="Translate.com" VerticalAlignment="Center" />
+                        </DockPanel>
+                    </Border>
+                    <Border Padding="12,10" Margin="0,0,0,6" CornerRadius="6"
+                            Background="{DynamicResource Brush.SurfaceSubtle}">
+                        <DockPanel>
+                            <ui:ToggleSwitch DockPanel.Dock="Right" VerticalAlignment="Center"
+                                IsChecked="{Binding Shell.TranslationCredentials.IsModernMTEnabled, Mode=TwoWay}" />
+                            <TextBlock Text="ModernMT" VerticalAlignment="Center" />
+                        </DockPanel>
+                    </Border>
+                    <Border Padding="12,10" Margin="0,0,0,6" CornerRadius="6"
+                            Background="{DynamicResource Brush.SurfaceSubtle}">
+                        <DockPanel>
+                            <ui:ToggleSwitch DockPanel.Dock="Right" VerticalAlignment="Center"
+                                IsChecked="{Binding Shell.TranslationCredentials.IsTencentEnabled, Mode=TwoWay}" />
+                            <TextBlock Text="Tencent TranSmart" VerticalAlignment="Center" />
+                        </DockPanel>
+                    </Border>
+                    <Border Padding="12,10" Margin="0,0,0,6" CornerRadius="6"
+                            Background="{DynamicResource Brush.SurfaceSubtle}">
+                        <DockPanel>
+                            <ui:ToggleSwitch DockPanel.Dock="Right" VerticalAlignment="Center"
+                                IsChecked="{Binding Shell.TranslationCredentials.IsVolcengineEnabled, Mode=TwoWay}" />
+                            <TextBlock Text="Volcengine" VerticalAlignment="Center" />
+                        </DockPanel>
+                    </Border>
+                    <Border Padding="12,10" Margin="0,0,0,6" CornerRadius="6"
+                            Background="{DynamicResource Brush.SurfaceSubtle}">
+                        <DockPanel>
+                            <ui:ToggleSwitch DockPanel.Dock="Right" VerticalAlignment="Center"
+                                IsChecked="{Binding Shell.TranslationCredentials.IsAlibabaEnabled, Mode=TwoWay}" />
+                            <TextBlock Text="Alibaba Translate" VerticalAlignment="Center" />
+                        </DockPanel>
+                    </Border>
+
                                             </Grid>
                                         </DockPanel>
                                FontWeight="SemiBold"

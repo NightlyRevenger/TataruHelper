@@ -17,8 +17,9 @@ namespace FFXIVTataruHelper.ViewModel
     {
         private static readonly TranslationEngineName[] EngineUiOrder =
         {
-            TranslationEngineName.GoogleTranslate, TranslationEngineName.YandexFree, TranslationEngineName.Papago,
-            TranslationEngineName.DeepL,
+            TranslationEngineName.GoogleTranslate, TranslationEngineName.YandexFree, TranslationEngineName.Bing, TranslationEngineName.Papago,
+            TranslationEngineName.DeepL, TranslationEngineName.TranslateCom, TranslationEngineName.ModernMT,
+            TranslationEngineName.Tencent, TranslationEngineName.Volcengine, TranslationEngineName.Alibaba,
             TranslationEngineName.AzureTranslator, TranslationEngineName.GoogleCloudTranslate,
             TranslationEngineName.DeepLApi, TranslationEngineName.OpenAI, TranslationEngineName.Gemini,
             TranslationEngineName.DeepSeek, TranslationEngineName.Claude, TranslationEngineName.OpenRouter,
@@ -57,6 +58,42 @@ namespace FFXIVTataruHelper.ViewModel
         {
             get => _store.IsEngineEnabled(TranslationEngineName.YandexFree);
             set => SetEngineEnabled(TranslationEngineName.YandexFree, value);
+        }
+
+        public bool IsBingEnabled
+        {
+            get => _store.IsEngineEnabled(TranslationEngineName.Bing);
+            set => SetEngineEnabled(TranslationEngineName.Bing, value);
+        }
+
+        public bool IsTranslateComEnabled
+        {
+            get => _store.IsEngineEnabled(TranslationEngineName.TranslateCom);
+            set => SetEngineEnabled(TranslationEngineName.TranslateCom, value);
+        }
+
+        public bool IsModernMTEnabled
+        {
+            get => _store.IsEngineEnabled(TranslationEngineName.ModernMT);
+            set => SetEngineEnabled(TranslationEngineName.ModernMT, value);
+        }
+
+        public bool IsTencentEnabled
+        {
+            get => _store.IsEngineEnabled(TranslationEngineName.Tencent);
+            set => SetEngineEnabled(TranslationEngineName.Tencent, value);
+        }
+
+        public bool IsVolcengineEnabled
+        {
+            get => _store.IsEngineEnabled(TranslationEngineName.Volcengine);
+            set => SetEngineEnabled(TranslationEngineName.Volcengine, value);
+        }
+
+        public bool IsAlibabaEnabled
+        {
+            get => _store.IsEngineEnabled(TranslationEngineName.Alibaba);
+            set => SetEngineEnabled(TranslationEngineName.Alibaba, value);
         }
 
         public bool IsPapagoEnabled
@@ -497,6 +534,12 @@ namespace FFXIVTataruHelper.ViewModel
         {
             TranslationEngineName.GoogleTranslate => nameof(IsGoogleTranslateEnabled),
             TranslationEngineName.YandexFree => nameof(IsYandexFreeEnabled),
+            TranslationEngineName.Bing => nameof(IsBingEnabled),
+            TranslationEngineName.TranslateCom => nameof(IsTranslateComEnabled),
+            TranslationEngineName.ModernMT => nameof(IsModernMTEnabled),
+            TranslationEngineName.Tencent => nameof(IsTencentEnabled),
+            TranslationEngineName.Volcengine => nameof(IsVolcengineEnabled),
+            TranslationEngineName.Alibaba => nameof(IsAlibabaEnabled),
             TranslationEngineName.Papago => nameof(IsPapagoEnabled),
             TranslationEngineName.DeepL => nameof(IsDeepLEnabled),
             TranslationEngineName.AzureTranslator => nameof(IsAzureEnabled),

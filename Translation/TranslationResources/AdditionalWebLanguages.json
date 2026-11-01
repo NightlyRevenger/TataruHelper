@@ -1,0 +1,22 @@
+[
+  {
+    "ShownName": "Auto",
+    "SystemName": "Auto",
+    "LanguageCode": "auto"
+  },
+  {
+    "ShownName": "English",
+    "SystemName": "English",
+    "LanguageCode": "en"
+  },
+  {
+    "ShownName": "Japanese",
+    "SystemName": "Japanese",
+    "LanguageCode": "ja"
+  },
+  {
+    "ShownName": "Russian",
+    "SystemName": "Russian",
+    "LanguageCode": "ru"
+  }
+]

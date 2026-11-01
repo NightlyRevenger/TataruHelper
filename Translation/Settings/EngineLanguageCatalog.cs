@@ -45,6 +45,15 @@ namespace Translation.Settings
             {
                 new EngineLanguageSource(TranslationEngineName.GoogleTranslate,
                     settings.GoogleTranslateLanguages, 9),
+                // Fallback preference, based on a small EN/RU and JA/RU dialogue
+                // sample and latency, rather than a universal quality score.
+                new EngineLanguageSource(TranslationEngineName.TranslateCom, settings.AdditionalWebLanguages, 8.6),
+                new EngineLanguageSource(TranslationEngineName.ModernMT, settings.AdditionalWebLanguages, 8.4),
+                new EngineLanguageSource(TranslationEngineName.Tencent, settings.AdditionalWebLanguages, 6.6),
+                new EngineLanguageSource(TranslationEngineName.Volcengine, settings.AdditionalWebLanguages, 6.4),
+                new EngineLanguageSource(TranslationEngineName.Alibaba, settings.AdditionalWebLanguages, 6.2),
+                new EngineLanguageSource(TranslationEngineName.Bing,
+                    settings.BingLanguages, 8.5),
                 new EngineLanguageSource(TranslationEngineName.Papago,
                     settings.PapagoLanguages, 6),
                 new EngineLanguageSource(TranslationEngineName.DeepL,

@@ -4,6 +4,8 @@ using Microsoft.Extensions.Logging;
 using Translation.Credentials;
 using Translation.Models;
 using Translation.Providers.Azure;
+using Translation.Providers.Bing;
+using Translation.Providers.Web;
 using Translation.Providers.Claude;
 using Translation.Providers.DeepL;
 using Translation.Providers.DeepSeek;
@@ -33,6 +35,7 @@ namespace Translation.Providers
             settings = settings ?? new TranslationSettings();
 
             var google = new GoogleTranslator(logger, settings);
+            var bing = new BingTranslator(logger);
             var papago = new PapagoTranslator(logger, settings);
             var deepLF = new DeepLTranslator(logger, settings, credentials);
             var azure = new AzureTranslator(logger, credentials);
@@ -52,7 +55,9 @@ namespace Translation.Providers
 
             var providers = new ITranslationProvider[]
             {
-                google, papago, deepLF, azure, googleCloud, deepLApi, openAi, deepSeek, yandexCloud, yandexGpt,
+                new TranslateComTranslator(logger), new ModernMtTranslator(logger), new TencentTranslator(logger),
+                new VolcengineTranslator(logger), new AlibabaTranslator(logger),
+                google, bing, papago, deepLF, azure, googleCloud, deepLApi, openAi, deepSeek, yandexCloud, yandexGpt,
                 yandexFree, gemini, openRouter, claude, libreTranslate, ollama, lmStudio,
             };
 

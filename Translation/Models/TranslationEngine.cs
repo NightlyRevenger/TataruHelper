@@ -34,6 +34,13 @@ namespace Translation.Models
 
         /// <summary>An open translation server the player points at. Needs an address, not a key.</summary>
         LibreTranslate = 20,
+
+        Bing = 21,
+        TranslateCom = 22,
+        ModernMT = 23,
+        Tencent = 24,
+        Volcengine = 25,
+        Alibaba = 26,
     }
 
     public class TranslationEngine : IEquatable<TranslationEngine>
@@ -53,6 +60,9 @@ namespace Translation.Models
         {
             switch (engineName)
             {
+                case TranslationEngineName.TranslateCom: return "Translate.com";
+                case TranslationEngineName.Tencent: return "Tencent TranSmart";
+                case TranslationEngineName.Alibaba: return "Alibaba Translate";
                 case TranslationEngineName.YandexFree:
                     return "Yandex";
                 case TranslationEngineName.Yandex:

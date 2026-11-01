@@ -18,6 +18,11 @@
         {
             switch (engine)
             {
+                // These extra web engines worked but made meaning-changing
+                // mistakes on the dialogue probe. Make them opt-in reserves.
+                case TranslationEngineName.Tencent:
+                case TranslationEngineName.Volcengine:
+                case TranslationEngineName.Alibaba:
                 case TranslationEngineName.Ollama:
                 case TranslationEngineName.LmStudio:
                 case TranslationEngineName.LibreTranslate:

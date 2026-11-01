@@ -1,0 +1,902 @@
+[
+  {
+    "ShownName": "Auto",
+    "SystemName": "Auto",
+    "LanguageCode": "auto"
+  },
+  {
+    "ShownName": "Acehnese (Latin)",
+    "SystemName": "Acehnese",
+    "LanguageCode": "ace"
+  },
+  {
+    "ShownName": "Afrikaans",
+    "SystemName": "Afrikaans",
+    "LanguageCode": "af"
+  },
+  {
+    "ShownName": "Albanian",
+    "SystemName": "Albanian",
+    "LanguageCode": "sq"
+  },
+  {
+    "ShownName": "Amharic",
+    "SystemName": "Amharic",
+    "LanguageCode": "am"
+  },
+  {
+    "ShownName": "Arabic",
+    "SystemName": "Arabic",
+    "LanguageCode": "ar"
+  },
+  {
+    "ShownName": "Arabic (Egyptian)",
+    "SystemName": "Arabic (Egyptian)",
+    "LanguageCode": "arz"
+  },
+  {
+    "ShownName": "Arabic (Moroccan)",
+    "SystemName": "Arabic (Moroccan)",
+    "LanguageCode": "ary"
+  },
+  {
+    "ShownName": "Arabic (Romanized)",
+    "SystemName": "Arabic (Romanized)",
+    "LanguageCode": "arb"
+  },
+  {
+    "ShownName": "Armenian",
+    "SystemName": "Armenian",
+    "LanguageCode": "hy"
+  },
+  {
+    "ShownName": "Assamese",
+    "SystemName": "Assamese",
+    "LanguageCode": "as"
+  },
+  {
+    "ShownName": "Asturian",
+    "SystemName": "Asturian",
+    "LanguageCode": "ast"
+  },
+  {
+    "ShownName": "Azerbaijani",
+    "SystemName": "Azerbaijani",
+    "LanguageCode": "az"
+  },
+  {
+    "ShownName": "Balinese",
+    "SystemName": "Balinese",
+    "LanguageCode": "ban"
+  },
+  {
+    "ShownName": "Bangla",
+    "SystemName": "Bengali",
+    "LanguageCode": "bn"
+  },
+  {
+    "ShownName": "Bashkir",
+    "SystemName": "Bashkir",
+    "LanguageCode": "ba"
+  },
+  {
+    "ShownName": "Basque",
+    "SystemName": "Basque",
+    "LanguageCode": "eu"
+  },
+  {
+    "ShownName": "Batak Toba",
+    "SystemName": "Batak Toba",
+    "LanguageCode": "bbc"
+  },
+  {
+    "ShownName": "Belarusian",
+    "SystemName": "Belarusian",
+    "LanguageCode": "be"
+  },
+  {
+    "ShownName": "Bhojpuri",
+    "SystemName": "Bhojpuri",
+    "LanguageCode": "bho"
+  },
+  {
+    "ShownName": "Bikol",
+    "SystemName": "Bikol",
+    "LanguageCode": "bik"
+  },
+  {
+    "ShownName": "Bodo",
+    "SystemName": "Bodo",
+    "LanguageCode": "brx"
+  },
+  {
+    "ShownName": "Bosnian",
+    "SystemName": "Bosnian",
+    "LanguageCode": "bs"
+  },
+  {
+    "ShownName": "Bulgarian",
+    "SystemName": "Bulgarian",
+    "LanguageCode": "bg"
+  },
+  {
+    "ShownName": "Cantonese (Traditional)",
+    "SystemName": "Cantonese",
+    "LanguageCode": "yue"
+  },
+  {
+    "ShownName": "Catalan",
+    "SystemName": "Catalan",
+    "LanguageCode": "ca"
+  },
+  {
+    "ShownName": "Cebuano",
+    "SystemName": "Cebuano",
+    "LanguageCode": "ceb"
+  },
+  {
+    "ShownName": "Chhattisgarhi",
+    "SystemName": "Chhattisgarhi",
+    "LanguageCode": "hne"
+  },
+  {
+    "ShownName": "Chinese (Literary)",
+    "SystemName": "Chinese (Literary)",
+    "LanguageCode": "lzh"
+  },
+  {
+    "ShownName": "Chinese Simplified",
+    "SystemName": "Chinese Simplified",
+    "LanguageCode": "zh-Hans"
+  },
+  {
+    "ShownName": "Chinese Traditional",
+    "SystemName": "Chinese Traditional",
+    "LanguageCode": "zh-Hant"
+  },
+  {
+    "ShownName": "Corsican",
+    "SystemName": "Corsican",
+    "LanguageCode": "co"
+  },
+  {
+    "ShownName": "Croatian",
+    "SystemName": "Croatian",
+    "LanguageCode": "hr"
+  },
+  {
+    "ShownName": "Czech",
+    "SystemName": "Czech",
+    "LanguageCode": "cs"
+  },
+  {
+    "ShownName": "Danish",
+    "SystemName": "Danish",
+    "LanguageCode": "da"
+  },
+  {
+    "ShownName": "Dari",
+    "SystemName": "Dari",
+    "LanguageCode": "prs"
+  },
+  {
+    "ShownName": "Divehi",
+    "SystemName": "Dhivehi",
+    "LanguageCode": "dv"
+  },
+  {
+    "ShownName": "Dogri",
+    "SystemName": "Dogri",
+    "LanguageCode": "doi"
+  },
+  {
+    "ShownName": "Dutch",
+    "SystemName": "Dutch",
+    "LanguageCode": "nl"
+  },
+  {
+    "ShownName": "English",
+    "SystemName": "English",
+    "LanguageCode": "en"
+  },
+  {
+    "ShownName": "English (United Kingdom)",
+    "SystemName": "English (United Kingdom)",
+    "LanguageCode": "en-GB"
+  },
+  {
+    "ShownName": "Esperanto",
+    "SystemName": "Esperanto",
+    "LanguageCode": "epo"
+  },
+  {
+    "ShownName": "Estonian",
+    "SystemName": "Estonian",
+    "LanguageCode": "et"
+  },
+  {
+    "ShownName": "Faroese",
+    "SystemName": "Faroese",
+    "LanguageCode": "fo"
+  },
+  {
+    "ShownName": "Fijian",
+    "SystemName": "Fijian",
+    "LanguageCode": "fj"
+  },
+  {
+    "ShownName": "Filipino",
+    "SystemName": "Filipino",
+    "LanguageCode": "fil"
+  },
+  {
+    "ShownName": "Finnish",
+    "SystemName": "Finnish",
+    "LanguageCode": "fi"
+  },
+  {
+    "ShownName": "French",
+    "SystemName": "French",
+    "LanguageCode": "fr"
+  },
+  {
+    "ShownName": "French (Canada)",
+    "SystemName": "French (Canada)",
+    "LanguageCode": "fr-CA"
+  },
+  {
+    "ShownName": "Frisian",
+    "SystemName": "Frisian",
+    "LanguageCode": "fy"
+  },
+  {
+    "ShownName": "Friulian",
+    "SystemName": "Friulian",
+    "LanguageCode": "fur"
+  },
+  {
+    "ShownName": "Galician",
+    "SystemName": "Galician",
+    "LanguageCode": "gl"
+  },
+  {
+    "ShownName": "Ganda",
+    "SystemName": "Ganda",
+    "LanguageCode": "lug"
+  },
+  {
+    "ShownName": "Georgian",
+    "SystemName": "Georgian",
+    "LanguageCode": "ka"
+  },
+  {
+    "ShownName": "German",
+    "SystemName": "German",
+    "LanguageCode": "de"
+  },
+  {
+    "ShownName": "Greek",
+    "SystemName": "Greek",
+    "LanguageCode": "el"
+  },
+  {
+    "ShownName": "Gujarati",
+    "SystemName": "Gujarati",
+    "LanguageCode": "gu"
+  },
+  {
+    "ShownName": "Haitian Creole",
+    "SystemName": "Haitian Creole",
+    "LanguageCode": "ht"
+  },
+  {
+    "ShownName": "Hausa",
+    "SystemName": "Hausa",
+    "LanguageCode": "ha"
+  },
+  {
+    "ShownName": "Hebrew",
+    "SystemName": "Hebrew",
+    "LanguageCode": "he"
+  },
+  {
+    "ShownName": "Hiligaynon",
+    "SystemName": "Hiligaynon",
+    "LanguageCode": "hil"
+  },
+  {
+    "ShownName": "Hindi",
+    "SystemName": "Hindi",
+    "LanguageCode": "hi"
+  },
+  {
+    "ShownName": "Hmong Daw",
+    "SystemName": "Hmong Daw",
+    "LanguageCode": "mww"
+  },
+  {
+    "ShownName": "Hungarian",
+    "SystemName": "Hungarian",
+    "LanguageCode": "hu"
+  },
+  {
+    "ShownName": "Iban",
+    "SystemName": "Iban",
+    "LanguageCode": "iba"
+  },
+  {
+    "ShownName": "Icelandic",
+    "SystemName": "Icelandic",
+    "LanguageCode": "is"
+  },
+  {
+    "ShownName": "Igbo",
+    "SystemName": "Igbo",
+    "LanguageCode": "ig"
+  },
+  {
+    "ShownName": "Ilocano",
+    "SystemName": "Ilocano",
+    "LanguageCode": "ilo"
+  },
+  {
+    "ShownName": "Indonesian",
+    "SystemName": "Indonesian",
+    "LanguageCode": "id"
+  },
+  {
+    "ShownName": "Inuinnaqtun",
+    "SystemName": "Inuinnaqtun",
+    "LanguageCode": "ikt"
+  },
+  {
+    "ShownName": "Inuktitut",
+    "SystemName": "Inuktut (Syllabics)",
+    "LanguageCode": "iu"
+  },
+  {
+    "ShownName": "Inuktitut (Latin)",
+    "SystemName": "Inuktut (Latin)",
+    "LanguageCode": "iu-Latn"
+  },
+  {
+    "ShownName": "Irish",
+    "SystemName": "Irish",
+    "LanguageCode": "ga"
+  },
+  {
+    "ShownName": "Italian",
+    "SystemName": "Italian",
+    "LanguageCode": "it"
+  },
+  {
+    "ShownName": "Jamaican Patois",
+    "SystemName": "Jamaican Patois",
+    "LanguageCode": "jam"
+  },
+  {
+    "ShownName": "Japanese",
+    "SystemName": "Japanese",
+    "LanguageCode": "ja"
+  },
+  {
+    "ShownName": "Javanese",
+    "SystemName": "Javanese",
+    "LanguageCode": "jav"
+  },
+  {
+    "ShownName": "Kabuverdianu",
+    "SystemName": "Kabuverdianu",
+    "LanguageCode": "kea"
+  },
+  {
+    "ShownName": "Kannada",
+    "SystemName": "Kannada",
+    "LanguageCode": "kn"
+  },
+  {
+    "ShownName": "Kapampangan",
+    "SystemName": "Kapampangan",
+    "LanguageCode": "pam"
+  },
+  {
+    "ShownName": "Kashmiri",
+    "SystemName": "Kashmiri",
+    "LanguageCode": "ks"
+  },
+  {
+    "ShownName": "Kazakh",
+    "SystemName": "Kazakh",
+    "LanguageCode": "kk"
+  },
+  {
+    "ShownName": "Khmer",
+    "SystemName": "Khmer",
+    "LanguageCode": "km"
+  },
+  {
+    "ShownName": "Kinyarwanda",
+    "SystemName": "Kinyarwanda",
+    "LanguageCode": "rw"
+  },
+  {
+    "ShownName": "Klingon (Latin)",
+    "SystemName": "Klingon (Latin)",
+    "LanguageCode": "tlh-Latn"
+  },
+  {
+    "ShownName": "Konkani",
+    "SystemName": "Konkani",
+    "LanguageCode": "gom"
+  },
+  {
+    "ShownName": "Korean",
+    "SystemName": "Korean",
+    "LanguageCode": "ko"
+  },
+  {
+    "ShownName": "Krio",
+    "SystemName": "Krio",
+    "LanguageCode": "kri"
+  },
+  {
+    "ShownName": "Kurdish (Central)",
+    "SystemName": "Kurdish (Kurmanji)",
+    "LanguageCode": "ku"
+  },
+  {
+    "ShownName": "Kurdish (Northern)",
+    "SystemName": "Kurdish (Northern)",
+    "LanguageCode": "kmr"
+  },
+  {
+    "ShownName": "Kyrgyz",
+    "SystemName": "Kyrgyz",
+    "LanguageCode": "ky"
+  },
+  {
+    "ShownName": "Lao",
+    "SystemName": "Lao",
+    "LanguageCode": "lo"
+  },
+  {
+    "ShownName": "Latin",
+    "SystemName": "Latin",
+    "LanguageCode": "la"
+  },
+  {
+    "ShownName": "Latvian",
+    "SystemName": "Latvian",
+    "LanguageCode": "lv"
+  },
+  {
+    "ShownName": "Ligurian (Genoese)",
+    "SystemName": "Ligurian",
+    "LanguageCode": "lij"
+  },
+  {
+    "ShownName": "Limburgish",
+    "SystemName": "Limburgish",
+    "LanguageCode": "lim"
+  },
+  {
+    "ShownName": "Lingala",
+    "SystemName": "Lingala",
+    "LanguageCode": "ln"
+  },
+  {
+    "ShownName": "Lithuanian",
+    "SystemName": "Lithuanian",
+    "LanguageCode": "lt"
+  },
+  {
+    "ShownName": "Lombard",
+    "SystemName": "Lombard",
+    "LanguageCode": "lmo"
+  },
+  {
+    "ShownName": "Lower Sorbian",
+    "SystemName": "Lower Sorbian",
+    "LanguageCode": "dsb"
+  },
+  {
+    "ShownName": "Luxembourgish",
+    "SystemName": "Luxembourgish",
+    "LanguageCode": "lb"
+  },
+  {
+    "ShownName": "Macedonian",
+    "SystemName": "Macedonian",
+    "LanguageCode": "mk"
+  },
+  {
+    "ShownName": "Maithili",
+    "SystemName": "Maithili",
+    "LanguageCode": "mai"
+  },
+  {
+    "ShownName": "Malagasy",
+    "SystemName": "Malagasy",
+    "LanguageCode": "mg"
+  },
+  {
+    "ShownName": "Malay",
+    "SystemName": "Malay",
+    "LanguageCode": "ms"
+  },
+  {
+    "ShownName": "Malayalam",
+    "SystemName": "Malayalam",
+    "LanguageCode": "ml"
+  },
+  {
+    "ShownName": "Maltese",
+    "SystemName": "Maltese",
+    "LanguageCode": "mt"
+  },
+  {
+    "ShownName": "Marathi",
+    "SystemName": "Marathi",
+    "LanguageCode": "mr"
+  },
+  {
+    "ShownName": "Marwari",
+    "SystemName": "Marwadi",
+    "LanguageCode": "mwr"
+  },
+  {
+    "ShownName": "Mauritian Creole",
+    "SystemName": "Mauritian Creole",
+    "LanguageCode": "mfe"
+  },
+  {
+    "ShownName": "Minangkabau (Latin)",
+    "SystemName": "Minang",
+    "LanguageCode": "min"
+  },
+  {
+    "ShownName": "Mongolian (Cyrillic)",
+    "SystemName": "Mongolian (Cyrillic)",
+    "LanguageCode": "mn-Cyrl"
+  },
+  {
+    "ShownName": "Mongolian (Traditional)",
+    "SystemName": "Mongolian (Traditional)",
+    "LanguageCode": "mn-Mong"
+  },
+  {
+    "ShownName": "Myanmar (Burmese)",
+    "SystemName": "Myanmar (Burmese)",
+    "LanguageCode": "my"
+  },
+  {
+    "ShownName": "Māori",
+    "SystemName": "Maori",
+    "LanguageCode": "mi"
+  },
+  {
+    "ShownName": "Nepali",
+    "SystemName": "Nepali",
+    "LanguageCode": "ne"
+  },
+  {
+    "ShownName": "Norwegian",
+    "SystemName": "Norwegian",
+    "LanguageCode": "nb"
+  },
+  {
+    "ShownName": "Norwegian Nynorsk",
+    "SystemName": "Norwegian Nynorsk",
+    "LanguageCode": "nno"
+  },
+  {
+    "ShownName": "Nyanja",
+    "SystemName": "Nyanja",
+    "LanguageCode": "nya"
+  },
+  {
+    "ShownName": "Occitan",
+    "SystemName": "Occitan",
+    "LanguageCode": "oc"
+  },
+  {
+    "ShownName": "Odia",
+    "SystemName": "Odia (Oriya)",
+    "LanguageCode": "or"
+  },
+  {
+    "ShownName": "Papiamento",
+    "SystemName": "Papiamento",
+    "LanguageCode": "pap"
+  },
+  {
+    "ShownName": "Pashto",
+    "SystemName": "Pashto",
+    "LanguageCode": "ps"
+  },
+  {
+    "ShownName": "Persian",
+    "SystemName": "Persian",
+    "LanguageCode": "fa"
+  },
+  {
+    "ShownName": "Polish",
+    "SystemName": "Polish",
+    "LanguageCode": "pl"
+  },
+  {
+    "ShownName": "Portuguese (Brazil)",
+    "SystemName": "Portuguese",
+    "LanguageCode": "pt"
+  },
+  {
+    "ShownName": "Portuguese (Portugal)",
+    "SystemName": "Portuguese (Portugal)",
+    "LanguageCode": "pt-PT"
+  },
+  {
+    "ShownName": "Punjabi",
+    "SystemName": "Punjabi (Gurmukhi)",
+    "LanguageCode": "pa"
+  },
+  {
+    "ShownName": "Punjabi (Shahmukhi)",
+    "SystemName": "Punjabi (Shahmukhi)",
+    "LanguageCode": "pnb"
+  },
+  {
+    "ShownName": "Querétaro Otomi",
+    "SystemName": "Querétaro Otomi",
+    "LanguageCode": "otq"
+  },
+  {
+    "ShownName": "Romanian",
+    "SystemName": "Romanian",
+    "LanguageCode": "ro"
+  },
+  {
+    "ShownName": "Rundi",
+    "SystemName": "Rundi",
+    "LanguageCode": "run"
+  },
+  {
+    "ShownName": "Russian",
+    "SystemName": "Russian",
+    "LanguageCode": "ru"
+  },
+  {
+    "ShownName": "Samoan",
+    "SystemName": "Samoan",
+    "LanguageCode": "sm"
+  },
+  {
+    "ShownName": "Sanskrit",
+    "SystemName": "Sanskrit",
+    "LanguageCode": "sa"
+  },
+  {
+    "ShownName": "Sardinian",
+    "SystemName": "Sardinian",
+    "LanguageCode": "srd"
+  },
+  {
+    "ShownName": "Serbian (Cyrillic)",
+    "SystemName": "Serbian (Cyrillic)",
+    "LanguageCode": "sr-Cyrl"
+  },
+  {
+    "ShownName": "Serbian (Latin)",
+    "SystemName": "Serbian (Latin)",
+    "LanguageCode": "sr-Latn"
+  },
+  {
+    "ShownName": "Sesotho",
+    "SystemName": "Sesotho",
+    "LanguageCode": "st"
+  },
+  {
+    "ShownName": "Sesotho sa Leboa",
+    "SystemName": "Sepedi",
+    "LanguageCode": "nso"
+  },
+  {
+    "ShownName": "Setswana",
+    "SystemName": "Tswana",
+    "LanguageCode": "tn"
+  },
+  {
+    "ShownName": "Seychelles French Creole",
+    "SystemName": "Seychellois Creole",
+    "LanguageCode": "crs"
+  },
+  {
+    "ShownName": "Shona",
+    "SystemName": "Shona",
+    "LanguageCode": "sn"
+  },
+  {
+    "ShownName": "Sicilian",
+    "SystemName": "Sicilian",
+    "LanguageCode": "scn"
+  },
+  {
+    "ShownName": "Sindhi",
+    "SystemName": "Sindhi",
+    "LanguageCode": "sd"
+  },
+  {
+    "ShownName": "Sinhala",
+    "SystemName": "Sinhala",
+    "LanguageCode": "si"
+  },
+  {
+    "ShownName": "Slovak",
+    "SystemName": "Slovak",
+    "LanguageCode": "sk"
+  },
+  {
+    "ShownName": "Slovenian",
+    "SystemName": "Slovenian",
+    "LanguageCode": "sl"
+  },
+  {
+    "ShownName": "Somali",
+    "SystemName": "Somali",
+    "LanguageCode": "so"
+  },
+  {
+    "ShownName": "Spanish",
+    "SystemName": "Spanish",
+    "LanguageCode": "es"
+  },
+  {
+    "ShownName": "Sundanese",
+    "SystemName": "Sundanese",
+    "LanguageCode": "su"
+  },
+  {
+    "ShownName": "Swahili",
+    "SystemName": "Swahili",
+    "LanguageCode": "sw"
+  },
+  {
+    "ShownName": "Swedish",
+    "SystemName": "Swedish",
+    "LanguageCode": "sv"
+  },
+  {
+    "ShownName": "Tahitian",
+    "SystemName": "Tahitian",
+    "LanguageCode": "ty"
+  },
+  {
+    "ShownName": "Tajik",
+    "SystemName": "Tajik",
+    "LanguageCode": "tgk"
+  },
+  {
+    "ShownName": "Tamil",
+    "SystemName": "Tamil",
+    "LanguageCode": "ta"
+  },
+  {
+    "ShownName": "Tatar",
+    "SystemName": "Tatar",
+    "LanguageCode": "tt"
+  },
+  {
+    "ShownName": "Telugu",
+    "SystemName": "Telugu",
+    "LanguageCode": "te"
+  },
+  {
+    "ShownName": "Tetum",
+    "SystemName": "Tetum",
+    "LanguageCode": "tet"
+  },
+  {
+    "ShownName": "Thai",
+    "SystemName": "Thai",
+    "LanguageCode": "th"
+  },
+  {
+    "ShownName": "Tibetan",
+    "SystemName": "Tibetan",
+    "LanguageCode": "bo"
+  },
+  {
+    "ShownName": "Tigrinya",
+    "SystemName": "Tigrinya",
+    "LanguageCode": "ti"
+  },
+  {
+    "ShownName": "Tok Pisin",
+    "SystemName": "Tok Pisin",
+    "LanguageCode": "tpi"
+  },
+  {
+    "ShownName": "Tongan",
+    "SystemName": "Tongan",
+    "LanguageCode": "to"
+  },
+  {
+    "ShownName": "Turkish",
+    "SystemName": "Turkish",
+    "LanguageCode": "tr"
+  },
+  {
+    "ShownName": "Turkmen",
+    "SystemName": "Turkmen",
+    "LanguageCode": "tk"
+  },
+  {
+    "ShownName": "Ukrainian",
+    "SystemName": "Ukrainian",
+    "LanguageCode": "uk"
+  },
+  {
+    "ShownName": "Upper Sorbian",
+    "SystemName": "Upper Sorbian",
+    "LanguageCode": "hsb"
+  },
+  {
+    "ShownName": "Urdu",
+    "SystemName": "Urdu",
+    "LanguageCode": "ur"
+  },
+  {
+    "ShownName": "Uyghur",
+    "SystemName": "Uyghur",
+    "LanguageCode": "ug"
+  },
+  {
+    "ShownName": "Uzbek (Latin)",
+    "SystemName": "Uzbek",
+    "LanguageCode": "uz"
+  },
+  {
+    "ShownName": "Venetian",
+    "SystemName": "Venetian",
+    "LanguageCode": "vec"
+  },
+  {
+    "ShownName": "Vietnamese",
+    "SystemName": "Vietnamese",
+    "LanguageCode": "vi"
+  },
+  {
+    "ShownName": "Waray",
+    "SystemName": "Waray",
+    "LanguageCode": "war"
+  },
+  {
+    "ShownName": "Welsh",
+    "SystemName": "Welsh",
+    "LanguageCode": "cy"
+  },
+  {
+    "ShownName": "Xhosa",
+    "SystemName": "Xhosa",
+    "LanguageCode": "xh"
+  },
+  {
+    "ShownName": "Yiddish (Eastern)",
+    "SystemName": "Yiddish (Eastern)",
+    "LanguageCode": "ydd"
+  },
+  {
+    "ShownName": "Yoruba",
+    "SystemName": "Yoruba",
+    "LanguageCode": "yo"
+  },
+  {
+    "ShownName": "Yucatec Maya",
+    "SystemName": "Yucatec Maya",
+    "LanguageCode": "yua"
+  },
+  {
+    "ShownName": "Zulu",
+    "SystemName": "Zulu",
+    "LanguageCode": "zu"
+  }
+]

@@ -68,6 +68,10 @@
 
         public string GoogleTranslateLanguages { get; set; } = "TranslationResources/GoogleTranslateLanguages.json";
 
+        public string AdditionalWebLanguages { get; set; } = "TranslationResources/AdditionalWebLanguages.json";
+
+        public string BingLanguages { get; set; } = "TranslationResources/BingLanguages.json";
+
         public string PapagoLanguages { get; set; } = "TranslationResources/PapagoLanguages.json";
 
         public string AzureTranslatorLanguages { get; set; } = "TranslationResources/AzureTranslatorLanguages.json";
