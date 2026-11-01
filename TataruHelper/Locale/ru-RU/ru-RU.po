@@ -746,12 +746,6 @@ msgstr "Таймаут в секундах."
 #~ msgid "Interval Width"
 #~ msgstr "Spacing"
 
-#~ msgid "English"
-#~ msgstr "English"
-
-#~ msgid "Russian"
-#~ msgstr "Russian"
-
 #~ msgid "Show Hide Chat Window Hotkey Tooltip"
 #~ msgstr ""
 #~ "Hotkey to hide a Chat Box when it is not needed and call it up when it is "
@@ -980,3 +974,12 @@ msgstr "DeepLX ответил ✓"
 
 msgid "DeepLX did not answer with a translation. Check the address."
 msgstr "DeepLX не вернул перевод. Проверьте адрес."
+
+msgid "Translation uses the configured relay first. If it fails, another enabled translator takes over. A browser backup is optional under Advanced."
+msgstr "Сначала используется настроенное реле. Если оно недоступно, перевод продолжится через другой включённый сервис. Резервный браузер можно подключить в «Дополнительно»."
+
+msgid "Optional backup: connect your browser to try DeepL there if the relay fails. Keep its window open."
+msgstr "Необязательный резерв: подключите браузер, чтобы пробовать DeepL через него при отказе реле. Оставьте его окно открытым."
+
+msgid "Browser backup is off"
+msgstr "Резервный браузер отключён"

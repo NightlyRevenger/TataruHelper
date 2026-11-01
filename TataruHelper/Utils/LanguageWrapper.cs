@@ -493,10 +493,11 @@ namespace FFXIVTataruHelper
             _SettingsWindow.Resources["OpenRouterHint"] =
                 catalog.GetString("One key for models from many providers. Pick any model OpenRouter lists.");
             _SettingsWindow.Resources["LocalModelsLabel"] = catalog.GetString("Local Models");
-            _SettingsWindow.Resources["DeepLBrowserHint"] = catalog.GetString("DeepL opens in a small window of your own browser (Chrome, Edge or Brave); your normal browser and its data are not touched.");
+            _SettingsWindow.Resources["DeepLAutoHint"] = catalog.GetString("Translation uses the configured relay first. If it fails, another enabled translator takes over. A browser backup is optional under Advanced.");
+            _SettingsWindow.Resources["DeepLBrowserHint"] = catalog.GetString("Optional backup: connect your browser to try DeepL there if the relay fails. Keep its window open.");
             _SettingsWindow.Resources["DeepLBrowserConnect"] = catalog.GetString("Connect browser");
             _SettingsWindow.Resources["DeepLBrowserDisconnect"] = catalog.GetString("Disconnect browser");
-            _SettingsWindow.Resources["DeepLBrowserStatusOff"] = catalog.GetString("Not connected");
+            _SettingsWindow.Resources["DeepLBrowserStatusOff"] = catalog.GetString("Browser backup is off");
             _SettingsWindow.Resources["DeepLBrowserStatusStarting"] = catalog.GetString("Connecting…");
             _SettingsWindow.Resources["DeepLBrowserStatusCheck"] = catalog.GetString("Tick the check box in the DeepL window once; it will not ask again.");
             _SettingsWindow.Resources["DeepLBrowserStatusConnected"] = catalog.GetString("Connected ✓");

@@ -42,70 +42,82 @@ namespace Translation.Providers.DeepL
         /// <summary>The value of the DeepL "model" setting that switches the browser route on.</summary>
         public const string BrowserModel = "browser";
 
-        private const string ConnectHint = " Press \"Connect browser\" in the DeepL settings.";
+        private const string ConnectHint = " Connect a browser under DeepL Advanced settings.";
 
         private readonly ITranslationCredentialStore _credentials;
 
+        private readonly TimeSpan _routeTimeout;
+        private readonly Func<string, string, string, string, CancellationToken, Task<string>> _relayTranslate;
+        private readonly Func<string, string, string, CancellationToken, Task<string>> _browserTranslate;
+
         public DeepLTranslator(ILogger logger, TranslationSettings settings,
             ITranslationCredentialStore credentials = null)
+            : this(logger, settings, credentials, DeepLXClient.TranslateAsync,
+                (text, source, target, token) => DeepLBrowserBridge.Shared.TranslateAsync(text, source, target, token), true)
+        {
+        }
+
+        internal DeepLTranslator(ILogger logger, TranslationSettings settings,
+            ITranslationCredentialStore credentials,
+            Func<string, string, string, string, CancellationToken, Task<string>> relayTranslate,
+            Func<string, string, string, CancellationToken, Task<string>> browserTranslate,
+            bool warmBrowser = false, TimeSpan? routeTimeout = null)
         {
             _logger = logger;
             _settings = settings ?? new TranslationSettings();
             _credentials = credentials;
+            _relayTranslate = relayTranslate;
+            _browserTranslate = browserTranslate;
+            _routeTimeout = routeTimeout ?? TimeSpan.FromSeconds(8);
 
-            // Opened ahead of the first line, so that line does not wait for the browser to start.
-            if (BrowserWanted)
-            {
+            if (warmBrowser && BrowserWanted)
                 _ = DeepLBrowserBridge.Shared.EnsureConnectedAsync(CancellationToken.None);
-            }
         }
 
         private bool BrowserWanted => _credentials?.GetModel(TranslationEngineName.DeepL) == BrowserModel;
 
         private string DeepLXAddress => _credentials?.GetEndpoint(TranslationEngineName.DeepL);
 
-        /// <summary>
-        /// The routes in the order they are tried: the player's browser, then a
-        /// DeepLX server, then the plain web endpoint. Null when none of the first
-        /// two gave a translation.
-        /// </summary>
+        /// <summary>Try the relay first, then the browser only if explicitly enabled.</summary>
         private async Task<string> TryConnectedRoutesAsync(string sentence, string inLang, string outLang,
             CancellationToken cancellationToken)
         {
             var source = string.IsNullOrWhiteSpace(inLang) ? "auto" : inLang.ToLowerInvariant();
             var target = string.IsNullOrWhiteSpace(outLang) ? "en" : outLang.ToLowerInvariant();
-
-            if (BrowserWanted)
-            {
-                try
-                {
-                    return await DeepLBrowserBridge.Shared.TranslateAsync(sentence, source, target, cancellationToken)
-                        .ConfigureAwait(false);
-                }
-                catch (Exception ex) when (!(ex is OperationCanceledException))
-                {
-                    _logger?.LogInformation("{Message}", "[DEEPL_BROWSER] " + ex.Message);
-                }
-            }
-
             var deepLX = DeepLXAddress;
             if (!string.IsNullOrWhiteSpace(deepLX))
             {
                 try
                 {
-                    var translated = await DeepLXClient.TranslateAsync(deepLX, sentence, source, target,
-                        cancellationToken).ConfigureAwait(false);
-                    if (!string.IsNullOrEmpty(translated))
-                    {
+                    using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                    timeout.CancelAfter(_routeTimeout);
+                    var translated = await _relayTranslate(deepLX, sentence, source, target,
+                        timeout.Token).ConfigureAwait(false);
+                    if (!string.IsNullOrWhiteSpace(translated))
                         return translated;
-                    }
                 }
-                catch (Exception ex) when (!(ex is OperationCanceledException))
+                catch (Exception ex) when (!cancellationToken.IsCancellationRequested)
                 {
                     _logger?.LogInformation("{Message}", "[DEEPL_DEEPLX] " + ex.Message);
                 }
             }
 
+            if (BrowserWanted)
+            {
+                try
+                {
+                    using var timeout = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+                    timeout.CancelAfter(_routeTimeout);
+                    var translated = await _browserTranslate(sentence, source, target, timeout.Token)
+                        .ConfigureAwait(false);
+                    if (!string.IsNullOrWhiteSpace(translated))
+                        return translated;
+                }
+                catch (Exception ex) when (!cancellationToken.IsCancellationRequested)
+                {
+                    _logger?.LogInformation("{Message}", "[DEEPL_BROWSER] " + ex.Message);
+                }
+            }
             return null;
         }
 
@@ -121,6 +133,11 @@ namespace Translation.Providers.DeepL
             {
                 return connected;
             }
+
+            // A configured route already tried DeepL. Do not make another,
+            // usually refused, direct request before the next engine can help.
+            if (BrowserWanted || !string.IsNullOrWhiteSpace(DeepLXAddress))
+                return string.Empty;
 
             // Asked to slow down, so slow down. Every line used to go on
             // knocking after the first refusal, which kept the rate exactly

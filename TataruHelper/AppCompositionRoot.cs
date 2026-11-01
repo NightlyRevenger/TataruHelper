@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.Threading.Tasks;
 
 using FFXIVTataruHelper.Factories;
 using FFXIVTataruHelper.FFHandlers;
@@ -17,6 +19,9 @@ using Microsoft.Extensions.Logging;
 
 using Translation;
 using Translation.Credentials;
+using Translation.Models;
+using Translation.Providers.DeepL;
+using Translation.Settings;
 
 using Updater;
 
@@ -24,6 +29,57 @@ namespace FFXIVTataruHelper
 {
     public static class AppCompositionRoot
     {
+        /// <summary>
+        /// Connects DeepL to the bundled local relay. Starting it takes seconds, so
+        /// it happens beside the application's own start rather than in front of
+        /// it; until it answers, DeepL simply goes on to the next route.
+        /// </summary>
+        private static ITranslationCredentialStore ConnectDeepLRelay(IServiceProvider provider)
+        {
+            var store = new DpapiCredentialStore();
+            var custom = store.GetEndpoint(TranslationEngineName.DeepL);
+            var ours = string.IsNullOrWhiteSpace(custom)
+                || custom.TrimEnd('/') == ManagedRelayProcess.DefaultEndpoint;
+
+            // The Linux launcher starts its own relay and passes the address on.
+            var launcherEndpoint = Environment.GetEnvironmentVariable(ManagedDeepLRelay.EnvironmentVariable);
+            if (!string.IsNullOrWhiteSpace(launcherEndpoint))
+            {
+                if (ManagedDeepLRelay.Configure(store, launcherEndpoint))
+                    Logger.WriteLog("DeepL: connected to the local relay started by the launcher.");
+                return store;
+            }
+
+            if (!ours || !store.IsEngineEnabled(TranslationEngineName.DeepL))
+                return store;
+
+            if (WineEnvironment.IsRunning)
+            {
+                // No relay came with this session: do not keep an address nobody answers.
+                ManagedDeepLRelay.Forget(store, ManagedRelayProcess.DefaultEndpoint);
+                return store;
+            }
+
+            var relay = provider.GetRequiredService<ManagedRelayProcess>();
+            var executable = Path.Combine(AppContext.BaseDirectory, "deepl-relay.exe");
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    var started = await relay.TryStartAsync(executable).ConfigureAwait(false);
+                    if (ManagedDeepLRelay.Configure(store, started))
+                        Logger.WriteLog("DeepL: connected to the bundled local relay.");
+                    else if (ManagedDeepLRelay.Forget(store, ManagedRelayProcess.DefaultEndpoint))
+                        Logger.WriteLog("DeepL: the local relay did not start; its address was cleared.");
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteLog("DeepL: the local relay could not be started: " + ex.GetType().Name);
+                }
+            });
+            return store;
+        }
+
         public static IServiceProvider BuildServiceProvider()
         {
             var services = new ServiceCollection();
@@ -50,7 +106,8 @@ namespace FFXIVTataruHelper
             services.AddSingleton<ILogger>(provider =>
                 provider.GetRequiredService<ILoggerFactory>().CreateLogger("TataruHelper"));
 
-            services.AddSingleton<ITranslationCredentialStore>(_ => new DpapiCredentialStore());
+            services.AddSingleton<ManagedRelayProcess>(_ => new ManagedRelayProcess(message => Logger.WriteLog(message)));
+            services.AddSingleton<ITranslationCredentialStore>(provider => ConnectDeepLRelay(provider));
             services.AddSingleton<TranslationCredentialsViewModel>();
             services.AddSingleton<WebTranslator>(provider => new WebTranslator(
                 provider.GetRequiredService<ILogger>(),
