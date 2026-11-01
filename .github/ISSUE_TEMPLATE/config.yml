@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions and help
+    url: https://discord.gg/bSrpbd9
+    about: Ask in the community Discord.
+  - name: FAQ and troubleshooting
+    url: https://github.com/NightlyRevenger/TataruHelper/wiki
+    about: Common problems and their solutions, in several languages.
+  - name: Translate the interface
+    url: https://crowdin.com/project/tataru-helper
+    about: Interface strings are translated in Crowdin, not through issues.

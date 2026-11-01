@@ -1,0 +1,73 @@
+name: Bug report
+description: Something does not work or translates wrongly
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for the report. Questions and troubleshooting are quicker in [Discord](https://discord.gg/bSrpbd9); check the [FAQ](https://github.com/NightlyRevenger/TataruHelper/wiki) and the section "When nothing is translated" of the [Guide](https://github.com/NightlyRevenger/TataruHelper/blob/master/Documents/Guide.MD#when-nothing-is-translated) first.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happens
+      description: What you did, what you expected and what happened instead.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Tataru Helper version
+      description: On the General page under Tataru Updates.
+      placeholder: "1.0.18"
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: System
+      options:
+        - Windows 11
+        - Windows 10
+        - Linux (game under Wine)
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: linux
+    attributes:
+      label: Linux only - launcher and Wine
+      description: For example XIVLauncher-RB with wine-xiv-staging-11.14, or the Steam Proton you use.
+    validations:
+      required: false
+  - type: dropdown
+    id: client
+    attributes:
+      label: Game client
+      options:
+        - Global (English, German, French, Japanese)
+        - Chinese
+        - Korean
+    validations:
+      required: true
+  - type: input
+    id: engine
+    attributes:
+      label: Translation engine and languages
+      placeholder: DeepL, Japanese to Russian
+    validations:
+      required: false
+  - type: textarea
+    id: diag
+    attributes:
+      label: Diagnostics
+      description: |
+        On the General page press **Collect diagnostics** and drop the resulting archive here. Or attach `Log.txt` from `%AppData%\TataruHelper`. Look through it first and remove anything you do not want to share.
+    validations:
+      required: false
+  - type: textarea
+    id: shots
+    attributes:
+      label: Screenshots
+      description: Optional, but they help for anything visual.
+    validations:
+      required: false
