@@ -357,3 +357,6 @@ MigrationBackup/
 #   TataruHelper.exe --build-reference-index
 TataruHelper/Resources/ReferenceTranslations.db
 TataruHelper/Resources/ReferenceTranslations.db.new
+
+# Runtime log of the application
+/Log.txt
