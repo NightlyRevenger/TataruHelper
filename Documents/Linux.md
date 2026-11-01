@@ -11,6 +11,7 @@ TataruHelper is a Windows program, and on Linux it runs under Wine, beside the g
 * The chat window stays above the game, and you can move it and resize it by its edges.
 * Settings, translation engines and API keys.
 * DeepL through your Linux browser: press **Connect browser** in the DeepL settings (Chromium, Chrome, Brave, Edge or Vivaldi from `/usr/bin`).
+* DeepL without a browser: build and run the relay from `tools/deepl-relay` (`go build`), then enter `http://127.0.0.1:2285` under **Advanced** - localhost inside Wine is localhost of your machine.
 
 ## Not yet
 

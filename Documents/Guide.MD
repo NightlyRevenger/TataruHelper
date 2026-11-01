@@ -27,7 +27,7 @@
 1. **Translation Engine:** here you can change the engine. Personally i prefer DeepL but Google Translate does its work. Take which you prefer better.  
 2. **FF Language:** this item should be the same as the game language.  
 3. **Translate To:** choose the language that is most comfortable for you to read in.  
-4. **DeepL:** DeepL turns bare requests away, so it works through your own browser. Turn DeepL on in the engine list and press **Connect browser**: a small DeepL window opens (Chrome, Edge or Brave, found automatically; your normal browser and its data are not touched). Tick the check box in that window once, and it will not ask again. Keep the window open (you can minimise it). Without it the old direct way is still tried, and if it fails, translation moves on to the next engine. Under **Advanced** you can enter the address of your own DeepLX server instead.
+4. **DeepL:** DeepL turns bare requests away, so it works through your own browser. Turn DeepL on in the engine list and press **Connect browser**: a small DeepL window opens (Chrome, Edge or Brave, found automatically; your normal browser and its data are not touched). Tick the check box in that window once, and it will not ask again. Keep the window open (you can minimise it). Without it the old direct way is still tried, and if it fails, translation moves on to the next engine. Under **Advanced** you can enter the address of your own DeepLX server instead, or the address of the small local relay from `tools/deepl-relay`, which carries plain requests through with a browser's TLS fingerprint and needs no browser (an unofficial route, at your own discretion).
 
 ### General  
 
