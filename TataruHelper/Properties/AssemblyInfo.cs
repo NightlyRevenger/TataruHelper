@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -55,6 +55,6 @@ using System.Windows;
 // master packs a Velopack release from this number, and Velopack refuses to
 // pack a version that is already out - so leaving it at the published one
 // turns the build red on every commit until somebody raises it.
-[assembly: AssemblyVersion("1.0.22")]
-[assembly: AssemblyFileVersion("1.0.22")]
+[assembly: AssemblyVersion("1.0.23")]
+[assembly: AssemblyFileVersion("1.0.23")]
 [assembly: InternalsVisibleTo("TataruHelper.Tests")]
