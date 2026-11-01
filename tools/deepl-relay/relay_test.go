@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"io"
 	"net/http"
@@ -118,7 +119,7 @@ func TestTranslateMapsLanguages(t *testing.T) {
 	defer srv.Close()
 
 	r := newRelay(srv.URL, "safari")
-	got, status, err := r.translate("test", "JA", "ru")
+	got, status, err := r.translate(context.Background(), "test", "JA", "ru")
 	if err != nil || status != 200 || got != "ok" {
 		t.Fatalf("got %q/%d, err %v", got, status, err)
 	}
@@ -141,7 +142,7 @@ func TestTranslatePassesRefusalStatus(t *testing.T) {
 	defer srv.Close()
 
 	r := newRelay(srv.URL, "safari")
-	_, status, err := r.translate("test", "auto", "EN")
+	_, status, err := r.translate(context.Background(), "test", "auto", "EN")
 	if status != 429 || err == nil {
 		t.Fatalf("want 429 and an error, got %d, %v", status, err)
 	}
@@ -156,10 +157,9 @@ func TestHandlerDeepLXProtocol(t *testing.T) {
 
 	r := newRelay(srv.URL, "safari")
 	server := httptest.NewServer(r.handler())
+	defer server.Close()
 
-	req, _ := http.NewRequest("POST", server.URL, strings.NewReader(`{"text":"Hello, friend","source_lang":"auto","target_lang":"ru"}`))
 	resp, err := http.Post(server.URL, "application/json", strings.NewReader(`{"text":"Hello, friend","source_lang":"auto","target_lang":"ru"}`))
-	_ = req
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -213,7 +213,28 @@ func TestHandlerPassesRefusalToCaller(t *testing.T) {
 	if resp.StatusCode != 429 {
 		t.Errorf("want 429, got %d (%s)", resp.StatusCode, body)
 	}
-	if !strings.Contains(string(body), "Too many requests") {
+	if !strings.Contains(string(body), "upstream requests paused") {
 		t.Errorf("message not passed through: %s", body)
+	}
+}
+
+func TestHandlerRejectsForeignHost(t *testing.T) {
+	r := newRelay("http://127.0.0.1:1", "safari")
+	h := r.handler()
+	for host, want := range map[string]int{
+		"evil.example":      http.StatusForbidden,
+		"evil.example:2285": http.StatusForbidden,
+		"127.0.0.1.evil.io": http.StatusForbidden,
+		"127.0.0.1:2285":    http.StatusOK,
+		"localhost:2285":    http.StatusOK,
+		"[::1]:2285":        http.StatusOK,
+	} {
+		req := httptest.NewRequest(http.MethodGet, "/health", nil)
+		req.Host = host
+		rec := httptest.NewRecorder()
+		h.ServeHTTP(rec, req)
+		if rec.Code != want {
+			t.Errorf("Host %q: status %d, want %d", host, rec.Code, want)
+		}
 	}
 }

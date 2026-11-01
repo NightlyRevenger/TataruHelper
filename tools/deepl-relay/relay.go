@@ -1,25 +1,24 @@
 // Package main implements a small local relay that lets TataruHelper reach
 // DeepL's free web endpoint without a browser.
 //
-// The endpoint behind Cloudflare turns away hand-written HTTP clients: it
-// classifies the sender by the TLS handshake fingerprint and by whether the
-// headers agree with that fingerprint. Mimicking the DeepL iOS *application*
-// (the x-app-* headers) is exactly what gets rejected; a browser's TLS
-// fingerprint with plain browser headers goes through, no cookies and no JS
-// challenge. Go cannot change .NET's handshake from inside the app, so the
-// relay sits beside it and speaks DeepLX on localhost.
+// Live probes found that a browser TLS profile and browser headers worked
+// without cookies or a JavaScript challenge. This is an unofficial endpoint;
+// those observations do not establish which signals its filter checks.
 package main
 
 import (
 	"context"
 	cryptotls "crypto/tls"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"log"
 	"math/rand"
+	"mime"
 	"net"
 	"net/http"
+	"strconv"
 	"strings"
 	"sync/atomic"
 	"time"
@@ -36,6 +35,9 @@ type deeplRelay struct {
 	userAgent   string
 	id          int64
 	logRequests bool
+	gate        chan struct{}
+	refusal     *refusalError // protected by gate, including upstream requests
+	now         func() time.Time
 }
 
 // browserProfile pairs a TLS hello with the user-agent that belongs to it.
@@ -63,23 +65,31 @@ func newRelay(endpoint, profile string) *deeplRelay {
 
 	r := &deeplRelay{
 		endpoint:  endpoint,
+		gate:      make(chan struct{}, 1),
+		now:       time.Now,
 		userAgent: p.userAgent,
 		id:        int64(rand.Intn(100_000)+8_300_000) * 1000,
 	}
 
 	if strings.HasPrefix(endpoint, "https://") {
 		dialTLS := func(ctx context.Context, network, addr string) (net.Conn, error) {
-			d := net.Dialer{}
+			ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
+			defer cancel()
+			d := net.Dialer{Timeout: 10 * time.Second}
 			raw, err := d.DialContext(ctx, network, addr)
 			if err != nil {
 				return nil, err
 			}
+			host, _, err := net.SplitHostPort(addr)
+			if err != nil {
+				raw.Close()
+				return nil, err
+			}
 			u := utls.UClient(raw, &utls.Config{
-				ServerName:         "www2.deepl.com",
-				InsecureSkipVerify: true,
-				NextProtos:         []string{"h2", "http/1.1"},
+				ServerName: host,
+				NextProtos: []string{"h2", "http/1.1"},
 			}, p.helloID)
-			if err := u.Handshake(); err != nil {
+			if err := u.HandshakeContext(ctx); err != nil {
 				raw.Close()
 				return nil, err
 			}
@@ -91,9 +101,12 @@ func newRelay(endpoint, profile string) *deeplRelay {
 		}
 		r.client = &http.Client{
 			Transport: &http.Transport{
-				DialTLSContext:     dialTLS,
-				ForceAttemptHTTP2:  true,
-				DisableCompression: true,
+				DialTLSContext:        dialTLS,
+				ForceAttemptHTTP2:     true,
+				DisableCompression:    true,
+				IdleConnTimeout:       90 * time.Second,
+				MaxIdleConnsPerHost:   2,
+				ResponseHeaderTimeout: 15 * time.Second,
 			},
 			Timeout: 20 * time.Second,
 		}
@@ -182,7 +195,21 @@ func parseTranslation(body string) (string, error) {
 
 // translate returns the translation, the HTTP status DeepL answered with, and
 // an error when the answer carries no translation.
-func (r *deeplRelay) translate(text, sourceLang, targetLang string) (string, int, error) {
+func (r *deeplRelay) translate(ctx context.Context, text, sourceLang, targetLang string) (string, int, error) {
+	// Serialize upstream requests so queued chat lines observe the first refusal.
+	select {
+	case r.gate <- struct{}{}:
+	case <-ctx.Done():
+		return "", 0, ctx.Err()
+	}
+	defer func() { <-r.gate }()
+	if err := ctx.Err(); err != nil {
+		return "", 0, err
+	}
+	if r.refusal != nil && r.now().Before(r.refusal.until) {
+		return "", r.refusal.status, r.refusal
+	}
+
 	source := strings.ToLower(strings.TrimSpace(sourceLang))
 	if source == "" {
 		source = "auto"
@@ -195,12 +222,11 @@ func (r *deeplRelay) translate(text, sourceLang, targetLang string) (string, int
 	id := atomic.AddInt64(&r.id, 1)
 	body := buildRequestBody(text, source, target, id, time.Now().UnixMilli())
 
-	req, err := http.NewRequest("POST", r.endpoint, strings.NewReader(body))
+	req, err := http.NewRequestWithContext(ctx, "POST", r.endpoint, strings.NewReader(body))
 	if err != nil {
 		return "", 0, err
 	}
-	// Browser headers only. The x-app-* application headers are what the
-	// endpoint's protection classifies as a bot.
+	// Keep headers consistent with the selected browser profile.
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Accept", "*/*")
 	req.Header.Set("Accept-Language", "en-US,en;q=0.9")
@@ -211,6 +237,10 @@ func (r *deeplRelay) translate(text, sourceLang, targetLang string) (string, int
 		return "", 0, err
 	}
 	defer resp.Body.Close()
+	if resp.StatusCode == http.StatusTooManyRequests || resp.StatusCode == http.StatusUnavailableForLegalReasons {
+		r.refusal = &refusalError{status: resp.StatusCode, until: r.now().Add(refusalDelay(resp.Header.Get("Retry-After"), r.now())), message: fmt.Sprintf("DeepL answered HTTP %d; upstream requests paused", resp.StatusCode)}
+		return "", resp.StatusCode, r.refusal
+	}
 
 	raw, err := io.ReadAll(io.LimitReader(resp.Body, 1<<20))
 	if err != nil {
@@ -249,10 +279,28 @@ func excerpt(s string) string {
 func (r *deeplRelay) handler() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+		// A web page can point its own domain at 127.0.0.1 (DNS rebinding) and
+		// reach this server from the player's browser; only a loopback Host is ours.
+		if !loopbackHost(req.Host) {
+			w.WriteHeader(http.StatusForbidden)
+			fmt.Fprint(w, `{"code":403,"message":"loopback host required"}`)
+			return
+		}
+		if req.Method == http.MethodGet && req.URL.Path == "/health" {
+			fmt.Fprint(w, `{"service":"tataruhelper-deepl-relay"}`)
+			return
+		}
 
 		if req.Method != http.MethodPost {
 			w.WriteHeader(http.StatusMethodNotAllowed)
 			fmt.Fprint(w, `{"code":405,"message":"POST only"}`)
+			return
+		}
+
+		mediaType, _, mediaErr := mime.ParseMediaType(req.Header.Get("Content-Type"))
+		if mediaErr != nil || mediaType != "application/json" {
+			w.WriteHeader(http.StatusUnsupportedMediaType)
+			fmt.Fprint(w, `{"code":415,"message":"application/json required"}`)
 			return
 		}
 
@@ -261,20 +309,37 @@ func (r *deeplRelay) handler() http.Handler {
 			SourceLang string `json:"source_lang"`
 			TargetLang string `json:"target_lang"`
 		}
-		body, err := io.ReadAll(io.LimitReader(req.Body, 1<<20))
+		body, err := io.ReadAll(http.MaxBytesReader(w, req.Body, 1<<20))
+		var tooLarge *http.MaxBytesError
+		if errors.As(err, &tooLarge) {
+			w.WriteHeader(http.StatusRequestEntityTooLarge)
+			fmt.Fprint(w, `{"code":413,"message":"request body too large"}`)
+			return
+		}
 		if err != nil || json.Unmarshal(body, &in) != nil || strings.TrimSpace(in.Text) == "" {
 			w.WriteHeader(http.StatusBadRequest)
 			fmt.Fprint(w, `{"code":400,"message":"text is required"}`)
 			return
 		}
 
-		translation, status, err := r.translate(in.Text, in.SourceLang, in.TargetLang)
+		ctx, cancel := context.WithTimeout(req.Context(), 20*time.Second)
+		defer cancel()
+		translation, status, err := r.translate(ctx, in.Text, in.SourceLang, in.TargetLang)
 		if err != nil {
 			if r.logRequests {
 				log.Printf("deepl-relay: refused with %d (%s)", status, excerpt(err.Error()))
 			}
 			if status == http.StatusTooManyRequests || status == http.StatusUnavailableForLegalReasons {
-				// Passed through as-is so the app's cooldown logic still works.
+				// The relay owns this pause; the application's DeepLX client
+				// does not maintain a cooldown of its own.
+				var refusal *refusalError
+				if errors.As(err, &refusal) {
+					seconds := int64(refusal.until.Sub(r.now()).Seconds()) + 1
+					if seconds < 1 {
+						seconds = 1
+					}
+					w.Header().Set("Retry-After", strconv.FormatInt(seconds, 10))
+				}
 				w.WriteHeader(status)
 				fmt.Fprintf(w, `{"code":%d,"message":%s}`, status, jsonText(err.Error()))
 				return
@@ -290,4 +355,34 @@ func (r *deeplRelay) handler() http.Handler {
 		w.WriteHeader(http.StatusOK)
 		fmt.Fprintf(w, `{"code":200,"data":%s}`, jsonText(translation))
 	})
+}
+
+// refusalError is retained until the upstream pause expires.
+type refusalError struct {
+	status  int
+	until   time.Time
+	message string
+}
+
+func (e *refusalError) Error() string { return e.message }
+
+func refusalDelay(value string, now time.Time) time.Duration {
+	const minimum = time.Minute
+	value = strings.TrimSpace(value)
+	if seconds, err := strconv.ParseInt(value, 10, 32); err == nil && seconds > 60 {
+		return time.Duration(seconds) * time.Second
+	}
+	if date, err := http.ParseTime(value); err == nil && date.Sub(now) > minimum {
+		return date.Sub(now)
+	}
+	return minimum
+}
+
+// loopbackHost reports whether a Host header names this machine itself.
+func loopbackHost(host string) bool {
+	if h, _, err := net.SplitHostPort(host); err == nil {
+		host = h
+	}
+	host = strings.Trim(host, "[]")
+	return host == "localhost" || host == "127.0.0.1" || host == "::1"
 }
