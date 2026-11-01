@@ -10,8 +10,8 @@ TataruHelper is a Windows program, and on Linux it runs under Wine, beside the g
 * Translation into the chat window, including the hand-made Russian translations.
 * The chat window stays above the game, and you can move it and resize it by its edges.
 * Settings, translation engines and API keys.
-* DeepL through your Linux browser: press **Connect browser** in the DeepL settings (Chromium, Chrome, Brave, Edge or Vivaldi from `/usr/bin`).
-* DeepL without a browser: build and run the relay from `tools/deepl-relay` (`go build`), then enter `http://127.0.0.1:2285` under **Advanced** - localhost inside Wine is localhost of your machine.
+* DeepL through your Linux browser: press **Advanced → Connect browser** in the DeepL settings (Chromium, Chrome, Brave, Edge or Vivaldi from `/usr/bin`).
+* The Linux `deepl-relay` binary is bundled: the normal desktop shortcut starts it, checks readiness, and connects DeepL automatically. Closing TataruHelper stops its relay. Custom DeepLX endpoints are preserved. Building the relay from `tools/deepl-relay` requires Go 1.27+; running the installed binary does not require Go.
 
 ## Not yet
 

@@ -1,0 +1,812 @@
+{
+  "date_moscow": "2026-11-01",
+  "environment": "Real .NET providers, win-x64 self-contained, Wine shared with running FFXIV; system certificate verification enabled",
+  "method": "6 EN→RU dialogue samples, 2 JA→RU samples, 1 auto→RU sample, 4 reverse/other language pairs per service. Timing includes initial session setup on first call. A small functional and qualitative probe, not a comprehensive quality benchmark.",
+  "summary": [
+    {
+      "engine": "TranslateCom",
+      "successful": 13,
+      "total": 13,
+      "en_ru_median_ms": 97.0,
+      "en_ru_max_ms": 432,
+      "enabled_by_default": true
+    },
+    {
+      "engine": "ModernMT",
+      "successful": 13,
+      "total": 13,
+      "en_ru_median_ms": 175.0,
+      "en_ru_max_ms": 476,
+      "enabled_by_default": true
+    },
+    {
+      "engine": "Tencent",
+      "successful": 13,
+      "total": 13,
+      "en_ru_median_ms": 520.5,
+      "en_ru_max_ms": 945,
+      "enabled_by_default": false
+    },
+    {
+      "engine": "Volcengine",
+      "successful": 13,
+      "total": 13,
+      "en_ru_median_ms": 281.5,
+      "en_ru_max_ms": 621,
+      "enabled_by_default": false
+    },
+    {
+      "engine": "Alibaba",
+      "successful": 13,
+      "total": 13,
+      "en_ru_median_ms": 720.5,
+      "en_ru_max_ms": 2651,
+      "enabled_by_default": false
+    }
+  ],
+  "quality_notes": {
+    "TranslateCom": "Best rendering of both Japanese samples among these candidates. EN→RU dialogue still sometimes literal.",
+    "ModernMT": "Fast independent EN→RU reserve; both Japanese dialogue samples contained meaning-changing errors.",
+    "Tencent": "Literal EN→RU and incomplete Japanese output; opt-in. Uses yi.qq.com with valid TLS.",
+    "Volcengine": "Literal output, including a bad Japanese idiom; opt-in.",
+    "Alibaba": "Slowest cold start in this run; quality varied between runs; opt-in.",
+    "ChromeTranslatorAPI": "Not integrated. Brave headless API advertised downloadable but Translator.create(en,ru) failed with NotSupportedError. Chrome for Testing availability timed out. Visible isolated browser probes exited before testing."
+  },
+  "baseline_en_ru_previous_run": [
+    {
+      "Engine": "Bing",
+      "Source": "Go on, then. I'll hold them off.",
+      "Text": "Ну ладно, тогда. Я их задержу.",
+      "Ms": 1092,
+      "Error": ""
+    },
+    {
+      "Engine": "Bing",
+      "Source": "Aye, that's the one. Take it to the quartermaster.",
+      "Text": "Ага, это оно. Отнеси это к интенданту.",
+      "Ms": 785,
+      "Error": ""
+    },
+    {
+      "Engine": "Bing",
+      "Source": "Hold the line! Do not let them breach the gates!",
+      "Text": "Держитесь! Не позволяйте им прорвать ворота!",
+      "Ms": 850,
+      "Error": ""
+    },
+    {
+      "Engine": "Bing",
+      "Source": "We shall not fall, not while there is breath in our lungs.",
+      "Text": "Мы не падем, не пока в наших легких есть дыхание.",
+      "Ms": 801,
+      "Error": ""
+    },
+    {
+      "Engine": "Bing",
+      "Source": "Have you no shame? After all they sacrificed for you?",
+      "Text": "У тебя нет стыда? Ведь они так много для тебя пожертвовали?",
+      "Ms": 793,
+      "Error": ""
+    },
+    {
+      "Engine": "Bing",
+      "Source": "Is this the way to the Crystarium? I seem to have lost my bearings.",
+      "Text": "Это путь к Кристариуму? Похоже, я потерял ориентиры.",
+      "Ms": 973,
+      "Error": ""
+    },
+    {
+      "Engine": "Yandex",
+      "Source": "Go on, then. I'll hold them off.",
+      "Text": "Тогда иди. Я их задержу.",
+      "Ms": 165,
+      "Error": ""
+    },
+    {
+      "Engine": "Yandex",
+      "Source": "Aye, that's the one. Take it to the quartermaster.",
+      "Text": "Да, это тот самый. Отнеси это квартирмейстеру.",
+      "Ms": 35,
+      "Error": ""
+    },
+    {
+      "Engine": "Yandex",
+      "Source": "Hold the line! Do not let them breach the gates!",
+      "Text": "Держите оборону! Не дайте им прорваться к воротам!",
+      "Ms": 20,
+      "Error": ""
+    },
+    {
+      "Engine": "Yandex",
+      "Source": "We shall not fall, not while there is breath in our lungs.",
+      "Text": "Мы не упадем, пока в наших легких есть дыхание.",
+      "Ms": 30,
+      "Error": ""
+    },
+    {
+      "Engine": "Yandex",
+      "Source": "Have you no shame? After all they sacrificed for you?",
+      "Text": "Неужели тебе совсем не стыдно? После всего, чем они пожертвовали ради тебя?",
+      "Ms": 17,
+      "Error": ""
+    },
+    {
+      "Engine": "Yandex",
+      "Source": "Is this the way to the Crystarium? I seem to have lost my bearings.",
+      "Text": "Это дорога в Кристалариум? Кажется, я заблудился.",
+      "Ms": 23,
+      "Error": ""
+    },
+    {
+      "Engine": "Google",
+      "Source": "Go on, then. I'll hold them off.",
+      "Text": "Ну давай. Я их задержу.",
+      "Ms": 1295,
+      "Error": ""
+    },
+    {
+      "Engine": "Google",
+      "Source": "Aye, that's the one. Take it to the quartermaster.",
+      "Text": "Да, это оно. Отнесите его интенданту.",
+      "Ms": 122,
+      "Error": ""
+    },
+    {
+      "Engine": "Google",
+      "Source": "Hold the line! Do not let them breach the gates!",
+      "Text": "Держите оборону! Не дайте им прорваться через ворота!",
+      "Ms": 181,
+      "Error": ""
+    },
+    {
+      "Engine": "Google",
+      "Source": "We shall not fall, not while there is breath in our lungs.",
+      "Text": "Мы не падём, пока ещё дышим.",
+      "Ms": 174,
+      "Error": ""
+    },
+    {
+      "Engine": "Google",
+      "Source": "Have you no shame? After all they sacrificed for you?",
+      "Text": "Тебе совсем не стыдно? Ведь они столько всего пожертвовали ради тебя?",
+      "Ms": 161,
+      "Error": ""
+    },
+    {
+      "Engine": "Google",
+      "Source": "Is this the way to the Crystarium? I seem to have lost my bearings.",
+      "Text": "Это путь в Кристариум? Кажется, я заблудился.",
+      "Ms": 173,
+      "Error": ""
+    },
+    {
+      "Engine": "Papago",
+      "Source": "Go on, then. I'll hold them off.",
+      "Text": "Пойдем, тогда. Я их отдержу.",
+      "Ms": 1905,
+      "Error": ""
+    },
+    {
+      "Engine": "Papago",
+      "Source": "Aye, that's the one. Take it to the quartermaster.",
+      "Text": "Да, это тот. Отвезите его к карьерасту.",
+      "Ms": 575,
+      "Error": ""
+    },
+    {
+      "Engine": "Papago",
+      "Source": "Hold the line! Do not let them breach the gates!",
+      "Text": "Оставайтесь в очереди! Не позволяйте им прорваться воротами!",
+      "Ms": 586,
+      "Error": ""
+    },
+    {
+      "Engine": "Papago",
+      "Source": "We shall not fall, not while there is breath in our lungs.",
+      "Text": "Мы не упадем, не пока дыхание в наших легких.",
+      "Ms": 664,
+      "Error": ""
+    },
+    {
+      "Engine": "Papago",
+      "Source": "Have you no shame? After all they sacrificed for you?",
+      "Text": "Ты не стыдишься? После всего, что они пожертвовали за тебя?",
+      "Ms": 579,
+      "Error": ""
+    },
+    {
+      "Engine": "Papago",
+      "Source": "Is this the way to the Crystarium? I seem to have lost my bearings.",
+      "Text": "Это путь к Crystarium? Кажется, я потерял подходы.",
+      "Ms": 534,
+      "Error": ""
+    }
+  ],
+  "rows": [
+    {
+      "Engine": "TranslateCom",
+      "Source": "Go on, then. I'll hold them off.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Давай, давай. Я их задержу.",
+      "Ms": 432,
+      "Error": ""
+    },
+    {
+      "Engine": "TranslateCom",
+      "Source": "Aye, that's the one. Take it to the quartermaster.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Да, именно он. Отнеси это квартирмейстеру.",
+      "Ms": 94,
+      "Error": ""
+    },
+    {
+      "Engine": "TranslateCom",
+      "Source": "Hold the line! Do not let them breach the gates!",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Держите линию! Не дайте им прорваться через ворота!",
+      "Ms": 93,
+      "Error": ""
+    },
+    {
+      "Engine": "TranslateCom",
+      "Source": "We shall not fall, not while there is breath in our lungs.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Мы не упадём, пока у нас есть дыхание в лёгких.",
+      "Ms": 93,
+      "Error": ""
+    },
+    {
+      "Engine": "TranslateCom",
+      "Source": "Have you no shame? After all they sacrificed for you?",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "У тебя нет стыда? После всего, что они пожертвовали ради тебя?",
+      "Ms": 101,
+      "Error": ""
+    },
+    {
+      "Engine": "TranslateCom",
+      "Source": "Is this the way to the Crystarium? I seem to have lost my bearings.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Это путь к Кристариуму? Похоже, я потерял ориентацию.",
+      "Ms": 100,
+      "Error": ""
+    },
+    {
+      "Engine": "TranslateCom",
+      "Source": "先に行け。ここは俺が食い止める。",
+      "SourceLang": "ja",
+      "TargetLang": "ru",
+      "Text": "Давай. Я задержу их здесь.",
+      "Ms": 97,
+      "Error": ""
+    },
+    {
+      "Engine": "TranslateCom",
+      "Source": "約束だ。必ず生きて帰ってこい。",
+      "SourceLang": "ja",
+      "TargetLang": "ru",
+      "Text": "Это обещание. Убедись, что вернёшься живым.",
+      "Ms": 92,
+      "Error": ""
+    },
+    {
+      "Engine": "TranslateCom",
+      "Source": "Where is the healer?",
+      "SourceLang": "auto",
+      "TargetLang": "ru",
+      "Text": "Где целитель?",
+      "Ms": 182,
+      "Error": ""
+    },
+    {
+      "Engine": "TranslateCom",
+      "Source": "Здравствуйте, друг.",
+      "SourceLang": "ru",
+      "TargetLang": "en",
+      "Text": "Hello, friend.",
+      "Ms": 187,
+      "Error": ""
+    },
+    {
+      "Engine": "TranslateCom",
+      "Source": "Where is the healer?",
+      "SourceLang": "en",
+      "TargetLang": "ja",
+      "Text": "ヒーラーはどこだ?",
+      "Ms": 229,
+      "Error": ""
+    },
+    {
+      "Engine": "TranslateCom",
+      "Source": "Спасибо за помощь.",
+      "SourceLang": "ru",
+      "TargetLang": "ja",
+      "Text": "ご助力ありがとうございます。",
+      "Ms": 217,
+      "Error": ""
+    },
+    {
+      "Engine": "TranslateCom",
+      "Source": "ありがとうございます。",
+      "SourceLang": "ja",
+      "TargetLang": "en",
+      "Text": "Thank you very much.",
+      "Ms": 150,
+      "Error": ""
+    },
+    {
+      "Engine": "ModernMT",
+      "Source": "Go on, then. I'll hold them off.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Тогда давай. Я задержу их.",
+      "Ms": 476,
+      "Error": ""
+    },
+    {
+      "Engine": "ModernMT",
+      "Source": "Aye, that's the one. Take it to the quartermaster.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Да, это тот самый. Отнесите его квартирмейстеру.",
+      "Ms": 149,
+      "Error": ""
+    },
+    {
+      "Engine": "ModernMT",
+      "Source": "Hold the line! Do not let them breach the gates!",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Держите линию! Не дайте им прорваться через ворота!",
+      "Ms": 179,
+      "Error": ""
+    },
+    {
+      "Engine": "ModernMT",
+      "Source": "We shall not fall, not while there is breath in our lungs.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Мы не упадем, пока есть дыхание в легких.",
+      "Ms": 163,
+      "Error": ""
+    },
+    {
+      "Engine": "ModernMT",
+      "Source": "Have you no shame? After all they sacrificed for you?",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Тебе не стыдно? В конце концов, они пожертвовали ради тебя?",
+      "Ms": 201,
+      "Error": ""
+    },
+    {
+      "Engine": "ModernMT",
+      "Source": "Is this the way to the Crystarium? I seem to have lost my bearings.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Это путь в Кристариум? Кажется, я потерял ориентиры.",
+      "Ms": 171,
+      "Error": ""
+    },
+    {
+      "Engine": "ModernMT",
+      "Source": "先に行け。ここは俺が食い止める。",
+      "SourceLang": "ja",
+      "TargetLang": "ru",
+      "Text": "Продолжайте.Я задержу это место.",
+      "Ms": 261,
+      "Error": ""
+    },
+    {
+      "Engine": "ModernMT",
+      "Source": "約束だ。必ず生きて帰ってこい。",
+      "SourceLang": "ja",
+      "TargetLang": "ru",
+      "Text": "Обещаю, ты вернешься живым.",
+      "Ms": 188,
+      "Error": ""
+    },
+    {
+      "Engine": "ModernMT",
+      "Source": "Where is the healer?",
+      "SourceLang": "auto",
+      "TargetLang": "ru",
+      "Text": "Где целитель?",
+      "Ms": 148,
+      "Error": ""
+    },
+    {
+      "Engine": "ModernMT",
+      "Source": "Здравствуйте, друг.",
+      "SourceLang": "ru",
+      "TargetLang": "en",
+      "Text": "Hello, friend.",
+      "Ms": 222,
+      "Error": ""
+    },
+    {
+      "Engine": "ModernMT",
+      "Source": "Where is the healer?",
+      "SourceLang": "en",
+      "TargetLang": "ja",
+      "Text": "ヒーラーはどこだ？",
+      "Ms": 151,
+      "Error": ""
+    },
+    {
+      "Engine": "ModernMT",
+      "Source": "Спасибо за помощь.",
+      "SourceLang": "ru",
+      "TargetLang": "ja",
+      "Text": "ご協力に感謝します。",
+      "Ms": 237,
+      "Error": ""
+    },
+    {
+      "Engine": "ModernMT",
+      "Source": "ありがとうございます。",
+      "SourceLang": "ja",
+      "TargetLang": "en",
+      "Text": "Thank you.",
+      "Ms": 120,
+      "Error": ""
+    },
+    {
+      "Engine": "Tencent",
+      "Source": "Go on, then. I'll hold them off.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Продолжай, тогда. Я их остановлю.",
+      "Ms": 945,
+      "Error": ""
+    },
+    {
+      "Engine": "Tencent",
+      "Source": "Aye, that's the one. Take it to the quartermaster.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Да, это то, что. Отнесите его к квартирмейстеру.",
+      "Ms": 579,
+      "Error": ""
+    },
+    {
+      "Engine": "Tencent",
+      "Source": "Hold the line! Do not let them breach the gates!",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Держите линию! Не позволяйте им нарушать ворота!",
+      "Ms": 494,
+      "Error": ""
+    },
+    {
+      "Engine": "Tencent",
+      "Source": "We shall not fall, not while there is breath in our lungs.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Мы не упадем, пока в наших легких есть дыхание.",
+      "Ms": 501,
+      "Error": ""
+    },
+    {
+      "Engine": "Tencent",
+      "Source": "Have you no shame? After all they sacrificed for you?",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Разве ты не стыдишься? Ведь за тебя жертвовали?",
+      "Ms": 540,
+      "Error": ""
+    },
+    {
+      "Engine": "Tencent",
+      "Source": "Is this the way to the Crystarium? I seem to have lost my bearings.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Это путь к Кристариуму? Кажется, я потерял свои ориентиры.",
+      "Ms": 464,
+      "Error": ""
+    },
+    {
+      "Engine": "Tencent",
+      "Source": "先に行け。ここは俺が食い止める。",
+      "SourceLang": "ja",
+      "TargetLang": "ru",
+      "Text": "Я остановлю это место.",
+      "Ms": 573,
+      "Error": ""
+    },
+    {
+      "Engine": "Tencent",
+      "Source": "約束だ。必ず生きて帰ってこい。",
+      "SourceLang": "ja",
+      "TargetLang": "ru",
+      "Text": "Это обещание, ты вернешься живым.",
+      "Ms": 527,
+      "Error": ""
+    },
+    {
+      "Engine": "Tencent",
+      "Source": "Where is the healer?",
+      "SourceLang": "auto",
+      "TargetLang": "ru",
+      "Text": "А где целитель?",
+      "Ms": 466,
+      "Error": ""
+    },
+    {
+      "Engine": "Tencent",
+      "Source": "Здравствуйте, друг.",
+      "SourceLang": "ru",
+      "TargetLang": "en",
+      "Text": "Hello, friend.",
+      "Ms": 543,
+      "Error": ""
+    },
+    {
+      "Engine": "Tencent",
+      "Source": "Where is the healer?",
+      "SourceLang": "en",
+      "TargetLang": "ja",
+      "Text": "ヒーラーはどこですか？",
+      "Ms": 620,
+      "Error": ""
+    },
+    {
+      "Engine": "Tencent",
+      "Source": "Спасибо за помощь.",
+      "SourceLang": "ru",
+      "TargetLang": "ja",
+      "Text": "ありがとうございました。",
+      "Ms": 648,
+      "Error": ""
+    },
+    {
+      "Engine": "Tencent",
+      "Source": "ありがとうございます。",
+      "SourceLang": "ja",
+      "TargetLang": "en",
+      "Text": "Thank you for sharing.",
+      "Ms": 556,
+      "Error": ""
+    },
+    {
+      "Engine": "Volcengine",
+      "Source": "Go on, then. I'll hold them off.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Тогда продолжайте. Я задержу их.",
+      "Ms": 621,
+      "Error": ""
+    },
+    {
+      "Engine": "Volcengine",
+      "Source": "Aye, that's the one. Take it to the quartermaster.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Да, это тот. Отнесите его квартирмейстеру.",
+      "Ms": 313,
+      "Error": ""
+    },
+    {
+      "Engine": "Volcengine",
+      "Source": "Hold the line! Do not let them breach the gates!",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Держите линию! Не позволяйте им взломать ворота!",
+      "Ms": 278,
+      "Error": ""
+    },
+    {
+      "Engine": "Volcengine",
+      "Source": "We shall not fall, not while there is breath in our lungs.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Мы не упадем, пока есть дыхание в наших легких.",
+      "Ms": 285,
+      "Error": ""
+    },
+    {
+      "Engine": "Volcengine",
+      "Source": "Have you no shame? After all they sacrificed for you?",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Тебе не стыдно? После всего, чем они пожертвовали ради тебя?",
+      "Ms": 254,
+      "Error": ""
+    },
+    {
+      "Engine": "Volcengine",
+      "Source": "Is this the way to the Crystarium? I seem to have lost my bearings.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Это путь в Кристарий? Кажется, я потерял ориентацию.",
+      "Ms": 253,
+      "Error": ""
+    },
+    {
+      "Engine": "Volcengine",
+      "Source": "先に行け。ここは俺が食い止める。",
+      "SourceLang": "ja",
+      "TargetLang": "ru",
+      "Text": "идти вперед. я остановлю это место.",
+      "Ms": 243,
+      "Error": ""
+    },
+    {
+      "Engine": "Volcengine",
+      "Source": "約束だ。必ず生きて帰ってこい。",
+      "SourceLang": "ja",
+      "TargetLang": "ru",
+      "Text": "Обещай мне, что вернешься живым.",
+      "Ms": 284,
+      "Error": ""
+    },
+    {
+      "Engine": "Volcengine",
+      "Source": "Where is the healer?",
+      "SourceLang": "auto",
+      "TargetLang": "ru",
+      "Text": "Где целитель?",
+      "Ms": 239,
+      "Error": ""
+    },
+    {
+      "Engine": "Volcengine",
+      "Source": "Здравствуйте, друг.",
+      "SourceLang": "ru",
+      "TargetLang": "en",
+      "Text": "Hello, friend.",
+      "Ms": 409,
+      "Error": ""
+    },
+    {
+      "Engine": "Volcengine",
+      "Source": "Where is the healer?",
+      "SourceLang": "en",
+      "TargetLang": "ja",
+      "Text": "ヒーラーはどこ?",
+      "Ms": 451,
+      "Error": ""
+    },
+    {
+      "Engine": "Volcengine",
+      "Source": "Спасибо за помощь.",
+      "SourceLang": "ru",
+      "TargetLang": "ja",
+      "Text": "あなたの助けに感謝します。",
+      "Ms": 647,
+      "Error": ""
+    },
+    {
+      "Engine": "Volcengine",
+      "Source": "ありがとうございます。",
+      "SourceLang": "ja",
+      "TargetLang": "en",
+      "Text": "Thank you very much.",
+      "Ms": 415,
+      "Error": ""
+    },
+    {
+      "Engine": "Alibaba",
+      "Source": "Go on, then. I'll hold them off.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Ну, давай. Я их задержу.",
+      "Ms": 2651,
+      "Error": ""
+    },
+    {
+      "Engine": "Alibaba",
+      "Source": "Aye, that's the one. Take it to the quartermaster.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Ага, это тот самый. Отнесите это к квартирмейстеру.",
+      "Ms": 726,
+      "Error": ""
+    },
+    {
+      "Engine": "Alibaba",
+      "Source": "Hold the line! Do not let them breach the gates!",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Держите линию! Не допустите, чтобы они прорвали ворота!",
+      "Ms": 647,
+      "Error": ""
+    },
+    {
+      "Engine": "Alibaba",
+      "Source": "We shall not fall, not while there is breath in our lungs.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Мы не падём, пока в наших лёгких есть дыхание.",
+      "Ms": 759,
+      "Error": ""
+    },
+    {
+      "Engine": "Alibaba",
+      "Source": "Have you no shame? After all they sacrificed for you?",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Тебе не стыдно? Ведь они ради тебя всем пожертвовали?",
+      "Ms": 687,
+      "Error": ""
+    },
+    {
+      "Engine": "Alibaba",
+      "Source": "Is this the way to the Crystarium? I seem to have lost my bearings.",
+      "SourceLang": "en",
+      "TargetLang": "ru",
+      "Text": "Это дорога к Кристариуму? Кажется, я потерял ориентиры.",
+      "Ms": 715,
+      "Error": ""
+    },
+    {
+      "Engine": "Alibaba",
+      "Source": "先に行け。ここは俺が食い止める。",
+      "SourceLang": "ja",
+      "TargetLang": "ru",
+      "Text": "Давай. Я буду держать их здесь.",
+      "Ms": 758,
+      "Error": ""
+    },
+    {
+      "Engine": "Alibaba",
+      "Source": "約束だ。必ず生きて帰ってこい。",
+      "SourceLang": "ja",
+      "TargetLang": "ru",
+      "Text": "-Это обещание. Убедитесь, что вы вернулись живыми.",
+      "Ms": 866,
+      "Error": ""
+    },
+    {
+      "Engine": "Alibaba",
+      "Source": "Where is the healer?",
+      "SourceLang": "auto",
+      "TargetLang": "ru",
+      "Text": "Где целитель?",
+      "Ms": 711,
+      "Error": ""
+    },
+    {
+      "Engine": "Alibaba",
+      "Source": "Здравствуйте, друг.",
+      "SourceLang": "ru",
+      "TargetLang": "en",
+      "Text": "Hello, friend.",
+      "Ms": 725,
+      "Error": ""
+    },
+    {
+      "Engine": "Alibaba",
+      "Source": "Where is the healer?",
+      "SourceLang": "en",
+      "TargetLang": "ja",
+      "Text": "ヒーラーはどこですか?",
+      "Ms": 821,
+      "Error": ""
+    },
+    {
+      "Engine": "Alibaba",
+      "Source": "Спасибо за помощь.",
+      "SourceLang": "ru",
+      "TargetLang": "ja",
+      "Text": "あなたの助けをありがとう。",
+      "Ms": 936,
+      "Error": ""
+    },
+    {
+      "Engine": "Alibaba",
+      "Source": "ありがとうございます。",
+      "SourceLang": "ja",
+      "TargetLang": "en",
+      "Text": "Thank you.",
+      "Ms": 689,
+      "Error": ""
+    }
+  ]
+}

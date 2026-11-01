@@ -419,14 +419,6 @@
                                                    Visibility="{Binding Shell.TranslationCredentials.IsDeepLXWorks, Converter={utils:BooleanToVisibilityConverterCollapse}}" />
                                         <TextBlock Margin="0,4,0,0" TextWrapping="Wrap" Text="{DynamicResource DeepLXBroken}"
                                                    Visibility="{Binding Shell.TranslationCredentials.IsDeepLXBroken, Converter={utils:BooleanToVisibilityConverterCollapse}}" />
-                                    </StackPanel>
-                                </Expander>
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
-
-                    <!-- Paid -->
-                    <TextBlock Style="{DynamicResource CaptionTextStyle}"
                                         <Separator Margin="0,12,0,12" />
                                         <TextBlock TextWrapping="Wrap" Margin="0,0,0,8"
                                                    Style="{DynamicResource CaptionTextStyle}"
@@ -454,6 +446,14 @@
                                                            Visibility="{Binding Shell.TranslationCredentials.IsDeepLBrowserNoBrowser, Converter={utils:BooleanToVisibilityConverterCollapse}}" />
                                                 <TextBlock TextWrapping="Wrap" Text="{DynamicResource DeepLBrowserStatusFailed}"
                                                            Visibility="{Binding Shell.TranslationCredentials.IsDeepLBrowserFailed, Converter={utils:BooleanToVisibilityConverterCollapse}}" />
+                                            </Grid>
+                                        </DockPanel>
+                                    </StackPanel>
+                                </Expander>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
                     <Border Padding="12,10" Margin="0,0,0,6" CornerRadius="6"
                             Background="{DynamicResource Brush.SurfaceSubtle}">
                         <DockPanel>
@@ -495,8 +495,8 @@
                         </DockPanel>
                     </Border>
 
-                                            </Grid>
-                                        </DockPanel>
+                    <!-- Paid -->
+                    <TextBlock Style="{DynamicResource CaptionTextStyle}"
                                FontWeight="SemiBold"
                                Margin="0,0,0,6" Text="{DynamicResource PaidTranslatorsLabel}" />
 
