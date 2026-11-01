@@ -175,8 +175,13 @@ namespace TataruHelper.Tests
         {
             public AppSettings AppSettings { get; } = new AppSettings
             {
-                TranslationContextBufferWindowMs = 1,
-                TranslationContextMaxBatchSize = 4
+                // The batch goes out when the second line arrives, not when
+                // a timer fires: with a short window the first line could be
+                // flushed alone before the second was even submitted, and the
+                // test would depend on the scheduler. The long window is only
+                // a ceiling that no test is meant to reach.
+                TranslationContextBufferWindowMs = 60_000,
+                TranslationContextMaxBatchSize = 2
             };
 
             public string ChatCodesFilePath => string.Empty;
