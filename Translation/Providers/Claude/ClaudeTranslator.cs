@@ -32,5 +32,11 @@ namespace Translation.Providers.Claude
         {
             return _client.TranslateAsync(sentence, inLang, outLang, cancellationToken);
         }
+
+        public Task<string> TranslateAsync(string sentence, string inLang, string outLang,
+            TranslationTextKind kind, CancellationToken cancellationToken)
+        {
+            return _client.TranslateAsync(sentence, inLang, outLang, kind, cancellationToken);
+        }
     }
 }

@@ -190,6 +190,13 @@ namespace FFXIVTataruHelper
                 _ChatMessageFilter.TrySplitNickname(chatCode, inSentence, out nickName, out sentenceToTranslate);
             var isPlayerChat = _ChatMessageFilter.IsPlayerChatCode(chatCode);
 
+            // The story is told in a handful of codes. Those lines read better
+            // localized than translated line by line, so an AI engine is given
+            // a prompt that asks for that rather than the chat prompt.
+            var kind = !string.IsNullOrEmpty(chatCode) && StoryChatCodes.Contains(chatCode)
+                ? TranslationTextKind.Story
+                : TranslationTextKind.Chat;
+
             if (Logger.RawDialogLogEnabled)
             {
                 Logger.WriteRawDialogLog(
@@ -212,6 +219,7 @@ namespace FFXIVTataruHelper
                 translationEngine,
                 fromLang,
                 toLang,
+                kind,
                 cancellationToken);
 
             if (!result.IsSuccess || result.Text.Length == 0)
@@ -353,9 +361,10 @@ namespace FFXIVTataruHelper
             TranslationEngine translationEngine,
             TranslatorLanguage fromLang,
             TranslatorLanguage toLang,
+            TranslationTextKind kind,
             CancellationToken cancellationToken)
         {
-            var request = new BufferedTranslationRequest(sentenceToTranslate, cancellationToken);
+            var request = new BufferedTranslationRequest(sentenceToTranslate, kind, cancellationToken);
             List<BufferedTranslationRequest> batchToFlush = null;
 
             lock (_translationBufferSync)
@@ -562,6 +571,7 @@ namespace FFXIVTataruHelper
                 translationEngine,
                 fromLang,
                 toLang,
+                request.Kind,
                 request.CancellationToken);
 
             request.CompletionSource.TrySetResult(result);
@@ -576,11 +586,16 @@ namespace FFXIVTataruHelper
             var combinedInput =
                 string.Join(_translationBatchDelimiter, requests.Select(x => x.InputText ?? string.Empty));
 
+            // Every line in a batch shares the chat code the batch key is built
+            // from, so they are all the same kind of text.
+            var batchKind = requests.Count > 0 ? requests[0].Kind : TranslationTextKind.Chat;
+
             var combinedResult = await _WebTranslator.TranslateAsync(
                 combinedInput,
                 translationEngine,
                 fromLang,
                 toLang,
+                batchKind,
                 CancellationToken.None);
 
             if (combinedResult.IsSuccess && TrySplitBatchedTranslation(
@@ -616,6 +631,7 @@ namespace FFXIVTataruHelper
                     translationEngine,
                     fromLang,
                     toLang,
+                    request.Kind,
                     request.CancellationToken);
 
                 request.CompletionSource.TrySetResult(result);
@@ -774,13 +790,17 @@ namespace FFXIVTataruHelper
         {
             public string InputText { get; }
 
+            public TranslationTextKind Kind { get; }
+
             public CancellationToken CancellationToken { get; }
 
             public TaskCompletionSource<TranslationResult> CompletionSource { get; }
 
-            public BufferedTranslationRequest(string inputText, CancellationToken cancellationToken)
+            public BufferedTranslationRequest(string inputText, TranslationTextKind kind,
+                CancellationToken cancellationToken)
             {
                 InputText = inputText ?? string.Empty;
+                Kind = kind;
                 CancellationToken = cancellationToken;
                 CompletionSource =
                     new TaskCompletionSource<TranslationResult>(TaskCreationOptions.RunContinuationsAsynchronously);

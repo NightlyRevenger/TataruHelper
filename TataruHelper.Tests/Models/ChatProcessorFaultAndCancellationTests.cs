@@ -44,7 +44,7 @@ namespace TataruHelper.Tests
                 DelayCts = new CancellationTokenSource() // no successor task: this task died
             };
             state.PendingRequests.Add(
-                new ChatProcessor.BufferedTranslationRequest("still waiting", CancellationToken.None));
+                new ChatProcessor.BufferedTranslationRequest("still waiting", TranslationTextKind.Chat, CancellationToken.None));
             states["key"] = state;
 
             var failed = ChatProcessor.FailPendingRequests(states, "key", Engine,
@@ -67,7 +67,7 @@ namespace TataruHelper.Tests
                 DelayCts = null // the task rescheduled the remainder: a live task owns it
             };
             state.PendingRequests.Add(
-                new ChatProcessor.BufferedTranslationRequest("somebody else's", CancellationToken.None));
+                new ChatProcessor.BufferedTranslationRequest("somebody else's", TranslationTextKind.Chat, CancellationToken.None));
             states["key"] = state;
 
             var failed = ChatProcessor.FailPendingRequests(states, "key", Engine, new Exception());
@@ -145,6 +145,7 @@ namespace TataruHelper.Tests
                 TranslationEngine translationEngine,
                 TranslatorLanguage fromLang,
                 TranslatorLanguage toLang,
+                TranslationTextKind kind,
                 CancellationToken cancellationToken)
             {
                 var call = new Call(inSentence, cancellationToken);

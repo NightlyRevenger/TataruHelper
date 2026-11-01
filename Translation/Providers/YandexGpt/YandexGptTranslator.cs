@@ -42,8 +42,14 @@ internal sealed class YandexGptTranslator : ITranslationProvider
     }
 
 
-    public async Task<string> TranslateAsync(string sentence, string inLang, string outLang,
+    public Task<string> TranslateAsync(string sentence, string inLang, string outLang,
         CancellationToken cancellationToken)
+    {
+        return TranslateAsync(sentence, inLang, outLang, TranslationTextKind.Chat, cancellationToken);
+    }
+
+    public async Task<string> TranslateAsync(string sentence, string inLang, string outLang,
+        TranslationTextKind kind, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(sentence))
             return string.Empty;
@@ -58,7 +64,7 @@ internal sealed class YandexGptTranslator : ITranslationProvider
         var modelAlias = string.IsNullOrWhiteSpace(configuredModel) ? DefaultModelAlias : configuredModel;
         var modelUri = "gpt://" + folderId + "/" + modelAlias;
 
-        var systemPrompt = FfxivTranslationPrompt.BuildSystemPrompt(inLang, outLang);
+        var systemPrompt = FfxivTranslationPrompt.BuildSystemPrompt(inLang, outLang, kind);
 
         var payloadText = new JObject
         {

@@ -53,8 +53,14 @@ namespace Translation.Providers.AI
             _extraHeaders = extraHeaders;
         }
 
-        public async Task<string> TranslateAsync(string sentence, string inLang, string outLang,
+        public Task<string> TranslateAsync(string sentence, string inLang, string outLang,
             CancellationToken cancellationToken)
+        {
+            return TranslateAsync(sentence, inLang, outLang, TranslationTextKind.Chat, cancellationToken);
+        }
+
+        public async Task<string> TranslateAsync(string sentence, string inLang, string outLang,
+            TranslationTextKind kind, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(sentence))
                 return string.Empty;
@@ -68,7 +74,7 @@ namespace Translation.Providers.AI
             var configuredModel = _credentials.GetModel(_engine);
             var model = string.IsNullOrWhiteSpace(configuredModel) ? _defaultModel : configuredModel;
 
-            var systemPrompt = FfxivTranslationPrompt.BuildSystemPrompt(inLang, outLang);
+            var systemPrompt = FfxivTranslationPrompt.BuildSystemPrompt(inLang, outLang, kind);
 
             var modelKey = _engine + "/" + model;
             var withTemperature = !ModelsWithoutTemperature.ContainsKey(modelKey);

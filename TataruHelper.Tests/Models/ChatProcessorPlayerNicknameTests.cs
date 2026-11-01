@@ -58,6 +58,7 @@ namespace TataruHelper.Tests.Models
                 TranslationEngine translationEngine,
                 TranslatorLanguage fromLang,
                 TranslatorLanguage toLang,
+                TranslationTextKind kind,
                 CancellationToken cancellationToken)
             {
                 Requests.Add(inSentence);

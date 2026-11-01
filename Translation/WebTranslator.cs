@@ -306,6 +306,17 @@ namespace Translation
             return TranslateAsync(inSentence, translationEngine, fromLang, toLang, CancellationToken.None);
         }
 
+        public Task<TranslationResult> TranslateAsync(
+            string inSentence,
+            TranslationEngine translationEngine,
+            TranslatorLanguage fromLang,
+            TranslatorLanguage toLang,
+            CancellationToken cancellationToken)
+        {
+            return TranslateAsync(inSentence, translationEngine, fromLang, toLang,
+                TranslationTextKind.Chat, cancellationToken);
+        }
+
         // Virtual so a test can stand in for the engine and script the faults
         // and the tokens instead of paying for real translations.
         public virtual Task<TranslationResult> TranslateAsync(
@@ -313,9 +324,10 @@ namespace Translation
             TranslationEngine translationEngine,
             TranslatorLanguage fromLang,
             TranslatorLanguage toLang,
+            TranslationTextKind kind,
             CancellationToken cancellationToken)
         {
-            return TranslateCoreAsync(inSentence, translationEngine, fromLang, toLang, cancellationToken);
+            return TranslateCoreAsync(inSentence, translationEngine, fromLang, toLang, kind, cancellationToken);
         }
 
         /// <summary>
@@ -475,7 +487,7 @@ namespace Translation
 
         private async Task<TranslationResult> TranslateCoreAsync(string inSentence,
             TranslationEngine translationEngine, TranslatorLanguage fromLang, TranslatorLanguage toLang,
-            CancellationToken cancellationToken)
+            TranslationTextKind kind, CancellationToken cancellationToken)
         {
             if (translationEngine == null || fromLang == null || toLang == null)
             {
@@ -537,7 +549,7 @@ namespace Translation
             var toLangCode = toLang.LanguageCode;
 
             var translationRequest =
-                new TranslationRequest(normalizedSentence, translationEngine.EngineName, fromLangCode, toLangCode);
+                new TranslationRequest(normalizedSentence, translationEngine.EngineName, fromLangCode, toLangCode, kind);
             KeyValuePair<TranslationRequest, string> cachedResult;
             lock (_cacheSync)
             {
@@ -551,7 +563,7 @@ namespace Translation
             }
 
             var result = await TranslateSharedAsync(translationRequest, translationEngine, toLang,
-                normalizedSentence, fromLangCode, toLangCode, cancellationToken).ConfigureAwait(false);
+                normalizedSentence, fromLangCode, toLangCode, kind, cancellationToken).ConfigureAwait(false);
 
             if (result.IsSuccess && !string.IsNullOrEmpty(result.Text))
             {
@@ -594,6 +606,7 @@ namespace Translation
             string sentence,
             string fromLangCode,
             string toLangCode,
+            TranslationTextKind kind,
             CancellationToken cancellationToken)
         {
             var completion = new TaskCompletionSource<TranslationResult>(
@@ -608,7 +621,7 @@ namespace Translation
             try
             {
                 var result = await InvokeSelectedProviderAsync(translationEngine.EngineName, sentence,
-                    fromLangCode, toLangCode, CancellationToken.None).ConfigureAwait(false);
+                    fromLangCode, toLangCode, kind, CancellationToken.None).ConfigureAwait(false);
 
                 // An engine that cannot do the job will sometimes say so by handing
                 // the sentence back as it came. Another engine gets to try; if none
@@ -625,7 +638,7 @@ namespace Translation
                 if (!result.IsSuccess)
                 {
                     var stoodIn = await TryFallbackProvidersAsync(translationEngine, sentence, toLang,
-                        fromLangCode, toLangCode, result, CancellationToken.None).ConfigureAwait(false);
+                        fromLangCode, toLangCode, kind, result, CancellationToken.None).ConfigureAwait(false);
                     result = stoodIn.IsSuccess ? stoodIn : (echoed ?? stoodIn);
                 }
 
@@ -779,6 +792,7 @@ namespace Translation
             TranslatorLanguage toLang,
             string fromLangCode,
             string toLangCode,
+            TranslationTextKind kind,
             TranslationResult originalFailure,
             CancellationToken cancellationToken)
         {
@@ -821,7 +835,7 @@ namespace Translation
                     : ResolveLanguageCode(candidate, null, fromLangCode) ?? "auto";
 
                 var result = await InvokeSelectedProviderAsync(candidate.EngineName, sentence, candidateFromCode,
-                    candidateToCode, cancellationToken).ConfigureAwait(false);
+                    candidateToCode, kind, cancellationToken).ConfigureAwait(false);
 
                 if (result.IsSuccess && !string.IsNullOrEmpty(result.Text))
                 {
@@ -886,6 +900,7 @@ namespace Translation
             string sentence,
             string fromLangCode,
             string toLangCode,
+            TranslationTextKind kind,
             CancellationToken cancellationToken)
         {
             if (!_TranslationProviders.TryGetValue(engineName, out var provider))
@@ -896,7 +911,7 @@ namespace Translation
 
             try
             {
-                var text = await provider.TranslateAsync(sentence, fromLangCode, toLangCode, cancellationToken)
+                var text = await provider.TranslateAsync(sentence, fromLangCode, toLangCode, kind, cancellationToken)
                     .ConfigureAwait(false) ?? string.Empty;
 
                 if (string.IsNullOrWhiteSpace(text))
