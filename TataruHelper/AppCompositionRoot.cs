@@ -41,9 +41,12 @@ namespace FFXIVTataruHelper
             var ours = string.IsNullOrWhiteSpace(custom)
                 || custom.TrimEnd('/') == ManagedRelayProcess.DefaultEndpoint;
 
-            // The Linux launcher starts its own relay and passes the address on.
+            // The Linux launcher may pass the address of a relay of its own. Its
+            // helper ends with its session, which an update restart outlives, so
+            // the address is only trusted when it is not ours or someone answers.
             var launcherEndpoint = Environment.GetEnvironmentVariable(ManagedDeepLRelay.EnvironmentVariable);
-            if (!string.IsNullOrWhiteSpace(launcherEndpoint))
+            if (!string.IsNullOrWhiteSpace(launcherEndpoint)
+                && launcherEndpoint.TrimEnd('/') != ManagedRelayProcess.DefaultEndpoint)
             {
                 if (ManagedDeepLRelay.Configure(store, launcherEndpoint))
                     Logger.WriteLog("DeepL: connected to the local relay started by the launcher.");
@@ -52,13 +55,6 @@ namespace FFXIVTataruHelper
 
             if (!ours || !store.IsEngineEnabled(TranslationEngineName.DeepL))
                 return store;
-
-            if (WineEnvironment.IsRunning)
-            {
-                // No relay came with this session: do not keep an address nobody answers.
-                ManagedDeepLRelay.Forget(store, ManagedRelayProcess.DefaultEndpoint);
-                return store;
-            }
 
             var relay = provider.GetRequiredService<ManagedRelayProcess>();
             var executable = Path.Combine(AppContext.BaseDirectory, "deepl-relay.exe");
