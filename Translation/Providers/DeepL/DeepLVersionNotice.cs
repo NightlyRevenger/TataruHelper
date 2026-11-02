@@ -29,7 +29,7 @@ namespace Translation.Providers.DeepL
             "versión antigua de deepl",     // es
             "стару версію deepl",           // uk
             "versione precedente di deepl", // it
-            "eski bir sürümünü",            // tr
+            "deepl'in eski bir sürümünü",   // tr
             "starszej wersji deepl",        // pl
             "versão mais antiga do deepl",  // pt
             "oudere versie van deepl",      // nl

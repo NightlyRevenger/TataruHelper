@@ -81,6 +81,7 @@ namespace Translation.Tests.Providers
         [TestCase("Hello, friend")]
         [TestCase("Привет, друг")]
         [TestCase("こんにちは世界")]
+        [TestCase("Haritanın eski bir sürümünü buldum")]
         [TestCase("")]
         [TestCase(null)]
         public void AnOrdinaryTranslation_IsNotTheNotice(string text)

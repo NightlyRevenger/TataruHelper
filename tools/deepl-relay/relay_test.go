@@ -265,7 +265,7 @@ func TestIsVersionNotice(t *testing.T) {
 		}
 	}
 
-	for _, translation := range []string{"", "Hello, friend", "Привет, друг", "こんにちは世界"} {
+	for _, translation := range []string{"", "Hello, friend", "Привет, друг", "こんにちは世界", "Haritanın eski bir sürümünü buldum"} {
 		if isVersionNotice(translation) {
 			t.Errorf("ordinary translation read as the notice: %q", translation)
 		}
