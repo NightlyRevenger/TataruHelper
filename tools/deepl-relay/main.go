@@ -8,17 +8,20 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"time"
 )
 
 func main() {
 	addr := flag.String("addr", "127.0.0.1:2285", "address to listen on (localhost only is enough for the app)")
 	profile := flag.String("profile", "ios", `TLS fingerprint to use: "ios" or "safari"`)
-	endpoint := flag.String("deepl", "https://www2.deepl.com/jsonrpc", "DeepL endpoint to forward to")
+	endpoint := flag.String("deepl", "https://www2.deepl.com/jsonrpc", "DeepL web endpoint to use as fallback")
+	oneshot := flag.String("oneshot", oneshotEndpoint, "DeepL app endpoint to translate through (empty disables it)")
 	verbose := flag.Bool("v", false, "log every request")
 	flag.Parse()
 
 	r := newRelay(*endpoint, *profile)
+	r.oneshotURL = strings.TrimSpace(*oneshot)
 	r.logRequests = *verbose
 	server := &http.Server{
 		Addr: *addr, Handler: r.handler(),
@@ -40,7 +43,8 @@ func main() {
 		close(stopped)
 	}()
 
-	log.Printf("deepl-relay on http://%s forwarding %s (profile %s)", *addr, *endpoint, *profile)
+	log.Printf("deepl-relay on http://%s: app route %s, web fallback %s (profile %s)",
+		*addr, *oneshot, *endpoint, *profile)
 	if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		log.Fatalf("deepl-relay: %v", err)
 	}

@@ -1,13 +1,20 @@
 // Package main implements a small local relay that lets TataruHelper reach
-// DeepL's free web endpoint without a browser.
+// DeepL's free translation without a browser.
 //
-// Live probes found that a browser TLS profile and browser headers worked
-// without cookies or a JavaScript challenge. This is an unofficial endpoint;
-// those observations do not establish which signals its filter checks.
+// Two routes reach DeepL. The app route posts to the oneshot endpoint DeepL's
+// own clients use, under a pinned iOS profile; it translates today. The web
+// route speaks the legacy jsonrpc protocol with a browser TLS fingerprint;
+// since 2 November 2026 the free endpoint answers that protocol with a
+// client-update notice instead of translations, so it stands as the fallback.
+// These are unofficial endpoints; the observations behind them do not
+// establish which signals DeepL's filter checks.
 package main
 
 import (
+	"compress/flate"
+	"compress/gzip"
 	"context"
+	crand "crypto/rand"
 	cryptotls "crypto/tls"
 	"encoding/json"
 	"errors"
@@ -22,22 +29,48 @@ import (
 	"strings"
 	"sync/atomic"
 	"time"
+	"unicode/utf16"
 
+	"github.com/andybalholm/brotli"
 	utls "github.com/refraction-networking/utls"
 )
 
 const maxRefusalExcerpt = 200
 
-// deeplRelay forwards DeepLX-shaped translations to DeepL's jsonrpc endpoint.
+// The emulated iOS profile is pinned to the shipping DeepL app (26.42), the
+// same one OwO-Network/DLX and un-ts/deeplx pin. DeepL rate-limits clients
+// whose TLS fingerprint, User-Agent and app_information tell inconsistent
+// stories, so every value stays on this one profile - and a claimed version
+// beyond a shipping iOS major earns HTTP 429 and can temporarily ban the IP.
+const (
+	oneshotEndpoint     = "https://oneshot-free.www.deepl.com/v1/translate"
+	iosAppVersion       = "26.42"
+	iosAppBuild         = "5443737"
+	iosOSVersion        = "26.0"
+	iosCFNetworkVersion = "3826.600.41"
+	iosDarwinVersion    = "25.0.0"
+
+	// The anonymous oneshot endpoint caps the sum of the texts at 1500 UTF-16
+	// code units; an astral character counts two.
+	maxOneshotTextUnits = 1500
+)
+
+// deeplRelay serves the DeepLX protocol and picks the upstream route.
 type deeplRelay struct {
 	endpoint    string
-	client      *http.Client
+	oneshotURL  string
+	client      *http.Client // the web route: browser TLS fingerprint
+	apiClient   *http.Client // the app route: ordinary TLS, iOS headers
 	userAgent   string
 	id          int64
 	logRequests bool
 	gate        chan struct{}
 	refusal     *refusalError // protected by gate, including upstream requests
+	webRefusal  *refusalError // jsonrpc notice: pauses the web route only
 	now         func() time.Time
+	instanceID  string // stable for the process, like one app launch
+	sessionID   string
+	skipOneshot bool // the app route refused this client; retire it
 }
 
 // browserProfile pairs a TLS hello with the user-agent that belongs to it.
@@ -64,11 +97,14 @@ func newRelay(endpoint, profile string) *deeplRelay {
 	}
 
 	r := &deeplRelay{
-		endpoint:  endpoint,
-		gate:      make(chan struct{}, 1),
-		now:       time.Now,
-		userAgent: p.userAgent,
-		id:        int64(rand.Intn(100_000)+8_300_000) * 1000,
+		endpoint:   endpoint,
+		gate:       make(chan struct{}, 1),
+		now:        time.Now,
+		userAgent:  p.userAgent,
+		id:         int64(rand.Intn(100_000)+8_300_000) * 1000,
+		apiClient:  &http.Client{Timeout: 20 * time.Second},
+		instanceID: newUUID(),
+		sessionID:  newUUID(),
 	}
 
 	if strings.HasPrefix(endpoint, "https://") {
@@ -204,8 +240,8 @@ var versionNoticeMarkers = []string{
 	"ältere version von deepl",     // DE
 	"старую версию deepl",          // RU
 	"ancienne version de deepl",    // FR
-	"旧版本的 deepl",                 // zh-CN
-	"deeplの古いバージョン",          // ja
+	"旧版本的 deepl",                   // zh-CN
+	"deeplの古いバージョン",                // ja
 	"versión antigua de deepl",     // es
 	"стару версію deepl",           // uk
 	"versione precedente di deepl", // it
@@ -229,6 +265,12 @@ func isVersionNotice(text string) bool {
 
 // translate returns the translation, the HTTP status DeepL answered with, and
 // an error when the answer carries no translation.
+//
+// The app route goes first: the web route's jsonrpc protocol has been
+// answered with the client-update notice since 2 November 2026. Whatever the
+// app route cannot serve - a language it does not map, a line past its
+// length cap, an answer it cannot read - the web route gets its turn;
+// whatever the app route refuses pauses upstream as its HTTP 429 does.
 func (r *deeplRelay) translate(ctx context.Context, text, sourceLang, targetLang string) (string, int, error) {
 	// Serialize upstream requests so queued chat lines observe the first refusal.
 	select {
@@ -244,6 +286,36 @@ func (r *deeplRelay) translate(ctx context.Context, text, sourceLang, targetLang
 		return "", r.refusal.status, r.refusal
 	}
 
+	source, target := normalizeLangs(sourceLang, targetLang)
+
+	if r.oneshotURL != "" && !r.skipOneshot {
+		targetCode, mapped := oneshotTargets[target]
+		sourceCode := ""
+		if mapped && source != "auto" {
+			sourceCode, mapped = oneshotSources[strings.ToUpper(source)]
+		}
+		if mapped && utf16Length(text) <= maxOneshotTextUnits {
+			translation, status, err, retryOtherRoute := r.oneshotTranslate(ctx, text, sourceCode, targetCode)
+			if err == nil {
+				if r.logRequests {
+					log.Printf("deepl-relay: %d chars translated over the app route", len(translation))
+				}
+				return translation, status, nil
+			}
+			if !retryOtherRoute {
+				return "", status, err
+			}
+			if r.logRequests {
+				log.Printf("deepl-relay: app route failed with %d (%s); trying the web route",
+					status, excerpt(err.Error()))
+			}
+		}
+	}
+
+	return r.translateWeb(ctx, text, source, target)
+}
+
+func normalizeLangs(sourceLang, targetLang string) (string, string) {
 	source := strings.ToLower(strings.TrimSpace(sourceLang))
 	if source == "" {
 		source = "auto"
@@ -251,6 +323,17 @@ func (r *deeplRelay) translate(ctx context.Context, text, sourceLang, targetLang
 	target := strings.ToUpper(strings.TrimSpace(targetLang))
 	if target == "" {
 		target = "EN"
+	}
+	return source, target
+}
+
+// translateWeb is the legacy jsonrpc route, browser fingerprint and all.
+func (r *deeplRelay) translateWeb(ctx context.Context, text, source, target string) (string, int, error) {
+	// The client-update notice is about this protocol, not about the
+	// network; it stands the web route down alone, so lines that fit the
+	// app route keep translating while this one rests.
+	if r.webRefusal != nil && r.now().Before(r.webRefusal.until) {
+		return "", r.webRefusal.status, r.webRefusal
 	}
 
 	id := atomic.AddInt64(&r.id, 1)
@@ -300,20 +383,182 @@ func (r *deeplRelay) translate(ctx context.Context, text, sourceLang, targetLang
 	if isVersionNotice(translation) {
 		// HTTP 200 carrying the client-update notice instead of a
 		// translation. Retrying the same request shape brings the same
-		// text back, so it is refused like an HTTP 429 is - the same
-		// pause upstream, the same status handed to the application -
-		// which keeps it off the player's screen and away from the
-		// engine the window follows. The app reads the same notice from
-		// someone else's relay and refuses it the same way.
-		r.refusal = &refusalError{
+		// text back, so the web route stands down for the same minute an
+		// HTTP 429 buys - but only this route: the notice speaks of the
+		// jsonrpc protocol, and the app route answers under a different
+		// profile. The refusal keeps the notice off the player's screen
+		// and away from the engine the window follows. The app reads the
+		// same notice from someone else's relay and refuses it the same
+		// way.
+		r.webRefusal = &refusalError{
 			status:  http.StatusTooManyRequests,
 			until:   r.now().Add(refusalDelay("", r.now())),
 			message: "DeepL answered with its client-update notice; upstream requests paused",
 		}
-		return "", r.refusal.status, r.refusal
+		return "", r.webRefusal.status, r.webRefusal
 	}
 
 	return translation, resp.StatusCode, nil
+}
+
+// oneshotTranslate asks the oneshot endpoint DeepL's own clients use. It
+// returns the translation, the status, an error, and whether the line should
+// be handed to the web route rather than reported.
+func (r *deeplRelay) oneshotTranslate(ctx context.Context, text, source, target string) (string, int, error, bool) {
+	req, err := http.NewRequestWithContext(ctx, "POST", r.oneshotURL,
+		strings.NewReader(buildOneshotRequestBody(text, source, target, r.instanceID)))
+	if err != nil {
+		return "", 0, err, true
+	}
+	// One coherent iOS story: headers, body and version agree (see the
+	// profile constants). Ordinary TLS - DeepL's edge resets browser
+	// fingerprints at this address, and the iOS ones would contradict the
+	// claimed version anyway.
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "*/*")
+	req.Header.Set("Accept-Encoding", "gzip, deflate, br")
+	req.Header.Set("Accept-Language", "en-US,en;q=0.9")
+	req.Header.Set("Authorization", "None")
+	req.Header.Set("User-Agent", fmt.Sprintf("DeepL/%s CFNetwork/%s Darwin/%s",
+		iosAppVersion, iosCFNetworkVersion, iosDarwinVersion))
+	req.Header.Set("x-app-os-version", iosOSVersion)
+	req.Header.Set("x-app-instance-id", r.instanceID)
+	req.Header.Set("x-app-session-id", r.sessionID)
+
+	resp, err := r.apiClient.Do(req)
+	if err != nil {
+		return "", 0, err, true
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode == http.StatusTooManyRequests || resp.StatusCode == http.StatusUnavailableForLegalReasons {
+		r.refusal = &refusalError{status: resp.StatusCode, until: r.now().Add(refusalDelay(resp.Header.Get("Retry-After"), r.now())), message: fmt.Sprintf("DeepL answered HTTP %d; upstream requests paused", resp.StatusCode)}
+		return "", r.refusal.status, r.refusal, false
+	}
+	if resp.StatusCode == http.StatusForbidden {
+		// A refused client (deeplcom answers OutdatedClient among others)
+		// does not clear by waiting. Pause like a 429 so the current burst
+		// backs off, and retire the app route for the rest of the process;
+		// un-pin the version constants only when the emulated profile is
+		// deliberately updated.
+		r.skipOneshot = true
+		r.refusal = &refusalError{
+			status:  http.StatusTooManyRequests,
+			until:   r.now().Add(refusalDelay("", r.now())),
+			message: "DeepL refused the emulated iOS client (HTTP 403); upstream requests paused",
+		}
+		return "", r.refusal.status, r.refusal, false
+	}
+	if resp.StatusCode != http.StatusOK {
+		raw, _ := io.ReadAll(io.LimitReader(resp.Body, 1<<16))
+		return "", resp.StatusCode,
+			fmt.Errorf("the app endpoint answered HTTP %d: %s", resp.StatusCode, excerpt(string(raw))), true
+	}
+
+	raw, err := decodeAnswerBody(resp)
+	if err != nil {
+		return "", resp.StatusCode, err, true
+	}
+	var answer struct {
+		Translations []struct {
+			Text string `json:"text"`
+		} `json:"translations"`
+	}
+	if err := json.Unmarshal(raw, &answer); err != nil {
+		return "", resp.StatusCode, fmt.Errorf("the app endpoint answered with text we cannot read as JSON"), true
+	}
+	if len(answer.Translations) == 0 || answer.Translations[0].Text == "" {
+		return "", resp.StatusCode, fmt.Errorf("the app endpoint answered without a translation"), true
+	}
+	return answer.Translations[0].Text, resp.StatusCode, nil, false
+}
+
+// buildOneshotRequestBody spells the oneshot request: a text array, the
+// languages in the endpoint's own spelling (auto omitted), and the iOS
+// app_information the clients send - the profile is checked against the
+// headers, so both must name the same app.
+func buildOneshotRequestBody(text, source, target, instanceID string) string {
+	sourceField := ""
+	if source != "" {
+		sourceField = `"source_lang":` + jsonText(source) + `,`
+	}
+	return `{"text":[` + jsonText(text) + `],` + sourceField +
+		`"target_lang":` + jsonText(target) +
+		`,"usage_type":"translate","app_information":{"os":"iOS","os_version":` + jsonText(iosOSVersion) +
+		`,"app_version":` + jsonText(iosAppVersion) +
+		`,"app_build":` + jsonText(iosAppBuild) +
+		`,"instance_id":` + jsonText(instanceID) + `}}`
+}
+
+// decodeAnswerBody gives back the wire JSON whatever encoding the endpoint
+// chose. The Accept-Encoding header is set by hand, so net/http leaves the
+// body undecoded.
+func decodeAnswerBody(resp *http.Response) ([]byte, error) {
+	var reader io.Reader = resp.Body
+	switch resp.Header.Get("Content-Encoding") {
+	case "gzip":
+		gz, err := gzip.NewReader(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+		reader = gz
+	case "deflate":
+		reader = flate.NewReader(resp.Body)
+	case "br":
+		reader = brotli.NewReader(resp.Body)
+	}
+	return io.ReadAll(io.LimitReader(reader, 1<<20))
+}
+
+// utf16Length counts UTF-16 code units, the unit the oneshot endpoint's
+// 1500-character cap is measured in; an astral character costs two.
+func utf16Length(text string) int {
+	return len(utf16.Encode([]rune(text)))
+}
+
+// newUUID is the v4 identifier the iOS app's instance and session ids have.
+func newUUID() string {
+	b := make([]byte, 16)
+	if _, err := crand.Read(b); err != nil {
+		// crypto/rand does not fail in practice; a fixed id is better than
+		// a panic over the player's chat lines.
+		for i := range b {
+			b[i] = byte(rand.Intn(256))
+		}
+		b[6], b[8] = 0x40, 0x80
+	}
+	b[6] = (b[6] & 0x0f) | 0x40
+	b[8] = (b[8] & 0x3f) | 0x80
+	return fmt.Sprintf("%x-%x-%x-%x-%x", b[0:4], b[4:6], b[6:8], b[8:10], b[10:16])
+}
+
+// The oneshot endpoint takes lowercase BCP-47-ish codes, and EN/PT/ZH are
+// regional there: plain EN means en-US as a target, generic en as a source;
+// ZH is zh-Hans as a target and generic zh as a source. The codes are the
+// ones the application's DeeplLanguages.json offers, so every line the app
+// can pick maps.
+var oneshotTargets = map[string]string{
+	"AR": "ar", "BG": "bg", "CS": "cs", "DA": "da", "DE": "de", "EL": "el",
+	"EN": "en-US", "EN-US": "en-US", "EN-GB": "en-GB",
+	"ES": "es", "ES-419": "es-419", "ET": "et", "FI": "fi", "FR": "fr",
+	"HE": "he", "HU": "hu", "ID": "id", "IT": "it", "JA": "ja", "KO": "ko",
+	"LT": "lt", "LV": "lv", "NB": "nb", "NL": "nl", "PL": "pl",
+	"PT": "pt-BR", "PT-BR": "pt-BR", "PT-PT": "pt-PT",
+	"RO": "ro", "RU": "ru", "SK": "sk", "SL": "sl", "SV": "sv",
+	"TR": "tr", "UK": "uk", "VI": "vi",
+	"ZH": "zh-Hans", "ZH-HANS": "zh-Hans", "ZH-HANT": "zh-Hant",
+}
+
+var oneshotSources = map[string]string{
+	"AR": "ar", "BG": "bg", "CS": "cs", "DA": "da", "DE": "de", "EL": "el",
+	"EN": "en", "EN-US": "en-US", "EN-GB": "en-GB",
+	"ES": "es", "ES-419": "es-419", "ET": "et", "FI": "fi", "FR": "fr",
+	"HE": "he", "HU": "hu", "ID": "id", "IT": "it", "JA": "ja", "KO": "ko",
+	"LT": "lt", "LV": "lv", "NB": "nb", "NL": "nl", "PL": "pl",
+	"PT": "pt", "PT-BR": "pt-BR", "PT-PT": "pt-PT",
+	"RO": "ro", "RU": "ru", "SK": "sk", "SL": "sl", "SV": "sv",
+	"TR": "tr", "UK": "uk", "VI": "vi",
+	"ZH": "zh", "ZH-HANS": "zh", "ZH-HANT": "zh",
 }
 
 func excerpt(s string) string {
