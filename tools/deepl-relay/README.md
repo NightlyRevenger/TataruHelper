@@ -57,6 +57,11 @@ upstream requests for at least 60 seconds, honoring a longer `Retry-After`
 status immediately with a `Retry-After` header. The app's DeepLX client
 has no cooldown of its own and continues to its remaining fallback routes.
 
+Since 2 November 2026 the endpoint also answers `200` with "You're using an
+older version of DeepL…" in place of translations. That notice is refused
+like a `429`: the same pause, the same status handed to the app, so it
+never reaches the player's screen.
+
 ## Options
 
 | Flag | Default | Meaning |

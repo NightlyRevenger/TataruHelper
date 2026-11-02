@@ -94,7 +94,21 @@ namespace Translation.Providers.DeepL
                     var translated = await _relayTranslate(deepLX, sentence, source, target,
                         timeout.Token).ConfigureAwait(false);
                     if (!string.IsNullOrWhiteSpace(translated))
-                        return translated;
+                    {
+                        // Someone else's DeepLX server can pass DeepL's
+                        // client-update notice through as its translation.
+                        // It is a refusal, not an answer; do not adopt it.
+                        if (DeepLVersionNotice.IsPresent(translated))
+                        {
+                            _logger?.LogInformation("{Message}",
+                                "[DEEPL_DEEPLX] The relay answered with DeepL's client-update notice, " +
+                                "not a translation.");
+                        }
+                        else
+                        {
+                            return translated;
+                        }
+                    }
                 }
                 catch (Exception ex) when (!cancellationToken.IsCancellationRequested)
                 {
@@ -111,7 +125,18 @@ namespace Translation.Providers.DeepL
                     var translated = await _browserTranslate(sentence, source, target, timeout.Token)
                         .ConfigureAwait(false);
                     if (!string.IsNullOrWhiteSpace(translated))
-                        return translated;
+                    {
+                        if (DeepLVersionNotice.IsPresent(translated))
+                        {
+                            _logger?.LogInformation("{Message}",
+                                "[DEEPL_BROWSER] The browser came back with DeepL's client-update notice, " +
+                                "not a translation.");
+                        }
+                        else
+                        {
+                            return translated;
+                        }
+                    }
                 }
                 catch (Exception ex) when (!cancellationToken.IsCancellationRequested)
                 {
@@ -169,7 +194,26 @@ namespace Translation.Providers.DeepL
                 if (responseBody == null)
                     return string.Empty;
 
-                return ParseTranslation(responseBody);
+                var translated = ParseTranslation(responseBody);
+
+                // HTTP 200 carrying the client-update notice instead of a
+                // translation. Retrying the same request shape brings the
+                // same text back, so the endpoint stands down exactly as it
+                // does after its HTTP 429, and the line goes to another
+                // engine rather than onto the screen as the notice itself.
+                if (DeepLVersionNotice.IsPresent(translated))
+                {
+                    _cooldown.Record(DateTime.UtcNow);
+                    _logger?.LogInformation("{Message}",
+                        "[DEEPL_VERSION_NOTICE] HTTP 200 carrying the client-update notice; standing down " +
+                        "for " + (int)CooldownAfterRefusal.TotalSeconds + "s");
+
+                    throw new QuotaExceededException(TranslationEngineName.DeepL,
+                        "DeepL's free endpoint no longer answers this request shape and asks for a newer " +
+                        "client. Translation continues on another engine until it answers again." + ConnectHint);
+                }
+
+                return translated;
             }
             catch (QuotaExceededException)
             {

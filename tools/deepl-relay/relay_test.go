@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestAdjustTimestamp(t *testing.T) {
@@ -236,5 +237,104 @@ func TestHandlerRejectsForeignHost(t *testing.T) {
 		if rec.Code != want {
 			t.Errorf("Host %q: status %d, want %d", host, rec.Code, want)
 		}
+	}
+}
+
+// versionNotice is what DeepL's free endpoint answers HTTP 200 with in place
+// of a translation since 2 November 2026 - reproduced live through this relay,
+// the same text whatever target language was asked for. It means the request
+// shape is retired, so the only honest reading is a refusal; the app matches
+// the same sentences in Translation/Providers/DeepL/DeepLVersionNotice.cs.
+const versionNotice = "You're using an older version of DeepL. To continue using the app, " +
+	"please update to the latest version.\n\n" +
+	"Sie verwenden eine ältere Version von DeepL. Bitte aktualisieren Sie die App, " +
+	"um sie weiterhin nutzen zu können.\n\n" +
+	"Вы используете старую версию DeepL. Чтобы продолжить работу с приложением, " +
+	"обновите его до последней версии."
+
+func TestIsVersionNotice(t *testing.T) {
+	if !isVersionNotice(versionNotice) {
+		t.Error("the multilingual blob must be recognized")
+	}
+
+	// Each language on its own, in case DeepL starts answering only in the
+	// language that was asked for.
+	for _, line := range strings.Split(versionNotice, "\n\n") {
+		if !isVersionNotice(line) {
+			t.Errorf("single language not recognized: %q", line)
+		}
+	}
+
+	for _, translation := range []string{"", "Hello, friend", "Привет, друг", "こんにちは世界"} {
+		if isVersionNotice(translation) {
+			t.Errorf("ordinary translation read as the notice: %q", translation)
+		}
+	}
+}
+
+func TestTranslateRefusesVersionNoticeLikeTooManyRequests(t *testing.T) {
+	requests := 0
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		requests++
+		w.Header().Set("Content-Type", "application/json")
+		io.WriteString(w, `{"jsonrpc":"2.0","result":{"texts":[{"text":`+jsonText(versionNotice)+`}]}}`)
+	}))
+	defer srv.Close()
+
+	r := newRelay(srv.URL, "safari")
+	now := time.Date(2026, 11, 2, 20, 0, 0, 0, time.UTC)
+	r.now = func() time.Time { return now }
+
+	got, status, err := r.translate(context.Background(), "hello", "auto", "EN")
+	if err == nil || status != http.StatusTooManyRequests || got != "" {
+		t.Fatalf("want the notice refused as 429, got %q/%d, err %v", got, status, err)
+	}
+
+	// While the pause stands, the next line is refused without knocking again.
+	_, status, err = r.translate(context.Background(), "hello again", "auto", "EN")
+	if err == nil || status != http.StatusTooManyRequests {
+		t.Errorf("during the pause want 429, got %d, err %v", status, err)
+	}
+	if requests != 1 {
+		t.Errorf("the pause must spare upstream the second request, saw %d", requests)
+	}
+
+	// The pause expires like any other refusal's, and the endpoint is tried again.
+	now = now.Add(time.Minute + time.Second)
+	_, status, err = r.translate(context.Background(), "hello once more", "auto", "EN")
+	if err == nil || status != http.StatusTooManyRequests {
+		t.Errorf("after the pause want a fresh attempt refused, got %d, err %v", status, err)
+	}
+	if requests != 2 {
+		t.Errorf("want a second upstream attempt after the pause, saw %d", requests)
+	}
+}
+
+func TestHandlerReportsVersionNoticeAsTooManyRequests(t *testing.T) {
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		io.WriteString(w, `{"jsonrpc":"2.0","result":{"texts":[{"text":`+jsonText(versionNotice)+`}]}}`)
+	}))
+	defer srv.Close()
+
+	r := newRelay(srv.URL, "safari")
+	server := httptest.NewServer(r.handler())
+	defer server.Close()
+
+	resp, err := http.Post(server.URL, "application/json", strings.NewReader(`{"text":"Hello, friend","target_lang":"ru"}`))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+
+	if resp.StatusCode != http.StatusTooManyRequests {
+		t.Errorf("want 429 to the application, got %d (%s)", resp.StatusCode, body)
+	}
+	if resp.Header.Get("Retry-After") == "" {
+		t.Errorf("the refusal should carry a Retry-After, body: %s", body)
+	}
+	if !strings.Contains(string(body), "client-update notice") {
+		t.Errorf("the message should name the notice, body: %s", body)
 	}
 }

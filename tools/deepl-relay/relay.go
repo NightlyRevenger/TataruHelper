@@ -193,6 +193,40 @@ func parseTranslation(body string) (string, error) {
 	return sb.String(), nil
 }
 
+// versionNoticeMarkers are the distinctive fragments of the notice DeepL's
+// free web endpoint answers HTTP 200 with in place of a translation since 2
+// November 2026, the same in fifteen languages whatever was asked for. The
+// request shape behind it is retired, so the notice is a refusal whatever the
+// status code says; the app matches the same sentences in
+// Translation/Providers/DeepL/DeepLVersionNotice.cs.
+var versionNoticeMarkers = []string{
+	"older version of deepl",       // EN
+	"ältere version von deepl",     // DE
+	"старую версию deepl",          // RU
+	"ancienne version de deepl",    // FR
+	"旧版本的 deepl",                 // zh-CN
+	"deeplの古いバージョン",          // ja
+	"versión antigua de deepl",     // es
+	"стару версію deepl",           // uk
+	"versione precedente di deepl", // it
+	"eski bir sürümünü",            // tr
+	"starszej wersji deepl",        // pl
+	"versão mais antiga do deepl",  // pt
+	"oudere versie van deepl",      // nl
+	"deepl versi lama",             // id
+	"starší verzi deepl",           // cs
+}
+
+func isVersionNotice(text string) bool {
+	lowered := strings.ToLower(text)
+	for _, marker := range versionNoticeMarkers {
+		if strings.Contains(lowered, marker) {
+			return true
+		}
+	}
+	return false
+}
+
 // translate returns the translation, the HTTP status DeepL answered with, and
 // an error when the answer carries no translation.
 func (r *deeplRelay) translate(ctx context.Context, text, sourceLang, targetLang string) (string, int, error) {
@@ -262,6 +296,23 @@ func (r *deeplRelay) translate(ctx context.Context, text, sourceLang, targetLang
 	if err != nil {
 		return "", resp.StatusCode, err
 	}
+
+	if isVersionNotice(translation) {
+		// HTTP 200 carrying the client-update notice instead of a
+		// translation. Retrying the same request shape brings the same
+		// text back, so it is refused like an HTTP 429 is - the same
+		// pause upstream, the same status handed to the application -
+		// which keeps it off the player's screen and away from the
+		// engine the window follows. The app reads the same notice from
+		// someone else's relay and refuses it the same way.
+		r.refusal = &refusalError{
+			status:  http.StatusTooManyRequests,
+			until:   r.now().Add(refusalDelay("", r.now())),
+			message: "DeepL answered with its client-update notice; upstream requests paused",
+		}
+		return "", r.refusal.status, r.refusal
+	}
+
 	return translation, resp.StatusCode, nil
 }
 
